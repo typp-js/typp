@@ -1,15 +1,15 @@
 import type { ConstructorMapping, IsEqual } from './base'
 
 namespace Stack {
-  export type Pop<T extends any[]> =
+  export type Pop<T extends readonly any[]> =
     T extends [...infer Rest, infer R]
       ? [R, Rest]
       : never
-  export type Shift<T extends any[]> =
+  export type Shift<T extends readonly any[]> =
     T extends [infer L, ...infer Rest]
       ? [L, Rest]
       : never
-  export type Push<T extends any[], V> =
+  export type Push<T extends readonly any[], V> =
     [...T, V]
 }
 
@@ -40,11 +40,13 @@ type Consume<
   ) : never
 ) : never
 
-type Typp<T extends any[]> = IsEqual<T, []> extends true
-  ? any
+type Typp<T extends readonly any[]> = true extends (
+  | IsEqual<T, []>
+  | IsEqual<T, readonly []>
+) ? t.Schema<any, any>
   : (
     Stack.Shift<T> extends [infer L, infer Rest extends any[]]
-      ? ConstructorEntries<L, Rest> extends (infer R)
+      ? Consume<L, Rest> extends (infer R)
         ? [R] extends [never]
           ? t.Schema<L, ConstructorMapping<L>>
           : R
@@ -52,12 +54,7 @@ type Typp<T extends any[]> = IsEqual<T, []> extends true
       : never
   )
 
-// &./index.spec.ts:5:7?
-// &./index.spec.ts:10:7?
-// &./index.spec.ts:11:7?
-// &./index.spec.ts:12:7?
-
-export function t<T extends any[]>(...t: T): Typp<T> {
+export function t<const T extends any[]>(...t: T): Typp<T> {
   return {} as Typp<T>
 }
 

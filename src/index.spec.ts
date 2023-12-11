@@ -2,10 +2,8 @@ import { expectTypeOf } from 'vitest'
 
 import { t } from './index'
 
-const StringSkm = t(String)
-
-expectTypeOf(StringSkm)
-  .toEqualTypeOf<t.Schema<StringConstructor, string>>()
+expectTypeOf(t(String)).toEqualTypeOf<t.Schema<StringConstructor, string>>()
+expectTypeOf(t()).toEqualTypeOf<t.Schema<any, any>>()
 
 const NumberArrSkm = t(Array, Number)
 const NumberVectorSkm = t(Array, Array, Number)
@@ -18,7 +16,7 @@ expectTypeOf(NumberArrSkm)
       number[]
     >
   >()
-  
+
 expectTypeOf(NumberVectorSkm)
   .toEqualTypeOf<
     t.Schema<
