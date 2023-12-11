@@ -101,6 +101,6 @@ export namespace t {
     shape: Shape
     type: T
   }
-  export type Infer<T extends Schema<any, any>> = T extends Schema<any, infer R> ? R : never
+  export type Infer<T extends Schema<any, any>> = [T] extends [Schema<any, infer R>] ? R : never
   export declare function infer<T extends Schema<any, any>>(t: T): Infer<T>
 }
