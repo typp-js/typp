@@ -9,23 +9,26 @@ test('primitive', () => {
 
 describe('array and tuple', () => {
   test('array', () => {
-    expectTypeOf(t(Array)).toEqualTypeOf<t.Schema<
+    const case0 = t(Array)
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<
       t.Schema<any, any>[], any[]
     >>()
-    expectTypeOf(t(Array, Number))
-      .toEqualTypeOf<
-        t.Schema<
-          t.Schema<NumberConstructor, number>[],
-          number[]
-        >
-      >()
-    expectTypeOf(t(Array, Array, Number))
-      .toEqualTypeOf<
-        t.Schema<
-          t.Schema<t.Schema<NumberConstructor, number>[], number[]>[],
-          number[][]
-        >
-      >()
+    expectTypeOf<t.Infer<typeof case0>>()
+      .toEqualTypeOf<any[]>()
+    const case1 = t(Array, Number)
+    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+      t.Schema<NumberConstructor, number>[],
+      number[]
+    >>()
+    expectTypeOf<t.Infer<typeof case1>>()
+      .toEqualTypeOf<number[]>()
+    const case2 = t(Array, Array, Number)
+    expectTypeOf(case2).toEqualTypeOf<t.Schema<
+      t.Schema<t.Schema<NumberConstructor, number>[], number[]>[],
+      number[][]
+    >>()
+    expectTypeOf<t.Infer<typeof case2>>()
+      .toEqualTypeOf<number[][]>()
   })
   test('tuple', () => {
     expectTypeOf(t([])).toEqualTypeOf<t.Schema<[], []>>()
