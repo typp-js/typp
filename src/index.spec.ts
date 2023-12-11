@@ -90,5 +90,24 @@ describe('object', () => {
       >()
     expectTypeOf<t.Infer<typeof case1>>()
       .toEqualTypeOf<{ [x: number]: string }>()
+    const case2 = t(Object, Number, Object)
+    expectTypeOf(case2)
+      .toEqualTypeOf<
+        t.Schema<{
+          [x: number]: t.Schema<{
+            [x: string | number | symbol]: t.Schema<any, any>;
+          }, {
+            [x: string | number | symbol]: any;
+          }>;
+        }, {
+          [x: number]: {
+            [x: string | number | symbol]: any;
+          };
+        }>
+      >()
+    expectTypeOf<t.Infer<typeof case2>>()
+      .toEqualTypeOf<{ [x: number]: { [x: string | number | symbol]: any } }>()
+    const case3 = t(Object, Object)
+    expectTypeOf<typeof case3>().toEqualTypeOf<never>()
   })
 })

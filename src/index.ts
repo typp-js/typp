@@ -70,6 +70,12 @@ type Consume<
     ) : never
 ) : never
 
+type InferInstanceType<T> = ConstructorMapping<T> extends infer InferInstanceType
+  ? [InferInstanceType] extends [never]
+    ? never
+    : t.Schema<T, InferInstanceType>
+  : never
+
 type Typp<T extends readonly any[]> = true extends (
   | IsEqual<T, []>
   | IsEqual<T, readonly []>
@@ -78,7 +84,7 @@ type Typp<T extends readonly any[]> = true extends (
     Stack.Shift<T> extends [infer L, infer Rest extends any[]]
       ? Consume<L, Rest> extends (infer R)
         ? [R] extends [never]
-          ? t.Schema<L, ConstructorMapping<L>>
+          ? InferInstanceType<L>
           : R
         : never
       : never
