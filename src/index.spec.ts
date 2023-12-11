@@ -3,8 +3,34 @@ import { test, expectTypeOf, describe } from 'vitest'
 import { t } from './index'
 
 test('primitive', () => {
-  expectTypeOf(t(String)).toEqualTypeOf<t.Schema<StringConstructor, string>>()
-  expectTypeOf(t()).toEqualTypeOf<t.Schema<any, any>>()
+  const cases = [
+    [t(String), String, {} as string],
+    [t(Number), Number, {} as number],
+    [t(Boolean), Boolean, {} as boolean],
+    [t(Symbol), Symbol, {} as symbol],
+    [t(BigInt), BigInt, {} as bigint],
+  ] as const
+
+  expectTypeOf(cases[0][0])
+    .toEqualTypeOf<t.Schema<typeof cases[0][1], typeof cases[0][2]>>()
+  expectTypeOf<t.Infer<typeof cases[0][0]>>()
+    .toEqualTypeOf<typeof cases[0][2]>()
+  expectTypeOf(cases[1][0])
+    .toEqualTypeOf<t.Schema<typeof cases[1][1], typeof cases[1][2]>>()
+  expectTypeOf<t.Infer<typeof cases[1][0]>>()
+    .toEqualTypeOf<typeof cases[1][2]>()
+  expectTypeOf(cases[2][0])
+    .toEqualTypeOf<t.Schema<typeof cases[2][1], typeof cases[2][2]>>()
+  expectTypeOf<t.Infer<typeof cases[2][0]>>()
+    .toEqualTypeOf<typeof cases[2][2]>()
+  expectTypeOf(cases[3][0])
+    .toEqualTypeOf<t.Schema<typeof cases[3][1], typeof cases[3][2]>>()
+  expectTypeOf<t.Infer<typeof cases[3][0]>>()
+    .toEqualTypeOf<typeof cases[3][2]>()
+  expectTypeOf(cases[4][0])
+    .toEqualTypeOf<t.Schema<typeof cases[4][1], typeof cases[4][2]>>()
+  expectTypeOf<t.Infer<typeof cases[4][0]>>()
+    .toEqualTypeOf<typeof cases[4][2]>()
 })
 
 describe('array and tuple', () => {
