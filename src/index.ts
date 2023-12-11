@@ -1,4 +1,4 @@
-import { ConstructorMapping, IsEqual, ValueOf } from './base'
+import { ConstructorMapping, IsEqual } from './base'
 
 namespace Stack {
   export type Pop<T extends any[]> =
