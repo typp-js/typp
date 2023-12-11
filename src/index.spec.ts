@@ -71,7 +71,16 @@ describe('array and tuple', () => {
 
 describe('object', () => {
   test('object', () => {
-    expectTypeOf(t(Object, Number, String))
+    const case0 = t(Object)
+    expectTypeOf(t(Object)).toEqualTypeOf<t.Schema<{
+      [x: string | number | symbol]: t.Schema<any, any>
+    }, {
+      [x: string | number | symbol]: any
+    }>>()
+    expectTypeOf<t.Infer<typeof case0>>()
+      .toEqualTypeOf<{ [x: string | number | symbol]: any }>()
+    const case1 = t(Object, Number, String)
+    expectTypeOf(case1)
       .toEqualTypeOf<
         t.Schema<{
           [x: number]: t.Schema<StringConstructor, string>;
@@ -79,5 +88,7 @@ describe('object', () => {
           [x: number]: string;
         }>
       >()
+    expectTypeOf<t.Infer<typeof case1>>()
+      .toEqualTypeOf<{ [x: number]: string }>()
   })
 })

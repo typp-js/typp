@@ -35,24 +35,41 @@ type Consume<
       Typp<Rest>[],
       t.Infer<Typp<Rest>>[]
     >
-) : IsEqual<T, ObjectConstructor> extends true ? (
-  Stack.Shift<Rest> extends [
-    infer L extends StringConstructor | NumberConstructor | SymbolConstructor,
-    infer Rest extends any[]
-  ] ? (
-    // @ts-ignore
-    t.Infer<Typp<[L]>> extends (
-      infer Keys extends string | number | symbol
-    ) ? t.Schema<{
-        // TODO union
-        [k in Keys]: Typp<Rest>
+) : true extends (
+  | IsEqual<T, ObjectConstructor>
+  | IsEqual<T, {}>
+) ? (
+  true extends (
+    | IsEqual<Rest, []>
+    | IsEqual<Rest, readonly []>
+  ) ? (
+    true extends IsEqual<T, {}> ? (
+      t.Schema<{}, {}>
+    ) : true extends IsEqual<T, ObjectConstructor> ? (
+      t.Schema<{
+        [k: string | number | symbol]: t.Schema<any, any>
       }, {
-        // TODO union
-        [k in Keys]: t.Infer<Typp<Rest>>
+        [k: string | number | symbol]: any
       }>
-      : never
-  ) : never
+    ) : never
+  ) : Stack.Shift<Rest> extends [
+      infer L extends StringConstructor | NumberConstructor | SymbolConstructor,
+      infer Rest extends any[]
+    ] ? (
+      // @ts-ignore
+      t.Infer<Typp<[L]>> extends (
+        infer Keys extends string | number | symbol
+      ) ? t.Schema<{
+          // TODO union
+          [k in Keys]: Typp<Rest>
+        }, {
+          // TODO union
+          [k in Keys]: t.Infer<Typp<Rest>>
+        }>
+        : never
+    ) : never
 ) : never
+// &./index.spec.ts:74:19?
 
 type Typp<T extends readonly any[]> = true extends (
   | IsEqual<T, []>
