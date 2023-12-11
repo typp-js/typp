@@ -1,0 +1,75 @@
+typp TGen<T> = Foo<Names extends T> -> { name: Names }
+
+typp TStr = TGen<string>
+// Compiles
+type TStr<Names extends string> = { name: Names }
+
+typp T1Or2 = TGen<1 | 2>
+// Compiles
+type T1Or2<Names extends 1 | 2> = { name: Names }
+
+typp GenericParams = [T extends string, U extends number]
+
+interface Foo<...GenericParams> { name: T, age: U }
+// Compiles
+interface Foo<T extends string, U extends number> { name: T, age: U }
+
+t(String)
+// string
+t(Number)
+// number
+or('1', '2')
+// '1' | '2'
+or('1', String)
+// '1' | (string & {})
+and(t({ a: String }), t({ b: Number }))
+// { a: string } & { b: number }
+const keys = or('oa', 'ob', 'c')
+and(keys, t`o${String}`)
+// 'oa' | 'ob'
+
+t([ String, Number ])
+// [string, number]
+t([], String)
+// string[]
+t([], [], Number)
+// number[][]
+
+t({}, String, Number)
+// { [x: string]: number }
+t({}, String, {}, String, Number)
+// { [x: string]: { [x: string]: number } }
+t({}, {}, String, Number)
+// { [x: string | number | symbol]: { [x: string]: number } }
+
+t({ name: String })
+// { name: string }
+
+t(Map, String, Number)
+// Map<string, number>
+
+t(Set, String)
+// Set<string>
+
+t(Promise, String)
+// Promise<string>
+
+t(Function, [], String)
+// () => string
+t(Function, [ String ], Number)
+// (a: string) => number
+t(Function, [ ], Function, [ String ], Number)
+// () => (a: string) => number
+
+t(Function, [ {} ], is(String))
+// (a: any) => a is string
+
+t((a = String) => Number)
+// (a: string) => number
+t((a = {}) => is(String))
+// (a: any) => a is string
+
+t((a = generic('T')) => or(a, String))
+// <T>(a: T) => T | (string & {})
+t((a = generic('T', String)) => or(a, String))
+// <T extends string>(a: T) => T | (string & {})
