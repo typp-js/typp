@@ -13,7 +13,7 @@ namespace Stack {
     [...T, V]
 }
 
-type ConstructorEntries<
+type Consume<
   T,
   Rest extends any[]
 > = IsEqual<T, ArrayConstructor> extends true ? (
