@@ -1,4 +1,4 @@
-import type { ConstructorMapping, IsEqual } from './base'
+import type { ConstructorMapping, IsEqual, IsNotEqual } from './base'
 
 namespace Stack {
   export type Pop<T extends readonly any[]> =
@@ -38,6 +38,11 @@ type Consume<
 ) : true extends (
   | IsEqual<T, ObjectConstructor>
   | IsEqual<T, {}>
+  | (
+    & ([T] extends [Record<string | number | symbol, any>] ? true : false)
+    & IsNotEqual<T, ObjectConstructor>
+    & ([T] extends [Function] ? false : true)
+  )
 ) ? (
   true extends (
     | IsEqual<Rest, []>
@@ -51,8 +56,22 @@ type Consume<
       }, {
         [k: string | number | symbol]: any
       }>
+    ) : [T] extends [Record<string | number | symbol, any>] ? (
+      {
+        -readonly [K in keyof T]: [T[K]] extends [t.Schema<any, any>]
+          ? T[K]
+          : Typp<[T[K]]>
+      } extends infer R ? (
+        t.Schema<R, {
+          [K in keyof R]: [R[K]] extends [t.Schema<any, any>]
+            ? t.Infer<R[K]>
+            // TODO maybe should return `R[K]`?
+            : never
+        }>
+      ) : never
     ) : never
-  ) : Stack.Shift<Rest> extends [
+  ) : (
+    Stack.Shift<Rest> extends [
       infer L extends StringConstructor | NumberConstructor | SymbolConstructor,
       infer Rest extends any[]
     ] ? (
@@ -68,6 +87,7 @@ type Consume<
         }>
         : never
     ) : never
+  )
 ) : never
 
 type InferInstanceType<T> = ConstructorMapping<T> extends infer InferInstanceType

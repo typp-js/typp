@@ -110,4 +110,60 @@ describe('object', () => {
     const case3 = t(Object, Object)
     expectTypeOf<typeof case3>().toEqualTypeOf<never>()
   })
+  test('interface', () => {
+    const case0 = t({})
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<{}, {}>>()
+    expectTypeOf<t.Infer<typeof case0>>()
+      .toEqualTypeOf<{}>()
+    const case1 = t({ a: Number, b: String })
+    expectTypeOf(case1).toEqualTypeOf<t.Schema<{
+      a: t.Schema<NumberConstructor, number>;
+      b: t.Schema<StringConstructor, string>;
+    }, {
+      a: number;
+      b: string;
+    }>>()
+    expectTypeOf<t.Infer<typeof case1>>()
+      .toEqualTypeOf<{ a: number; b: string }>()
+    const case2 = t({ a: Number, b: { c: String } })
+    expectTypeOf(case2).toEqualTypeOf<t.Schema<{
+      a: t.Schema<NumberConstructor, number>;
+      b: t.Schema<{
+        c: t.Schema<StringConstructor, string>;
+      }, {
+        c: string;
+      }>;
+    }, {
+      a: number;
+      b: {
+        c: string;
+      };
+    }>>()
+    expectTypeOf<t.Infer<typeof case2>>()
+      .toEqualTypeOf<{ a: number; b: { c: string } }>()
+    const case3 = t({ a: t([], Number) })
+    expectTypeOf(case3).toEqualTypeOf<t.Schema<{
+      a: t.Schema<t.Schema<NumberConstructor, number>[], number[]>;
+    }, {
+      a: number[];
+    }>>()
+    expectTypeOf<t.Infer<typeof case3>>()
+      .toEqualTypeOf<{ a: number[] }>()
+    const case4 = t({ a: Number, b: Object })
+    expectTypeOf(case4).toEqualTypeOf<t.Schema<{
+      a: t.Schema<NumberConstructor, number>;
+      b: t.Schema<{
+        [x: string | number | symbol]: t.Schema<any, any>;
+      }, {
+        [x: string | number | symbol]: any;
+      }>;
+    }, {
+      a: number;
+      b: {
+        [x: string | number | symbol]: any;
+      };
+    }>>()
+    expectTypeOf<t.Infer<typeof case4>>()
+      .toEqualTypeOf<{ a: number; b: { [x: string | number | symbol]: any } }>()
+  })
 })
