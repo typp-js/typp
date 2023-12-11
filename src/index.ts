@@ -69,7 +69,6 @@ type Consume<
         : never
     ) : never
 ) : never
-// &./index.spec.ts:74:19?
 
 type Typp<T extends readonly any[]> = true extends (
   | IsEqual<T, []>
