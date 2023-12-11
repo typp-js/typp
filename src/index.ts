@@ -16,11 +16,25 @@ namespace Stack {
 type Consume<
   T,
   Rest extends any[]
-> = IsEqual<T, ArrayConstructor> extends true ? (
-  t.Schema<
-    Typp<Rest>[],
-    t.Infer<Typp<Rest>>[]
-  >
+> = true extends (
+  | IsEqual<T, ArrayConstructor>
+  | IsEqual<T, []>
+  | IsEqual<T, readonly []>
+) ? (
+  true extends (
+    & (
+      | IsEqual<Rest, []>
+      | IsEqual<Rest, readonly []>
+    )
+    & (
+      | IsEqual<T, []>
+      | IsEqual<T, readonly []>
+    )
+  ) ? t.Schema<[], []>
+    : t.Schema<
+      Typp<Rest>[],
+      t.Infer<Typp<Rest>>[]
+    >
 ) : IsEqual<T, ObjectConstructor> extends true ? (
   Stack.Shift<Rest> extends [
     infer L extends StringConstructor | NumberConstructor | SymbolConstructor,

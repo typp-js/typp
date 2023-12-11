@@ -7,8 +7,10 @@ expectTypeOf(t()).toEqualTypeOf<t.Schema<any, any>>()
 
 const NumberArrSkm = t(Array, Number)
 const NumberVectorSkm = t(Array, Array, Number)
-const NumberMapToStringSkm = t(Object, Number, String)
 
+expectTypeOf(t(Array)).toEqualTypeOf<t.Schema<
+  t.Schema<any, any>[], any[]
+>>()
 expectTypeOf(NumberArrSkm)
   .toEqualTypeOf<
     t.Schema<
@@ -16,7 +18,6 @@ expectTypeOf(NumberArrSkm)
       number[]
     >
   >()
-
 expectTypeOf(NumberVectorSkm)
   .toEqualTypeOf<
     t.Schema<
@@ -25,6 +26,13 @@ expectTypeOf(NumberVectorSkm)
     >
   >()
 
+expectTypeOf(t([])).toEqualTypeOf<t.Schema<[], []>>()
+expectTypeOf(t([], Number)).toEqualTypeOf<t.Schema<
+  t.Schema<NumberConstructor, number>[],
+  number[]
+>>()
+
+const NumberMapToStringSkm = t(Object, Number, String)
 expectTypeOf(NumberMapToStringSkm)
   .toEqualTypeOf<
     t.Schema<{
