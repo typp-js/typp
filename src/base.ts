@@ -16,6 +16,8 @@ export type Narrow<T> = Cast<T, unknown[] | [] | (T extends Primitive ? T : neve
 
 export type ValueOf<T> = T[keyof T]
 
+export type UseWhenNoNever<T, U = never> = [T] extends [never] ? U : T
+
 interface ConstructorEntries<
   A = any, B = any, C = any, D = any, E = any
 > {

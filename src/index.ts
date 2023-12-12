@@ -1,4 +1,4 @@
-import type { ConstructorMapping, IsEqual, IsNotEqual } from './base'
+import { ConstructorMapping, IsEqual, IsNotEqual, UseWhenNoNever } from './base'
 
 namespace Stack {
   export type Pop<T extends readonly any[]> =
@@ -89,9 +89,10 @@ type Consume<
 
 type Consumer<T extends readonly any[]> =
   Stack.Shift<T> extends [infer L, infer Rest extends any[]]
-    ? Consume<L, Rest> extends (infer R) ? (
-      [R] extends [never] ? InferInstanceType<L> : R
-    ) : never
+    ? UseWhenNoNever<
+      Consume<L, Rest>,
+      InferInstanceType<L>
+    >
     : never
 
 type InferInstanceType<T> = ConstructorMapping<T> extends infer InferInstanceType
