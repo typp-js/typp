@@ -31,10 +31,7 @@ type Consume<
       | IsEqual<T, readonly []>
     )
   ) ? t.Schema<[], []>
-    : t.Schema<
-      Typp<Rest>[],
-      t.Infer<Typp<Rest>>[]
-    >
+    : t.Schema<Typp<Rest>[], t.Infer<Typp<Rest>>[]>
 ) : true extends (
   | IsEqual<T, ObjectConstructor>
   | IsEqual<T, {}>
