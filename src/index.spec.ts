@@ -308,6 +308,18 @@ describe('union', () => {
     >>()
     expectTypeOf<t.Infer<typeof case2>>()
       .toEqualTypeOf<number | string>()
+    const case3 = t.union([1, 2, '3', true, null, undefined])
+    expectTypeOf(case3).toEqualTypeOf<t.Schema<
+      | t.Schema<NumberConstructor, 1>
+      | t.Schema<NumberConstructor, 2>
+      | t.Schema<StringConstructor, '3'>
+      | t.Schema<BooleanConstructor, true>
+      | t.Schema<null, null>
+      | t.Schema<undefined, undefined>,
+      1 | 2 | '3' | true | null | undefined
+    >>()
+    expectTypeOf<t.Infer<typeof case3>>()
+      .toEqualTypeOf<1 | 2 | '3' | true | null | undefined>()
   })
 })
 
