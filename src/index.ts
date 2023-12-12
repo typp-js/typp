@@ -87,6 +87,13 @@ type Consume<
   )
 ) : never
 
+type Consumer<T extends readonly any[]> =
+  Stack.Shift<T> extends [infer L, infer Rest extends any[]]
+    ? Consume<L, Rest> extends (infer R) ? (
+      [R] extends [never] ? InferInstanceType<L> : R
+    ) : never
+    : never
+
 type InferInstanceType<T> = ConstructorMapping<T> extends infer InferInstanceType
   ? [InferInstanceType] extends [never]
     ? never
@@ -96,16 +103,7 @@ type InferInstanceType<T> = ConstructorMapping<T> extends infer InferInstanceTyp
 type Typp<T extends readonly any[]> = true extends (
   | IsEqual<T, []>
   | IsEqual<T, readonly []>
-) ? t.Schema<any, any>
-  : (
-    Stack.Shift<T> extends [infer L, infer Rest extends any[]]
-      ? Consume<L, Rest> extends (infer R)
-        ? [R] extends [never]
-          ? InferInstanceType<L>
-          : R
-        : never
-      : never
-  )
+) ? t.Schema<any, any> : Consumer<T>
 
 export function t<const T extends any[]>(...t: T): Typp<T> {
   return {} as Typp<T>
