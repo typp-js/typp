@@ -1,5 +1,6 @@
 import { ConstructorMapping, IsEqual, IsNotEqual, Stack, UseWhenNoNever } from './base'
 import { ArrayConsume } from './consumers/array'
+import { MapConsume } from './consumers/map'
 import { ObjectConsume } from './consumers/object'
 
 type Consume<
@@ -21,6 +22,10 @@ type Consume<
   )
 ) ? (
   ObjectConsume<T, Rest>
+) : true extends (
+  IsEqual<T, MapConstructor>
+) ? (
+  MapConsume<T, Rest>
 ) : never
 
 type Consumer<T extends readonly any[]> =

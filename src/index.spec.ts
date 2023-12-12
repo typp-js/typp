@@ -166,4 +166,34 @@ describe('object', () => {
     expectTypeOf<t.Infer<typeof case4>>()
       .toEqualTypeOf<{ a: number; b: { [x: string | number | symbol]: any } }>()
   })
+  test('map', () => {
+    const case0 = t(Map)
+    expectTypeOf(case0).toEqualTypeOf<
+      t.Schema<
+        t.Map<t.Schema<any, any>, t.Schema<any, any>>,
+        Map<any, any>
+      >
+    >()
+    expectTypeOf<t.Infer<typeof case0>>()
+      .toEqualTypeOf<Map<any, any>>()
+
+    const case1 = t(Map, Number)
+    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+      t.Map<t.Schema<NumberConstructor, number>, t.Schema<any, any>>,
+      Map<number, any>
+    >>()
+    expectTypeOf<t.Infer<typeof case1>>()
+      .toEqualTypeOf<Map<number, any>>()
+
+    const case2 = t(Map, Number, String)
+    expectTypeOf(case2).toEqualTypeOf<t.Schema<
+      t.Map<
+        t.Schema<NumberConstructor, number>,
+        t.Schema<StringConstructor, string>
+      >,
+      Map<number, string>
+    >>()
+    expectTypeOf<t.Infer<typeof case2>>()
+      .toEqualTypeOf<Map<number, string>>()
+  })
 })
