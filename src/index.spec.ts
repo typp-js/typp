@@ -67,6 +67,35 @@ describe('array and tuple', () => {
       number[][]
     >>()
   })
+  test('Set', () => {
+    const case0 = t(Set)
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+      t.Set<t.Schema<any, any>>,
+      Set<any>
+    >>()
+    expectTypeOf<t.Infer<typeof case0>>()
+      .toEqualTypeOf<Set<any>>()
+    const case1 = t(Set, Number)
+    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+      t.Set<t.Schema<NumberConstructor, number>>,
+      Set<number>
+    >>()
+    expectTypeOf<t.Infer<typeof case1>>()
+      .toEqualTypeOf<Set<number>>()
+    const case2 = t(Set, { a: Number })
+    expectTypeOf(case2).toEqualTypeOf<t.Schema<
+      t.Set<t.Schema<{
+        a: t.Schema<NumberConstructor, number>;
+      }, {
+        a: number;
+      }>>,
+      Set<{
+        a: number;
+      }>
+    >>()
+    expectTypeOf<t.Infer<typeof case2>>()
+      .toEqualTypeOf<Set<{ a: number }>>()
+  })
 })
 
 describe('object', () => {
@@ -166,7 +195,7 @@ describe('object', () => {
     expectTypeOf<t.Infer<typeof case4>>()
       .toEqualTypeOf<{ a: number; b: { [x: string | number | symbol]: any } }>()
   })
-  test('map', () => {
+  test('Map', () => {
     const case0 = t(Map)
     expectTypeOf(case0).toEqualTypeOf<
       t.Schema<
