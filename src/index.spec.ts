@@ -271,8 +271,9 @@ describe('literal', () => {
 describe('union', () => {
   test('base', () => {
     const case0 = t.union([])
-    // TODO type must is `t.Schema<typeof symbols.never, never>`
-    expectTypeOf(case0).toEqualTypeOf<t.Schema<never, never>>()
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+      typeof t.Symbols.never, never
+    >>()
     expectTypeOf<t.Infer<typeof case0>>()
       .toEqualTypeOf<never>()
     const case1 = t.union([Number])

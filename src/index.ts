@@ -59,7 +59,9 @@ export namespace t {
     infer Item extends Schema<any, any>
   ) ? Infer<Item> : never
   export declare function union<const T>(t: readonly T[]): Types<T> extends infer Schemas ? (
-    Schema<Schemas, Infers<Schemas>>
+    [Schemas] extends [never]
+      ? Schema<typeof symbols.never, never>
+      : Schema<Schemas, Infers<Schemas>>
   ) : never
 }
 
