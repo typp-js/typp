@@ -1,17 +1,6 @@
-import { ConstructorMapping, IsEqual, IsNotEqual, UseWhenNoNever } from './base'
-
-namespace Stack {
-  export type Pop<T extends readonly any[]> =
-    T extends [...infer Rest, infer R]
-      ? [R, Rest]
-      : never
-  export type Shift<T extends readonly any[]> =
-    T extends [infer L, ...infer Rest]
-      ? [L, Rest]
-      : never
-  export type Push<T extends readonly any[], V> =
-    [...T, V]
-}
+import { ConstructorMapping, IsEqual, IsNotEqual, Stack, UseWhenNoNever } from './base'
+import { ArrayConsume } from './consumers/array'
+import { ObjectConsume } from './consumers/object'
 
 type Consume<
   T,
@@ -21,17 +10,7 @@ type Consume<
   | IsEqual<T, []>
   | IsEqual<T, readonly []>
 ) ? (
-  true extends (
-    & (
-      | IsEqual<Rest, []>
-      | IsEqual<Rest, readonly []>
-    )
-    & (
-      | IsEqual<T, []>
-      | IsEqual<T, readonly []>
-    )
-  ) ? t.Schema<[], []>
-    : t.Schema<Typp<Rest>[], t.Infer<Typp<Rest>>[]>
+  ArrayConsume<T, Rest>
 ) : true extends (
   | IsEqual<T, ObjectConstructor>
   | IsEqual<T, {}>
@@ -41,50 +20,7 @@ type Consume<
     & ([T] extends [Function] ? false : true)
   )
 ) ? (
-  true extends (
-    | IsEqual<Rest, []>
-    | IsEqual<Rest, readonly []>
-  ) ? (
-    true extends IsEqual<T, {}> ? (
-      t.Schema<{}, {}>
-    ) : true extends IsEqual<T, ObjectConstructor> ? (
-      t.Schema<{
-        [k: string | number | symbol]: t.Schema<any, any>
-      }, {
-        [k: string | number | symbol]: any
-      }>
-    ) : [T] extends [Record<string | number | symbol, any>] ? (
-      {
-        -readonly [K in keyof T]: [T[K]] extends [t.Schema<any, any>]
-          ? T[K]
-          : Typp<[T[K]]>
-      } extends infer R ? (
-        t.Schema<R, {
-          [K in keyof R]: [R[K]] extends [t.Schema<any, any>]
-            ? t.Infer<R[K]>
-            // TODO maybe should return `R[K]`?
-            : never
-        }>
-      ) : never
-    ) : never
-  ) : (
-    Stack.Shift<Rest> extends [
-      infer L extends StringConstructor | NumberConstructor | SymbolConstructor,
-      infer Rest extends any[]
-    ] ? (
-      // @ts-ignore
-      t.Infer<Typp<[L]>> extends (
-        infer Keys extends string | number | symbol
-      ) ? t.Schema<{
-          // TODO union
-          [k in Keys]: Typp<Rest>
-        }, {
-          // TODO union
-          [k in Keys]: t.Infer<Typp<Rest>>
-        }>
-        : never
-    ) : never
-  )
+  ObjectConsume<T, Rest>
 ) : never
 
 type Consumer<T extends readonly any[]> =
@@ -101,7 +37,7 @@ type InferInstanceType<T> = ConstructorMapping<T> extends infer InferInstanceTyp
     : t.Schema<T, InferInstanceType>
   : never
 
-type Typp<T extends readonly any[]> = true extends (
+export type Typp<T extends readonly any[]> = true extends (
   | IsEqual<T, []>
   | IsEqual<T, readonly []>
 ) ? t.Schema<any, any> : Consumer<T>

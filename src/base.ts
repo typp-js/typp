@@ -18,6 +18,19 @@ export type ValueOf<T> = T[keyof T]
 
 export type UseWhenNoNever<T, U = never> = [T] extends [never] ? U : T
 
+export namespace Stack {
+  export type Pop<T extends readonly any[]> =
+    T extends [...infer Rest, infer R]
+      ? [R, Rest]
+      : never
+  export type Shift<T extends readonly any[]> =
+    T extends [infer L, ...infer Rest]
+      ? [L, Rest]
+      : never
+  export type Push<T extends readonly any[], V> =
+    [...T, V]
+}
+
 interface ConstructorEntries<
   A = any, B = any, C = any, D = any, E = any
 > {
