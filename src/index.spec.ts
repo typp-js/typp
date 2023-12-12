@@ -266,6 +266,20 @@ describe('literal', () => {
     expectTypeOf<t.Infer<typeof case8>>()
       .toEqualTypeOf<bigint>()
   })
+  test('special type', () => {
+    const case0 = t.void()
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<typeof t.Symbols.void, void>>()
+    expectTypeOf<t.Infer<typeof case0>>()
+      .toEqualTypeOf<void>()
+    const case1 = t.unknown()
+    expectTypeOf(case1).toEqualTypeOf<t.Schema<typeof t.Symbols.unknown, unknown>>()
+    expectTypeOf<t.Infer<typeof case1>>()
+      .toEqualTypeOf<unknown>()
+    const case2 = t.never()
+    expectTypeOf(case2).toEqualTypeOf<t.Schema<typeof t.Symbols.never, never>>()
+    expectTypeOf<t.Infer<typeof case2>>()
+      .toEqualTypeOf<never>()
+  })
 })
 
 describe('union', () => {

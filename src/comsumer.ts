@@ -63,9 +63,17 @@ type PrimitiveMapping<T> = true extends (
 ) ? (
   t.Schema<undefined, undefined>
 ) : true extends (
-  IsEqual<undefined, T>
+  IsEqual<void, T>
 ) ? (
-  t.Schema<undefined, undefined>
+  t.Schema<typeof t.Symbols.void, void>
+) : true extends (
+  IsEqual<unknown, T>
+) ? (
+  t.Schema<typeof t.Symbols.unknown, unknown>
+) : true extends (
+  IsEqual<never, T>
+) ? (
+  t.Schema<typeof t.Symbols.never, never>
 ) : never
 
 type InferInstanceType<T> = ConstructorMapping<T> extends infer InferInstanceType
