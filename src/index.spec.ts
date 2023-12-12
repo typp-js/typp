@@ -279,6 +279,10 @@ describe('literal', () => {
     expectTypeOf(case2).toEqualTypeOf<t.Schema<typeof t.Symbols.never, never>>()
     expectTypeOf<t.Infer<typeof case2>>()
       .toEqualTypeOf<never>()
+    const case3 = t.any()
+    expectTypeOf(case3).toEqualTypeOf<t.Schema<any, any>>()
+    expectTypeOf<t.Infer<typeof case3>>()
+      .toEqualTypeOf<any>()
   })
 })
 

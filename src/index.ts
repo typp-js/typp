@@ -43,6 +43,7 @@ export namespace t {
    * rename and export to user
    */
   export const Symbols = symbols
+  export declare function any(): Schema<any, any>
   export declare function unknown(): Schema<typeof symbols.unknown, unknown>
   export declare function string(): Schema<StringConstructor, string>
   export declare function number(): Schema<NumberConstructor, number>
