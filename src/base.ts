@@ -2,8 +2,10 @@ export type IsEqual<A, B> =
   (<T>() => T extends A ? 1 : 2) extends
   (<T>() => T extends B ? 1 : 2) ? true : false
 
+export type IsNotEqual<A, B> = IsEqual<A, B> extends true ? false : true
+
 export type ValueOf<T> = T[keyof T]
-  
+
 interface ConstructorEntries<
   A = any, B = any, C = any, D = any, E = any
 > {
