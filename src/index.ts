@@ -39,6 +39,10 @@ export namespace t {
   export type Infer<T extends Schema<any, any>> = [T] extends [Schema<any, infer R>] ? R : never
   export declare function infer<T extends Schema<any, any>>(t: T): Infer<T>
 
+  /**
+   * rename and export to user
+   */
+  export const Symbols = symbols
   export declare function unknown(): Schema<typeof symbols.unknown, unknown>
   export declare function string(): Schema<StringConstructor, string>
   export declare function number(): Schema<NumberConstructor, number>

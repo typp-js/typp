@@ -34,9 +34,43 @@ type Consume<
   SetConsume<T, Rest>
 ) : never
 
+type PrimitiveMapping<T> = true extends (
+  [T] extends [string] ? true : false
+) ? (
+  t.Schema<StringConstructor, T>
+) : true extends (
+  [T] extends [number] ? true : false
+) ? (
+  t.Schema<NumberConstructor, T>
+) : true extends (
+  [T] extends [bigint] ? true : false
+) ? (
+  t.Schema<BigIntConstructor, T>
+) : true extends (
+  [T] extends [boolean] ? true : false
+) ? (
+  t.Schema<BooleanConstructor, T>
+) : true extends (
+  [T] extends [symbol] ? true : false
+) ? (
+  t.Schema<SymbolConstructor, T>
+) : true extends (
+  IsEqual<null, T>
+) ? (
+  t.Schema<null, null>
+) : true extends (
+  IsEqual<undefined, T>
+) ? (
+  t.Schema<undefined, undefined>
+) : true extends (
+  IsEqual<undefined, T>
+) ? (
+  t.Schema<undefined, undefined>
+) : never
+
 type InferInstanceType<T> = ConstructorMapping<T> extends infer InferInstanceType
   ? [InferInstanceType] extends [never]
-    ? never
+    ? PrimitiveMapping<T>
     : t.Schema<T, InferInstanceType>
   : never
 
