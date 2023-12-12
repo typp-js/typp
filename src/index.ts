@@ -49,6 +49,14 @@ export namespace t {
   export declare function regexp(): Schema<RegExpConstructor, RegExp>
   export declare function undefined(): Schema<undefined, undefined>
   export declare function never(): Schema<typeof symbols.never, never>
+
+  export type Types<T> = T extends infer Item ? Typp<[Item]> : never
+  export type Infers<T> = T extends (
+    infer Item extends Schema<any, any>
+  ) ? Infer<Item> : never
+  export declare function union<const T>(t: readonly T[]): Types<T> extends infer Schemas ? (
+    Schema<Schemas, Infers<Schemas>>
+  ) : never
 }
 
 export const typp: typeof t = t

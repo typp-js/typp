@@ -226,3 +226,31 @@ describe('object', () => {
       .toEqualTypeOf<Map<number, string>>()
   })
 })
+
+describe('literal', () => {})
+
+describe('union', () => {
+  test('base', () => {
+    const case0 = t.union([])
+    // TODO type must is `t.Schema<typeof symbols.never, never>`
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<never, never>>()
+    expectTypeOf<t.Infer<typeof case0>>()
+      .toEqualTypeOf<never>()
+    const case1 = t.union([Number])
+    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+      t.Schema<NumberConstructor, number>,
+      number
+    >>()
+    expectTypeOf<t.Infer<typeof case1>>()
+      .toEqualTypeOf<number>()
+    const case2 = t.union([Number, String])
+    expectTypeOf(case2).toEqualTypeOf<t.Schema<
+      t.Schema<NumberConstructor, number> | t.Schema<StringConstructor, string>,
+      number | string
+    >>()
+    expectTypeOf<t.Infer<typeof case2>>()
+      .toEqualTypeOf<number | string>()
+  })
+})
+
+describe('intersect', () => {})
