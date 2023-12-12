@@ -4,6 +4,8 @@ export type IsEqual<A, B> =
 
 export type IsNotEqual<A, B> = IsEqual<A, B> extends true ? false : true
 
+export type U2I<U> = (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never
+
 type Cast<A, B> = A extends B ? A : B
 
 type Primitive = string | number | boolean | bigint | symbol | undefined | null
