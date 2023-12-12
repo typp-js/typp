@@ -4,6 +4,16 @@ export type IsEqual<A, B> =
 
 export type IsNotEqual<A, B> = IsEqual<A, B> extends true ? false : true
 
+type Cast<A, B> = A extends B ? A : B
+
+type Primitive = string | number | boolean | bigint | symbol | undefined | null
+
+export type Narrow<T> = Cast<T, unknown[] | [] | (T extends Primitive ? T : never) | ({
+  [K in keyof T]: K extends typeof Symbol.species
+    ? T[K]
+    : Narrow<T[K]>
+})>
+
 export type ValueOf<T> = T[keyof T]
 
 interface ConstructorEntries<
