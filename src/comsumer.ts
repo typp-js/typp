@@ -35,25 +35,9 @@ type Consume<
 ) : never
 
 type PrimitiveMapping<T> = true extends (
-  [T] extends [string] ? true : false
+  [T] extends [string | number | bigint | boolean | symbol] ? true : false
 ) ? (
-  t.Schema<StringConstructor, T>
-) : true extends (
-  [T] extends [number] ? true : false
-) ? (
-  t.Schema<NumberConstructor, T>
-) : true extends (
-  [T] extends [bigint] ? true : false
-) ? (
-  t.Schema<BigIntConstructor, T>
-) : true extends (
-  [T] extends [boolean] ? true : false
-) ? (
-  t.Schema<BooleanConstructor, T>
-) : true extends (
-  [T] extends [symbol] ? true : false
-) ? (
-  t.Schema<SymbolConstructor, T>
+  t.Schema<T, T>
 ) : true extends (
   IsEqual<null, T>
 ) ? (

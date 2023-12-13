@@ -238,33 +238,33 @@ describe('literal', () => {
     expectTypeOf<t.Infer<typeof case1>>()
       .toEqualTypeOf<undefined>()
     const case2 = t(true)
-    expectTypeOf(case2).toEqualTypeOf<t.Schema<BooleanConstructor, true>>()
+    expectTypeOf(case2).toEqualTypeOf<t.Schema<true, true>>()
     expectTypeOf<t.Infer<typeof case2>>()
       .toEqualTypeOf<true>()
     const case3 = t(false)
-    expectTypeOf(case3).toEqualTypeOf<t.Schema<BooleanConstructor, false>>()
+    expectTypeOf(case3).toEqualTypeOf<t.Schema<false, false>>()
     expectTypeOf<t.Infer<typeof case3>>()
       .toEqualTypeOf<false>()
     const case4 = t('')
-    expectTypeOf(case4).toEqualTypeOf<t.Schema<StringConstructor, ''>>()
+    expectTypeOf(case4).toEqualTypeOf<t.Schema<'', ''>>()
     expectTypeOf<t.Infer<typeof case4>>()
       .toEqualTypeOf<''>()
     const case5 = t(0)
-    expectTypeOf(case5).toEqualTypeOf<t.Schema<NumberConstructor, 0>>()
+    expectTypeOf(case5).toEqualTypeOf<t.Schema<0, 0>>()
     expectTypeOf<t.Infer<typeof case5>>()
       .toEqualTypeOf<0>()
     const case6 = t(1)
-    expectTypeOf(case6).toEqualTypeOf<t.Schema<NumberConstructor, 1>>()
+    expectTypeOf(case6).toEqualTypeOf<t.Schema<1, 1>>()
     expectTypeOf<t.Infer<typeof case6>>()
       .toEqualTypeOf<1>()
     const case7 = t(Symbol())
-    expectTypeOf(case7).toEqualTypeOf<t.Schema<SymbolConstructor, symbol>>()
+    expectTypeOf(case7).toEqualTypeOf<t.Schema<symbol, symbol>>()
     expectTypeOf<t.Infer<typeof case7>>()
       .toEqualTypeOf<symbol>()
-    const case8 = t(BigInt(0))
-    expectTypeOf(case8).toEqualTypeOf<t.Schema<BigIntConstructor, bigint>>()
+    const case8 = t(0n)
+    expectTypeOf(case8).toEqualTypeOf<t.Schema<0n, 0n>>()
     expectTypeOf<t.Infer<typeof case8>>()
-      .toEqualTypeOf<bigint>()
+      .toEqualTypeOf<0n>()
 
     // @ts-expect-error - Argument of type ObjectConstructor is not assignable to parameter of type
     // string | number | bigint | boolean | symbol | null | undefined
@@ -349,10 +349,10 @@ describe('union', () => {
       .toEqualTypeOf<number | string>()
     const case3 = t.union([1, 2, '3', true, null, undefined])
     expectTypeOf(case3).toEqualTypeOf<t.Schema<
-      | t.Schema<NumberConstructor, 1>
-      | t.Schema<NumberConstructor, 2>
-      | t.Schema<StringConstructor, '3'>
-      | t.Schema<BooleanConstructor, true>
+      | t.Schema<1, 1>
+      | t.Schema<2, 2>
+      | t.Schema<'3', '3'>
+      | t.Schema<true, true>
       | t.Schema<null, null>
       | t.Schema<undefined, undefined>,
       1 | 2 | '3' | true | null | undefined
@@ -368,16 +368,13 @@ describe('intersect', () => {
     t.intersect([])
 
     const case0 = t.intersect([1])
-    expectTypeOf(case0).toEqualTypeOf<t.Schema<
-      NumberConstructor,
-      1
-    >>()
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<1, 1>>()
     expectTypeOf<t.Infer<typeof case0>>()
       .toEqualTypeOf<1>()
 
     const case1 = t.intersect([1, Number])
     expectTypeOf(case1).toEqualTypeOf<t.Schema<
-      t.Schema<NumberConstructor, 1> & t.Schema<NumberConstructor, number>,
+      t.Schema<1, 1> & t.Schema<NumberConstructor, number>,
       1
     >>()
     expectTypeOf<t.Infer<typeof case1>>()
@@ -385,7 +382,7 @@ describe('intersect', () => {
 
     const case2 = t.intersect([1, Number, String])
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
-      t.Schema<NumberConstructor, 1> & t.Schema<NumberConstructor, number> & t.Schema<StringConstructor, string>,
+      t.Schema<1, 1> & t.Schema<NumberConstructor, number> & t.Schema<StringConstructor, string>,
       never
     >>()
     expectTypeOf<t.Infer<typeof case2>>()
@@ -443,9 +440,9 @@ describe('intersect', () => {
     ])
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
       t.Schema<
-        t.Schema<StringConstructor, 'a'> | t.Schema<StringConstructor, 'ab'> | t.Schema<StringConstructor, 'b'>,
+        t.Schema<'a', 'a'> | t.Schema<'ab', 'ab'> | t.Schema<'b', 'b'>,
         'a' | 'ab' | 'b'
-      > & t.Schema<StringConstructor, 'a'>,
+      > & t.Schema<`a${string}`, `a${string}`>,
       ('a' | 'ab' | 'b') & `a${string}`
     >>()
     expectTypeOf<t.Infer<typeof case0>>().toEqualTypeOf<T0>()
@@ -458,9 +455,9 @@ describe('intersect', () => {
     ])
     expectTypeOf(case1).toEqualTypeOf<t.Schema<
       t.Schema<
-        t.Schema<StringConstructor, 'a'> | t.Schema<StringConstructor, 'ax'> | t.Schema<StringConstructor, 'a12'> | t.Schema<StringConstructor, 'b'>,
+        t.Schema<'a', 'a'> | t.Schema<'ax', 'ax'> | t.Schema<'a12', 'a12'> | t.Schema<'b', 'b'>,
         'a' | 'ax' | 'a12' | 'b'
-      > & t.Schema<StringConstructor, `a${number}`>,
+      > & t.Schema<`a${number}`, `a${number}`>,
       ('a' | 'ax' | 'a12' | 'b') & `a${number}`
     >>()
     expectTypeOf<t.Infer<typeof case1>>().toEqualTypeOf<T1>()
