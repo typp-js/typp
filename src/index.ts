@@ -110,21 +110,23 @@ export namespace t {
   export declare function union<const T>(t: readonly T[]): Union<T>
   export const or = union
 
-  export type Intersect<Shapes extends readonly any[]> = TyppT<Shapes> extends (
-    infer Schemas extends readonly Schema<any, any>[]
-  ) ? (
-    [Schemas] extends [never]
-      ? Schema<typeof symbols.never, never>
-      : Schema<
-        T2I<Schemas>,
-        T2I<InferT<Schemas>>
-      >
-  ) : never
+  export type Intersect<
+    Shapes extends readonly [any, ...any[]]
+  > = Shapes['length'] extends 1
+    ? TyppWhenNotATypp<Shapes[0]>
+    : TyppT<Shapes> extends (
+      infer Schemas extends readonly Schema<any, any>[]
+    ) ? (
+      [Schemas] extends [never]
+        ? Schema<typeof symbols.never, never>
+        : Schema<
+          T2I<Schemas>,
+          T2I<InferT<Schemas>>
+        >
+    ) : never
   export declare function intersect<
     const T extends readonly [any, ...any[]]
-  >(t: T): T['length'] extends 1
-    ? TyppT<T>[0]
-    : Intersect<T>
+  >(t: T): Intersect<T>
   export const and = intersect
 }
 
