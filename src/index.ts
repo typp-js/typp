@@ -1,4 +1,4 @@
-import { IsEqual, T2I } from './base'
+import { IsEqual, T2I, ULength } from './base'
 import { Consumer } from './comsumer'
 
 export type Typp<T extends readonly any[]> = true extends (
@@ -51,10 +51,15 @@ literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
 export namespace t {
   interface SchemaMeta<Shape, T> {
   }
-  export interface Schema<Shape, T> {
-    shape: Shape
-    meta: SchemaMeta<Shape, T>
+  interface SchemaMethods<Shape, T> {
+    or<const U>(t: readonly U[]): Union<Shape | U>
   }
+  export type Schema<Shape, T> =
+    & {
+      shape: Shape
+      meta: SchemaMeta<Shape, T>
+    }
+    & SchemaMethods<Shape, T>
   export type Infer<T extends Schema<any, any>> = [T] extends [Schema<any, infer R>] ? R : never
   export declare function infer<T extends Schema<any, any>>(t: T): Infer<T>
 
@@ -105,6 +110,7 @@ export namespace t {
         : Schema<Schemas, Infers<Schemas>>
     ) : never
   export declare function union<const T>(t: readonly T[]): Union<T>
+  export const or = union
 
   export type Intersection<Shapes extends readonly Schema<any, any>[]> = Schema<
     T2I<Shapes>,
