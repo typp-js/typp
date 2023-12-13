@@ -8,6 +8,24 @@ export type U2I<U> = (U extends any ? (k: U) => void : never) extends ((k: infer
 export type T2I<T extends readonly any[]> = T extends [infer L, ...infer R]
   ? L & T2I<R> : unknown
 
+/**
+ * LastInUnion<1 | 2> = 2.
+ */
+type LastInUnion<U> = U2I<
+  U extends unknown ? (x: U) => 0 : never
+> extends (x: infer L) => 0
+  ? L
+  : never
+
+/**
+ * U2T<1 | 2> = [1, 2].
+ */
+export type U2T<U, Last = LastInUnion<U>> = [U] extends [never]
+  ? []
+  : [...U2T<Exclude<U, Last>>, Last]
+
+export type ULength<U> = U2T<U>['length']
+
 type Cast<A, B> = A extends B ? A : B
 
 type Primitive = string | number | boolean | bigint | symbol | undefined | null
