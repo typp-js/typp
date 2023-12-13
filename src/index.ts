@@ -25,14 +25,10 @@ t.void = function (): t.Schema<typeof symbols.void, void> {
 
 t.literal = t.const = literal
 function literal<
-  T extends string | number | bigint | symbol | null | boolean | undefined,
-  WrapT = [T] extends [string]
-    ? JoinLiteral<SplitLiteral<T>>
-    : T
->(value: T): t.Schema<WrapT, WrapT> {
-  return {} as t.Schema<WrapT, WrapT>
+  T extends string | number | bigint | symbol | null | boolean | undefined
+>(value: T): Typp<[T]> {
+  return {} as Typp<[T]>
 }
-type LiteralPlaceholder<T extends string = string> = `__DO_NOT_USE_SAME_LITERAL_${T}__IF_YOU_WANT_TO_USE_IT__`
 literal.String = `__DO_NOT_USE_SAME_LITERAL_${
   'STRING'
 }__IF_YOU_WANT_TO_USE_IT__` as const
@@ -51,33 +47,6 @@ literal.Boolean = `__DO_NOT_USE_SAME_LITERAL_${
 literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
   'UNDEFINED'
 }__IF_YOU_WANT_TO_USE_IT__` as const
-interface LiteralStringMapping {
-  STRING: string
-  NUMBER: number
-  BIGINT: bigint
-  NULL: null
-  BOOLEAN: boolean
-  UNDEFINED: undefined
-}
-type SplitLiteral<T extends string> = string extends T
-  ? string[]
-  : T extends ''
-    ? []
-    : T extends `${infer L}${LiteralPlaceholder}${infer R}`
-      ? T extends `${L}${infer S}${R}`
-        ? S extends LiteralPlaceholder<infer S extends keyof LiteralStringMapping>
-          ? [L, LiteralStringMapping[S], ...SplitLiteral<R>]
-          : never
-        : [T]
-      : [T]
-type JoinLiteral<T extends readonly any[]> = T extends readonly [
-  infer L extends LiteralStringMapping[keyof LiteralStringMapping],
-  infer R extends LiteralStringMapping[keyof LiteralStringMapping],
-  ...infer Rest
-] ? `${L}${R}${JoinLiteral<Rest>}`
-  : T extends readonly [infer L]
-    ? L extends string ? L : never
-    : ''
 
 export namespace t {
   interface SchemaMeta<Shape, T> {

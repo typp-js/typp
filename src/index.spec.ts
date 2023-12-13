@@ -322,6 +322,37 @@ describe('literal', () => {
     >>()
     expectTypeOf<t.Infer<typeof case4>>()
       .toEqualTypeOf<`a${undefined}`>()
+
+    const case5 = t(`a${t.literal.String}`)
+    expectTypeOf(case5).toEqualTypeOf<t.Schema<
+      `a${string}`, `a${string}`
+    >>()
+    expectTypeOf<t.Infer<typeof case5>>()
+      .toEqualTypeOf<`a${string}`>()
+    const case6 = t(`a${t.literal.Number}`)
+    expectTypeOf(case6).toEqualTypeOf<t.Schema<
+      `a${number}`, `a${number}`
+    >>()
+    expectTypeOf<t.Infer<typeof case6>>()
+      .toEqualTypeOf<`a${number}`>()
+    const case7 = t(`a${t.literal.Boolean}`)
+    expectTypeOf(case7).toEqualTypeOf<t.Schema<
+      `a${boolean}`, `a${boolean}`
+    >>()
+    expectTypeOf<t.Infer<typeof case7>>()
+      .toEqualTypeOf<`a${boolean}`>()
+    const case8 = t(`a${t.literal.Null}`)
+    expectTypeOf(case8).toEqualTypeOf<t.Schema<
+      `a${null}`, `a${null}`
+    >>()
+    expectTypeOf<t.Infer<typeof case8>>()
+      .toEqualTypeOf<`a${null}`>()
+    const case9 = t(`a${t.literal.Undefined}`)
+    expectTypeOf(case9).toEqualTypeOf<t.Schema<
+      `a${undefined}`, `a${undefined}`
+    >>()
+    expectTypeOf<t.Infer<typeof case9>>()
+      .toEqualTypeOf<`a${undefined}`>()
   })
 })
 
