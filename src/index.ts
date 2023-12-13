@@ -79,8 +79,9 @@ export namespace t {
   export declare function undefined(): Schema<undefined, undefined>
   export declare function never(): Schema<typeof symbols.never, never>
 
+  type TyppWhenNotATypp<T> = T extends Schema<any, any> ? T : Typp<[T]>
   // make every item of `union` type which wrapped `Typp` for getting `Schema`
-  export type Typps<T> = T extends infer Item ? Typp<[Item]> : never
+  export type Typps<T> = T extends infer Item ? TyppWhenNotATypp<Item> : never
   // infer type from every item of `union` type
   export type Infers<T> = T extends (
     infer Item extends Schema<any, any>
@@ -90,10 +91,7 @@ export namespace t {
   export type TyppT<T extends readonly any[]> = T extends readonly [
     infer Item, ...infer Rest extends any[]
   ] ? (
-    [
-      Item extends Schema<any, any> ? Item : Typp<[Item]>,
-      ...TyppT<Rest>
-    ]
+    [TyppWhenNotATypp<Item>, ...TyppT<Rest>]
   ) : []
   // infer type from every item of `tuple` type
   export type InferT<T extends readonly Schema<any, any>[]> = T extends [
