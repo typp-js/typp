@@ -103,9 +103,9 @@ export namespace t {
       : Schema<Schemas, Infers<Schemas>>
   ) : never
 
-  export type Intersection<Shape extends readonly Schema<any, any>[]> = Schema<
-    T2I<Shape>,
-    T2I<InferT<Shape>>
+  export type Intersection<Shapes extends readonly Schema<any, any>[]> = Schema<
+    T2I<Shapes>,
+    T2I<InferT<Shapes>>
   >
   export declare function intersect<
     const T extends readonly [any, ...any[]]
