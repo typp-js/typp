@@ -97,11 +97,12 @@ export namespace t {
   ] ? (
     [Infer<Item>, ...InferT<Rest>]
   ) : []
-  export declare function union<const T>(t: readonly T[]): Typps<T> extends infer Schemas ? (
+  export type Union<T> = Typps<T> extends infer Schemas ? (
     [Schemas] extends [never]
       ? Schema<typeof symbols.never, never>
       : Schema<Schemas, Infers<Schemas>>
   ) : never
+  export declare function union<const T>(t: readonly T[]): Union<T>
 
   export type Intersection<Shapes extends readonly Schema<any, any>[]> = Schema<
     T2I<Shapes>,
