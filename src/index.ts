@@ -70,8 +70,6 @@ type SplitLiteral<T extends string> = string extends T
           : never
         : [T]
       : [T]
-type T0 = SplitLiteral<'any'>
-//   ^?
 type JoinLiteral<T extends readonly any[]> = T extends readonly [
   infer L extends LiteralStringMapping[keyof LiteralStringMapping],
   infer R extends LiteralStringMapping[keyof LiteralStringMapping],
