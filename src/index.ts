@@ -1,4 +1,4 @@
-import { IsEqual } from './base'
+import { IsEqual, T2I } from './base'
 import { Consumer } from './comsumer'
 
 export type Typp<T extends readonly any[]> = true extends (
@@ -59,11 +59,36 @@ export namespace t {
   export type Infers<T> = T extends (
     infer Item extends Schema<any, any>
   ) ? Infer<Item> : never
+
+  export type TypeT<T extends readonly any[]> = T extends readonly [
+    infer Item, ...infer Rest extends any[]
+  ] ? (
+    [
+      Item extends Schema<any, any> ? Item : Typp<[Item]>,
+      ...TypeT<Rest>
+    ]
+  ) : []
+  export type InferT<T extends readonly Schema<any, any>[]> = T extends [
+    infer Item extends Schema<any, any>,
+    ...infer Rest extends readonly Schema<any, any>[]
+  ] ? (
+    [Infer<Item>, ...InferT<Rest>]
+  ) : []
   export declare function union<const T>(t: readonly T[]): Types<T> extends infer Schemas ? (
     [Schemas] extends [never]
       ? Schema<typeof symbols.never, never>
       : Schema<Schemas, Infers<Schemas>>
   ) : never
+
+  export type Intersection<Shape extends readonly Schema<any, any>[]> = Schema<
+    T2I<Shape>,
+    T2I<InferT<Shape>>
+  >
+  export declare function intersect<
+    const T extends readonly [any, ...any[]]
+  >(t: T): T['length'] extends 1
+    ? TypeT<T>[0]
+    : Intersection<TypeT<T>>
 }
 
 export const typp: typeof t = t

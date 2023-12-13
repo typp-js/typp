@@ -323,4 +323,57 @@ describe('union', () => {
   })
 })
 
-describe('intersect', () => {})
+describe('intersect', () => {
+  test('base', () => {
+    // @ts-expect-error - Source has 0 element(s) but target requires 1
+    t.intersect([])
+
+    const case0 = t.intersect([1])
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+      NumberConstructor,
+      1
+    >>()
+    expectTypeOf<t.Infer<typeof case0>>()
+      .toEqualTypeOf<1>()
+
+    const case1 = t.intersect([1, Number])
+    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+      t.Schema<NumberConstructor, 1> & t.Schema<NumberConstructor, number>,
+      1
+    >>()
+    expectTypeOf<t.Infer<typeof case1>>()
+      .toEqualTypeOf<1>()
+
+    const case2 = t.intersect([1, Number, String])
+    expectTypeOf(case2).toEqualTypeOf<t.Schema<
+      t.Schema<NumberConstructor, 1> & t.Schema<NumberConstructor, number> & t.Schema<StringConstructor, string>,
+      never
+    >>()
+    expectTypeOf<t.Infer<typeof case2>>()
+      .toEqualTypeOf<never>()
+
+    const case3 = t.intersect([Number, t.unknown()])
+    expectTypeOf(case3).toEqualTypeOf<t.Schema<
+      t.Schema<NumberConstructor, number> & t.Schema<typeof t.Symbols.unknown, unknown>,
+      number
+    >>()
+    expectTypeOf<t.Infer<typeof case3>>()
+      .toEqualTypeOf<number>()
+
+    const case4 = t.intersect([Number, t.never()])
+    expectTypeOf(case4).toEqualTypeOf<t.Schema<
+      t.Schema<NumberConstructor, number> & t.Schema<typeof t.Symbols.never, never>,
+      never
+    >>()
+    expectTypeOf<t.Infer<typeof case4>>()
+      .toEqualTypeOf<never>()
+
+    const case5 = t.intersect([Number, t.any()])
+    expectTypeOf(case5).toEqualTypeOf<t.Schema<
+      t.Schema<NumberConstructor, number> & t.Schema<any, any>,
+      any
+    >>()
+    expectTypeOf<t.Infer<typeof case5>>()
+      .toEqualTypeOf<any>()
+  })
+})
