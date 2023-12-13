@@ -395,4 +395,35 @@ describe('intersect', () => {
     expectTypeOf<t.Infer<typeof case7>>()
       .toEqualTypeOf<number>()
   })
+  test('pick up literal', () => {
+    type T0 = ('a' | 'ab' | 'b') & `a${string}`
+    //   ^?
+    const case0 = t.intersect([
+      t.union(['a', 'ab', 'b']),
+      `a${'' as string}`
+    ])
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+      t.Schema<
+        t.Schema<StringConstructor, 'a'> | t.Schema<StringConstructor, 'ab'> | t.Schema<StringConstructor, 'b'>,
+        'a' | 'ab' | 'b'
+      > & t.Schema<StringConstructor, 'a'>,
+      ('a' | 'ab' | 'b') & `a${string}`
+    >>()
+    expectTypeOf<t.Infer<typeof case0>>().toEqualTypeOf<T0>()
+
+    type T1 = ('a' | 'ax' | 'a12' | 'b') & `a${number}`
+    //   ^?
+    const case1 = t.intersect([
+      t.union(['a', 'ax', 'a12', 'b']),
+      `a${0 as number}`
+    ])
+    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+      t.Schema<
+        t.Schema<StringConstructor, 'a'> | t.Schema<StringConstructor, 'ax'> | t.Schema<StringConstructor, 'a12'> | t.Schema<StringConstructor, 'b'>,
+        'a' | 'ax' | 'a12' | 'b'
+      > & t.Schema<StringConstructor, `a${number}`>,
+      ('a' | 'ax' | 'a12' | 'b') & `a${number}`
+    >>()
+    expectTypeOf<t.Infer<typeof case1>>().toEqualTypeOf<T1>()
+  })
 })
