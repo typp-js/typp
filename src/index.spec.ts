@@ -369,7 +369,7 @@ describe('union', () => {
     expectTypeOf<t.Infer<typeof case1>>()
       .toEqualTypeOf<number>()
     const case2 = t.union([Number, String])
-    const case2_1 = t(Number).or([String])
+    const case2_1 = t(Number).or(String)
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
       t.Schema<NumberConstructor, number> | t.Schema<StringConstructor, string>,
       number | string

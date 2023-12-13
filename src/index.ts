@@ -52,7 +52,7 @@ export namespace t {
   interface SchemaMeta<Shape, T> {
   }
   interface SchemaMethods<Shape, T> {
-    or<const U>(t: readonly U[]): Union<Shape | U>
+    or<const U>(...t: readonly U[]): Union<Shape | U>
   }
   export type Schema<Shape, T> =
     & {
