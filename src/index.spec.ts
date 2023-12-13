@@ -291,6 +291,38 @@ describe('literal', () => {
     expectTypeOf<t.Infer<typeof case3>>()
       .toEqualTypeOf<any>()
   })
+  test('template literal', () => {
+    const case0 = t.literal(`a${String}`)
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+      `a${string}`, `a${string}`
+    >>()
+    expectTypeOf<t.Infer<typeof case0>>()
+      .toEqualTypeOf<`a${string}`>()
+    const case1 = t.literal(`a${0 as number}`)
+    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+      `a${number}`, `a${number}`
+    >>()
+    expectTypeOf<t.Infer<typeof case1>>()
+      .toEqualTypeOf<`a${number}`>()
+    const case2 = t.literal(`a${t.literal.Boolean}`)
+    expectTypeOf(case2).toEqualTypeOf<t.Schema<
+      `a${boolean}`, `a${boolean}`
+    >>()
+    expectTypeOf<t.Infer<typeof case2>>()
+      .toEqualTypeOf<`a${boolean}`>()
+    const case3 = t.literal(`a${t.literal.Null}`)
+    expectTypeOf(case3).toEqualTypeOf<t.Schema<
+      `a${null}`, `a${null}`
+    >>()
+    expectTypeOf<t.Infer<typeof case3>>()
+      .toEqualTypeOf<`a${null}`>()
+    const case4 = t.literal(`a${t.literal.Undefined}`)
+    expectTypeOf(case4).toEqualTypeOf<t.Schema<
+      `a${undefined}`, `a${undefined}`
+    >>()
+    expectTypeOf<t.Infer<typeof case4>>()
+      .toEqualTypeOf<`a${undefined}`>()
+  })
 })
 
 describe('union', () => {
