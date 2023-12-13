@@ -265,6 +265,13 @@ describe('literal', () => {
     expectTypeOf(case8).toEqualTypeOf<t.Schema<BigIntConstructor, bigint>>()
     expectTypeOf<t.Infer<typeof case8>>()
       .toEqualTypeOf<bigint>()
+
+    // @ts-expect-error - Argument of type ObjectConstructor is not assignable to parameter of type
+    // string | number | bigint | boolean | symbol | null | undefined
+    t.const(Object)
+    // @ts-expect-error - Argument of type ObjectConstructor is not assignable to parameter of type
+    // string | number | bigint | boolean | symbol | null | undefined
+    t.literal(Object)
   })
   test('special type', () => {
     const case0 = t.void()
