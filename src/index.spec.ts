@@ -375,5 +375,24 @@ describe('intersect', () => {
     >>()
     expectTypeOf<t.Infer<typeof case5>>()
       .toEqualTypeOf<any>()
+
+    // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-8.html#improved-intersection-reduction-union-compatibility-and-narrowing:~:text=Another%20change%20is%20that%20%7B%7D%20intersected%20with%20any%20other%20object%20type%20simplifies%20right%20down%20to%20that%20object%20type.%20That%20meant%20that%20we%20were%20able%20to%20rewrite%20NonNullable%20to%20just%20use%20an%20intersection%20with%20%7B%7D%2C%20because%20%7B%7D%20%26%20null%20and%20%7B%7D%20%26%20undefined%20just%20get%20tossed%20away.
+    // Another change is that {} intersected with any other object type simplifies right down to that object type.
+    // That meant that we were able to rewrite NonNullable to just use an intersection with {},
+    // because {} & null and {} & undefined just get tossed away.
+    const case6 = t.intersect([Number, {}])
+    expectTypeOf(case6).toEqualTypeOf<t.Schema<
+      t.Schema<NumberConstructor, number> & t.Schema<{}, {}>,
+      number
+    >>()
+    expectTypeOf<t.Infer<typeof case6>>()
+      .toEqualTypeOf<number>()
+    const case7 = t.intersect([Number, t({})])
+    expectTypeOf(case7).toEqualTypeOf<t.Schema<
+      t.Schema<NumberConstructor, number> & t.Schema<{}, {}>,
+      number
+    >>()
+    expectTypeOf<t.Infer<typeof case7>>()
+      .toEqualTypeOf<number>()
   })
 })
