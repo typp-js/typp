@@ -74,26 +74,30 @@ export namespace t {
   export declare function undefined(): Schema<undefined, undefined>
   export declare function never(): Schema<typeof symbols.never, never>
 
-  export type Types<T> = T extends infer Item ? Typp<[Item]> : never
+  // make every item of `union` type which wrapped `Typp` for getting `Schema`
+  export type Typps<T> = T extends infer Item ? Typp<[Item]> : never
+  // infer type from every item of `union` type
   export type Infers<T> = T extends (
     infer Item extends Schema<any, any>
   ) ? Infer<Item> : never
 
-  export type TypeT<T extends readonly any[]> = T extends readonly [
+  // make every item of `tuple` type which wrapped `Typp` for getting `Schema`
+  export type TyppT<T extends readonly any[]> = T extends readonly [
     infer Item, ...infer Rest extends any[]
   ] ? (
     [
       Item extends Schema<any, any> ? Item : Typp<[Item]>,
-      ...TypeT<Rest>
+      ...TyppT<Rest>
     ]
   ) : []
+  // infer type from every item of `tuple` type
   export type InferT<T extends readonly Schema<any, any>[]> = T extends [
     infer Item extends Schema<any, any>,
     ...infer Rest extends readonly Schema<any, any>[]
   ] ? (
     [Infer<Item>, ...InferT<Rest>]
   ) : []
-  export declare function union<const T>(t: readonly T[]): Types<T> extends infer Schemas ? (
+  export declare function union<const T>(t: readonly T[]): Typps<T> extends infer Schemas ? (
     [Schemas] extends [never]
       ? Schema<typeof symbols.never, never>
       : Schema<Schemas, Infers<Schemas>>
@@ -106,8 +110,8 @@ export namespace t {
   export declare function intersect<
     const T extends readonly [any, ...any[]]
   >(t: T): T['length'] extends 1
-    ? TypeT<T>[0]
-    : Intersection<TypeT<T>>
+    ? TyppT<T>[0]
+    : Intersection<TyppT<T>>
 }
 
 export const typp: typeof t = t
