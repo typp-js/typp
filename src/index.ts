@@ -76,6 +76,8 @@ export namespace t {
       & (
         | IsEqual<U, {}>
         | IsEqual<U, unknown>
+        | IsEqual<U, Schema<{}, {}>>
+        | IsEqual<U, Schema<typeof symbols.unknown, unknown>>
       )
     ) ? Schema<StringConstructor, string & {}>
       : Intersect<Shapes>
