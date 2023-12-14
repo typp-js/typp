@@ -102,8 +102,9 @@ type InferInstanceType<T> = ConstructorMapping<T> extends infer InferInstanceTyp
   : never
 
 // TODO replace `t.SpecialShapes[keyof t.SpecialShapes]`
-type InferSpecialShape<T> = [T] extends [t.SpecialShape<t.SpecialShapes[keyof t.SpecialShapes], any>]
-  ? true extends IsEqual<T['type'], t.SpecialShapes['union']>
+type InferSpecialShape<T> = [T] extends [
+  t.SpecialShape<t.SpecialShapes[keyof t.SpecialShapes], any>
+] ? true extends IsEqual<T['type'], t.SpecialShapes['union']>
     // TODO no `t.InferT`?
     ? t.Union<t.InferT<T['schemas']>>
     : true extends IsEqual<T['type'], t.SpecialShapes['intersection']>
