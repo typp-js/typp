@@ -461,6 +461,52 @@ describe('intersect', () => {
     expectTypeOf<t.Infer<typeof case7>>()
       .toEqualTypeOf<number>()
   })
+  test('instance.and', () => {
+    const case0 = t.union([1, 2, '3']).and(String)
+    //    ^?
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+      & (
+        | t.Schema<1, 1>
+        | t.Schema<2, 2>
+        | t.Schema<'3', '3'>
+      )
+      & t.Schema<StringConstructor, string>,
+      '3'
+    >>()
+    expectTypeOf<t.Infer<typeof case0>>()
+      .toEqualTypeOf<'3'>()
+    const case1 = t.union([1, 2, '3']).and(t.string())
+    expectTypeOf(case1).toEqualTypeOf<typeof case0>()
+
+    const case2 = t(String).and(t({}))
+    expectTypeOf(case2).toEqualTypeOf<
+      t.Schema<StringConstructor, string>
+    >()
+    expectTypeOf<t.Infer<typeof case2>>()
+      .toEqualTypeOf<string>()
+    type Case2 = t.Infer<typeof case2>
+    //   ^?
+    const case3 = t(String).and(t.unknown())
+    expectTypeOf(case3).toEqualTypeOf<
+      t.Schema<StringConstructor, string>
+    >()
+    expectTypeOf<t.Infer<typeof case3>>()
+      .toEqualTypeOf<string>()
+    type Case3 = t.Infer<typeof case3>
+    //   ^?
+    const case4 = t.union(['11', '22', '33', t(String).and(t.unknown())])
+    expectTypeOf(case4).toEqualTypeOf<t.Schema<
+      | t.Schema<'11', '11'>
+      | t.Schema<'22', '22'>
+      | t.Schema<'33', '33'>
+      | t.Schema<StringConstructor, string>,
+      '11' | '22' | '33'
+    >>()
+    expectTypeOf<t.Infer<typeof case4>>()
+      .toEqualTypeOf<'11' | '22' | '33' | (string & {})>()
+    type Case4 = t.Infer<typeof case4>
+    //   ^?
+  })
   test('pick up literal', () => {
     type T0 = ('a' | 'ab' | 'b') & `a${string}`
     //   ^?

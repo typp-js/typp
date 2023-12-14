@@ -52,6 +52,17 @@ export namespace t {
   interface SchemaMeta<Shape, T> {
   }
   interface SchemaMethods<Shape, T> {
+    and<
+      const U extends any,
+      Shapes extends readonly [any, ...any[]] = [Shape, U]
+    >(t: U): true extends (
+      & [T] extends [string] ? true : false
+      & (
+        | IsEqual<U, {}>
+        | IsEqual<U, unknown>
+      )
+    ) ? Schema<StringConstructor, string & {}>
+      : Intersect<Shapes>
     or<const U>(...t: readonly U[]): Union<Shape | U>
   }
   export interface SchemaFields<Shape, T> {
