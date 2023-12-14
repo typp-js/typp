@@ -71,7 +71,7 @@ export namespace t {
       const U extends any,
       Shapes extends readonly [any, ...any[]] = [Shape, U]
     >(t: U): true extends (
-      & [T] extends [string] ? true : false
+      & ([T] extends [string] ? true : false)
       & (
         | IsEqual<U, {}>
         | IsEqual<U, unknown>
