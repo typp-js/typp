@@ -70,27 +70,9 @@ export namespace t {
     type: T
     schemas: S
   }
-  interface SchemaMeta<Shape, T> {
+  export interface SchemaMeta<Shape, T> {
   }
-  interface SchemaMethods<Shape, T> {
-    and<
-      const U extends any,
-      Shapes extends readonly [any, ...any[]] = [Shape, U]
-    >(t: U): true extends (
-        & ([T] extends [string] ? true : false)
-        & (
-        | IsEqual<U, {}>
-        | IsEqual<U, unknown>
-        | IsEqual<U, Schema<{}, {}>>
-        | IsEqual<U, Schema<typeof symbols.unknown, unknown>>
-        )
-        ) ? Schema<StringConstructor, string & {}>
-      : Intersect<Shapes>
-    or<
-      const U extends readonly any[],
-      Shapes extends readonly [any, ...any[]] = [Shape, ...U]
-    >(...t: U): Union<Shapes>
-  }
+  export interface SchemaMethods<Shape, T> {}
   export interface SchemaFields<Shape, T> {
     shape: Shape
     meta: SchemaMeta<Shape, T>
@@ -146,6 +128,25 @@ export namespace t {
 }
 // Calculate type
 export namespace t {
+  export interface SchemaMethods<Shape, T> {
+    and<
+      const U extends any,
+      Shapes extends readonly [any, ...any[]] = [Shape, U]
+    >(t: U): true extends (
+      & ([T] extends [string] ? true : false)
+      & (
+        | IsEqual<U, {}>
+        | IsEqual<U, unknown>
+        | IsEqual<U, Schema<{}, {}>>
+        | IsEqual<U, Schema<typeof symbols.unknown, unknown>>
+      )
+    ) ? Schema<StringConstructor, string & {}>
+      : Intersect<Shapes>
+    or<
+      const U extends readonly any[],
+      Shapes extends readonly [any, ...any[]] = [Shape, ...U]
+    >(...t: U): Union<Shapes>
+  }
   export type Union<
     Shapes extends readonly any[],
     T = Shapes[number]
