@@ -372,7 +372,7 @@ describe('union', () => {
     const case2_1 = t(Number).or(String)
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
       t.SpecialShape<
-        t.SpecialShapes['union'], [
+        t.SpecialShapeTypeMapping['union'], [
           t.Schema<NumberConstructor, number>,
           t.Schema<StringConstructor, string>
         ]
@@ -384,7 +384,7 @@ describe('union', () => {
     expectTypeOf(case2_1).toEqualTypeOf<typeof case2>()
     const case3 = t.union([1, 2, '3', true, null, undefined])
     expectTypeOf(case3).toEqualTypeOf<t.Schema<
-      t.SpecialShape<t.SpecialShapes['union'], [
+      t.SpecialShape<t.SpecialShapeTypeMapping['union'], [
         t.Schema<1, 1>,
         t.Schema<2, 2>,
         t.Schema<'3', '3'>,
@@ -412,7 +412,7 @@ describe('intersect', () => {
     const case1 = t.intersect([1, Number])
     expectTypeOf(case1).toEqualTypeOf<t.Schema<
       t.SpecialShape<
-        t.SpecialShapes['intersection'], [
+        t.SpecialShapeTypeMapping['intersection'], [
           t.Schema<1, 1>,
           t.Schema<NumberConstructor, number>
         ]
@@ -425,7 +425,7 @@ describe('intersect', () => {
     const case2 = t.intersect([1, Number, String])
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
       t.SpecialShape<
-        t.SpecialShapes['intersection'], [
+        t.SpecialShapeTypeMapping['intersection'], [
           t.Schema<1, 1>,
           t.Schema<NumberConstructor, number>,
           t.Schema<StringConstructor, string>
@@ -439,7 +439,7 @@ describe('intersect', () => {
     const case3 = t.intersect([Number, t.unknown()])
     expectTypeOf(case3).toEqualTypeOf<t.Schema<
       t.SpecialShape<
-        t.SpecialShapes['intersection'], [
+        t.SpecialShapeTypeMapping['intersection'], [
           t.Schema<NumberConstructor, number>,
           t.Schema<typeof t.Symbols.unknown, unknown>
         ]
@@ -452,7 +452,7 @@ describe('intersect', () => {
     const case4 = t.intersect([Number, t.never()])
     expectTypeOf(case4).toEqualTypeOf<t.Schema<
       t.SpecialShape<
-        t.SpecialShapes['intersection'], [
+        t.SpecialShapeTypeMapping['intersection'], [
           t.Schema<NumberConstructor, number>,
           t.Schema<typeof t.Symbols.never, never>
         ]
@@ -465,7 +465,7 @@ describe('intersect', () => {
     const case5 = t.intersect([Number, t.any()])
     expectTypeOf(case5).toEqualTypeOf<t.Schema<
       t.SpecialShape<
-        t.SpecialShapes['intersection'], [
+        t.SpecialShapeTypeMapping['intersection'], [
           t.Schema<NumberConstructor, number>,
           t.Schema<any, any>
         ]
@@ -482,7 +482,7 @@ describe('intersect', () => {
     const case6 = t.intersect([Number, {}])
     expectTypeOf(case6).toEqualTypeOf<t.Schema<
       t.SpecialShape<
-        t.SpecialShapes['intersection'], [
+        t.SpecialShapeTypeMapping['intersection'], [
           t.Schema<NumberConstructor, number>,
           t.Schema<{}, {}>
         ]
@@ -494,7 +494,7 @@ describe('intersect', () => {
     const case7 = t.intersect([Number, t({})])
     expectTypeOf(case7).toEqualTypeOf<t.Schema<
       t.SpecialShape<
-        t.SpecialShapes['intersection'], [
+        t.SpecialShapeTypeMapping['intersection'], [
           t.Schema<NumberConstructor, number>,
           t.Schema<{}, {}>
         ]
@@ -509,8 +509,8 @@ describe('intersect', () => {
     //    ^?
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
       t.SpecialShape<
-        t.SpecialShapes['intersection'], [
-          t.Schema<t.SpecialShape<t.SpecialShapes['union'], [
+        t.SpecialShapeTypeMapping['intersection'], [
+          t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['union'], [
             t.Schema<1, 1>,
             t.Schema<2, 2>,
             t.Schema<'3', '3'>
@@ -544,7 +544,7 @@ describe('intersect', () => {
     const case4 = t.union(['11', '22', '33', t(String).and(t.unknown())])
     expectTypeOf(case4).toEqualTypeOf<t.Schema<
       t.SpecialShape<
-        t.SpecialShapes['union'], [
+        t.SpecialShapeTypeMapping['union'], [
           t.Schema<'11', '11'>,
           t.Schema<'22', '22'>,
           t.Schema<'33', '33'>,
@@ -569,8 +569,8 @@ describe('intersect', () => {
     ])
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
       t.SpecialShape<
-        t.SpecialShapes['intersection'], [
-          t.Schema<t.SpecialShape<t.SpecialShapes['union'], [
+        t.SpecialShapeTypeMapping['intersection'], [
+          t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['union'], [
             t.Schema<'a', 'a'>,
             t.Schema<'ab', 'ab'>,
             t.Schema<'b', 'b'>
@@ -590,8 +590,8 @@ describe('intersect', () => {
     ])
     expectTypeOf(case1).toEqualTypeOf<t.Schema<
       t.SpecialShape<
-        t.SpecialShapes['intersection'], [
-          t.Schema<t.SpecialShape<t.SpecialShapes['union'], [
+        t.SpecialShapeTypeMapping['intersection'], [
+          t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['union'], [
             t.Schema<'a', 'a'>,
             t.Schema<'ax', 'ax'>,
             t.Schema<'a12', 'a12'>,

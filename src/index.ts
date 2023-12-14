@@ -53,17 +53,17 @@ literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
 }__IF_YOU_WANT_TO_USE_IT__` as const
 
 export namespace t {
-  // TODO rename to `specialShapeTypes`
-  export const specialShapes = {
+  export const specialShapeTypeMapping = Object.freeze({
     union: Symbol('union'),
     intersection: Symbol('intersection')
-  } as {
+  }) as {
     readonly union: unique symbol
     readonly intersection: unique symbol
   }
-  export type SpecialShapes = typeof specialShapes
+  export type SpecialShapeTypeMapping = typeof specialShapeTypeMapping
+  export type SpecialShapeTypes = SpecialShapeTypeMapping[keyof SpecialShapeTypeMapping]
   export interface SpecialShape<
-    T extends SpecialShapes[keyof SpecialShapes] = SpecialShapes[keyof SpecialShapes],
+    T extends SpecialShapeTypes = SpecialShapeTypes,
     S extends readonly Schema<any, any>[] = []
   > {
     type: T
@@ -155,7 +155,7 @@ export namespace t {
       [Schemas] extends [never]
         ? Schema<typeof symbols.never, never>
         : Schema<
-          SpecialShape<SpecialShapes['union'], SchemaT>,
+          SpecialShape<SpecialShapeTypeMapping['union'], SchemaT>,
           Infers<Schemas>
         >
     ) : never
@@ -174,7 +174,7 @@ export namespace t {
       [Schemas] extends [never]
         ? Schema<typeof symbols.never, never>
         : Schema<
-          SpecialShape<SpecialShapes['intersection'], Schemas>,
+          SpecialShape<SpecialShapeTypeMapping['intersection'], Schemas>,
           T2I<InferT<Schemas>>
         >
     ) : never
