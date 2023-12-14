@@ -10,11 +10,11 @@ export function t<const T extends any[]>(...t: T): Typp<T> {
   return {} as Typp<T>
 }
 
-const symbols = {
+const symbols = Object.freeze({
   void: Symbol('void'),
   unknown: Symbol('unknown'),
   never: Symbol('never')
-} as {
+}) as {
   readonly void: unique symbol
   readonly unknown: unique symbol
   readonly never: unique symbol
