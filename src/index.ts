@@ -54,12 +54,14 @@ export namespace t {
   interface SchemaMethods<Shape, T> {
     or<const U>(...t: readonly U[]): Union<Shape | U>
   }
-  export type Schema<Shape, T> =
-    & {
-      shape: Shape
-      meta: SchemaMeta<Shape, T>
-    }
+  export interface SchemaFields<Shape, T> {
+    shape: Shape
+    meta: SchemaMeta<Shape, T>
+  }
+  type _Schema<Shape, T> =
+    & SchemaFields<Shape, T>
     & SchemaMethods<Shape, T>
+  export interface Schema<Shape, T> extends _Schema<Shape, T> {}
   export type Infer<T extends Schema<any, any>> = [T] extends [never]
     ? never
     : [T] extends [Schema<any, infer R>] ? R : never
