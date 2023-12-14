@@ -543,11 +543,15 @@ describe('intersect', () => {
     //   ^?
     const case4 = t.union(['11', '22', '33', t(String).and(t.unknown())])
     expectTypeOf(case4).toEqualTypeOf<t.Schema<
-      | t.Schema<'11', '11'>
-      | t.Schema<'22', '22'>
-      | t.Schema<'33', '33'>
-      | t.Schema<StringConstructor, string>,
-      '11' | '22' | '33'
+      t.SpecialShape<
+        t.SpecialShapes['union'], [
+          t.Schema<'11', '11'>,
+          t.Schema<'22', '22'>,
+          t.Schema<'33', '33'>,
+          t.Schema<StringConstructor, string>
+        ]
+      >,
+      '11' | '22' | '33' | (string & {})
     >>()
     expectTypeOf<t.Infer<typeof case4>>()
       .toEqualTypeOf<'11' | '22' | '33' | (string & {})>()
