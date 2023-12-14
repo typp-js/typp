@@ -404,7 +404,12 @@ describe('intersect', () => {
 
     const case1 = t.intersect([1, Number])
     expectTypeOf(case1).toEqualTypeOf<t.Schema<
-      t.Schema<1, 1> & t.Schema<NumberConstructor, number>,
+      t.SpecialShape<
+        t.SpecialShapes['intersection'], [
+          t.Schema<1, 1>,
+          t.Schema<NumberConstructor, number>
+        ]
+      >,
       1
     >>()
     expectTypeOf<t.Infer<typeof case1>>()
@@ -412,7 +417,13 @@ describe('intersect', () => {
 
     const case2 = t.intersect([1, Number, String])
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
-      t.Schema<1, 1> & t.Schema<NumberConstructor, number> & t.Schema<StringConstructor, string>,
+      t.SpecialShape<
+        t.SpecialShapes['intersection'], [
+          t.Schema<1, 1>,
+          t.Schema<NumberConstructor, number>,
+          t.Schema<StringConstructor, string>
+        ]
+      >,
       never
     >>()
     expectTypeOf<t.Infer<typeof case2>>()
@@ -420,7 +431,12 @@ describe('intersect', () => {
 
     const case3 = t.intersect([Number, t.unknown()])
     expectTypeOf(case3).toEqualTypeOf<t.Schema<
-      t.Schema<NumberConstructor, number> & t.Schema<typeof t.Symbols.unknown, unknown>,
+      t.SpecialShape<
+        t.SpecialShapes['intersection'], [
+          t.Schema<NumberConstructor, number>,
+          t.Schema<typeof t.Symbols.unknown, unknown>
+        ]
+      >,
       number
     >>()
     expectTypeOf<t.Infer<typeof case3>>()
@@ -428,7 +444,12 @@ describe('intersect', () => {
 
     const case4 = t.intersect([Number, t.never()])
     expectTypeOf(case4).toEqualTypeOf<t.Schema<
-      t.Schema<NumberConstructor, number> & t.Schema<typeof t.Symbols.never, never>,
+      t.SpecialShape<
+        t.SpecialShapes['intersection'], [
+          t.Schema<NumberConstructor, number>,
+          t.Schema<typeof t.Symbols.never, never>
+        ]
+      >,
       never
     >>()
     expectTypeOf<t.Infer<typeof case4>>()
@@ -436,7 +457,12 @@ describe('intersect', () => {
 
     const case5 = t.intersect([Number, t.any()])
     expectTypeOf(case5).toEqualTypeOf<t.Schema<
-      t.Schema<NumberConstructor, number> & t.Schema<any, any>,
+      t.SpecialShape<
+        t.SpecialShapes['intersection'], [
+          t.Schema<NumberConstructor, number>,
+          t.Schema<any, any>
+        ]
+      >,
       any
     >>()
     expectTypeOf<t.Infer<typeof case5>>()
@@ -448,14 +474,24 @@ describe('intersect', () => {
     // because {} & null and {} & undefined just get tossed away.
     const case6 = t.intersect([Number, {}])
     expectTypeOf(case6).toEqualTypeOf<t.Schema<
-      t.Schema<NumberConstructor, number> & t.Schema<{}, {}>,
+      t.SpecialShape<
+        t.SpecialShapes['intersection'], [
+          t.Schema<NumberConstructor, number>,
+          t.Schema<{}, {}>
+        ]
+      >,
       number
     >>()
     expectTypeOf<t.Infer<typeof case6>>()
       .toEqualTypeOf<number>()
     const case7 = t.intersect([Number, t({})])
     expectTypeOf(case7).toEqualTypeOf<t.Schema<
-      t.Schema<NumberConstructor, number> & t.Schema<{}, {}>,
+      t.SpecialShape<
+        t.SpecialShapes['intersection'], [
+          t.Schema<NumberConstructor, number>,
+          t.Schema<{}, {}>
+        ]
+      >,
       number
     >>()
     expectTypeOf<t.Infer<typeof case7>>()
@@ -465,12 +501,12 @@ describe('intersect', () => {
     const case0 = t.union([1, 2, '3']).and(String)
     //    ^?
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
-      & (
-        | t.Schema<1, 1>
-        | t.Schema<2, 2>
-        | t.Schema<'3', '3'>
-      )
-      & t.Schema<StringConstructor, string>,
+      t.SpecialShape<
+        t.SpecialShapes['intersection'], [
+          t.Schema<1, 1> | t.Schema<2, 2> | t.Schema<'3', '3'>,
+          t.Schema<StringConstructor, string>
+        ]
+      >,
       '3'
     >>()
     expectTypeOf<t.Infer<typeof case0>>()
@@ -517,11 +553,13 @@ describe('intersect', () => {
       // `a${String}`
     ])
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
-      t.Schema<
-        t.Schema<'a', 'a'> | t.Schema<'ab', 'ab'> | t.Schema<'b', 'b'>,
-        'a' | 'ab' | 'b'
-      > & t.Schema<`a${string}`, `a${string}`>,
-      ('a' | 'ab' | 'b') & `a${string}`
+      t.SpecialShape<
+        t.SpecialShapes['intersection'], [
+          t.Schema<t.Schema<'a', 'a'> | t.Schema<'ab', 'ab'> | t.Schema<'b', 'b'>, 'a' | 'ab' | 'b'>,
+          t.Schema<`a${string}`, `a${string}`>
+        ]
+      >,
+      'a' | 'ab'
     >>()
     expectTypeOf<t.Infer<typeof case0>>().toEqualTypeOf<T0>()
 
@@ -532,11 +570,13 @@ describe('intersect', () => {
       `a${0 as number}`
     ])
     expectTypeOf(case1).toEqualTypeOf<t.Schema<
-      t.Schema<
-        t.Schema<'a', 'a'> | t.Schema<'ax', 'ax'> | t.Schema<'a12', 'a12'> | t.Schema<'b', 'b'>,
-        'a' | 'ax' | 'a12' | 'b'
-      > & t.Schema<`a${number}`, `a${number}`>,
-      ('a' | 'ax' | 'a12' | 'b') & `a${number}`
+      t.SpecialShape<
+        t.SpecialShapes['intersection'], [
+          t.Schema<t.Schema<'a', 'a'> | t.Schema<'ax', 'ax'> | t.Schema<'a12', 'a12'> | t.Schema<'b', 'b'>, 'a' | 'ax' | 'a12' | 'b'>,
+          t.Schema<`a${number}`, `a${number}`>
+        ]
+      >,
+      'a12'
     >>()
     expectTypeOf<t.Infer<typeof case1>>().toEqualTypeOf<T1>()
   })

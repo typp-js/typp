@@ -49,6 +49,21 @@ literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
 }__IF_YOU_WANT_TO_USE_IT__` as const
 
 export namespace t {
+  export const specialShapes = {
+    union: Symbol('union'),
+    intersection: Symbol('intersection')
+  } as {
+    readonly union: unique symbol
+    readonly intersection: unique symbol
+  }
+  export type SpecialShapes = typeof specialShapes
+  export interface SpecialShape<
+    T extends SpecialShapes[keyof SpecialShapes],
+    S extends readonly Schema<any, any>[] = []
+  > {
+    type: T
+    schemas: S
+  }
   interface SchemaMeta<Shape, T> {
   }
   interface SchemaMethods<Shape, T> {
@@ -135,7 +150,7 @@ export namespace t {
       [Schemas] extends [never]
         ? Schema<typeof symbols.never, never>
         : Schema<
-          T2I<Schemas>,
+          SpecialShape<SpecialShapes['intersection'], Schemas>,
           T2I<InferT<Schemas>>
         >
     ) : never
