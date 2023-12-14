@@ -42,13 +42,13 @@ export type UseWhenNoNever<T, U = never> = [T] extends [never] ? U : T
 
 export namespace Stack {
   export type Pop<T extends readonly any[]> =
-    T extends [...infer Rest, infer R]
+    T extends readonly [...infer Rest, infer R]
       ? [R, Rest]
-      : never
+      : [never, never]
   export type Shift<T extends readonly any[]> =
-    T extends [infer L, ...infer Rest]
+    T extends readonly [infer L, ...infer Rest]
       ? [L, Rest]
-      : never
+      : [never, never]
   export type Push<T extends readonly any[], V> =
     [...T, V]
 }
