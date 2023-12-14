@@ -52,6 +52,7 @@ literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
   'UNDEFINED'
 }__IF_YOU_WANT_TO_USE_IT__` as const
 
+// Base type
 export namespace t {
   export const specialShapeTypeMapping = Object.freeze({
     union: Symbol('union'),
@@ -76,14 +77,14 @@ export namespace t {
       const U extends any,
       Shapes extends readonly [any, ...any[]] = [Shape, U]
     >(t: U): true extends (
-      & ([T] extends [string] ? true : false)
-      & (
+        & ([T] extends [string] ? true : false)
+        & (
         | IsEqual<U, {}>
         | IsEqual<U, unknown>
         | IsEqual<U, Schema<{}, {}>>
         | IsEqual<U, Schema<typeof symbols.unknown, unknown>>
-      )
-    ) ? Schema<StringConstructor, string & {}>
+        )
+        ) ? Schema<StringConstructor, string & {}>
       : Intersect<Shapes>
     or<
       const U extends readonly any[],
@@ -103,6 +104,30 @@ export namespace t {
     : [T] extends [Schema<any, infer R>] ? R : never
   export declare function infer<T extends Schema<any, any>>(t: T): Infer<T>
 
+  export type TyppWhenNotATypp<T> = [T] extends [Schema<any, any>] ? T : Typp<[T]>
+  // make every item of `union` type which wrapped `Typp` for getting `Schema`
+  export type Typps<T> = T extends infer Item ? TyppWhenNotATypp<Item> : never
+  // infer type from every item of `union` type
+  export type Infers<T> = T extends (
+    infer Item extends Schema<any, any>
+    ) ? Infer<Item> : never
+
+  // make every item of `tuple` type which wrapped `Typp` for getting `Schema`
+  export type TyppT<T extends readonly any[]> = T extends readonly [
+    infer Item, ...infer Rest extends any[]
+  ] ? (
+    [TyppWhenNotATypp<Item>, ...TyppT<Rest>]
+    ) : []
+  // infer type from every item of `tuple` type
+  export type InferT<T extends readonly Schema<any, any>[]> = T extends [
+    infer Item extends Schema<any, any>,
+    ...infer Rest extends readonly Schema<any, any>[]
+  ] ? (
+    [Infer<Item>, ...InferT<Rest>]
+    ) : []
+}
+// Base static function
+export namespace t {
   /**
    * rename and export to user
    */
@@ -118,28 +143,9 @@ export namespace t {
   export declare function regexp(): Schema<RegExpConstructor, RegExp>
   export declare function undefined(): Schema<undefined, undefined>
   export declare function never(): Schema<typeof symbols.never, never>
-
-  type TyppWhenNotATypp<T> = [T] extends [Schema<any, any>] ? T : Typp<[T]>
-  // make every item of `union` type which wrapped `Typp` for getting `Schema`
-  export type Typps<T> = T extends infer Item ? TyppWhenNotATypp<Item> : never
-  // infer type from every item of `union` type
-  export type Infers<T> = T extends (
-    infer Item extends Schema<any, any>
-  ) ? Infer<Item> : never
-
-  // make every item of `tuple` type which wrapped `Typp` for getting `Schema`
-  export type TyppT<T extends readonly any[]> = T extends readonly [
-    infer Item, ...infer Rest extends any[]
-  ] ? (
-    [TyppWhenNotATypp<Item>, ...TyppT<Rest>]
-  ) : []
-  // infer type from every item of `tuple` type
-  export type InferT<T extends readonly Schema<any, any>[]> = T extends [
-    infer Item extends Schema<any, any>,
-    ...infer Rest extends readonly Schema<any, any>[]
-  ] ? (
-    [Infer<Item>, ...InferT<Rest>]
-  ) : []
+}
+// Calculate type
+export namespace t {
   export type Union<
     Shapes extends readonly any[],
     T = Shapes[number]
