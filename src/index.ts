@@ -14,6 +14,10 @@ const symbols = {
   void: Symbol('void'),
   unknown: Symbol('unknown'),
   never: Symbol('never')
+} as {
+  readonly void: unique symbol
+  readonly unknown: unique symbol
+  readonly never: unique symbol
 }
 
 t.null = function (): t.Schema<null, null> {
