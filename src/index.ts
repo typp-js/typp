@@ -49,6 +49,7 @@ literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
 }__IF_YOU_WANT_TO_USE_IT__` as const
 
 export namespace t {
+  // TODO rename to `specialShapeTypes`
   export const specialShapes = {
     union: Symbol('union'),
     intersection: Symbol('intersection')
@@ -58,7 +59,7 @@ export namespace t {
   }
   export type SpecialShapes = typeof specialShapes
   export interface SpecialShape<
-    T extends SpecialShapes[keyof SpecialShapes],
+    T extends SpecialShapes[keyof SpecialShapes] = SpecialShapes[keyof SpecialShapes],
     S extends readonly Schema<any, any>[] = []
   > {
     type: T
@@ -78,7 +79,10 @@ export namespace t {
       )
     ) ? Schema<StringConstructor, string & {}>
       : Intersect<Shapes>
-    or<const U>(...t: readonly U[]): Union<Shape | U>
+    or<
+      const U extends readonly any[],
+      Shapes extends readonly [any, ...any[]] = [Shape, ...U]
+    >(...t: U): Union<Shapes>
   }
   export interface SchemaFields<Shape, T> {
     shape: Shape
@@ -130,14 +134,28 @@ export namespace t {
   ] ? (
     [Infer<Item>, ...InferT<Rest>]
   ) : []
-  export type Union<T> = ULength<T> extends 1
-    ? Typp<[T]>
-    : Typps<T> extends infer Schemas ? (
+  export type Union<
+    Shapes extends readonly any[],
+    T = Shapes[number]
+  > = Shapes['length'] extends 1
+    ? Typp<Shapes>
+    : [
+      Typps<T>,
+      TyppT<Shapes>
+    ] extends [
+      infer Schemas extends Schema<any, any>,
+      infer SchemaT extends Schema<any, any>[]
+    ] ? (
       [Schemas] extends [never]
         ? Schema<typeof symbols.never, never>
-        : Schema<Schemas, Infers<Schemas>>
+        : Schema<
+          SpecialShape<SpecialShapes['union'], SchemaT>,
+          Infers<Schemas>
+        >
     ) : never
-  export declare function union<const T>(t: readonly T[]): Union<T>
+  export declare function union<
+    const T extends readonly any[]
+  >(t: T): Union<T>
   export const or = union
 
   export type Intersect<

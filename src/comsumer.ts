@@ -101,10 +101,23 @@ type InferInstanceType<T> = ConstructorMapping<T> extends infer InferInstanceTyp
     : t.Schema<T, InferInstanceType>
   : never
 
+// TODO replace `t.SpecialShapes[keyof t.SpecialShapes]`
+type InferSpecialShape<T> = [T] extends [t.SpecialShape<t.SpecialShapes[keyof t.SpecialShapes], any>]
+  ? true extends IsEqual<T['type'], t.SpecialShapes['union']>
+    // TODO no `t.InferT`?
+    ? t.Union<t.InferT<T['schemas']>>
+    : true extends IsEqual<T['type'], t.SpecialShapes['intersection']>
+      ? t.Intersect<T['schemas']>
+      : never
+  : never
+
 export type Consumer<T extends readonly any[]> =
   Stack.Shift<T> extends [infer L, infer Rest extends any[]]
     ? UseWhenNoNever<
-      Consume<L, Rest>,
-      InferInstanceType<L>
+        InferSpecialShape<L>,
+        UseWhenNoNever<
+          Consume<L, Rest>,
+          InferInstanceType<L>
+        >
     >
     : never
