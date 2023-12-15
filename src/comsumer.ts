@@ -119,5 +119,5 @@ export type Consumer<T extends readonly any[]> =
           Consume<L, Rest>,
           InferInstanceType<L>
         >
-    >
+      >
     : never
