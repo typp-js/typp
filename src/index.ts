@@ -72,7 +72,19 @@ export namespace t {
   }
   export interface SchemaMeta<Shape, T> {
   }
-  export interface SchemaMethods<Shape, T> {}
+  export interface SchemaMethods<Shape, T> {
+    // TODO keyof
+    // TODO omit
+    // TODO pick
+    // TODO exclude
+    // TODO extract
+    // TODO nonNullable
+    // TODO nullable
+    // TODO readonly
+    // TODO mutable
+    // TODO partial
+    // TODO required
+  }
   export interface SchemaFields<Shape, T> {
     shape: Shape
     meta: SchemaMeta<Shape, T>
