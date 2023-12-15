@@ -1,4 +1,4 @@
-import { IsEqual, T2I, ULength } from './base'
+import { IsEqual, T2I } from './base'
 import { Consumer } from './comsumer'
 
 export type Typp<T extends readonly any[]> = true extends (
@@ -52,20 +52,40 @@ literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
   'UNDEFINED'
 }__IF_YOU_WANT_TO_USE_IT__` as const
 
+t.function = t.fn
+
 // Base type
 export namespace t {
-  export const specialShapeTypeMapping = Object.freeze({
+  export interface DynamicSpecialShapeTypeMapping {
+    readonly [key: string]: symbol
+  }
+  export const specialShapeTypeMapping = {
     union: Symbol('union'),
     intersection: Symbol('intersection')
-  }) as {
+  } as {
     readonly union: unique symbol
     readonly intersection: unique symbol
+  } & DynamicSpecialShapeTypeMapping
+  export function defineSpecialShapeType<
+    T extends keyof DynamicSpecialShapeTypeMapping,
+    S extends DynamicSpecialShapeTypeMapping[T]
+  >(type: T, symbol: S): void {
+    specialShapeTypeMapping[type] = symbol
+  }
+  export interface SpecialShapeSchemaMapping {
+    [k: SpecialShapeTypes]: any
+  }
+  export interface SpecialShapeSchemaMapping {
+    [specialShapeTypeMapping.union]: readonly Schema<any, any>[]
+  }
+  export interface SpecialShapeSchemaMapping {
+    [specialShapeTypeMapping.intersection]: readonly Schema<any, any>[]
   }
   export type SpecialShapeTypeMapping = typeof specialShapeTypeMapping
   export type SpecialShapeTypes = SpecialShapeTypeMapping[keyof SpecialShapeTypeMapping]
   export interface SpecialShape<
-    T extends SpecialShapeTypes = SpecialShapeTypes,
-    S extends readonly Schema<any, any>[] = []
+    T extends SpecialShapeTypes,
+    S extends SpecialShapeSchemaMapping[T]
   > {
     type: T
     schemas: S

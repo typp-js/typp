@@ -1,5 +1,6 @@
 import { ConstructorMapping, IsEqual, IsNotEqual, Stack, UseWhenNoNever } from './base'
 import { ArrayConsume } from './consumers/array'
+import { FunctionConsume } from './consumers/function'
 import { MapConsume } from './consumers/map'
 import { ObjectConsume } from './consumers/object'
 import { SetConsume } from './consumers/set'
@@ -32,6 +33,10 @@ type Consume<
   IsEqual<T, SetConstructor>
 ) ? (
   SetConsume<T, Rest>
+) : true extends (
+  IsEqual<T, FunctionConstructor>
+) ? (
+  FunctionConsume<T, Rest>
 ) : never
 
 type LiteralPlaceholder<T extends string = string> = `__DO_NOT_USE_SAME_LITERAL_${T}__IF_YOU_WANT_TO_USE_IT__`
