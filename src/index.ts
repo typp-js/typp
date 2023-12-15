@@ -104,21 +104,21 @@ export namespace t {
   // infer type from every item of `union` type
   export type Infers<T> = T extends (
     infer Item extends Schema<any, any>
-    ) ? Infer<Item> : never
+  ) ? Infer<Item> : never
 
   // make every item of `tuple` type which wrapped `Typp` for getting `Schema`
   export type TyppT<T extends readonly any[]> = T extends readonly [
     infer Item, ...infer Rest extends any[]
   ] ? (
     [TyppWhenNotATypp<Item>, ...TyppT<Rest>]
-    ) : []
+  ) : []
   // infer type from every item of `tuple` type
   export type InferT<T extends readonly Schema<any, any>[]> = T extends [
     infer Item extends Schema<any, any>,
     ...infer Rest extends readonly Schema<any, any>[]
   ] ? (
     [Infer<Item>, ...InferT<Rest>]
-    ) : []
+  ) : []
 }
 // Base static function
 export namespace t {
