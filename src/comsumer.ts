@@ -74,24 +74,15 @@ type PrimitiveMapping<T> = true extends (
       : never
   ) : t.Schema<T, T>
 ) : true extends (
-  IsEqual<null, T>
+  | IsEqual<T, null>
+  | IsEqual<T, undefined>
 ) ? (
-  t.Schema<null, null>
-) : true extends (
-  IsEqual<undefined, T>
-) ? (
-  t.Schema<undefined, undefined>
-) : true extends (
-  IsEqual<void, T>
-) ? (
+  t.Schema<T, T>
+) : true extends IsEqual<T, void> ? (
   t.Schema<typeof t.Symbols.void, void>
-) : true extends (
-  IsEqual<unknown, T>
-) ? (
+) : true extends IsEqual<T, unknown> ? (
   t.Schema<typeof t.Symbols.unknown, unknown>
-) : true extends (
-  IsEqual<never, T>
-) ? (
+) : true extends IsEqual<T, never> ? (
   t.Schema<typeof t.Symbols.never, never>
 ) : never
 
