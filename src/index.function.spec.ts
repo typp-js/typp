@@ -57,6 +57,9 @@ describe('function', () => {
       ]>,
       () => Map<number, string>
     >>()
+    expectTypeOf<t.Infer<typeof base3_0>>()
+      .toEqualTypeOf<() => Map<number, string>>()
+    expectTypeOf(base3_0).toEqualTypeOf(base3_1)
   })
   test('generic', () => {
     // type T0 = [
