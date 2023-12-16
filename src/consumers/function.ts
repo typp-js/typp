@@ -2,18 +2,30 @@ import { IsEqual, Stack } from '../base'
 import { t, Typp } from '..'
 
 const functionSymbol = Symbol('function')
+const genericSymbol = Symbol('generic')
 declare module '..' {
   namespace t {
     export function fn<
       const Args extends readonly any[],
       RT extends any = void
     >(args: Args, rt?: RT): Typp<[FunctionConstructor, Args, RT]>
-    export type Generic<L, E, D> = {
+    export interface Generic<
+      L extends string,
+      E extends t.Schema<any, any> = t.Schema<any, any>,
+      D extends t.Infer<E> = never
+    > {
       label: L
       extends: E
       default: D
     }
-    export function generic<const L, E, D = never>(label: L, _extends?: E, _default?: D): Generic<L, E, D>
+    export function generic<
+      const L extends string,
+      E extends t.Schema<any, any> = t.Schema<any, any>,
+      D extends t.Infer<E> = never
+    >(label: L, _extends?: E, _default?: D): t.SpecialShape<
+      t.SpecialShapeTypeMapping['generic'],
+      [Generic<L, E, D>]
+    >
 
     type Replace<T, U extends any[]> = U extends [infer A, ...infer B]
       ? A extends Generic<any, any, any>
@@ -22,13 +34,16 @@ declare module '..' {
       : []
     interface DynamicSpecialShapeTypeMapping {
       readonly function: typeof functionSymbol
+      readonly generic: typeof genericSymbol
     }
     export interface SpecialShapeSchemaMapping {
       [t.specialShapeTypeMapping.function]: [readonly t.Schema<any, any>[], t.Schema<any, any>]
+      [t.specialShapeTypeMapping.generic]: [Generic<string, t.Schema<any, any>, any>]
     }
   }
 }
 t.defineSpecialShapeType('function', functionSymbol)
+t.defineSpecialShapeType('generic', genericSymbol)
 
 export type FunctionConsume<
   T,
@@ -47,6 +62,7 @@ export type FunctionConsume<
     infer Rest extends readonly any[]
   ] ? (
     [
+      // TODO resolve generic
       t.TyppT<Args>,
       true extends (
         | IsEqual<Rest, []>
