@@ -41,6 +41,22 @@ describe('function', () => {
     expectTypeOf<t.Infer<typeof base2_0>>()
       .toEqualTypeOf<(a: string, b: number) => string>()
     expectTypeOf(base2_0).toEqualTypeOf(base2_1)
+
+    const base3_0 = t.function([], Map, Number, String)
+    const base3_1 = t(Function, [], Map, Number, String)
+    expectTypeOf(base3_0).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
+        [],
+        t.Schema<
+          t.Map<
+            t.Schema<NumberConstructor, number>,
+            t.Schema<StringConstructor, string>
+          >,
+          Map<number, string>
+        >
+      ]>,
+      () => Map<number, string>
+    >>()
   })
   test('generic', () => {
     // type T0 = [

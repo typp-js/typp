@@ -7,8 +7,8 @@ declare module '..' {
   namespace t {
     export function fn<
       const Args extends readonly any[],
-      RT extends any = void
-    >(args: Args, rt?: RT): Typp<[FunctionConstructor, Args, RT]>
+      RT extends readonly any[] = []
+    >(args: Args, ...rt: RT): Typp<[FunctionConstructor, Args, ...RT]>
     export interface Generic<
       L extends string,
       E extends t.Schema<any, any> = t.Schema<any, any>,
