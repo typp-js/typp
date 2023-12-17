@@ -25,7 +25,7 @@ export type U2T<U, Last = LastInUnion<U>> = [U] extends [never]
   ? []
   : [...U2T<U2T_Exclude<U, Last>>, Last]
 
-type IsUnion<T, U = T> = T extends U ? ([U] extends [T] ? false : true) : false
+export type IsUnion<T, U = T> = T extends U ? ([U] extends [T] ? false : true) : false
 
 export type Concats<T extends readonly any[]> = T extends readonly [infer L, ...infer R]
   ? L extends readonly any[] ? [...L, ...Concats<R>] : []
