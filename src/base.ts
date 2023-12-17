@@ -17,12 +17,13 @@ type LastInUnion<U> = U2I<
   ? L
   : never
 
+type U2T_Exclude<T,U> = T extends U ? (<A>() => (A extends T ? 1 : 2)) extends (<A>() => (A extends U ? 1 : 2)) ? never : T : T
 /**
  * U2T<1 | 2> = [1, 2].
  */
 export type U2T<U, Last = LastInUnion<U>> = [U] extends [never]
   ? []
-  : [...U2T<Exclude<U, Last>>, Last]
+  : [...U2T<U2T_Exclude<U, Last>>, Last]
 
 type IsUnion<T, U = T> = T extends U ? ([U] extends [T] ? false : true) : false
 
