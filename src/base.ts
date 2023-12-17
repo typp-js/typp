@@ -79,6 +79,52 @@ export type Collect<T, U> = IsUnion<T> extends true ? (
   []
 )
 
+type ReplaceFinder<T, U extends readonly [any, any][]> = U extends [
+  infer L extends [any, any],
+  ...infer R extends readonly [any, any][]
+] ? (
+  T extends L[0] ? L[1] : ReplaceFinder<T, R>
+) : T
+// //   _?
+// type R0 = ReplaceFinder<'a', [['a', '1']]>
+// //   _?
+// type R1 = ReplaceFinder<'a' | 'b' | 'd', [
+//   [1, '1'],
+//   [2, true],
+//   ['d', 'e']
+// ]>
+
+export type Replace<
+  T,
+  U extends readonly [any, any][],
+> = IsUnion<T> extends true ? (
+  T extends infer Item ? Replace<Item, U> : never
+) : [T] extends [U[number][0]] ? (
+  ReplaceFinder<T, U>
+) : true extends (
+  | IsEqual<T, []>
+) ? (
+  []
+) : [T] extends [[
+  infer L, ...infer R
+]] ? (
+  [Replace<L, U>, ...Replace<R, U>]
+) : [T] extends [Record<string | symbol | number, any>] ? (
+  true extends (
+    | IsEqual<T, {}>
+  ) ? never : (
+    {
+      [
+        K in keyof T
+          // TODO support replace in key
+          // as ReplaceFinder<keyof T, U>
+      ]: Replace<T[K], U>
+    }
+  )
+) : (
+  T
+)
+
 type Cast<A, B> = A extends B ? A : B
 
 type Primitive = string | number | boolean | bigint | symbol | undefined | null
