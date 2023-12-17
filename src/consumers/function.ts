@@ -40,8 +40,10 @@ declare module '..' {
       readonly generic: typeof genericSymbol
     }
     export interface SpecialShapeSchemaMapping {
-      [t.specialShapeTypeMapping.function]: [readonly t.Schema<any, any>[], t.Schema<any, any>]
-      [t.specialShapeTypeMapping.generic]: [Generic<string, t.Schema<any, any>, any>]
+      [t.specialShapeTypeMapping
+        .function]: [readonly t.Schema<any, any>[], t.Schema<any, any>]
+      [t.specialShapeTypeMapping
+        .generic]: Generic<string, t.Schema<any, any>, any>
     }
   }
 }
