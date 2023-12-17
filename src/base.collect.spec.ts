@@ -15,6 +15,8 @@ test('base', () => {
   }, number>>().toEqualTypeOf<[1, 2]>()
   expectTypeOf<Collect<{}, number>>().toEqualTypeOf<[]>()
 
+  expectTypeOf<Collect<1 | 2, number>>()
+    .toEqualTypeOf<[1, 2]>()
   expectTypeOf<Collect<1 | 2 | '3', number>>()
     .toEqualTypeOf<[1, 2]>()
 })
