@@ -11,6 +11,11 @@ export type Includes<
   ? L extends U[number] ? Includes<R, U> : false
   : true
 
+export type IsSameTuple<
+  T extends readonly any[],
+  U extends readonly any[]
+> = Includes<T, U> extends true ? Includes<U, T> : false
+
 export type U2I<U> = (U extends any ? (k: U) => void : never) extends ((k: infer I) => void) ? I : never
 export type T2I<T extends readonly any[]> = T extends [infer L, ...infer R]
   ? L & T2I<R> : unknown
