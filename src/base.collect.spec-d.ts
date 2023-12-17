@@ -24,6 +24,22 @@ test('base', () => {
 test('nested', () => {
   expectTypeOf<Collect<[1, 2, '3', 4 | 5], number>>()
     .toEqualTypeOf<[1, 2, 4, 5]>()
+  expectTypeOf<Collect<{
+    a: 1
+    b: 2
+    c: '3'
+    d: 4 | 5
+    e: [6, '7']
+  }, number>>()
+    .toEqualTypeOf<[1, 2, 4, 5, 6]>()
+
+  expectTypeOf<Collect<{
+    a: 1
+    b: 2
+    c: '3'
+    d: number
+  }, number>>()
+    .toEqualTypeOf<[1, 2, number]>()
 
   expectTypeOf<Collect<true | 1 | 2 | [3, '4'] | {
     a: 5, b: 6, c: true
