@@ -116,7 +116,6 @@ export namespace t {
   export type Infer<T extends Schema<any, any>> = [T] extends [never]
     ? never
     : [T] extends [Schema<any, infer R>] ? R : never
-  export declare function infer<T extends Schema<any, any>>(t: T): Infer<T>
 
   export type TyppWhenNotATypp<T> = [T] extends [Schema<any, any>] ? T : Typp<[T]>
   // make every item of `union` type which wrapped `Typp` for getting `Schema`
