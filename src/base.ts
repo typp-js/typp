@@ -60,9 +60,7 @@ export type Collect<T, U> = IsUnion<T> extends true ? (
           ? Collect<T[K], U>
           : []
       ) : never
-    >> extends infer Tuple extends any[] ? (
-      true extends IsEqual<Tuple, []> ? [] : Tuple
-    ) : []
+    >>
   )
 ) : (
   []
