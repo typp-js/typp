@@ -1,33 +1,35 @@
-import { expectTypeOf } from 'vitest';
+import { test, expectTypeOf } from 'vitest'
 
 import type { ConstructorMapping } from './base'
 
-expectTypeOf<ConstructorMapping<StringConstructor>>()
-  .toMatchTypeOf<string>()
+test('base', () => {
+  expectTypeOf<ConstructorMapping<StringConstructor>>()
+    .toMatchTypeOf<string>()
 
-expectTypeOf<ConstructorMapping<NumberConstructor>>()
-  .toMatchTypeOf<number>()
+  expectTypeOf<ConstructorMapping<NumberConstructor>>()
+    .toMatchTypeOf<number>()
 
-expectTypeOf<ConstructorMapping<MapConstructor, string, number>>()
-  .toMatchTypeOf<Map<string, number>>()
+  expectTypeOf<ConstructorMapping<MapConstructor, string, number>>()
+    .toMatchTypeOf<Map<string, number>>()
 
-// don't resolve tuple type
-expectTypeOf<ConstructorMapping<[NumberConstructor]>>()
-  .toMatchTypeOf<never>()
-expectTypeOf<ConstructorMapping<[NumberConstructor, StringConstructor]>>()
-  .toMatchTypeOf<never>()
+  // don't resolve tuple type
+  expectTypeOf<ConstructorMapping<[NumberConstructor]>>()
+    .toMatchTypeOf<never>()
+  expectTypeOf<ConstructorMapping<[NumberConstructor, StringConstructor]>>()
+    .toMatchTypeOf<never>()
 
-// don't resolve object type
-expectTypeOf<ConstructorMapping<{
-  foo: NumberConstructor
-}>>()
-  .toMatchTypeOf<never>()
+  // don't resolve object type
+  expectTypeOf<ConstructorMapping<{
+    foo: NumberConstructor
+  }>>()
+    .toMatchTypeOf<never>()
 
-expectTypeOf<ConstructorMapping<never>>()
-  .toMatchTypeOf<never>()
-expectTypeOf<ConstructorMapping<unknown>>()
-  .toMatchTypeOf<never>()
-expectTypeOf<ConstructorMapping<{}>>()
-  .toMatchTypeOf<never>()
-expectTypeOf<ConstructorMapping<any>>()
-  .toMatchTypeOf<never>()
+  expectTypeOf<ConstructorMapping<never>>()
+    .toMatchTypeOf<never>()
+  expectTypeOf<ConstructorMapping<unknown>>()
+    .toMatchTypeOf<never>()
+  expectTypeOf<ConstructorMapping<{}>>()
+    .toMatchTypeOf<never>()
+  expectTypeOf<ConstructorMapping<any>>()
+    .toMatchTypeOf<never>()
+})
