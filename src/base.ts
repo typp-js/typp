@@ -24,7 +24,49 @@ export type U2T<U, Last = LastInUnion<U>> = [U] extends [never]
   ? []
   : [...U2T<Exclude<U, Last>>, Last]
 
+type IsUnion<T, U = T> = T extends U ? ([U] extends [T] ? false : true) : false
+
+export type Concats<T extends readonly any[]> = T extends readonly [infer L, ...infer R]
+  ? L extends readonly any[] ? [...L, ...Concats<R>] : []
+  : []
+
 export type ULength<U> = U2T<U>['length']
+
+export type Collect<T, U> = [T] extends [U] ? (
+  [T]
+) : true extends (
+  | IsEqual<T, []>
+) ? (
+  []
+) : [T] extends [[
+  infer L, ...infer R
+]] ? (
+  [L] extends [U]
+    ? [...Collect<L, U>, ...Collect<R, U>]
+    : [R] extends [[]]
+      ? []
+      : Collect<R, U>
+) : [T] extends [Record<string | symbol | number, any>] ? (
+  true extends (
+    | IsEqual<T, {}>
+  ) ? [] : (
+    Concats<U2T<
+      keyof T extends infer Keys ? (
+        Keys extends infer K extends keyof T
+          ? Collect<T[K], U>
+          : []
+      ) : never
+    >> extends infer Tuple extends any[] ? (
+      true extends IsEqual<Tuple, []> ? [] : Tuple
+    ) : []
+  )
+) : (
+  IsUnion<T> extends false
+    ? []
+    : Concats<U2T<
+      T extends infer Item ? Collect<Item, U> : []
+    >>
+)
 
 type Cast<A, B> = A extends B ? A : B
 
