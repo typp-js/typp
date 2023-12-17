@@ -97,7 +97,10 @@ type InferInstanceType<T> = ConstructorMapping<T> extends infer InferInstanceTyp
     : t.Schema<T, InferInstanceType>
   : never
 
-type InferSpecialShape<T> = [T] extends [
+type InferSpecialShape<
+  T,
+  Rest extends any[] = []
+> = [T] extends [
   t.SpecialShape<t.SpecialShapeTypes, any>
 ] ? (
   true extends (
@@ -112,7 +115,6 @@ type InferSpecialShape<T> = [T] extends [
   ) : true extends (
     IsEqual<T['type'], t.SpecialShapeTypeMapping['generic']>
   ) ? (
-    // TODO resolve generic
     T
   ) : never
 ) : never
