@@ -22,9 +22,12 @@ declare module '..' {
       const L extends string,
       E extends t.Schema<any, any> = t.Schema<any, any>,
       D extends t.Infer<E> = never
-    >(label: L, _extends?: E, _default?: D): t.SpecialShape<
-      t.SpecialShapeTypeMapping['generic'],
-      [Generic<L, E, D>]
+    >(label: L, _extends?: E, _default?: D): t.Schema<
+      t.SpecialShape<
+        t.SpecialShapeTypeMapping['generic'],
+        Generic<L, E, D>
+      >,
+      t.SpecialShapeTypeMapping['generic']
     >
 
     type Replace<T, U extends any[]> = U extends [infer A, ...infer B]
