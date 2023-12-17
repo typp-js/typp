@@ -1,4 +1,4 @@
-import { IsEqual, Stack } from '../base'
+import { Collect, IsEqual, Stack } from '../base'
 import { t, Typp } from '..'
 
 const functionSymbol = Symbol('function')
@@ -68,6 +68,7 @@ export type FunctionConsume<
   ] ? (
     [
       // TODO resolve generic
+      Collect<Args, t.Generic<string>>,
       t.TyppT<Args>,
       true extends (
         | IsEqual<Rest, []>
@@ -75,12 +76,53 @@ export type FunctionConsume<
       ) ? t.Schema<typeof t.Symbols.void, void>
         : Typp<Rest>
     ] extends [
+      infer Generics    extends readonly t.Generic<string>[],
       infer ArgsSchemas extends readonly t.Schema<any, any>[],
       infer RestSchema  extends t.Schema<any, any>
-    ] ? t.Schema<
-        t.SpecialShape<t.SpecialShapeTypeMapping['function'], [ArgsSchemas, RestSchema]>,
-        (...args: t.InferT<ArgsSchemas>) => t.Infer<RestSchema>
-      >
-      : never
+    ] ? (
+      AggregationGenerics<Generics> extends infer AGenerics extends readonly t.Generic<string>[] ? (
+          t.Schema<
+            t.SpecialShape<t.SpecialShapeTypeMapping['function'], [ArgsSchemas, RestSchema]>,
+            AGenerics['length'] extends 0 ? (
+              (...args: t.InferT<ArgsSchemas>) => t.Infer<RestSchema>
+            ) : (
+              // AGenerics
+              GenericsFuncMap<AGenerics, t.InferT<ArgsSchemas>, t.Infer<RestSchema>>[Generics['length']]
+            )
+          >
+      ) : never
+    ) : never
   ) : never
 )
+
+type AggregationGenerics<
+  Generics extends readonly t.Generic<string>[],
+  Output extends t.Generic<string>[] = []
+> = Generics extends readonly [
+  infer L extends t.Generic<string>,
+  ...infer R extends readonly t.Generic<string>[]
+// if L in Output, skip
+] ? L extends Output[number]
+    ? AggregationGenerics<R, Output>
+    : AggregationGenerics<R, [...Output, L]>
+  : Output
+
+interface GenericsFuncMap<
+  Generics extends readonly t.Generic<string>[],
+  Args extends readonly any[] = [],
+  RT extends any = void
+> {
+  1: <
+    T extends t.Infer<Generics[0]['extends']> = Generics[0]['default']
+  >(...args: Args) => RT
+  2: <
+    T0 extends t.Infer<Generics[0]['extends']> = Generics[0]['default'],
+    T1 extends t.Infer<Generics[1]['extends']> = Generics[1]['default']
+  >(...args: Args) => RT
+  3: <
+    T0 extends t.Infer<Generics[0]['extends']> = Generics[0]['default'],
+    T1 extends t.Infer<Generics[1]['extends']> = Generics[1]['default'],
+    T2 extends t.Infer<Generics[2]['extends']> = Generics[2]['default']
+  >(...args: Args) => RT
+  [index: number]: (...args: Args) => RT
+}

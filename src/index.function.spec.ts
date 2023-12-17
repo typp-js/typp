@@ -62,6 +62,12 @@ describe('function', () => {
     expectTypeOf(base3_0).toEqualTypeOf(base3_1)
   })
   test('generic', () => {
+    const case0 = t(Function, [t.generic('T', t.string())], Number)
+    //    ^?
+    type Case0Shape = typeof case0['shape']['schemas']
+    //   ^?
+    type Case0T = t.Infer<typeof case0>
+    //   ^?
     // type T0 = [
     //   [a: Generic<'T', string, never>, number],
     //   string
