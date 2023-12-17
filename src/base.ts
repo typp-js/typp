@@ -32,7 +32,11 @@ export type Concats<T extends readonly any[]> = T extends readonly [infer L, ...
 
 export type ULength<U> = U2T<U>['length']
 
-export type Collect<T, U> = [T] extends [U] ? (
+export type Collect<T, U> = IsUnion<T> extends true ? (
+  Concats<U2T<
+    T extends infer Item ? Collect<Item, U> : []
+  >>
+) : [T] extends [U] ? (
   [T]
 ) : true extends (
   | IsEqual<T, []>
@@ -61,11 +65,7 @@ export type Collect<T, U> = [T] extends [U] ? (
     ) : []
   )
 ) : (
-  IsUnion<T> extends false
-    ? []
-    : Concats<U2T<
-      T extends infer Item ? Collect<Item, U> : []
-    >>
+  []
 )
 
 type Cast<A, B> = A extends B ? A : B
