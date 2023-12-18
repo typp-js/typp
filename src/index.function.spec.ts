@@ -62,31 +62,49 @@ describe('function', () => {
     expectTypeOf(base3_0).toEqualTypeOf(base3_1)
   })
   test('generic', () => {
-    const case0 = t(Function, [t.generic('T', t.string())], Number)
-    //    ^?
-    type Case0Shape = typeof case0['shape']['schemas']
-    //   ^?
+    const case0 = t(
+      Function, [t.generic('T', t.string())], t.generic('T', t.string())
+    )
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
+        [t.Schema<
+          t.SpecialShape<
+            t.SpecialShapeTypeMapping['generic'],
+            t.Generic<'T', t.Schema<StringConstructor, string>, never>
+          >,
+          t.Generic<'T', t.Schema<StringConstructor, string>, never>
+        >],
+        t.Schema<
+          t.SpecialShape<
+            t.SpecialShapeTypeMapping['generic'],
+            t.Generic<'T', t.Schema<StringConstructor, string>, never>
+          >,
+          t.Generic<'T', t.Schema<StringConstructor, string>, never>
+        >
+      ]>,
+      <T extends string = never>(args_0: T) => T
+    >>()
     type Case0T = t.Infer<typeof case0>
-    //   ^?
-    // type T0 = [
-    //   [a: Generic<'T', string, never>, number],
-    //   string
-    // ]
-    // //   _?
-    // type T1 = [T0] extends [[infer Args, infer RT]] ? (
-    //   <T extends Args[0]['extends'] = Args[0]['default']>(...args: t.Replace<T, Args>) => RT
-    //   ) : never
-    // 1. 将 Args 中定义的 Schema 替换为对应的类型，而 Generic 类型不做替换
-    // 2. 将 Args 中的 Generic 数量统计出来，选择到对应数量的泛型函数
-    // 3. 泛型参数的相关信息填充到对应的位置中去
-    // 4. 将函数参数以及返回值中的「泛型类型」替换为函数对应的「泛型参数」
-
-    // const foo = t((a = generic('T', String), b = Number) => String)
-    // const fuo = t((a = generic('T', String), b = Number) => String, [generic('T', String), Number])
-    // const fuu = t((a = generic('T', String), b = Number) => [String, a, b])
-    // const fou = t((a = generic('T', String), b = Number) => [String, [a, b]])
-    // const baz = t(Function, [generic('T', String), Number], String)
-    // const bar = t.function([generic('T', String), Number], String)
-
+    expectTypeOf<Case0T>()
+      .toEqualTypeOf<<T extends string = never>(args_0: T) => T>()
+    expectTypeOf<Case0T>()
+      // @ts-expect-error
+      .toEqualTypeOf<<T extends number = never>(args_0: T) => T>()
+    expectTypeOf<Case0T>()
+      // @ts-expect-error
+      .toEqualTypeOf<<T extends string = number>(args_0: T) => T>()
+    expectTypeOf<Case0T>()
+      // @ts-expect-error
+      .toEqualTypeOf<<T extends string = never>(args_0: number) => T>()
+    expectTypeOf<Case0T>()
+      // @ts-expect-error
+      .toEqualTypeOf<<T extends string = never>(args_0: T) => number>()
+    const case0T = (() => void 0) as Case0T
+    const t0 = case0T('foo')
+    expectTypeOf(t0).toEqualTypeOf<'foo'>()
+    // @ts-expect-error
+    expectTypeOf(t0).toEqualTypeOf<string>()
+    // @ts-expect-error
+    case0T(1)
   })
 })
