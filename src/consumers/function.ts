@@ -1,4 +1,4 @@
-import { Collect, IsEqual, Stack } from '../base'
+import { Collect, IsEqual, Replace, Stack } from '../base'
 import { t, Typp } from '..'
 
 const functionSymbol = Symbol('function')
@@ -22,19 +22,11 @@ declare module '..' {
       const L extends string,
       E extends t.Schema<any, any> = t.Schema<any, any>,
       D extends t.Infer<E> = never
-    >(label: L, _extends?: E, _default?: D): t.Schema<
-      t.SpecialShape<
-        t.SpecialShapeTypeMapping['generic'],
-        Generic<L, E, D>
-      >,
-      t.SpecialShapeTypeMapping['generic']
+    >(label: L, _extends?: E, _default?: D): t.SpecialShape<
+      t.SpecialShapeTypeMapping['generic'],
+      Generic<L, E, D>
     >
 
-    type Replace<T, U extends any[]> = U extends [infer A, ...infer B]
-      ? A extends Generic<any, any, any>
-        ? [T, ...Replace<T, B>]
-        : [A, ...Replace<T, B>]
-      : []
     interface DynamicSpecialShapeTypeMapping {
       readonly function: typeof functionSymbol
       readonly generic: typeof genericSymbol
@@ -68,7 +60,9 @@ export type FunctionConsume<
   ] ? (
     [
       // TODO resolve generic
-      Collect<Args, t.Generic<string>>,
+      Collect<Args, t.SpecialShape<
+        t.SpecialShapeTypeMapping['generic'], t.Generic<string>
+      >>,
       t.TyppT<Args>,
       true extends (
         | IsEqual<Rest, []>
@@ -76,24 +70,37 @@ export type FunctionConsume<
       ) ? t.Schema<typeof t.Symbols.void, void>
         : Typp<Rest>
     ] extends [
-      infer Generics    extends readonly t.Generic<string>[],
-      infer ArgsSchemas extends readonly t.Schema<any, any>[],
-      infer RestSchema  extends t.Schema<any, any>
+      infer GenericSpecialShapes extends readonly t.SpecialShape<t.SpecialShapeTypeMapping['generic'], t.Generic<string>>[],
+      infer ArgsSchemas          extends readonly t.Schema<any, any>[],
+      infer RestSchema           extends t.Schema<any, any>
     ] ? (
-      AggregationGenerics<Generics> extends infer AGenerics extends readonly t.Generic<string>[] ? (
-          t.Schema<
-            t.SpecialShape<t.SpecialShapeTypeMapping['function'], [ArgsSchemas, RestSchema]>,
-            AGenerics['length'] extends 0 ? (
-              (...args: t.InferT<ArgsSchemas>) => t.Infer<RestSchema>
-            ) : (
-              // AGenerics
-              GenericsFuncMap<AGenerics, t.InferT<ArgsSchemas>, t.Infer<RestSchema>>[Generics['length']]
-            )
-          >
+      InferGenericsFromSpecialShapes<GenericSpecialShapes> extends (
+        infer Generics extends readonly t.Generic<string>[]
+      ) ? (
+        // Generics
+        AggregationGenerics<Generics> extends infer AGenerics extends readonly t.Generic<string>[] ? (
+            t.Schema<
+              t.SpecialShape<t.SpecialShapeTypeMapping['function'], [ArgsSchemas, RestSchema]>,
+              AGenerics['length'] extends 0 ? (
+                (...args: t.InferT<ArgsSchemas>) => t.Infer<RestSchema>
+              ) : (
+                GenericsFuncMap<AGenerics, t.InferT<ArgsSchemas>, t.Infer<RestSchema>>[Generics['length']]
+              )
+            >
+        ) : never
       ) : never
     ) : never
   ) : never
 )
+
+type InferGenericsFromSpecialShapes<
+  SpecialShapes extends readonly t.SpecialShape<any, any>[]
+> = SpecialShapes extends readonly [
+  infer L extends t.SpecialShape<any, any>,
+  ...infer R extends readonly t.SpecialShape<any, any>[]
+] ? L extends t.SpecialShape<t.SpecialShapeTypeMapping['generic'], infer Generic> ? (
+  [Generic] extends [t.Generic<string>] ? [Generic, ...InferGenericsFromSpecialShapes<R>] : never
+) : never : []
 
 type AggregationGenerics<
   Generics extends readonly t.Generic<string>[],
@@ -114,15 +121,102 @@ interface GenericsFuncMap<
 > {
   1: <
     T extends t.Infer<Generics[0]['extends']> = Generics[0]['default']
-  >(...args: Args) => RT
+  >(...args: (
+    Replace<Args, [
+      [Generics[0], T]
+    ]> extends infer NArgs extends any[] ? NArgs : []
+  )) => Replace<RT, [
+    [Generics[0], T]
+  ]>
   2: <
     T0 extends t.Infer<Generics[0]['extends']> = Generics[0]['default'],
     T1 extends t.Infer<Generics[1]['extends']> = Generics[1]['default']
-  >(...args: Args) => RT
+  >(...args: (
+    Replace<Args, [
+      [Generics[0], T0],
+      [Generics[1], T1]
+    ]> extends infer NArgs extends any[] ? NArgs : []
+  )) => Replace<RT, [
+    [Generics[0], T0],
+    [Generics[1], T1]
+  ]>
   3: <
     T0 extends t.Infer<Generics[0]['extends']> = Generics[0]['default'],
     T1 extends t.Infer<Generics[1]['extends']> = Generics[1]['default'],
     T2 extends t.Infer<Generics[2]['extends']> = Generics[2]['default']
-  >(...args: Args) => RT
-  [index: number]: (...args: Args) => RT
+  >(...args: (
+    Replace<Args, [
+      [Generics[0], T0],
+      [Generics[1], T1],
+      [Generics[2], T2]
+    ]> extends infer NArgs extends any[] ? NArgs : []
+  )) => Replace<RT, [
+    [Generics[0], T0],
+    [Generics[1], T1],
+    [Generics[2], T2]
+  ]>
+  4: <
+    T0 extends t.Infer<Generics[0]['extends']> = Generics[0]['default'],
+    T1 extends t.Infer<Generics[1]['extends']> = Generics[1]['default'],
+    T2 extends t.Infer<Generics[2]['extends']> = Generics[2]['default'],
+    T3 extends t.Infer<Generics[3]['extends']> = Generics[3]['default']
+  >(...args: (
+    Replace<Args, [
+      [Generics[0], T0],
+      [Generics[1], T1],
+      [Generics[2], T2],
+      [Generics[3], T3]
+    ]> extends infer NArgs extends any[] ? NArgs : []
+  )) => Replace<RT, [
+    [Generics[0], T0],
+    [Generics[1], T1],
+    [Generics[2], T2],
+    [Generics[3], T3]
+  ]>
+  5: <
+    T0 extends t.Infer<Generics[0]['extends']> = Generics[0]['default'],
+    T1 extends t.Infer<Generics[1]['extends']> = Generics[1]['default'],
+    T2 extends t.Infer<Generics[2]['extends']> = Generics[2]['default'],
+    T3 extends t.Infer<Generics[3]['extends']> = Generics[3]['default'],
+    T4 extends t.Infer<Generics[4]['extends']> = Generics[4]['default']
+  >(...args: (
+    Replace<Args, [
+      [Generics[0], T0],
+      [Generics[1], T1],
+      [Generics[2], T2],
+      [Generics[3], T3],
+      [Generics[4], T4]
+    ]> extends infer NArgs extends any[] ? NArgs : []
+  )) => Replace<RT, [
+    [Generics[0], T0],
+    [Generics[1], T1],
+    [Generics[2], T2],
+    [Generics[3], T3],
+    [Generics[4], T4]
+  ]>
+  6: <
+    T0 extends t.Infer<Generics[0]['extends']> = Generics[0]['default'],
+    T1 extends t.Infer<Generics[1]['extends']> = Generics[1]['default'],
+    T2 extends t.Infer<Generics[2]['extends']> = Generics[2]['default'],
+    T3 extends t.Infer<Generics[3]['extends']> = Generics[3]['default'],
+    T4 extends t.Infer<Generics[4]['extends']> = Generics[4]['default'],
+    T5 extends t.Infer<Generics[5]['extends']> = Generics[5]['default']
+  >(...args: (
+    Replace<Args, [
+      [Generics[0], T0],
+      [Generics[1], T1],
+      [Generics[2], T2],
+      [Generics[3], T3],
+      [Generics[4], T4],
+      [Generics[5], T5]
+    ]> extends infer NArgs extends any[] ? NArgs : []
+  )) => Replace<RT, [
+    [Generics[0], T0],
+    [Generics[1], T1],
+    [Generics[2], T2],
+    [Generics[3], T3],
+    [Generics[4], T4],
+    [Generics[5], T5]
+  ]>
+  [index: number]: (...args: any[]) => any
 }

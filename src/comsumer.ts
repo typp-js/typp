@@ -115,11 +115,16 @@ type InferSpecialShape<
   ) : true extends (
     IsEqual<T['type'], t.SpecialShapeTypeMapping['generic']>
   ) ? (
-    T
+    t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['generic'], T['schemas']>,
+      T['schemas']
+    >
   ) : never
 ) : never
 
-export type Consumer<T extends readonly any[]> =
+export type Consumer<
+  T extends readonly any[]
+> =
   Stack.Shift<T> extends [infer L, infer Rest extends any[]]
     ? UseWhenNoNever<
         InferSpecialShape<L>,
