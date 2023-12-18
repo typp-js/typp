@@ -61,7 +61,40 @@ describe('function', () => {
       .toEqualTypeOf<() => Map<number, string>>()
     expectTypeOf(base3_0).toEqualTypeOf(base3_1)
   })
-  test('generic', () => {
+  test('generic in args', () => {
+    const skm = t(Function, [t.generic('T', t.string())])
+    expectTypeOf(skm).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
+        [t.Schema<
+          t.SpecialShape<
+            t.SpecialShapeTypeMapping['generic'],
+            t.Generic<'T', t.Schema<StringConstructor, string>, never>
+          >,
+          t.Generic<'T', t.Schema<StringConstructor, string>, never>
+        >],
+        t.Schema<typeof t.Symbols.void, void>
+      ]>,
+      <T extends string = never>(args_0: T) => void
+    >>()
+    type Skm = t.Infer<typeof skm>
+    expectTypeOf<Skm>().toEqualTypeOf<<T extends string = never>(args_0: T) => void>()
+    // @ts-expect-error
+    expectTypeOf<Skm>().toEqualTypeOf<<T extends number = never>(args_0: T) => void>()
+    // @ts-expect-error
+    expectTypeOf<Skm>().toEqualTypeOf<<T extends string = number>(args_0: T) => void>()
+    // @ts-expect-error
+    expectTypeOf<Skm>().toEqualTypeOf<<T extends string = never>(args_0: number) => void>()
+    // @ts-expect-error
+    expectTypeOf<Skm>().toEqualTypeOf<<T extends string = never>(args_0: T) => number>()
+    const skmT = (() => void 0) as Skm
+    const t0 = skmT('foo')
+    expectTypeOf(t0).toEqualTypeOf<void>()
+    // @ts-expect-error
+    expectTypeOf(t0).toEqualTypeOf<string>()
+    // @ts-expect-error
+    skmT(1)
+  })
+  test('generic in `args` and `return`', () => {
     const case0 = t(
       Function, [t.generic('T', t.string())], t.generic('T', t.string())
     )
@@ -85,20 +118,16 @@ describe('function', () => {
       <T extends string = never>(args_0: T) => T
     >>()
     type Case0T = t.Infer<typeof case0>
-    expectTypeOf<Case0T>()
-      .toEqualTypeOf<<T extends string = never>(args_0: T) => T>()
-    expectTypeOf<Case0T>()
-      // @ts-expect-error
-      .toEqualTypeOf<<T extends number = never>(args_0: T) => T>()
-    expectTypeOf<Case0T>()
-      // @ts-expect-error
-      .toEqualTypeOf<<T extends string = number>(args_0: T) => T>()
-    expectTypeOf<Case0T>()
-      // @ts-expect-error
-      .toEqualTypeOf<<T extends string = never>(args_0: number) => T>()
-    expectTypeOf<Case0T>()
-      // @ts-expect-error
-      .toEqualTypeOf<<T extends string = never>(args_0: T) => number>()
+    expectTypeOf<Case0T>().toEqualTypeOf<<T extends string = never>(args_0: T) => T>()
+    // @ts-expect-error
+    expectTypeOf<Case0T>().toEqualTypeOf<<T extends number = never>(args_0: T) => T>()
+    // @ts-expect-error
+    expectTypeOf<Case0T>().toEqualTypeOf<<T extends string = number>(args_0: T) => T>()
+    // @ts-expect-error
+    expectTypeOf<Case0T>().toEqualTypeOf<<T extends string = never>(args_0: number) => T>()
+    // @ts-expect-error
+    expectTypeOf<Case0T>().toEqualTypeOf<<T extends string = never>(args_0: T) => number>()
+
     const case0T = (() => void 0) as Case0T
     const t0 = case0T('foo')
     expectTypeOf(t0).toEqualTypeOf<'foo'>()
