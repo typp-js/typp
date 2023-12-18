@@ -175,4 +175,12 @@ describe('function', () => {
     // @ts-expect-error
     objectSkmT({ foo: 1 })
   })
+  test('`implements` instance method', () => {
+    const case0 = t.function([], String)
+    const case0Impl = case0.implement(() => 'test')
+    expectTypeOf(case0Impl).toEqualTypeOf<() => string>()
+    // `Schema<any, any>` is not contains `implements` method which is only defined in `Schema<Function, any>`
+    // @ts-expect-error
+    t([]).implement
+  })
 })

@@ -1,4 +1,4 @@
-import { Collect, IsEqual, Replace, Stack } from '../base'
+import { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../base'
 import { t, Typp } from '..'
 
 const functionSymbol = Symbol('function')
@@ -41,10 +41,14 @@ declare module '..' {
         .generic]: Generic<string, t.Schema<any, any>, any>
     }
 
-    // interface SchemaMethodsEntries<A = any, B = any, C = any> {10000: [
-    //   A extends t.SpecialShape<t.SpecialShapeTypeMapping['function'], any> ? true : false, {
-    //   }
-    // ]}
+    interface SchemaMethodsEntries<A = any, B = any, C = any> {10000: [
+      (
+        & ([A] extends [t.SpecialShape<t.SpecialShapeTypeMapping['function'], any>] ? true : false)
+        & IsNotEqual<A, any>
+      ), {
+        implement(func: B): B
+      }
+    ]}
   }
 }
 t.defineSpecialShapeType('function', functionSymbol)
