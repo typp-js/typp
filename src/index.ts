@@ -1,4 +1,4 @@
-import { IsEqual, IsNotEqual, T2I, ValueOf } from './base'
+import { IsEqual, IsNotEqual, Pretty, T2I, U2I, ValueOf } from './base'
 import { Consumer } from './comsumer'
 
 export type Typp<T extends readonly any[]> = true extends (
@@ -98,7 +98,7 @@ export namespace t {
   export type SchemaMethodsMapping<
     A = any, B = any, C = any,
     Entries extends SchemaMethodsEntries<A, B, C> = SchemaMethodsEntries<A, B, C>
-  > = [keyof Entries] extends [infer Keys extends number] ? (
+  > = [keyof Entries] extends [infer Keys extends number] ? Pretty<U2I<
     ValueOf<{
       [ K in Keys
         as true extends (
@@ -109,7 +109,7 @@ export namespace t {
     }> extends infer R
       ? [R] extends [never] ? {} : R
       : never
-  ) : {}
+  >> : {}
   export interface SchemaMethodsAll<Shape, T> {
     // TODO keyof
     // TODO omit
@@ -131,10 +131,9 @@ export namespace t {
     meta: SchemaMeta<Shape, T>
   }
 
-  type _Schema<Shape, T> =
+  export type Schema<Shape, T> =
     & SchemaFields<Shape, T>
     & SchemaMethods<Shape, T>
-  export interface Schema<Shape, T> extends _Schema<Shape, T> {}
   export type Infer<T extends Schema<any, any>> = [T] extends [never]
     ? never
     : [T] extends [Schema<any, infer R>] ? R : never
@@ -198,6 +197,7 @@ export namespace t {
     or<
       const U extends readonly any[],
       Shapes extends readonly [any, ...any[]] = [Shape, ...U]
+      // @ts-ignore FIXME
     >(...t: U): Union<Shapes>
   }
   export type Union<
