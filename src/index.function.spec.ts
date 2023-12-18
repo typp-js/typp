@@ -94,20 +94,8 @@ describe('function', () => {
     )
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
-        [t.Schema<
-          t.SpecialShape<
-            t.SpecialShapeTypeMapping['generic'],
-            t.Generic<'T', t.Schema<StringConstructor, string>, never>
-          >,
-          t.Generic<'T', t.Schema<StringConstructor, string>, never>
-        >],
-        t.Schema<
-          t.SpecialShape<
-            t.SpecialShapeTypeMapping['generic'],
-            t.Generic<'T', t.Schema<StringConstructor, string>, never>
-          >,
-          t.Generic<'T', t.Schema<StringConstructor, string>, never>
-        >
+        [t.GenericSchema<t.Generic<'T', t.Schema<StringConstructor, string>, never>>],
+        t.GenericSchema<t.Generic<'T', t.Schema<StringConstructor, string>, never>>
       ]>,
       <T extends string = never>(args_0: T) => T
     >>()
