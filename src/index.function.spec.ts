@@ -138,9 +138,9 @@ describe('function', () => {
   })
   test('generic in `args` nested structure', () => {
     const T = t.generic('T', t.string())
-    const skm = t(Function, [t(Array, T)])
+    const arraySkm = t(Function, [t(Array, T)])
     type TSkm = typeof T
-    expectTypeOf(skm).toEqualTypeOf<t.Schema<
+    expectTypeOf(arraySkm).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
         [t.Schema<
           t.GenericSchema<TSkm['schemas']>[],
@@ -150,7 +150,21 @@ describe('function', () => {
       ]>,
       <T extends string = never>(args_0: T[]) => void
     >>()
-    expectTypeOf<t.Infer<typeof skm>>()
+    expectTypeOf<t.Infer<typeof arraySkm>>()
       .toEqualTypeOf<<T extends string = never>(args_0: T[]) => void>()
+
+    const tupleSkm = t(Function, [t([T])])
+    expectTypeOf(tupleSkm).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
+        [t.Schema<
+          [t.GenericSchema<TSkm['schemas']>],
+          [TSkm['schemas']]
+        >],
+        t.Schema<typeof t.Symbols.void, void>
+      ]>,
+      <T extends string = never>(args_0: [T]) => void
+    >>()
+    expectTypeOf<t.Infer<typeof tupleSkm>>()
+      .toEqualTypeOf<<T extends string = never>(args_0: [T]) => void>()
   })
 })

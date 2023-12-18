@@ -62,10 +62,6 @@ export type FunctionConsume<
     infer Rest extends readonly any[]
   ] ? (
     [
-      // TODO resolve generic
-      Collect<Args, t.SpecialShape<
-        t.SpecialShapeTypeMapping['generic'], t.Generic<string>
-      >>,
       t.TyppT<Args>,
       true extends (
         | IsEqual<Rest, []>
@@ -73,23 +69,23 @@ export type FunctionConsume<
       ) ? t.Schema<typeof t.Symbols.void, void>
         : Typp<Rest>
     ] extends [
-      infer GenericSpecialShapes extends readonly t.SpecialShape<t.SpecialShapeTypeMapping['generic'], t.Generic<string>>[],
-      infer ArgsSchemas          extends readonly t.Schema<any, any>[],
-      infer RestSchema           extends t.Schema<any, any>
+      infer ArgsSchemas extends readonly t.Schema<any, any>[],
+      infer RestSchema  extends t.Schema<any, any>
     ] ? (
-      InferGenericsFromSpecialShapes<GenericSpecialShapes> extends (
-        infer Generics extends readonly t.Generic<string>[]
-      ) ? (
-        // Generics
+      [
+        Collect<t.InferT<ArgsSchemas>, t.Generic<string>>,
+      ] extends [
+        infer Generics extends readonly t.Generic<string>[],
+      ] ? (
         AggregationGenerics<Generics> extends infer AGenerics extends readonly t.Generic<string>[] ? (
-            t.Schema<
-              t.SpecialShape<t.SpecialShapeTypeMapping['function'], [ArgsSchemas, RestSchema]>,
-              AGenerics['length'] extends 0 ? (
-                (...args: t.InferT<ArgsSchemas>) => t.Infer<RestSchema>
-              ) : (
-                GenericsFuncMap<AGenerics, t.InferT<ArgsSchemas>, t.Infer<RestSchema>>[Generics['length']]
-              )
-            >
+          t.Schema<
+            t.SpecialShape<t.SpecialShapeTypeMapping['function'], [ArgsSchemas, RestSchema]>,
+            AGenerics['length'] extends 0 ? (
+              (...args: t.InferT<ArgsSchemas>) => t.Infer<RestSchema>
+            ) : (
+              GenericsFuncMap<AGenerics, t.InferT<ArgsSchemas>, t.Infer<RestSchema>>[Generics['length']]
+            )
+          >
         ) : never
       ) : never
     ) : never
