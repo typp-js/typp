@@ -40,6 +40,11 @@ declare module '..' {
       [t.specialShapeTypeMapping
         .generic]: Generic<string, t.Schema<any, any>, any>
     }
+
+    // interface SchemaMethodsEntries<A = any, B = any, C = any> {10000: [
+    //   A extends t.SpecialShape<t.SpecialShapeTypeMapping['function'], any> ? true : false, {
+    //   }
+    // ]}
   }
 }
 t.defineSpecialShapeType('function', functionSymbol)

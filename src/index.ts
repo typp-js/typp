@@ -1,4 +1,4 @@
-import { IsEqual, T2I } from './base'
+import { IsEqual, IsNotEqual, T2I, ValueOf } from './base'
 import { Consumer } from './comsumer'
 
 export type Typp<T extends readonly any[]> = true extends (
@@ -92,7 +92,25 @@ export namespace t {
   }
   export interface SchemaMeta<Shape, T> {
   }
-  export interface SchemaMethods<Shape, T> {
+  export interface SchemaMethodsEntries<A = any, B = any, C = any> {
+    [key: number & {}]: [boolean, any]
+  }
+  export type SchemaMethodsMapping<
+    A = any, B = any, C = any,
+    Entries extends SchemaMethodsEntries<A, B, C> = SchemaMethodsEntries<A, B, C>
+  > = [keyof Entries] extends [infer Keys extends number] ? (
+    ValueOf<{
+      [ K in Keys
+        as true extends (
+          & Entries[K][0]
+          & IsNotEqual<K, number & {}>
+        ) ? K : never
+      ]: Entries[K][1]
+    }> extends infer R
+      ? [R] extends [never] ? {} : R
+      : never
+  ) : {}
+  export interface SchemaMethodsAll<Shape, T> {
     // TODO keyof
     // TODO omit
     // TODO pick
@@ -105,10 +123,14 @@ export namespace t {
     // TODO partial
     // TODO required
   }
+  export type SchemaMethods<Shape, T> =
+    & SchemaMethodsMapping<Shape, T>
+    & SchemaMethodsAll<Shape, T>
   export interface SchemaFields<Shape, T> {
     shape: Shape
     meta: SchemaMeta<Shape, T>
   }
+
   type _Schema<Shape, T> =
     & SchemaFields<Shape, T>
     & SchemaMethods<Shape, T>
@@ -159,7 +181,7 @@ export namespace t {
 }
 // Calculate type
 export namespace t {
-  export interface SchemaMethods<Shape, T> {
+  export interface SchemaMethodsAll<Shape, T> {
     and<
       const U extends any,
       Shapes extends readonly [any, ...any[]] = [Shape, U]
