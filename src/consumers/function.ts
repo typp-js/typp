@@ -41,13 +41,14 @@ declare module '..' {
         .generic]: Generic<string, t.Schema<any, any>, any>
     }
 
+    interface FunctionSchemaMethods<Shape, T> {
+      implement(func: T): T
+    }
     interface SchemaMethodsEntries<A = any, B = any, C = any> {10000: [
       (
         & ([A] extends [t.SpecialShape<t.SpecialShapeTypeMapping['function'], any>] ? true : false)
         & IsNotEqual<A, any>
-      ), {
-        implement(func: B): B
-      }
+      ), FunctionSchemaMethods<A, B>
     ]}
   }
 }
