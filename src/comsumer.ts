@@ -115,10 +115,7 @@ type InferSpecialShape<
   ) : true extends (
     IsEqual<T['type'], t.SpecialShapeTypeMapping['generic']>
   ) ? (
-    t.Schema<
-      t.SpecialShape<t.SpecialShapeTypeMapping['generic'], T['schemas']>,
-      T['schemas']
-    >
+    t.GenericSchema<T['schemas']>
   ) : never
 ) : never
 

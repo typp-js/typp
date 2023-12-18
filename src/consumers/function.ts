@@ -18,6 +18,9 @@ declare module '..' {
       extends: E
       default: D
     }
+    export type GenericSchema<G extends Generic<string>> = t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['generic'], G>, G
+    >
     export function generic<
       const L extends string,
       E extends t.Schema<any, any> = t.Schema<any, any>,
