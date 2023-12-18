@@ -136,4 +136,21 @@ describe('function', () => {
     // @ts-expect-error
     case0T(1)
   })
+  test('generic in `args` nested structure', () => {
+    const T = t.generic('T', t.string())
+    const skm = t(Function, [t(Array, T)])
+    type TSkm = typeof T
+    expectTypeOf(skm).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
+        [t.Schema<
+          t.GenericSchema<TSkm['schemas']>[],
+          TSkm['schemas'][]
+        >],
+        t.Schema<typeof t.Symbols.void, void>
+      ]>,
+      <T extends string = never>(args_0: T[]) => void
+    >>()
+    expectTypeOf<t.Infer<typeof skm>>()
+      .toEqualTypeOf<<T extends string = never>(args_0: T[]) => void>()
+  })
 })
