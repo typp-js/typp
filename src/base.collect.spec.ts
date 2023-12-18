@@ -26,6 +26,9 @@ test('nested', () => {
     IsSameTuple<Collect<[1, 2, '3', 4 | 5], number>, [1, 2, 4, 5]>
   >().toEqualTypeOf<true>()
   expectTypeOf<
+    Collect<[[1]], number>
+  >().toEqualTypeOf<[1]>()
+  expectTypeOf<
     IsSameTuple<Collect<{
       a: 1
       b: 2

@@ -61,7 +61,7 @@ export type Collect<T, U> = IsUnion<T> extends true ? (
   [L] extends [U]
     ? [...Collect<L, U>, ...Collect<R, U>]
     : [R] extends [[]]
-      ? []
+      ? Collect<L, U>
       : Collect<R, U>
 ) : [T] extends [Record<string | symbol | number, any>] ? (
   true extends (
