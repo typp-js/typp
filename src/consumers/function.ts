@@ -43,6 +43,10 @@ declare module '..' {
 
     interface FunctionSchemaMethods<Shape, T> {
       implement(func: T): T
+      // TODO args()
+      // TODO returns()
+      // TODO getter parameters
+      // TODO getter returnType
     }
     interface SchemaMethodsEntries<A = any, B = any, C = any> {10000: [
       (
