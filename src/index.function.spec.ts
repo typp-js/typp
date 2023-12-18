@@ -160,5 +160,31 @@ describe('function', () => {
     >>()
     expectTypeOf<t.Infer<typeof tupleSkm>>()
       .toEqualTypeOf<<T extends string = never>(args_0: [T]) => void>()
+    const tupleSkmT = (() => void 0) as t.Infer<typeof tupleSkm>
+    tupleSkmT(['foo'])
+    // @ts-expect-error
+    tupleSkmT([1])
+    // @ts-expect-error
+    tupleSkmT(['foo', 'bar'])
+    // @ts-expect-error
+    tupleSkmT([])
+
+    const objectSkm = t(Function, [t({ foo: T })])
+    expectTypeOf(objectSkm).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
+        [t.Schema<
+          { foo: t.GenericSchema<TSkm['schemas']> },
+          { foo: TSkm['schemas'] }
+        >],
+        t.Schema<typeof t.Symbols.void, void>
+      ]>,
+      <T extends string = never>(args_0: { foo: T }) => void
+    >>()
+    expectTypeOf<t.Infer<typeof objectSkm>>()
+      .toEqualTypeOf<<T extends string = never>(args_0: { foo: T }) => void>()
+    const objectSkmT = (() => void 0) as t.Infer<typeof objectSkm>
+    objectSkmT({ foo: 'foo' })
+    // @ts-expect-error
+    objectSkmT({ foo: 1 })
   })
 })
