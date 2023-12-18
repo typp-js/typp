@@ -527,7 +527,7 @@ describe('intersect', () => {
 
     const case2 = t(String).and(t({}))
     expectTypeOf(case2).toEqualTypeOf<
-      t.Schema<StringConstructor, string>
+      t.Schema<StringConstructor, string & {}>
     >()
     expectTypeOf<t.Infer<typeof case2>>()
       .toEqualTypeOf<string>()
@@ -535,7 +535,7 @@ describe('intersect', () => {
     //   ^?
     const case3 = t(String).and(t.unknown())
     expectTypeOf(case3).toEqualTypeOf<
-      t.Schema<StringConstructor, string>
+      t.Schema<StringConstructor, string & {}>
     >()
     expectTypeOf<t.Infer<typeof case3>>()
       .toEqualTypeOf<string>()
@@ -548,7 +548,7 @@ describe('intersect', () => {
           t.Schema<'11', '11'>,
           t.Schema<'22', '22'>,
           t.Schema<'33', '33'>,
-          t.Schema<StringConstructor, string>
+          t.Schema<StringConstructor, string & {}>
         ]
       >,
       '11' | '22' | '33' | (string & {})
