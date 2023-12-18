@@ -132,7 +132,7 @@ export namespace t {
     [TyppWhenNotATypp<Item>, ...TyppT<Rest>]
   ) : []
   // infer type from every item of `tuple` type
-  export type InferT<T extends readonly Schema<any, any>[]> = T extends [
+  export type InferT<T extends readonly Schema<any, any>[]> = T extends readonly [
     infer Item extends Schema<any, any>,
     ...infer Rest extends readonly Schema<any, any>[]
   ] ? (
