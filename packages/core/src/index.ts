@@ -212,9 +212,11 @@ export namespace t {
           Infers<Schemas>
         >
     ) : never
-  export declare function union<
+  export function union<
     const T extends readonly any[]
-  >(t: T): Union<T>
+  >(t: T): Union<T> {
+    return {} as Union<T>
+  }
   export const or = union
 
   export type Intersect<
@@ -231,10 +233,61 @@ export namespace t {
           T2I<InferT<Schemas>>
         >
     ) : never
-  export declare function intersect<
+  export function intersect<
     const T extends readonly [any, ...any[]]
-  >(t: T): Intersect<T>
+  >(t: T): Intersect<T> {
+    return {} as Intersect<T>
+  }
   export const and = intersect
 }
 
 export const typp: typeof t = t
+
+// Extensible
+export namespace t {
+  const cantRefine = [
+    'defineStatic',
+    'defineSpecialShapeType',
+    'Symbols'
+  ] as const
+  export interface DefineStaticOptions {
+    /**
+     * if `true`, will override the existed static function.
+     * else, will throw an error when override the existed static function.
+     *
+     * @default false
+     */
+    override?: boolean
+  }
+  export function defineStatic<
+    K extends keyof typeof t, V extends typeof t[K]
+  >(key: K, value: V, options: DefineStaticOptions = {}) {
+    if ((
+      cantRefine as unknown as string[]
+    ).includes(key)) {
+      throw new Error(`can not refine static field "${key}" for typp`)
+    }
+    const isExisted = Object.prototype.hasOwnProperty.call(t, key)
+    if (isExisted && !options.override) {
+      throw new Error(`can not refine static field "${key}" for typp`)
+    }
+    Object.defineProperty(t, key, {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value
+    })
+    return () => {
+      const isExisted = Object.prototype.hasOwnProperty.call(t, key)
+      if (!isExisted || t[key] !== value)
+        return
+      Object.defineProperty(t, key, {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: undefined
+      })
+      delete t[key]
+    }
+  }
+}
