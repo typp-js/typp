@@ -1,7 +1,7 @@
 import { IsEqual, Stack } from '../types'
-import { t, Typp } from '..'
+import { t, Typp } from '../index'
 
-declare module '..' {
+declare module '../index' {
   namespace t {
     // TODO keyof
     // TODO omit

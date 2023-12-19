@@ -1,7 +1,9 @@
 {
+  "name": "typp-workspace",
+  "description": "A workspace for typp project.",
   "scripts": {
-    "test": "vitest --typecheck",
-    "coverage": "vitest run --coverage"
+    "test": "pnpm --recursive run test",
+    "coverage": "pnpm --recursive run coverage"
   },
   "devDependencies": {
     "@types/node": "^18.19.3",

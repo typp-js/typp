@@ -1,0 +1,8 @@
+{
+  "name": "@typp/core",
+  "description": "Checking your type in javascript.",
+  "scripts": {
+    "test": "vitest --typecheck --no-watch",
+    "coverage": "vitest run --coverage"
+  }
+}

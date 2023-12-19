@@ -1,9 +1,9 @@
 import { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../types'
-import { t, Typp } from '..'
+import { t, Typp } from '../index'
 
 const functionSymbol = Symbol('function')
 const genericSymbol = Symbol('generic')
-declare module '..' {
+declare module '../index' {
   namespace t {
     export function fn<
       const Args extends readonly any[],

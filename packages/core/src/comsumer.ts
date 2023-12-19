@@ -4,7 +4,7 @@ import { FunctionConsume } from './consumers/function'
 import { MapConsume } from './consumers/map'
 import { ObjectConsume } from './consumers/object'
 import { SetConsume } from './consumers/set'
-import { t } from '.'
+import { t } from './index'
 
 type Consume<
   T,
