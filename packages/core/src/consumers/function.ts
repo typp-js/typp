@@ -3,7 +3,7 @@ import { t, Typp } from '..'
 
 const functionSymbol = Symbol('function')
 const genericSymbol = Symbol('generic')
-declare module '..' {
+declare module '@typp/core' {
   namespace t {
     export function fn<
       const Args extends readonly any[],

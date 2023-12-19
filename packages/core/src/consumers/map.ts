@@ -1,7 +1,7 @@
 import { IsEqual, Stack } from '../types'
 import { t, Typp } from '..'
 
-declare module '..' {
+declare module '@typp/core' {
   namespace t {
     export interface Map<
       KSchema extends t.Schema<any, any>,
