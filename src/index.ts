@@ -75,12 +75,6 @@ export namespace t {
   export interface SpecialShapeSchemaMapping {
     [k: SpecialShapeTypes]: any
   }
-  export interface SpecialShapeSchemaMapping {
-    [specialShapeTypeMapping.union]: readonly Schema<any, any>[]
-  }
-  export interface SpecialShapeSchemaMapping {
-    [specialShapeTypeMapping.intersection]: readonly Schema<any, any>[]
-  }
   export type SpecialShapeTypeMapping = typeof specialShapeTypeMapping
   export type SpecialShapeTypes = SpecialShapeTypeMapping[keyof SpecialShapeTypeMapping]
   export interface SpecialShape<
@@ -111,16 +105,10 @@ export namespace t {
       : never
   >> : {}
   export interface SchemaMethodsAll<Shape, T> {
-    // TODO keyof
-    // TODO omit
-    // TODO pick
-    // TODO exclude
-    // TODO extract
-    // TODO nonNullable
-    // TODO nullable
     // TODO readonly
     // TODO mutable
-    // TODO partial
+    // TODO nullable
+    // TODO nonNullable
     // TODO required
   }
   export type SchemaMethods<Shape, T> =
@@ -180,6 +168,14 @@ export namespace t {
 }
 // Calculate type
 export namespace t {
+  // TODO exclude
+  // TODO extract
+  interface SpecialShapeSchemaMapping {
+    [specialShapeTypeMapping.union]: readonly Schema<any, any>[]
+  }
+  interface SpecialShapeSchemaMapping {
+    [specialShapeTypeMapping.intersection]: readonly Schema<any, any>[]
+  }
   export interface SchemaMethodsAll<Shape, T> {
     and<
       const U extends any,

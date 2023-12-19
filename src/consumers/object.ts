@@ -1,6 +1,15 @@
 import { IsEqual, Stack } from '../types'
 import { t, Typp } from '..'
 
+declare module '..' {
+  namespace t {
+    // TODO keyof
+    // TODO omit
+    // TODO pick
+    // TODO partial
+  }
+}
+
 export type ObjectConsume<
   T,
   Rest extends any[]
