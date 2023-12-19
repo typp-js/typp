@@ -1,4 +1,4 @@
-import { IsEqual } from '../base'
+import { IsEqual } from '../types'
 import { t, Typp } from '..'
 
 declare module '..' {

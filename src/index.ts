@@ -1,4 +1,4 @@
-import { IsEqual, IsNotEqual, Pretty, T2I, U2I, ValueOf } from './base'
+import { IsEqual, IsNotEqual, Pretty, T2I, U2I, ValueOf } from './types'
 import { Consumer } from './comsumer'
 
 export type Typp<T extends readonly any[]> = true extends (

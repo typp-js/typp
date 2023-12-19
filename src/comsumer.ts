@@ -1,4 +1,4 @@
-import { ConstructorMapping, IsEqual, IsNotEqual, Stack, UseWhenNoNever } from './base'
+import { ConstructorMapping, IsEqual, IsNotEqual, Stack, UseWhenNoNever } from './types'
 import { ArrayConsume } from './consumers/array'
 import { FunctionConsume } from './consumers/function'
 import { MapConsume } from './consumers/map'

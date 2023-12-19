@@ -1,4 +1,4 @@
-import { IsEqual, Stack } from '../base'
+import { IsEqual, Stack } from '../types'
 import { t, Typp } from '..'
 
 export type ObjectConsume<

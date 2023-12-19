@@ -1,5 +1,5 @@
 import { expectTypeOf, test } from 'vitest'
-import { Collect, IsSameTuple } from '../src/base'
+import { Collect, IsSameTuple } from '../src/types'
 
 test('base', () => {
   expectTypeOf<Collect<[1, 2, true, '3'], number>>()

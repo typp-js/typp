@@ -1,4 +1,4 @@
-import { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../base'
+import { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../types'
 import { t, Typp } from '..'
 
 const functionSymbol = Symbol('function')
