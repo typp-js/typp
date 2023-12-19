@@ -195,10 +195,9 @@ export namespace t {
     ) ? Schema<StringConstructor, string & {}>
       : Intersect<Shapes>
     or<
-      const U extends readonly any[],
-      Shapes extends readonly [any, ...any[]] = [Shape, ...U]
-      // @ts-ignore FIXME
-    >(...t: U): Union<Shapes>
+      const U extends any,
+      Shapes extends readonly [any, ...any[]] = [Shape, U]
+    >(t: U): Union<Shapes>
   }
   export type Union<
     Shapes extends readonly any[],
