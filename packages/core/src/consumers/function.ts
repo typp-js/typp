@@ -30,7 +30,7 @@ declare module '@typp/core' {
       Generic<L, E, D>
     >
 
-    interface DynamicSpecialShapeTypeMapping {
+    export interface DynamicSpecialShapeTypeMapping {
       readonly function: typeof functionSymbol
       readonly generic: typeof genericSymbol
     }
