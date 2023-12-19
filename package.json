@@ -2,6 +2,7 @@
   "name": "typp-workspace",
   "description": "A workspace for typp project.",
   "scripts": {
+    "lint": "eslint --cache --cache-location=node_modules/.cache/.eslintcache/ ./ --max-warnings=0",
     "test": "pnpm --recursive run test",
     "coverage": "pnpm --recursive run coverage"
   },
@@ -10,6 +11,7 @@
     "@vitest/coverage-istanbul": "^1.0.4",
     "pnpm-helper": "workspace:*",
     "rollup-helper": "workspace:*",
+    "standard": "workspace:*",
     "typescript": "^5.3.3",
     "vitest": "^1.0.4"
   }

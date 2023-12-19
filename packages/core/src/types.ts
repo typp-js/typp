@@ -31,7 +31,7 @@ type LastInUnion<U> = U2I<
   ? L
   : never
 
-type U2T_Exclude<T,U> = T extends U ? (<A>() => (A extends T ? 1 : 2)) extends (<A>() => (A extends U ? 1 : 2)) ? never : T : T
+type U2T_Exclude<T, U> = T extends U ? (<A>() => (A extends T ? 1 : 2)) extends (<A>() => (A extends U ? 1 : 2)) ? never : T : T
 /**
  * U2T<1 | 2> = [1, 2].
  */

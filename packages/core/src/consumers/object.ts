@@ -1,5 +1,5 @@
-import { IsEqual, Stack } from '../types'
-import { t, Typp } from '..'
+import type { t, Typp } from '..'
+import type { IsEqual, Stack } from '../types'
 
 declare module '@typp/core' {
   namespace t {

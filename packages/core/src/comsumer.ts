@@ -1,11 +1,11 @@
-import { ConstructorMapping, IsEqual, IsNotEqual, Stack, UseWhenNoNever } from './types'
-import { ArrayConsume } from './consumers/array'
-import { FunctionConsume } from './consumers/function'
-import { MapConsume } from './consumers/map'
-import { ObjectConsume } from './consumers/object'
-import { SetConsume } from './consumers/set'
-import { PrimitiveMapping } from './consumers/primitive'
-import { t } from '.'
+import type { t } from '.'
+import type { ArrayConsume } from './consumers/array'
+import type { FunctionConsume } from './consumers/function'
+import type { MapConsume } from './consumers/map'
+import type { ObjectConsume } from './consumers/object'
+import type { PrimitiveMapping } from './consumers/primitive'
+import type { SetConsume } from './consumers/set'
+import type { ConstructorMapping, IsEqual, IsNotEqual, Stack, UseWhenNoNever } from './types'
 
 type Consume<
   T,

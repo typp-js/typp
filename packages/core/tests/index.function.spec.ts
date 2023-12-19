@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, test } from 'vitest'
+
 import { t } from '../src'
 
 describe('function', () => {

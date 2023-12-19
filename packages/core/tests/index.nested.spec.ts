@@ -1,4 +1,4 @@
-import { test, expectTypeOf, describe } from 'vitest'
+import { describe, expectTypeOf, test } from 'vitest'
 
 import { t } from '../src'
 

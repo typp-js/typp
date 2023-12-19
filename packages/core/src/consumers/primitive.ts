@@ -1,5 +1,5 @@
-import { t } from '..'
-import { IsEqual } from '../types'
+import type { t } from '..'
+import type { IsEqual } from '../types'
 
 type LiteralPlaceholder<T extends string = string> = `__DO_NOT_USE_SAME_LITERAL_${T}__IF_YOU_WANT_TO_USE_IT__`
 interface LiteralStringMapping {

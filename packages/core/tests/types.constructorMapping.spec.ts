@@ -1,4 +1,4 @@
-import { test, expectTypeOf } from 'vitest'
+import { expectTypeOf, test } from 'vitest'
 
 import type { ConstructorMapping } from '../src/types'
 

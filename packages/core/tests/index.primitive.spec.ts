@@ -1,4 +1,4 @@
-import { test, expectTypeOf, describe } from 'vitest'
+import { describe, expectTypeOf, test } from 'vitest'
 
 import { t } from '../src'
 
@@ -8,7 +8,7 @@ test('base', () => {
     [t(Number), Number, {} as number],
     [t(Boolean), Boolean, {} as boolean],
     [t(Symbol), Symbol, {} as symbol],
-    [t(BigInt), BigInt, {} as bigint],
+    [t(BigInt), BigInt, {} as bigint]
   ] as const
 
   expectTypeOf(cases[0][0])

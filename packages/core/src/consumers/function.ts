@@ -1,5 +1,6 @@
-import { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../types'
-import { t, Typp } from '..'
+import type { Typp } from '..'
+import { t } from '..'
+import type { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../types'
 
 const functionSymbol = Symbol('function')
 const genericSymbol = Symbol('generic')
@@ -85,7 +86,7 @@ export type FunctionConsume<
         : Typp<Rest>
     ] extends [
       infer ArgsSchemas extends readonly t.Schema<any, any>[],
-      infer RestSchema  extends t.Schema<any, any>
+      infer RestSchema extends t.Schema<any, any>
     ] ? (
       [
         Collect<t.InferT<ArgsSchemas>, t.Generic<string>>,
@@ -131,7 +132,7 @@ type AggregationGenerics<
 interface GenericsFuncMap<
   Generics extends readonly t.Generic<string>[],
   Args extends readonly any[] = [],
-  RT extends any = void
+  RT = void
 > {
   1: <
     T extends t.Infer<Generics[0]['extends']> = Generics[0]['default']

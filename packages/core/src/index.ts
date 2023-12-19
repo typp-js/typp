@@ -1,5 +1,5 @@
-import { IsEqual, IsNotEqual, Pretty, T2I, U2I, ValueOf } from './types'
-import { Consumer } from './comsumer'
+import type { Consumer } from './comsumer'
+import type { IsEqual, IsNotEqual, Pretty, T2I, U2I, ValueOf } from './types'
 
 export type Typp<T extends readonly any[]> = true extends (
   | IsEqual<T, []>
@@ -176,7 +176,7 @@ export namespace t {
   }
   export interface SchemaMethodsAll<Shape, T> {
     and<
-      const U extends any,
+      const U,
       Shapes extends readonly [any, ...any[]] = [Shape, U]
     >(t: U): true extends (
       & ([T] extends [string] ? true : false)
@@ -189,7 +189,7 @@ export namespace t {
     ) ? Schema<StringConstructor, string & {}>
       : Intersect<Shapes>
     or<
-      const U extends any,
+      const U,
       Shapes extends readonly [any, ...any[]] = [Shape, U]
     >(t: U): Union<Shapes>
   }
