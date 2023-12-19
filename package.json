@@ -1,12 +1,14 @@
 {
   "scripts": {
-    "test": "vitest --typecheck"
+    "test": "vitest --typecheck",
+    "coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@types/node": "^18.19.3",
-    "typescript": "^5.3.3",
-    "vitest": "^1.0.4",
+    "@vitest/coverage-istanbul": "^1.0.4",
+    "pnpm-helper": "workspace:*",
     "rollup-helper": "workspace:*",
-    "pnpm-helper": "workspace:*"
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.4"
   }
 }
