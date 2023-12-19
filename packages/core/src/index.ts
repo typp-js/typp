@@ -52,8 +52,6 @@ literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
   'UNDEFINED'
 }__IF_YOU_WANT_TO_USE_IT__` as const
 
-t.function = t.fn
-
 // Base type
 export namespace t {
   export interface DynamicSpecialShapeTypeMapping {

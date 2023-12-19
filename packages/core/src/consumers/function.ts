@@ -9,6 +9,7 @@ declare module '@typp/core' {
       const Args extends readonly any[],
       RT extends readonly any[] = []
     >(args: Args, ...rt: RT): Typp<[FunctionConstructor, Args, ...RT]>
+    export { fn as function }
     export interface Generic<
       L extends string,
       E extends t.Schema<any, any> = t.Schema<any, any>,
