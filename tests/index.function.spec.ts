@@ -1,5 +1,5 @@
 import { describe, expectTypeOf, test } from 'vitest'
-import { t } from '.'
+import { t } from '../src'
 
 describe('function', () => {
   test('base', () => {

@@ -1,6 +1,6 @@
 import { test, expectTypeOf, describe } from 'vitest'
 
-import { t } from './index'
+import { t } from '../src'
 
 test('primitive', () => {
   const cases = [

@@ -1,6 +1,6 @@
 import { test, expectTypeOf } from 'vitest'
 
-import type { ConstructorMapping } from './base'
+import type { ConstructorMapping } from '../src/base'
 
 test('base', () => {
   expectTypeOf<ConstructorMapping<StringConstructor>>()

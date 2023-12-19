@@ -5,8 +5,9 @@ export default defineConfig({
     coverage: {
       provider: 'istanbul'
     },
+    include: ['**/tests/**/*.spec.ts'],
     typecheck: {
-      include: ['**/src/**/*.spec.ts']
+      include: ['**/tests/**/*.spec.ts']
     }
   }
 })

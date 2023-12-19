@@ -1,5 +1,5 @@
 import { expectTypeOf, test } from 'vitest'
-import { Replace } from './base'
+import { Replace } from '../src/base'
 
 test('base', () => {
   //   _?
