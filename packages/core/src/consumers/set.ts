@@ -1,7 +1,7 @@
 import { IsEqual } from '../types'
-import { t, Typp } from '../index'
+import { t, Typp } from '..'
 
-declare module '../index' {
+declare module '..' {
   namespace t {
     export interface Set<S extends t.Schema<any, any>> {
       itemSchema: S

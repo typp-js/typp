@@ -1,5 +1,5 @@
 import { IsEqual } from '../types'
-import { t, Typp } from '../index'
+import { t, Typp } from '..'
 
 export type ArrayConsume<
   T,
