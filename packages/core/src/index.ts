@@ -64,6 +64,8 @@ export namespace t {
     // TODO nullable
     // TODO nonNullable
     // TODO required
+    // TODO optional
+    infer(t: T): T
   }
   export type SchemaMethods<Shape, T> =
     & SchemaMethodsMapping<Shape, T>
@@ -82,6 +84,10 @@ export namespace t {
   export type Infer<T extends Schema<any, any>> = [T] extends [never]
     ? never
     : [T] extends [Schema<any, infer R>] ? R : never
+
+  export function infer<const T extends any[]>(...t: T) {
+    return (obj: Infer<Typp<T>>) => obj
+  }
 
   export type TyppWhenNotATypp<T> = [T] extends [Schema<any, any>] ? T : Typp<[T]>
   // make every item of `union` type which wrapped `Typp` for getting `Schema`
