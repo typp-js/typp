@@ -6,8 +6,6 @@ const unionSymbol = Symbol('union')
 const intersectionSymbol = Symbol('intersection')
 declare module '@typp/core' {
   export namespace t {
-    import Symbols = t.Symbols
-
     // TODO exclude
     // TODO extract
     export interface DynamicSpecialShapeTypeMapping {
@@ -30,7 +28,7 @@ declare module '@typp/core' {
           | IsEqual<U, {}>
           | IsEqual<U, unknown>
           | IsEqual<U, t.Schema<{}, {}>>
-          | IsEqual<U, t.Schema<typeof Symbols.unknown, unknown>>
+          | IsEqual<U, t.Schema<typeof t.Symbols.unknown, unknown>>
         )
       ) ? t.Schema<StringConstructor, string & {}>
         : Intersect<Shapes>
