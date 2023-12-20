@@ -10,48 +10,6 @@ export function t<const T extends any[]>(...t: T): Typp<T> {
   return {} as Typp<T>
 }
 
-const symbols = Object.freeze({
-  void: Symbol('void'),
-  unknown: Symbol('unknown'),
-  never: Symbol('never')
-}) as {
-  readonly void: unique symbol
-  readonly unknown: unique symbol
-  readonly never: unique symbol
-}
-
-t.null = function (): t.Schema<null, null> {
-  return {} as t.Schema<null, null>
-}
-t.void = function (): t.Schema<typeof symbols.void, void> {
-  return {} as t.Schema<typeof symbols.void, void>
-}
-
-t.literal = t.const = literal
-function literal<
-  T extends string | number | bigint | symbol | null | boolean | undefined
->(value: T): Typp<[T]> {
-  return {} as Typp<[T]>
-}
-literal.String = `__DO_NOT_USE_SAME_LITERAL_${
-  'STRING'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.Number = `__DO_NOT_USE_SAME_LITERAL_${
-  'NUMBER'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.BigInt = `__DO_NOT_USE_SAME_LITERAL_${
-  'BIGINT'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.Null = `__DO_NOT_USE_SAME_LITERAL_${
-  'NULL'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.Boolean = `__DO_NOT_USE_SAME_LITERAL_${
-  'BOOLEAN'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
-  'UNDEFINED'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-
 // Base type
 export namespace t {
   export interface DynamicSpecialShapeTypeMapping {
@@ -146,26 +104,10 @@ export namespace t {
     [Infer<Item>, ...InferT<Rest>]
   ) : []
 }
-// Base static function
-export namespace t {
-  /**
-   * rename and export to user
-   */
-  export const Symbols = symbols
-  export declare function any(): Schema<any, any>
-  export declare function unknown(): Schema<typeof symbols.unknown, unknown>
-  export declare function string(): Schema<StringConstructor, string>
-  export declare function number(): Schema<NumberConstructor, number>
-  export declare function bigint(): Schema<BigIntConstructor, bigint>
-  export declare function symbol(): Schema<SymbolConstructor, symbol>
-  export declare function boolean(): Schema<BooleanConstructor, boolean>
-  export declare function date(): Schema<DateConstructor, Date>
-  export declare function regexp(): Schema<RegExpConstructor, RegExp>
-  export declare function undefined(): Schema<undefined, undefined>
-  export declare function never(): Schema<typeof symbols.never, never>
-}
 // Calculate type
 export namespace t {
+  import Symbols = t.Symbols
+
   // TODO exclude
   // TODO extract
   interface SpecialShapeSchemaMapping {
@@ -184,7 +126,7 @@ export namespace t {
         | IsEqual<U, {}>
         | IsEqual<U, unknown>
         | IsEqual<U, Schema<{}, {}>>
-        | IsEqual<U, Schema<typeof symbols.unknown, unknown>>
+        | IsEqual<U, Schema<typeof Symbols.unknown, unknown>>
       )
     ) ? Schema<StringConstructor, string & {}>
       : Intersect<Shapes>
@@ -206,7 +148,7 @@ export namespace t {
       infer SchemaT extends Schema<any, any>[]
     ] ? (
       [Schemas] extends [never]
-        ? Schema<typeof symbols.never, never>
+        ? Schema<typeof Symbols.never, never>
         : Schema<
           SpecialShape<SpecialShapeTypeMapping['union'], SchemaT>,
           Infers<Schemas>
@@ -227,7 +169,7 @@ export namespace t {
       infer Schemas extends readonly Schema<any, any>[]
     ) ? (
       [Schemas] extends [never]
-        ? Schema<typeof symbols.never, never>
+        ? Schema<typeof Symbols.never, never>
         : Schema<
           SpecialShape<SpecialShapeTypeMapping['intersection'], Schemas>,
           T2I<InferT<Schemas>>
@@ -248,7 +190,6 @@ export namespace t {
   export const CANT_REFINE = Object.freeze([
     'defineStatic',
     'defineSpecialShapeType',
-    'Symbols',
     'CANT_REFINE'
   ] as const)
   type CantRefine = typeof CANT_REFINE[number]

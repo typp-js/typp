@@ -1,5 +1,74 @@
-import type { t } from '..'
+import type { Typp } from '..'
+import { t } from '..'
 import type { IsEqual } from '../types'
+
+function literal<
+  T extends string | number | bigint | symbol | null | boolean | undefined
+>(value: T): Typp<[T]> {
+  return {} as Typp<[T]>
+}
+literal.String = `__DO_NOT_USE_SAME_LITERAL_${
+  'STRING'
+}__IF_YOU_WANT_TO_USE_IT__` as const
+literal.Number = `__DO_NOT_USE_SAME_LITERAL_${
+  'NUMBER'
+}__IF_YOU_WANT_TO_USE_IT__` as const
+literal.BigInt = `__DO_NOT_USE_SAME_LITERAL_${
+  'BIGINT'
+}__IF_YOU_WANT_TO_USE_IT__` as const
+literal.Null = `__DO_NOT_USE_SAME_LITERAL_${
+  'NULL'
+}__IF_YOU_WANT_TO_USE_IT__` as const
+literal.Boolean = `__DO_NOT_USE_SAME_LITERAL_${
+  'BOOLEAN'
+}__IF_YOU_WANT_TO_USE_IT__` as const
+literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
+  'UNDEFINED'
+}__IF_YOU_WANT_TO_USE_IT__` as const
+t.defineStatic('literal', literal)
+
+const symbols = Object.freeze({
+  void: Symbol('void'),
+  unknown: Symbol('unknown'),
+  never: Symbol('never')
+}) as {
+  readonly void: unique symbol
+  readonly unknown: unique symbol
+  readonly never: unique symbol
+}
+t.defineStatic('Symbols', symbols)
+
+declare module '@typp/core' {
+  namespace t {
+    import Schema = t.Schema
+    /**
+     * rename and export to user
+     */
+    export const Symbols: typeof symbols
+
+    export function any(): Schema<any, any>
+    export function unknown(): Schema<typeof Symbols.unknown, unknown>
+    export function string(): Schema<StringConstructor, string>
+    export function number(): Schema<NumberConstructor, number>
+    export function bigint(): Schema<BigIntConstructor, bigint>
+    export function symbol(): Schema<SymbolConstructor, symbol>
+    export function boolean(): Schema<BooleanConstructor, boolean>
+    export function date(): Schema<DateConstructor, Date>
+    export function regexp(): Schema<RegExpConstructor, RegExp>
+    export function undefined(): Schema<undefined, undefined>
+    export function never(): Schema<typeof Symbols.never, never>
+
+    function _null(): t.Schema<null, null>
+    function _void(): t.Schema<typeof Symbols.void, void>
+    export { _null as null, _void as void }
+
+    const _literal: typeof literal
+    export {
+      _literal as const,
+      _literal as literal
+    }
+  }
+}
 
 type LiteralPlaceholder<T extends string = string> = `__DO_NOT_USE_SAME_LITERAL_${T}__IF_YOU_WANT_TO_USE_IT__`
 interface LiteralStringMapping {
