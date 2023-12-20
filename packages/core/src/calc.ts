@@ -1,26 +1,18 @@
+import type { Typp } from '.'
 import type { IsEqual, T2I } from './types'
 
 declare module '@typp/core' {
   // Calculate type
   export namespace t {
     import Symbols = t.Symbols
-    import specialShapeTypeMapping = t.specialShapeTypeMapping
-    import Schema = t.Schema
-    import Typps = t.Typps
-    import TyppT = t.TyppT
-    import SpecialShape = t.SpecialShape
-    import SpecialShapeTypeMapping = t.SpecialShapeTypeMapping
-    import Infers = t.Infers
-    import TyppWhenNotATypp = t.TyppWhenNotATypp
-    import InferT = t.InferT
 
     // TODO exclude
     // TODO extract
     export interface SpecialShapeSchemaMapping {
-      [specialShapeTypeMapping.union]: readonly Schema<any, any>[]
+      [t.specialShapeTypeMapping.union]: readonly t.Schema<any, any>[]
     }
     export interface SpecialShapeSchemaMapping {
-      [specialShapeTypeMapping.intersection]: readonly Schema<any, any>[]
+      [t.specialShapeTypeMapping.intersection]: readonly t.Schema<any, any>[]
     }
     export interface SchemaMethodsAll<Shape, T> {
       and<
@@ -31,10 +23,10 @@ declare module '@typp/core' {
         & (
           | IsEqual<U, {}>
           | IsEqual<U, unknown>
-          | IsEqual<U, Schema<{}, {}>>
-          | IsEqual<U, Schema<typeof Symbols.unknown, unknown>>
+          | IsEqual<U, t.Schema<{}, {}>>
+          | IsEqual<U, t.Schema<typeof Symbols.unknown, unknown>>
         )
-      ) ? Schema<StringConstructor, string & {}>
+      ) ? t.Schema<StringConstructor, string & {}>
         : Intersect<Shapes>
       or<
         const U,
@@ -47,17 +39,17 @@ declare module '@typp/core' {
     > = Shapes['length'] extends 1
       ? Typp<Shapes>
       : [
-        Typps<T>,
-        TyppT<Shapes>
+        t.Typps<T>,
+        t.TyppT<Shapes>
       ] extends [
-        infer Schemas extends Schema<any, any>,
-        infer SchemaT extends Schema<any, any>[]
+        infer Schemas extends t.Schema<any, any>,
+        infer SchemaT extends t.Schema<any, any>[]
       ] ? (
         [Schemas] extends [never]
-          ? Schema<typeof Symbols.never, never>
-          : Schema<
-            SpecialShape<SpecialShapeTypeMapping['union'], SchemaT>,
-            Infers<Schemas>
+          ? t.Schema<typeof t.Symbols.never, never>
+          : t.Schema<
+            t.SpecialShape<t.SpecialShapeTypeMapping['union'], SchemaT>,
+            t.Infers<Schemas>
           >
       ) : never
     export function union<const T extends readonly any[]>(t: T): Union<T>
@@ -66,15 +58,15 @@ declare module '@typp/core' {
     export type Intersect<
       Shapes extends readonly [any, ...any[]]
     > = Shapes['length'] extends 1
-      ? TyppWhenNotATypp<Shapes[0]>
-      : TyppT<Shapes> extends (
-        infer Schemas extends readonly Schema<any, any>[]
+      ? t.TyppWhenNotATypp<Shapes[0]>
+      : t.TyppT<Shapes> extends (
+        infer Schemas extends readonly t.Schema<any, any>[]
       ) ? (
         [Schemas] extends [never]
-          ? Schema<typeof Symbols.never, never>
-          : Schema<
-            SpecialShape<SpecialShapeTypeMapping['intersection'], Schemas>,
-            T2I<InferT<Schemas>>
+          ? t.Schema<typeof t.Symbols.never, never>
+          : t.Schema<
+            t.SpecialShape<t.SpecialShapeTypeMapping['intersection'], Schemas>,
+            T2I<t.InferT<Schemas>>
           >
       ) : never
     export function intersect<const T extends readonly [any, ...any[]]>(t: T): Intersect<T>

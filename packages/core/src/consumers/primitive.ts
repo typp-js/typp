@@ -40,26 +40,25 @@ t.defineStatic('Symbols', symbols)
 
 declare module '@typp/core' {
   namespace t {
-    import Schema = t.Schema
     /**
      * rename and export to user
      */
     export const Symbols: typeof symbols
 
-    export function any(): Schema<any, any>
-    export function unknown(): Schema<typeof Symbols.unknown, unknown>
-    export function string(): Schema<StringConstructor, string>
-    export function number(): Schema<NumberConstructor, number>
-    export function bigint(): Schema<BigIntConstructor, bigint>
-    export function boolean(): Schema<BooleanConstructor, boolean>
-    export function symbol(): Schema<SymbolConstructor, symbol>
-    export function date(): Schema<DateConstructor, Date>
-    export function regexp(): Schema<RegExpConstructor, RegExp>
-    export function undefined(): Schema<undefined, undefined>
-    export function never(): Schema<typeof Symbols.never, never>
+    export function any(): t.Schema<any, any>
+    export function unknown(): t.Schema<typeof Symbols.unknown, unknown>
+    export function string(): t.Schema<StringConstructor, string>
+    export function number(): t.Schema<NumberConstructor, number>
+    export function bigint(): t.Schema<BigIntConstructor, bigint>
+    export function boolean(): t.Schema<BooleanConstructor, boolean>
+    export function symbol(): t.Schema<SymbolConstructor, symbol>
+    export function date(): t.Schema<DateConstructor, Date>
+    export function regexp(): t.Schema<RegExpConstructor, RegExp>
+    export function undefined(): t.Schema<undefined, undefined>
+    export function never(): t.Schema<typeof Symbols.never, never>
 
-    function _null(): Schema<null, null>
-    function _void(): Schema<typeof Symbols.void, void>
+    function _null(): t.Schema<null, null>
+    function _void(): t.Schema<typeof Symbols.void, void>
     export { _null as null, _void as void }
 
     const _literal: typeof literal
