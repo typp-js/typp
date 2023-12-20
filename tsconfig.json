@@ -9,5 +9,6 @@
     "paths": {
       "@typp/*": ["./packages/*/src"]
     }
-  }
+  },
+  "exclude": ["node_modules", "**/dist"]
 }

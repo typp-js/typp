@@ -9,6 +9,8 @@
   "devDependencies": {
     "@types/node": "^18.19.3",
     "@vitest/coverage-istanbul": "^1.1.0",
+    "crrc": "workspace:*",
+    "esbuild-register": "^3.5.0",
     "pnpm-helper": "workspace:*",
     "rollup-helper": "workspace:*",
     "standard": "workspace:*",
