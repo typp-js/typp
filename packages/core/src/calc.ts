@@ -24,7 +24,7 @@ declare module '@typp/core' {
       and<
         const U,
         Shapes extends readonly [any, ...any[]] = [Shape, U]
-      >(t: U): true extends (
+      >(u: U): true extends (
         & ([T] extends [string] ? true : false)
         & (
           | IsEqual<U, {}>
@@ -75,7 +75,7 @@ declare module '@typp/core' {
             T2I<t.InferT<Schemas>>
           >
       ) : never
-    export function intersect<const T extends readonly [any, ...any[]]>(t: T): Intersect<T>
+    export function intersect<const T extends readonly [any, ...any[]]>(i: T): Intersect<T>
     export { intersect as and }
   }
 }
