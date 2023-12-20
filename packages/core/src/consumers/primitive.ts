@@ -2,31 +2,6 @@ import type { Typp } from '..'
 import { t } from '..'
 import type { IsEqual } from '../types'
 
-function literal<
-  T extends string | number | bigint | symbol | null | boolean | undefined
->(value: T): Typp<[T]> {
-  return {} as Typp<[T]>
-}
-literal.String = `__DO_NOT_USE_SAME_LITERAL_${
-  'STRING'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.Number = `__DO_NOT_USE_SAME_LITERAL_${
-  'NUMBER'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.BigInt = `__DO_NOT_USE_SAME_LITERAL_${
-  'BIGINT'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.Null = `__DO_NOT_USE_SAME_LITERAL_${
-  'NULL'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.Boolean = `__DO_NOT_USE_SAME_LITERAL_${
-  'BOOLEAN'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
-  'UNDEFINED'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-t.defineStatic('literal', literal)
-
 const symbols = Object.freeze({
   void: Symbol('void'),
   unknown: Symbol('unknown'),
@@ -68,6 +43,44 @@ declare module '@typp/core' {
     }
   }
 }
+t.defineStatic('any', () => <t.Schema<any, any>>({}))
+t.defineStatic('unknown', () => <t.Schema<typeof symbols.unknown, unknown>>({}))
+t.defineStatic('string', () => <t.Schema<StringConstructor, string>>({}))
+t.defineStatic('number', () => <t.Schema<NumberConstructor, number>>({}))
+t.defineStatic('bigint', () => <t.Schema<BigIntConstructor, bigint>>({}))
+t.defineStatic('boolean', () => <t.Schema<BooleanConstructor, boolean>>({}))
+t.defineStatic('symbol', () => <t.Schema<SymbolConstructor, symbol>>({}))
+t.defineStatic('date', () => <t.Schema<DateConstructor, Date>>({}))
+t.defineStatic('regexp', () => <t.Schema<RegExpConstructor, RegExp>>({}))
+t.defineStatic('undefined', () => <t.Schema<undefined, undefined>>({}))
+t.defineStatic('never', () => <t.Schema<typeof symbols.never, never>>({}))
+t.defineStatic('null', () => <t.Schema<null, null>>({}))
+t.defineStatic('void', () => <t.Schema<typeof symbols.void, void>>({}))
+
+function literal<
+  T extends string | number | bigint | symbol | null | boolean | undefined
+>(value: T): Typp<[T]> {
+  return {} as Typp<[T]>
+}
+literal.String = `__DO_NOT_USE_SAME_LITERAL_${
+  'STRING'
+}__IF_YOU_WANT_TO_USE_IT__` as const
+literal.Number = `__DO_NOT_USE_SAME_LITERAL_${
+  'NUMBER'
+}__IF_YOU_WANT_TO_USE_IT__` as const
+literal.BigInt = `__DO_NOT_USE_SAME_LITERAL_${
+  'BIGINT'
+}__IF_YOU_WANT_TO_USE_IT__` as const
+literal.Null = `__DO_NOT_USE_SAME_LITERAL_${
+  'NULL'
+}__IF_YOU_WANT_TO_USE_IT__` as const
+literal.Boolean = `__DO_NOT_USE_SAME_LITERAL_${
+  'BOOLEAN'
+}__IF_YOU_WANT_TO_USE_IT__` as const
+literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
+  'UNDEFINED'
+}__IF_YOU_WANT_TO_USE_IT__` as const
+t.defineStatic('literal', literal)
 
 type LiteralPlaceholder<T extends string = string> = `__DO_NOT_USE_SAME_LITERAL_${T}__IF_YOU_WANT_TO_USE_IT__`
 interface LiteralStringMapping {
