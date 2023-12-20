@@ -1,5 +1,7 @@
+import './calc'
+
 import type { Consumer } from './comsumer'
-import type { IsEqual, IsNotEqual, Pretty, T2I, U2I, ValueOf } from './types'
+import type { IsEqual, IsNotEqual, Pretty, U2I, ValueOf } from './types'
 
 export type Typp<T extends readonly any[]> = true extends (
   | IsEqual<T, []>
@@ -9,8 +11,8 @@ export type Typp<T extends readonly any[]> = true extends (
 export function t<const T extends any[]>(...t: T): Typp<T> {
   return {} as Typp<T>
 }
+export { t as typp }
 
-// Base type
 export namespace t {
   export interface DynamicSpecialShapeTypeMapping {
     readonly [key: string]: symbol
@@ -104,87 +106,6 @@ export namespace t {
     [Infer<Item>, ...InferT<Rest>]
   ) : []
 }
-// Calculate type
-export namespace t {
-  import Symbols = t.Symbols
-
-  // TODO exclude
-  // TODO extract
-  interface SpecialShapeSchemaMapping {
-    [specialShapeTypeMapping.union]: readonly Schema<any, any>[]
-  }
-  interface SpecialShapeSchemaMapping {
-    [specialShapeTypeMapping.intersection]: readonly Schema<any, any>[]
-  }
-  export interface SchemaMethodsAll<Shape, T> {
-    and<
-      const U,
-      Shapes extends readonly [any, ...any[]] = [Shape, U]
-    >(t: U): true extends (
-      & ([T] extends [string] ? true : false)
-      & (
-        | IsEqual<U, {}>
-        | IsEqual<U, unknown>
-        | IsEqual<U, Schema<{}, {}>>
-        | IsEqual<U, Schema<typeof Symbols.unknown, unknown>>
-      )
-    ) ? Schema<StringConstructor, string & {}>
-      : Intersect<Shapes>
-    or<
-      const U,
-      Shapes extends readonly [any, ...any[]] = [Shape, U]
-    >(t: U): Union<Shapes>
-  }
-  export type Union<
-    Shapes extends readonly any[],
-    T = Shapes[number]
-  > = Shapes['length'] extends 1
-    ? Typp<Shapes>
-    : [
-      Typps<T>,
-      TyppT<Shapes>
-    ] extends [
-      infer Schemas extends Schema<any, any>,
-      infer SchemaT extends Schema<any, any>[]
-    ] ? (
-      [Schemas] extends [never]
-        ? Schema<typeof Symbols.never, never>
-        : Schema<
-          SpecialShape<SpecialShapeTypeMapping['union'], SchemaT>,
-          Infers<Schemas>
-        >
-    ) : never
-  export function union<
-    const T extends readonly any[]
-  >(t: T): Union<T> {
-    return {} as Union<T>
-  }
-  export const or = union
-
-  export type Intersect<
-    Shapes extends readonly [any, ...any[]]
-  > = Shapes['length'] extends 1
-    ? TyppWhenNotATypp<Shapes[0]>
-    : TyppT<Shapes> extends (
-      infer Schemas extends readonly Schema<any, any>[]
-    ) ? (
-      [Schemas] extends [never]
-        ? Schema<typeof Symbols.never, never>
-        : Schema<
-          SpecialShape<SpecialShapeTypeMapping['intersection'], Schemas>,
-          T2I<InferT<Schemas>>
-        >
-    ) : never
-  export function intersect<
-    const T extends readonly [any, ...any[]]
-  >(t: T): Intersect<T> {
-    return {} as Intersect<T>
-  }
-  export const and = intersect
-}
-
-export const typp: typeof t = t
-
 // Extensible
 export namespace t {
   export const CANT_REFINE = Object.freeze([
