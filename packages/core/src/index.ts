@@ -18,12 +18,7 @@ export namespace t {
     readonly [key: string]: symbol
   }
   export const specialShapeTypeMapping = {
-    union: Symbol('union'),
-    intersection: Symbol('intersection')
-  } as {
-    readonly union: unique symbol
-    readonly intersection: unique symbol
-  } & DynamicSpecialShapeTypeMapping
+  } as DynamicSpecialShapeTypeMapping
   export function defineSpecialShapeType<
     T extends keyof DynamicSpecialShapeTypeMapping,
     S extends DynamicSpecialShapeTypeMapping[T]

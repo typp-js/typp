@@ -1,6 +1,8 @@
 import type { Typp } from '.'
 import type { IsEqual, T2I } from './types'
 
+const unionSymbol = Symbol('union')
+const intersectionSymbol = Symbol('intersection')
 declare module '@typp/core' {
   // Calculate type
   export namespace t {
@@ -8,6 +10,10 @@ declare module '@typp/core' {
 
     // TODO exclude
     // TODO extract
+    export interface DynamicSpecialShapeTypeMapping {
+      readonly union: typeof unionSymbol
+      readonly intersection: typeof intersectionSymbol
+    }
     export interface SpecialShapeSchemaMapping {
       [t.specialShapeTypeMapping.union]: readonly t.Schema<any, any>[]
     }
