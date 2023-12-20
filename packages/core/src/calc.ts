@@ -1,10 +1,10 @@
 import type { Typp } from '.'
+import { t } from '.'
 import type { IsEqual, T2I } from './types'
 
 const unionSymbol = Symbol('union')
 const intersectionSymbol = Symbol('intersection')
 declare module '@typp/core' {
-  // Calculate type
   export namespace t {
     import Symbols = t.Symbols
 
@@ -79,3 +79,7 @@ declare module '@typp/core' {
     export { intersect as and }
   }
 }
+// TODO
+t.defineStatic('union', () => ({} as any))
+// TODO
+t.defineStatic('intersect', () => ({} as any))
