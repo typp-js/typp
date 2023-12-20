@@ -36,6 +36,24 @@ describe('array and tuple', () => {
       .toEqualTypeOf<number[][]>()
     expectTypeOf(case2_0).toEqualTypeOf<typeof case2_1>()
     expectTypeOf(case2_0).toEqualTypeOf<typeof case2_2>()
+
+    const case3_0 = t(Array, { a: Number })
+    const case3_1 = t.array({ a: Number })
+    const case3_2 = t.array(t({ a: Number }))
+    expectTypeOf(case3_0).toEqualTypeOf<t.Schema<
+      t.Schema<{
+        a: t.Schema<NumberConstructor, number>;
+      }, {
+        a: number;
+      }>[],
+      {
+        a: number;
+      }[]
+    >>()
+    expectTypeOf<t.Infer<typeof case3_0>>()
+      .toEqualTypeOf<{ a: number }[]>()
+    expectTypeOf(case3_0).toEqualTypeOf<typeof case3_1>()
+    expectTypeOf(case3_0).toEqualTypeOf<typeof case3_2>()
   })
   test('tuple', () => {
     expectTypeOf(t([])).toEqualTypeOf<t.Schema<[], []>>()
