@@ -121,11 +121,16 @@ export default (
     }),
     {
       input: exportsEntries,
-      output: {
-        dir: 'dist',
-        entryFileNames: ({ name }) => `${name.replace(/^src\//, '')}.d.ts`,
-        preserveModules: true
-      },
+      output: [
+        {
+          dir: 'dist',
+          entryFileNames: ({ name }) => `${name.replace(/^src\//, '')}.esm.d.ts`,
+          preserveModules: true
+        },
+        {
+          dir: 'dist'
+        }
+      ],
       plugins: [
         styled && skip({ patterns: [/\.s?css$/] }),
         dts({ tsconfig: resolveWorkspacePath('tsconfig.dts.json') }),
