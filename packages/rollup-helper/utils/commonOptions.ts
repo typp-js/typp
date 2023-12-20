@@ -1,7 +1,9 @@
 import type { OutputOptions } from 'rollup'
 
-export const commonOutputOptions: OutputOptions = {
+const defineOutput = <O extends OutputOptions>(output: O) => output
+
+export const commonOutputOptions = defineOutput({
   dir: 'dist',
   exports: 'named',
   sourcemap: true
-}
+})

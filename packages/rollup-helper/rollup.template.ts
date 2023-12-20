@@ -1,17 +1,18 @@
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 
-import terser from '@rollup/plugin-terser'
 import autoprefixer from 'autoprefixer'
 import { getWorkspaceDir } from 'pnpm-helper/getWorkspaceDir'
 import type { InputPluginOption, RollupOptions } from 'rollup'
-import { createGlobalsLinkage } from 'rollup-helper/plugins/globals'
-import skip from 'rollup-helper/plugins/skip'
-import { commonOutputOptions } from 'rollup-helper/utils/commonOptions'
-import externalResolver from 'rollup-helper/utils/externalResolver'
 import { dts } from 'rollup-plugin-dts'
 import esbuild from 'rollup-plugin-esbuild'
 import postcss from 'rollup-plugin-postcss'
+
+import { createGlobalsLinkage } from './plugins/globals'
+import skip from './plugins/skip'
+import { commonOutputOptions } from './utils/commonOptions'
+import externalResolver from './utils/externalResolver'
+import withMinify from './utils/withMinify'
 
 const workspaceRoot = getWorkspaceDir()
 function resolveWorkspacePath(p: string) {
@@ -70,19 +71,12 @@ export default (
     {
       input: exportsEntries,
       output: [
-        {
+        ...withMinify({
           ...commonOutputOptions,
           format: 'esm',
           entryFileNames: '[name].esm.js',
           preserveModules: true
-        },
-        {
-          ...commonOutputOptions,
-          format: 'esm',
-          entryFileNames: '[name].esm.min.js',
-          preserveModules: true,
-          plugins: [terser()]
-        }
+        })
       ],
       plugins: [
         globalsRegister({ external }),
@@ -100,32 +94,18 @@ export default (
       return {
         input: input,
         output: [
-          {
+          ...withMinify({
             ...commonOutputOptions,
             name: outputName,
             format: 'iife',
             entryFileNames: `${name}.iife.js`
-          },
-          {
-            ...commonOutputOptions,
-            name: outputName,
-            format: 'iife',
-            entryFileNames: `${name}.iife.min.js`,
-            plugins: [terser()]
-          },
-          {
+          }),
+          ...withMinify({
             ...commonOutputOptions,
             name: outputName,
             format: 'umd',
             entryFileNames: `${name}.umd.js`
-          },
-          {
-            ...commonOutputOptions,
-            name: outputName,
-            format: 'umd',
-            entryFileNames: `${name}.umd.min.js`,
-            plugins: [terser()]
-          }
+          })
         ],
         plugins: [
           globalsOutput,
