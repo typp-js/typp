@@ -51,8 +51,8 @@ declare module '@typp/core' {
     export function string(): Schema<StringConstructor, string>
     export function number(): Schema<NumberConstructor, number>
     export function bigint(): Schema<BigIntConstructor, bigint>
-    export function symbol(): Schema<SymbolConstructor, symbol>
     export function boolean(): Schema<BooleanConstructor, boolean>
+    export function symbol(): Schema<SymbolConstructor, symbol>
     export function date(): Schema<DateConstructor, Date>
     export function regexp(): Schema<RegExpConstructor, RegExp>
     export function undefined(): Schema<undefined, undefined>

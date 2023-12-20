@@ -2,35 +2,57 @@ import { describe, expectTypeOf, test } from 'vitest'
 
 import { t } from '../src'
 
-test('base', () => {
-  const cases = [
-    [t(String), String, {} as string],
-    [t(Number), Number, {} as number],
-    [t(Boolean), Boolean, {} as boolean],
-    [t(Symbol), Symbol, {} as symbol],
-    [t(BigInt), BigInt, {} as bigint]
-  ] as const
+describe('primitive', () => {
+  test('creat by Constructor', () => {
+    const cases = [
+      [t(String), String, {} as string],
+      [t(Number), Number, {} as number],
+      [t(BigInt), BigInt, {} as bigint],
+      [t(Boolean), Boolean, {} as boolean],
+      [t(Symbol), Symbol, {} as symbol],
+      [t(Date), Date, {} as Date],
+      [t(RegExp), RegExp, {} as RegExp],
+      [t(undefined), undefined, undefined],
+      [t(null), null, null]
+    ] as const
 
-  expectTypeOf(cases[0][0])
-    .toEqualTypeOf<t.Schema<typeof cases[0][1], typeof cases[0][2]>>()
-  expectTypeOf<t.Infer<typeof cases[0][0]>>()
-    .toEqualTypeOf<typeof cases[0][2]>()
-  expectTypeOf(cases[1][0])
-    .toEqualTypeOf<t.Schema<typeof cases[1][1], typeof cases[1][2]>>()
-  expectTypeOf<t.Infer<typeof cases[1][0]>>()
-    .toEqualTypeOf<typeof cases[1][2]>()
-  expectTypeOf(cases[2][0])
-    .toEqualTypeOf<t.Schema<typeof cases[2][1], typeof cases[2][2]>>()
-  expectTypeOf<t.Infer<typeof cases[2][0]>>()
-    .toEqualTypeOf<typeof cases[2][2]>()
-  expectTypeOf(cases[3][0])
-    .toEqualTypeOf<t.Schema<typeof cases[3][1], typeof cases[3][2]>>()
-  expectTypeOf<t.Infer<typeof cases[3][0]>>()
-    .toEqualTypeOf<typeof cases[3][2]>()
-  expectTypeOf(cases[4][0])
-    .toEqualTypeOf<t.Schema<typeof cases[4][1], typeof cases[4][2]>>()
-  expectTypeOf<t.Infer<typeof cases[4][0]>>()
-    .toEqualTypeOf<typeof cases[4][2]>()
+    expectTypeOf(cases[0][0])
+      .toEqualTypeOf<t.Schema<typeof cases[0][1], typeof cases[0][2]>>()
+    expectTypeOf<t.Infer<typeof cases[0][0]>>()
+      .toEqualTypeOf<typeof cases[0][2]>()
+    expectTypeOf(cases[1][0])
+      .toEqualTypeOf<t.Schema<typeof cases[1][1], typeof cases[1][2]>>()
+    expectTypeOf<t.Infer<typeof cases[1][0]>>()
+      .toEqualTypeOf<typeof cases[1][2]>()
+    expectTypeOf(cases[2][0])
+      .toEqualTypeOf<t.Schema<typeof cases[2][1], typeof cases[2][2]>>()
+    expectTypeOf<t.Infer<typeof cases[2][0]>>()
+      .toEqualTypeOf<typeof cases[2][2]>()
+    expectTypeOf(cases[3][0])
+      .toEqualTypeOf<t.Schema<typeof cases[3][1], typeof cases[3][2]>>()
+    expectTypeOf<t.Infer<typeof cases[3][0]>>()
+      .toEqualTypeOf<typeof cases[3][2]>()
+    expectTypeOf(cases[4][0])
+      .toEqualTypeOf<t.Schema<typeof cases[4][1], typeof cases[4][2]>>()
+    expectTypeOf<t.Infer<typeof cases[4][0]>>()
+      .toEqualTypeOf<typeof cases[4][2]>()
+    expectTypeOf(cases[5][0])
+      .toEqualTypeOf<t.Schema<typeof cases[5][1], typeof cases[5][2]>>()
+    expectTypeOf<t.Infer<typeof cases[5][0]>>()
+      .toEqualTypeOf<typeof cases[5][2]>()
+    expectTypeOf(cases[6][0])
+      .toEqualTypeOf<t.Schema<typeof cases[6][1], typeof cases[6][2]>>()
+    expectTypeOf<t.Infer<typeof cases[6][0]>>()
+      .toEqualTypeOf<typeof cases[6][2]>()
+    expectTypeOf(cases[7][0])
+      .toEqualTypeOf<t.Schema<typeof cases[7][1], typeof cases[7][2]>>()
+    expectTypeOf<t.Infer<typeof cases[7][0]>>()
+      .toEqualTypeOf<typeof cases[7][2]>()
+    expectTypeOf(cases[8][0])
+      .toEqualTypeOf<t.Schema<typeof cases[8][1], typeof cases[8][2]>>()
+    expectTypeOf<t.Infer<typeof cases[8][0]>>()
+      .toEqualTypeOf<typeof cases[8][2]>()
+  })
 })
 
 describe('literal', () => {
