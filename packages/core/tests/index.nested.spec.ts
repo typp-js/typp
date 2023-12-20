@@ -65,6 +65,57 @@ describe('array and tuple', () => {
       t.Schema<t.Schema<NumberConstructor, number>[], number[]>[],
       number[][]
     >>()
+    const case0_0 = t([Number])
+    const case0_1 = t.tuple(Number)
+    expectTypeOf(case0_0).toEqualTypeOf<t.Schema<
+      [t.Schema<NumberConstructor, number>],
+      [number]
+    >>()
+    expectTypeOf<t.Infer<typeof case0_0>>()
+      .toEqualTypeOf<[number]>()
+    expectTypeOf(case0_0).toEqualTypeOf<typeof case0_1>()
+    const case1_0 = t([Number, String])
+    const case1_1 = t.tuple(Number, String)
+    expectTypeOf(case1_0).toEqualTypeOf<t.Schema<
+      [
+        t.Schema<NumberConstructor, number>,
+        t.Schema<StringConstructor, string>
+      ],
+      [number, string]
+    >>()
+    expectTypeOf<t.Infer<typeof case1_0>>()
+      .toEqualTypeOf<[number, string]>()
+    expectTypeOf(case1_0).toEqualTypeOf<typeof case1_1>()
+    const case2_0 = t([Number, [String]])
+    const case2_1 = t.tuple(Number, [String])
+    expectTypeOf(case2_0).toEqualTypeOf<t.Schema<
+      [
+        t.Schema<NumberConstructor, number>,
+        t.Schema<[t.Schema<StringConstructor, string>], [string]>
+      ],
+      [number, [string]]
+    >>()
+    expectTypeOf<t.Infer<typeof case2_0>>()
+      .toEqualTypeOf<[number, [string]]>()
+    expectTypeOf(case2_0).toEqualTypeOf<typeof case2_1>()
+    const case3_0 = t([Number, { a: String }])
+    const case3_1 = t.tuple(Number, { a: String })
+    expectTypeOf(case3_0).toEqualTypeOf<t.Schema<
+      [
+        t.Schema<NumberConstructor, number>,
+        t.Schema<{
+          a: t.Schema<StringConstructor, string>;
+        }, {
+          a: string;
+        }>
+      ],
+      [number, {
+        a: string;
+      }]
+    >>()
+    expectTypeOf<t.Infer<typeof case3_0>>()
+      .toEqualTypeOf<[number, { a: string }]>()
+    expectTypeOf(case3_0).toEqualTypeOf<typeof case3_1>()
   })
   test('Set', () => {
     const case0 = t(Set)
