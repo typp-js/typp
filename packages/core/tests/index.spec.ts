@@ -51,4 +51,24 @@ describe('infer', () => {
     // expectTypeOf<GenericFunc>().toEqualTypeOf<GenericFuncTypeof>()
     // expectTypeOf(genericFunc).toEqualTypeOf<GenericFunc>()
   })
+  test('union and intersection', () => {
+    // TODO
+  })
+  test('instance method', () => {
+    const NumberSchema = t(Number)
+    const number0 = NumberSchema.infer(0)
+    expect(number0).toBe(0)
+    expectTypeOf<typeof number0>().toEqualTypeOf<number>()
+    // @ts-expect-error
+    NumberSchema.infer('0')
+
+    const literal0 = t(1)
+    const number1 = literal0.infer(1)
+    expect(number1).toBe(1)
+    expectTypeOf<typeof number1>().toEqualTypeOf<1>()
+    // @ts-expect-error
+    literal0.infer(0)
+    // @ts-expect-error
+    literal0.infer('0')
+  })
 })
