@@ -23,6 +23,7 @@ type Consume<
     & ([T] extends [Record<string | number | symbol, any>] ? true : false)
     & IsNotEqual<T, ObjectConstructor>
     & ([T] extends [Function] ? false : true)
+    & ([T] extends [t.Schema<any, any>] ? false : true)
   )
 ) ? (
   ObjectConsume<T, Rest>
@@ -76,7 +77,10 @@ export type Consumer<
         InferSpecialShape<L>,
         UseWhenNoNever<
           Consume<L, Rest>,
-          InferInstanceType<L>
+          UseWhenNoNever<
+            InferInstanceType<L>,
+            [L] extends [t.Schema<any, any>] ? L : never
+          >
         >
       >
     : never

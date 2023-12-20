@@ -37,6 +37,7 @@ export namespace t {
     type: T
     schemas: S
   }
+
   export interface SchemaMeta<Shape, T> {
   }
   export interface SchemaMethodsEntries<A = any, B = any, C = any> {
@@ -72,9 +73,12 @@ export namespace t {
     meta: SchemaMeta<Shape, T>
   }
 
+  const __typp__: unique symbol = Symbol('typp')
   export type Schema<Shape, T> =
     & SchemaFields<Shape, T>
     & SchemaMethods<Shape, T>
+    & { [__typp__]: true }
+
   export type Infer<T extends Schema<any, any>> = [T] extends [never]
     ? never
     : [T] extends [Schema<any, infer R>] ? R : never
