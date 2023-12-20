@@ -4,26 +4,34 @@ import { t } from '../src'
 
 describe('array and tuple', () => {
   test('array', () => {
-    const case0 = t(Array)
-    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+    const case0_0 = t(Array)
+    const case0_1 = t.array()
+    expectTypeOf(case0_0).toEqualTypeOf<t.Schema<
       t.Schema<any, any>[], any[]
     >>()
-    expectTypeOf<t.Infer<typeof case0>>()
+    expectTypeOf<t.Infer<typeof case0_0>>()
       .toEqualTypeOf<any[]>()
-    const case1 = t(Array, Number)
-    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+    expectTypeOf(case0_0).toEqualTypeOf<typeof case0_1>()
+
+    const case1_0 = t(Array, Number)
+    const case1_1 = t.array(Number)
+    expectTypeOf(case1_0).toEqualTypeOf<t.Schema<
       t.Schema<NumberConstructor, number>[],
       number[]
     >>()
-    expectTypeOf<t.Infer<typeof case1>>()
+    expectTypeOf<t.Infer<typeof case1_0>>()
       .toEqualTypeOf<number[]>()
-    const case2 = t(Array, Array, Number)
-    expectTypeOf(case2).toEqualTypeOf<t.Schema<
+    expectTypeOf(case1_0).toEqualTypeOf<typeof case1_1>()
+
+    const case2_0 = t(Array, Array, Number)
+    const case2_1 = t.array(Array, Number)
+    expectTypeOf(case2_0).toEqualTypeOf<t.Schema<
       t.Schema<t.Schema<NumberConstructor, number>[], number[]>[],
       number[][]
     >>()
-    expectTypeOf<t.Infer<typeof case2>>()
+    expectTypeOf<t.Infer<typeof case2_0>>()
       .toEqualTypeOf<number[][]>()
+    expectTypeOf(case2_0).toEqualTypeOf<typeof case2_1>()
   })
   test('tuple', () => {
     expectTypeOf(t([])).toEqualTypeOf<t.Schema<[], []>>()
