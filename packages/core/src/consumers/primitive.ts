@@ -81,6 +81,7 @@ literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
   'UNDEFINED'
 }__IF_YOU_WANT_TO_USE_IT__` as const
 t.defineStatic('literal', literal)
+// TODO proxy `const` to `literal`
 
 type LiteralPlaceholder<T extends string = string> = `__DO_NOT_USE_SAME_LITERAL_${T}__IF_YOU_WANT_TO_USE_IT__`
 interface LiteralStringMapping {

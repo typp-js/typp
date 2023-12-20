@@ -61,6 +61,12 @@ declare module '@typp/core' {
 t.defineSpecialShapeType('function', functionSymbol)
 t.defineSpecialShapeType('generic', genericSymbol)
 
+t.defineStatic('fn', <
+  const Args extends readonly any[],
+  RT extends readonly any[] = []
+>(args: Args, ...rt: RT) => <Typp<[FunctionConstructor, Args, ...RT]>>({}))
+// TODO proxy `function` to `fn`
+
 export type FunctionConsume<
   T,
   Rest extends any[]

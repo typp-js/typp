@@ -160,4 +160,8 @@ export namespace t {
       delete t[key]
     }
   }
+  // TODO static.alias
+  // TODO static.proxy
+  // TODO static.pipe
+  // TODO defineMethod
 }
