@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest'
+
 import { t } from '../src'
 
 declare module '../src' {
