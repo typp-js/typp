@@ -58,8 +58,8 @@ declare module '@typp/core' {
     export function undefined(): Schema<undefined, undefined>
     export function never(): Schema<typeof Symbols.never, never>
 
-    function _null(): t.Schema<null, null>
-    function _void(): t.Schema<typeof Symbols.void, void>
+    function _null(): Schema<null, null>
+    function _void(): Schema<typeof Symbols.void, void>
     export { _null as null, _void as void }
 
     const _literal: typeof literal
