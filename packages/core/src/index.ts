@@ -245,11 +245,13 @@ export const typp: typeof t = t
 
 // Extensible
 export namespace t {
-  const cantRefine = [
+  export const CANT_REFINE = Object.freeze([
     'defineStatic',
     'defineSpecialShapeType',
-    'Symbols'
-  ] as const
+    'Symbols',
+    'CANT_REFINE'
+  ] as const)
+  type CantRefine = typeof CANT_REFINE[number]
   export interface DefineStaticOptions {
     /**
      * if `true`, will override the existed static function.
@@ -260,16 +262,17 @@ export namespace t {
     override?: boolean
   }
   export function defineStatic<
-    K extends keyof typeof t, V extends typeof t[K]
+    K extends Exclude<keyof typeof t, CantRefine>,
+    V extends typeof t[K]
   >(key: K, value: V, options: DefineStaticOptions = {}) {
     if ((
-      cantRefine as unknown as string[]
+      CANT_REFINE as unknown as string[]
     ).includes(key)) {
-      throw new Error(`can not refine static field "${key}" for typp`)
+      throw new Error(`can not refine static field "${key}" for typp, because it is always static`)
     }
     const isExisted = Object.prototype.hasOwnProperty.call(t, key)
     if (isExisted && !options.override) {
-      throw new Error(`can not refine static field "${key}" for typp`)
+      throw new Error(`can not refine static field "${key}" for typp, because it is existed and if you want to override it, please set the option "override" to true`)
     }
     Object.defineProperty(t, key, {
       configurable: true,
