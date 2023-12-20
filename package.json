@@ -8,11 +8,11 @@
   },
   "devDependencies": {
     "@types/node": "^18.19.3",
-    "@vitest/coverage-istanbul": "^1.0.4",
+    "@vitest/coverage-istanbul": "^1.1.0",
     "pnpm-helper": "workspace:*",
     "rollup-helper": "workspace:*",
     "standard": "workspace:*",
     "typescript": "^5.3.3",
-    "vitest": "^1.0.4"
+    "vitest": "^1.1.0"
   }
 }
