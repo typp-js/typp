@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import { resolve } from 'node:path'
 
+import terser from '@rollup/plugin-terser'
 import autoprefixer from 'autoprefixer'
 import { getWorkspaceDir } from 'pnpm-helper/getWorkspaceDir'
 import type { InputPluginOption, RollupOptions } from 'rollup'
@@ -74,6 +75,13 @@ export default (
           format: 'esm',
           entryFileNames: '[name].esm.js',
           preserveModules: true
+        },
+        {
+          ...commonOutputOptions,
+          format: 'esm',
+          entryFileNames: '[name].esm.min.js',
+          preserveModules: true,
+          plugins: [terser()]
         }
       ],
       plugins: [
@@ -101,8 +109,22 @@ export default (
           {
             ...commonOutputOptions,
             name: outputName,
+            format: 'iife',
+            entryFileNames: `${name}.iife.min.js`,
+            plugins: [terser()]
+          },
+          {
+            ...commonOutputOptions,
+            name: outputName,
             format: 'umd',
             entryFileNames: `${name}.umd.js`
+          },
+          {
+            ...commonOutputOptions,
+            name: outputName,
+            format: 'umd',
+            entryFileNames: `${name}.umd.min.js`,
+            plugins: [terser()]
           }
         ],
         plugins: [
