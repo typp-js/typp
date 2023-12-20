@@ -8,5 +8,5 @@
     "stripInternal": true,
     "outDir": "temp"
   },
-  "exclude": ["**/tests"]
+  "exclude": ["**/tests", "**/dist"]
 }
