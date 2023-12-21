@@ -9,9 +9,20 @@ export type Typp<T extends readonly any[]> = true extends (
 ) ? t.Schema<any, any> : Consumer<T>
 
 export function t<const T extends any[]>(...t: T): Typp<T> {
+  // TODO implement
   return {} as Typp<T>
 }
 export { t as typp }
+
+const consumers = new Set<t.Consumer>()
+export namespace t {
+  export type Consumer = (...args: any[]) => [t.Schema<any, any>, any[]]
+  export function defineConsumer(
+    consumer: Consumer
+  ) {
+    consumers.add(consumer)
+  }
+}
 
 export namespace t {
   export interface DynamicSpecialShapeTypeMapping {
