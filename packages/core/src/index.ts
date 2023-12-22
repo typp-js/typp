@@ -126,6 +126,7 @@ export namespace t {
 export namespace t {
   export const CANT_REFINE = Object.freeze([
     'defineStatic',
+    'defineConsumer',
     'defineSpecialShapeType',
     'CANT_REFINE'
   ] as const)
