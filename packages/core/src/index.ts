@@ -81,16 +81,15 @@ export namespace t {
   export type SchemaMethods<Shape, T> =
     & SchemaMethodsMapping<Shape, T>
     & SchemaMethodsAll<Shape, T>
-  export interface SchemaFields<Shape, T> {
-    shape: Shape
-    meta: SchemaMeta<Shape, T>
-  }
 
   const __typp__: unique symbol = Symbol('typp')
   export type Schema<Shape, T> =
-    & SchemaFields<Shape, T>
     & SchemaMethods<Shape, T>
-    & { [__typp__]: true }
+    & {
+      [__typp__]: true
+      shape: Shape
+      meta: SchemaMeta<Shape, T>
+    }
 
   export type Infer<T extends Schema<any, any>> = [T] extends [never]
     ? never
