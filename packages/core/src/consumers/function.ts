@@ -43,18 +43,18 @@ declare module '@typp/core' {
         .generic]: Generic<string, t.Schema<any, any>, any>
     }
 
-    export interface FunctionSchemaMethods<Shape, T> {
+    export interface FunctionSchemaFields<Shape, T> {
       implement(func: T): T
       // TODO args()
       // TODO returns()
       // TODO getter parameters
       // TODO getter returnType
     }
-    export interface SchemaMethodsEntries<A = any, B = any, C = any> {10000: [
+    export interface SchemaFieldsEntries<A = any, B = any, C = any> {10000: [
       (
         & ([A] extends [t.SpecialShape<t.SpecialShapeTypeMapping['function'], any>] ? true : false)
         & IsNotEqual<A, any>
-      ), FunctionSchemaMethods<A, B>
+      ), FunctionSchemaFields<A, B>
     ]}
   }
 }

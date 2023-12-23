@@ -18,7 +18,7 @@ declare module '@typp/core' {
     export interface SpecialShapeSchemaMapping {
       [t.specialShapeTypeMapping.intersection]: readonly t.Schema<any, any>[]
     }
-    export interface SchemaMethodsAll<Shape, T> {
+    export interface SchemaFieldsAll<Shape, T> {
       and<
         const U,
         Shapes extends readonly [any, ...any[]] = [Shape, U]

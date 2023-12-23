@@ -51,12 +51,12 @@ export namespace t {
 
   export interface SchemaMeta<Shape, T> {
   }
-  export interface SchemaMethodsEntries<A = any, B = any, C = any> {
+  export interface SchemaFieldsEntries<A = any, B = any, C = any> {
     [key: number & {}]: [boolean, any]
   }
-  export type SchemaMethodsMapping<
+  export type SchemaFieldsMapping<
     A = any, B = any, C = any,
-    Entries extends SchemaMethodsEntries<A, B, C> = SchemaMethodsEntries<A, B, C>
+    Entries extends SchemaFieldsEntries<A, B, C> = SchemaFieldsEntries<A, B, C>
   > = [keyof Entries] extends [infer Keys extends number] ? Pretty<U2I<
     ValueOf<{
       [ K in Keys
@@ -69,7 +69,7 @@ export namespace t {
       ? [R] extends [never] ? {} : R
       : never
   >> : {}
-  export interface SchemaMethodsAll<Shape, T> {
+  export interface SchemaFieldsAll<Shape, T> {
     // TODO readonly
     // TODO mutable
     // TODO nullable
@@ -78,13 +78,13 @@ export namespace t {
     // TODO optional
     infer(t: T): T
   }
-  export type SchemaMethods<Shape, T> =
-    & SchemaMethodsMapping<Shape, T>
-    & SchemaMethodsAll<Shape, T>
+  export type SchemaFields<Shape, T> =
+    & SchemaFieldsMapping<Shape, T>
+    & SchemaFieldsAll<Shape, T>
 
   const __typp__: unique symbol = Symbol('typp')
   export type Schema<Shape, T> =
-    & SchemaMethods<Shape, T>
+    & SchemaFields<Shape, T>
     & {
       [__typp__]: true
       shape: Shape
