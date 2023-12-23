@@ -3,19 +3,22 @@ import './calc'
 import type { Consumer } from './comsumer'
 import type { IsEqual, IsNotEqual, Pretty, U2I, ValueOf } from './types'
 
+const __typp__: unique symbol = Symbol('typp')
+
 export type Typp<T extends readonly any[]> = true extends (
   | IsEqual<T, []>
   | IsEqual<T, readonly []>
 ) ? t.Schema<any, any> : Consumer<T>
 
 export function t<const T extends any[]>(...t: T): Typp<T> {
-  // TODO implement
-  return {} as Typp<T>
+  return {
+    [__typp__]: true
+  } as Typp<T>
 }
 export { t as typp }
 
-const consumers = new Set<t.Consumer>()
 // Arguments consumer
+const consumers = new Set<t.Consumer>()
 export namespace t {
   export type Consumer = (...args: any[]) => [t.Schema<any, any>, any[]]
   export function defineConsumer(
@@ -51,6 +54,7 @@ export namespace t {
   }
 }
 // Base
+const registers = new Set<t.FieldsRegister>()
 export namespace t {
   export interface SchemaMeta<Shape, T> {
   }
@@ -84,8 +88,11 @@ export namespace t {
   export type SchemaFields<Shape, T> =
     & SchemaFieldsMapping<Shape, T>
     & SchemaFieldsAll<Shape, T>
+  export type FieldsRegister = <Shape>(shape: Shape) => SchemaFieldsMapping<Shape> | null | false | undefined
+  export function defineFieldsRegister(register: FieldsRegister) {
+    registers.add(register)
+  }
 
-  const __typp__: unique symbol = Symbol('typp')
   export type Schema<Shape, T> =
     & SchemaFields<Shape, T>
     & {
@@ -135,6 +142,7 @@ export namespace t {
   export const CANT_REFINE = Object.freeze([
     'defineStatic',
     'defineConsumer',
+    'defineFieldsRegister',
     'defineSpecialShapeType',
     'CANT_REFINE'
   ] as const)
