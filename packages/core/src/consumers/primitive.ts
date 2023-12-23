@@ -3,10 +3,12 @@ import { t } from '..'
 import type { IsEqual } from '../types'
 
 const symbols = Object.freeze({
+  any: Symbol('any'),
   void: Symbol('void'),
   unknown: Symbol('unknown'),
   never: Symbol('never')
 }) as {
+  readonly any: unique symbol
   readonly void: unique symbol
   readonly unknown: unique symbol
   readonly never: unique symbol
