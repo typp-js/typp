@@ -45,6 +45,24 @@ declare module '@typp/core' {
     }
   }
 }
+t.defineConsumer((args) => {
+  const [first, ...rest] = args
+  if ([
+    String,
+    Number,
+    BigInt,
+    Boolean,
+    Symbol,
+    Date,
+    RegExp,
+    undefined,
+    null
+  ].includes(first)) {
+    return [{
+      shape: first
+    }, rest] as const
+  }
+})
 t.defineStatic('any', () => <t.Schema<any, any>>({}))
 t.defineStatic('unknown', () => <t.Schema<typeof symbols.unknown, unknown>>({}))
 t.defineStatic('string', () => <t.Schema<StringConstructor, string>>({}))
