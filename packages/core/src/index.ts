@@ -1,7 +1,7 @@
 import './calc'
 
 import type { Consumer } from './comsumer'
-import type { IsEqual, IsNotEqual, Pretty, U2I, ValueOf } from './types'
+import type { IsEqual, IsNotEqual, Nonexistentable, Pretty, U2I, ValueOf } from './types'
 
 const __typp__: unique symbol = Symbol('typp')
 
@@ -88,7 +88,7 @@ export namespace t {
   export type SchemaFields<Shape, T> =
     & SchemaFieldsMapping<Shape, T>
     & SchemaFieldsAll<Shape, T>
-  export type FieldsRegister = <Shape>(shape: Shape) => SchemaFieldsMapping<Shape> | null | false | undefined
+  export type FieldsRegister = <Shape>(shape: Shape) => Nonexistentable<SchemaFieldsMapping<Shape>>
   export function defineFieldsRegister(register: FieldsRegister) {
     registers.add(register)
   }
