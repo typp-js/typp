@@ -17,17 +17,20 @@ export function t<const T extends any[]>(...t: T): Typp<T> {
 }
 export { t as typp }
 
-// Arguments consumer
+interface SchemaBase<Shape, T> {
+  shape: Shape
+  meta?: t.SchemaMeta<Shape, T>
+}
+
+// Consumer
 const consumers = new Set<t.Consumer>()
 export namespace t {
-  export type Consumer = (...args: any[]) => [t.Schema<any, any>, any[]]
-  export function defineConsumer(
-    consumer: Consumer
-  ) {
+  export type Consumer = (...args: any[]) => Nonexistentable<[SchemaBase<any, any>, any[]]>
+  export function defineConsumer(consumer: Consumer) {
     consumers.add(consumer)
   }
 }
-// Special shape
+// Shape
 export namespace t {
   export interface DynamicSpecialShapeTypeMapping {
     readonly [key: string]: symbol
@@ -95,11 +98,8 @@ export namespace t {
 
   export type Schema<Shape, T> =
     & SchemaFields<Shape, T>
-    & {
-      [__typp__]: true
-      shape: Shape
-      meta: SchemaMeta<Shape, T>
-    }
+    & SchemaBase<Shape, T>
+    & { [__typp__]: true }
   export function isSchema(obj: any): obj is Schema<any, any> {
     return obj[__typp__] === true
   }
