@@ -15,6 +15,7 @@ export function t<const T extends any[]>(...t: T): Typp<T> {
 export { t as typp }
 
 const consumers = new Set<t.Consumer>()
+// Arguments consumer
 export namespace t {
   export type Consumer = (...args: any[]) => [t.Schema<any, any>, any[]]
   export function defineConsumer(
@@ -23,6 +24,7 @@ export namespace t {
     consumers.add(consumer)
   }
 }
+// Special shape
 export namespace t {
   export interface DynamicSpecialShapeTypeMapping {
     readonly [key: string]: symbol
@@ -48,6 +50,7 @@ export namespace t {
     schemas: S
   }
 }
+// Base
 export namespace t {
   export interface SchemaMeta<Shape, T> {
   }
