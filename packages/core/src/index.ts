@@ -93,6 +93,12 @@ export namespace t {
       shape: Shape
       meta: SchemaMeta<Shape, T>
     }
+  export function isSchema(obj: any): obj is Schema<any, any> {
+    return obj[__typp__] === true
+  }
+  export function isSchemas(arr: any[]): arr is Schema<any, any>[] {
+    return arr.every(isSchema)
+  }
 
   export type Infer<T extends Schema<any, any>> = [T] extends [never]
     ? never
