@@ -23,7 +23,6 @@ export namespace t {
     consumers.add(consumer)
   }
 }
-
 export namespace t {
   export interface DynamicSpecialShapeTypeMapping {
     readonly [key: string]: symbol
@@ -48,7 +47,8 @@ export namespace t {
     type: T
     schemas: S
   }
-
+}
+export namespace t {
   export interface SchemaMeta<Shape, T> {
   }
   export interface SchemaFieldsEntries<A = any, B = any, C = any> {
@@ -174,5 +174,5 @@ export namespace t {
   // TODO static.alias
   // TODO static.proxy
   // TODO static.pipe
-  // TODO defineMethod
+  // TODO defineField
 }
