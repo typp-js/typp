@@ -136,6 +136,23 @@ export default (
       plugins: [
         styled && skip({ patterns: [/\.s?css$/] }),
         dts({ tsconfig: resolveWorkspacePath('tsconfig.dts.json') }),
+        {
+          name: 'rollup-plugin-declare-module-replacer',
+          /**
+           * replace relative path `declare module './xxx'` to `declare module '{{package name}}'`
+           * in output file generated
+           */
+          generateBundle(_, bundle) {
+            for (const file of Object.values(bundle)) {
+              if (!('code' in file)) continue
+
+              file.code = file.code.replace(
+                /declare module ['|"]\..*['|"]/g,
+                `declare module '${pkgJson.name}'`
+              )
+            }
+          }
+        },
         dtsPlugins
       ],
       external
