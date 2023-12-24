@@ -1,5 +1,5 @@
 import type { Typp } from '..'
-import { t } from '..'
+import { t } from '../base'
 import type { IsEqual } from '../types'
 
 const symbols = Object.freeze({
@@ -15,7 +15,7 @@ const symbols = Object.freeze({
 }
 t.defineStatic('Symbols', symbols)
 
-declare module '@typp/core' {
+declare module '../base' {
   namespace t {
     /**
      * rename and export to user

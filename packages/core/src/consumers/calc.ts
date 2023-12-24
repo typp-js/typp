@@ -1,10 +1,10 @@
-import type { Typp } from '.'
-import { t } from '.'
-import type { IsEqual, T2I } from './types'
+import { t } from '../base'
+import type { Typp } from '../index'
+import type { IsEqual, T2I } from '../types'
 
 const unionSymbol = Symbol('union')
 const intersectionSymbol = Symbol('intersection')
-declare module '@typp/core' {
+declare module '../base' {
   export namespace t {
     // TODO exclude
     // TODO extract

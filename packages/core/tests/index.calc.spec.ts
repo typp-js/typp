@@ -1,4 +1,4 @@
-import '../src/calc'
+import '../src/consumers/calc'
 
 import { describe, expectTypeOf, test } from 'vitest'
 

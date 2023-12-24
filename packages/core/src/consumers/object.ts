@@ -1,7 +1,7 @@
 import type { t, Typp } from '..'
 import type { IsEqual, Stack } from '../types'
 
-declare module '@typp/core' {
+declare module '../base' {
   namespace t {
     // TODO keyof
     // TODO omit

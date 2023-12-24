@@ -1,7 +1,7 @@
 import type { t, Typp } from '..'
 import type { IsEqual } from '../types'
 
-declare module '@typp/core' {
+declare module '../base' {
   namespace t {
     export interface Set<S extends t.Schema<any, any>> {
       itemSchema: S

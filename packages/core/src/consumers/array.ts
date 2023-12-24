@@ -1,8 +1,8 @@
 import type { Typp } from '..'
-import { t } from '..'
+import { t } from '../base'
 import type { IsEqual } from '../types'
 
-declare module '@typp/core' {
+declare module '../base' {
   namespace t {
     export function array<const T extends readonly any[]>(...types: T): Typp<[ArrayConstructor, ...T]>
     export function tuple<const T extends readonly any[]>(...types: T): Typp<[T]>

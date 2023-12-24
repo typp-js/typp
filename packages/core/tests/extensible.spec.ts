@@ -1,8 +1,7 @@
+import { t } from '@typp/core'
 import { expect, test } from 'vitest'
 
-import { t } from '../src'
-
-declare module '../src' {
+declare module '@typp/core' {
   namespace t {
     export function ____foo(): string
     export const ____bar: number

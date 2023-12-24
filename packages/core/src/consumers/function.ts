@@ -1,10 +1,10 @@
 import type { Typp } from '..'
-import { t } from '..'
+import { t } from '../base'
 import type { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../types'
 
 const functionSymbol = Symbol('function')
 const genericSymbol = Symbol('generic')
-declare module '@typp/core' {
+declare module '../base' {
   namespace t {
     export function fn<
       const Args extends readonly any[],
