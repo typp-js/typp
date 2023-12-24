@@ -1,5 +1,6 @@
-import { t } from '@typp/core'
 import { expect, test } from 'vitest'
+
+import { t } from '../src'
 
 declare module '@typp/core' {
   namespace t {
