@@ -1,6 +1,6 @@
 import type { Typp } from '..'
 import { t } from '../base'
-import type { IsEqual } from '../types'
+import type { IsEqual, NoIndexSignature, ValueOf, Values } from '../types'
 
 declare module '../base' {
   namespace t {
@@ -130,7 +130,38 @@ type JoinLiteral<T extends readonly any[]> = T extends readonly [
     ? L extends string ? L : never
     : ''
 
+export interface ConstructorEntries<
+  A = any, B = any, C = any, D = any, E = any
+> {
+  1000: [StringConstructor, string]
+  1001: [NumberConstructor, number]
+  1002: [BigIntConstructor, bigint]
+  1003: [BooleanConstructor, boolean]
+  1004: [SymbolConstructor, symbol]
+  1005: [DateConstructor, Date]
+  1006: [RegExpConstructor, RegExp]
+  [key: number]: [Function, any]
+}
+
+export type ConstructorMapping<
+  T,
+  A = any, B = any, C = any, D = any, E = any,
+  Entries extends ConstructorEntries<A, B, C> = ConstructorEntries<A, B, C>
+> = ValueOf<{
+  [ K in keyof Entries
+      as IsEqual<
+        // @ts-ignore
+        Entries[K][0],
+        T
+      > extends true ? number : never
+  ]: Entries[K & number][1]
+}>
+
 export type PrimitiveMapping<T> = true extends (
+  [T] extends [Values<NoIndexSignature<ConstructorEntries>>[0]] ? true : false
+) ? (
+  t.Schema<T, ConstructorMapping<T>>
+) : true extends (
   [T] extends [string | number | bigint | boolean | symbol] ? true : false
 ) ? (
   [T] extends [string] ? (

@@ -1,6 +1,36 @@
 import { describe, expectTypeOf, test } from 'vitest'
 
 import { t } from '../src'
+import type { ConstructorMapping } from '../src/consumers/primitive'
+
+test('base', () => {
+  expectTypeOf<ConstructorMapping<StringConstructor>>()
+    .toMatchTypeOf<string>()
+
+  expectTypeOf<ConstructorMapping<NumberConstructor>>()
+    .toMatchTypeOf<number>()
+
+  // don't resolve tuple type
+  expectTypeOf<ConstructorMapping<[NumberConstructor]>>()
+    .toMatchTypeOf<never>()
+  expectTypeOf<ConstructorMapping<[NumberConstructor, StringConstructor]>>()
+    .toMatchTypeOf<never>()
+
+  // don't resolve object type
+  expectTypeOf<ConstructorMapping<{
+    foo: NumberConstructor
+  }>>()
+    .toMatchTypeOf<never>()
+
+  expectTypeOf<ConstructorMapping<never>>()
+    .toMatchTypeOf<never>()
+  expectTypeOf<ConstructorMapping<unknown>>()
+    .toMatchTypeOf<never>()
+  expectTypeOf<ConstructorMapping<{}>>()
+    .toMatchTypeOf<never>()
+  expectTypeOf<ConstructorMapping<any>>()
+    .toMatchTypeOf<never>()
+})
 
 describe('primitive', () => {
   test('creat by Constructor', () => {

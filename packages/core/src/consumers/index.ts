@@ -1,5 +1,5 @@
 import type { t } from '../base'
-import type { ConstructorMapping, IsEqual, IsNotEqual, Stack, UseWhenNoNever } from '../types'
+import type { IsEqual, IsNotEqual, Stack, UseWhenNoNever } from '../types'
 import type { ArrayConsume } from './array'
 import type { FunctionConsume } from './function'
 import type { MapConsume } from './map'
@@ -41,12 +41,6 @@ type Consume<
   FunctionConsume<T, Rest>
 ) : never
 
-type InferInstanceType<T> = ConstructorMapping<T> extends infer InferInstanceType
-  ? [InferInstanceType] extends [never]
-    ? PrimitiveMapping<T>
-    : t.Schema<T, InferInstanceType>
-  : never
-
 type InferSpecialShape<
   T,
   Rest extends any[] = []
@@ -78,7 +72,7 @@ export type Consumer<
         UseWhenNoNever<
           Consume<L, Rest>,
           UseWhenNoNever<
-            InferInstanceType<L>,
+            PrimitiveMapping<L>,
             [L] extends [t.Schema<any, any>] ? L : never
           >
         >
