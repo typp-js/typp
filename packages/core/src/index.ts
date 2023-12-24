@@ -10,8 +10,18 @@ export type Typp<T extends readonly any[]> = true extends (
   | IsEqual<T, readonly []>
 ) ? t.Schema<any, any> : Consumer<T>
 
-export function t<const T extends any[]>(...t: T): Typp<T> {
+export function t<const T extends any[]>(...types: T): Typp<T> {
+  let shape: any
+  for (const consumer of consumers) {
+    const result = consumer(...types)
+    if (result) {
+      const [s] = result
+      shape = s
+      break
+    }
+  }
   return {
+    shape,
     [__typp__]: true
   } as Typp<T>
 }
@@ -25,7 +35,7 @@ interface SchemaBase<Shape, T> {
 // Consumer
 const consumers = new Set<t.Consumer>()
 export namespace t {
-  export type Consumer = (...args: any[]) => Nonexistentable<[SchemaBase<any, any>, any[]]>
+  export type Consumer = (...args: any[]) => Nonexistentable<[shape: any]>
   export function defineConsumer(consumer: Consumer) {
     consumers.add(consumer)
   }

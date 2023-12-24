@@ -45,8 +45,7 @@ declare module '@typp/core' {
     }
   }
 }
-t.defineConsumer((args) => {
-  const [first, ...rest] = args
+t.defineConsumer((first, ...rest) => {
   if ([
     String,
     Number,
@@ -58,9 +57,7 @@ t.defineConsumer((args) => {
     undefined,
     null
   ].includes(first)) {
-    return [{
-      shape: first
-    }, rest] as const
+    return [first] as const
   }
 })
 t.defineStatic('any', () => <t.Schema<any, any>>({}))
