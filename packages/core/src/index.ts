@@ -1,5 +1,3 @@
-import './calc'
-
 import type { Consumer } from './comsumer'
 import type { IsEqual, IsNotEqual, Nonexistentable, Pretty, U2I, ValueOf } from './types'
 
