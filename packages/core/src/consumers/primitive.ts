@@ -2,19 +2,6 @@ import type { Typp } from '..'
 import { t } from '../base'
 import type { IsEqual } from '../types'
 
-const symbols = Object.freeze({
-  any: Symbol('any'),
-  void: Symbol('void'),
-  unknown: Symbol('unknown'),
-  never: Symbol('never')
-}) as {
-  readonly any: unique symbol
-  readonly void: unique symbol
-  readonly unknown: unique symbol
-  readonly never: unique symbol
-}
-t.defineStatic('Symbols', symbols)
-
 declare module '../base' {
   namespace t {
     /**
@@ -45,6 +32,20 @@ declare module '../base' {
     }
   }
 }
+
+const symbols = Object.freeze({
+  any: Symbol('any'),
+  void: Symbol('void'),
+  unknown: Symbol('unknown'),
+  never: Symbol('never')
+}) as {
+  readonly any: unique symbol
+  readonly void: unique symbol
+  readonly unknown: unique symbol
+  readonly never: unique symbol
+}
+t.defineStatic('Symbols', symbols)
+
 t.defineConsumer((first, ...rest) => {
   if ([
     String,
