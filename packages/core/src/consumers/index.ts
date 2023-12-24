@@ -65,19 +65,22 @@ type InferSpecialShape<
 
 export type Consumer<
   T extends readonly any[]
-> =
-  Stack.Shift<T> extends [infer L, infer Rest extends any[]]
-    ? UseWhenNoNever<
-        InferSpecialShape<L>,
+> = Stack.Shift<T> extends [infer L, infer Rest extends any[]]
+  // TODO simplify code
+  ? UseWhenNoNever<
+      // TODO SpecialShapeMapping
+      InferSpecialShape<L>,
+      UseWhenNoNever<
+        // TODO ShapeMapping
+        // TODO merge SpecialShapeMapping and ShapeMapping
+        Consume<L, Rest>,
         UseWhenNoNever<
-          Consume<L, Rest>,
-          UseWhenNoNever<
-            PrimitiveMapping<L>,
-            [L] extends [t.Schema<any, any>] ? L : never
-          >
+          PrimitiveMapping<L>,
+          [L] extends [t.Schema<any, any>] ? L : never
         >
       >
-    : never
+    >
+  : never
 
 export * from './array'
 export * from './calc'
