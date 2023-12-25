@@ -145,7 +145,7 @@ export type Narrow<T> = Cast<T, unknown[] | [] | (T extends Primitive ? T : neve
     : Narrow<T[K]>
 })>
 
-export type ValueOf<T> = T[keyof T]
+export type ValueOf<T extends {}> = { [K in keyof T]: T[K] } extends infer X ? X[keyof X] : never
 
 export type UseWhenNoNever<T, U = never> = [T] extends [never] ? U : T
 
