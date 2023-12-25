@@ -150,9 +150,7 @@ export type ConstructorMapping<
 > = ValueOf<{
   [ K in keyof Entries
       as IsEqual<
-        // @ts-ignore
-        Entries[K][0],
-        T
+        Entries[K & number][0], T
       > extends true ? number : never
   ]: Entries[K & number][1]
 }>
