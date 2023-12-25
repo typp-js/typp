@@ -3,6 +3,9 @@ import type { IsEqual } from '../types'
 
 declare module '../base' {
   namespace t {
+    export interface ShapeEntries<T, Rest extends any[]> {
+      101000: [IsEqual<T, SetConstructor>, SetConsume<T, Rest>]
+    }
     export interface Set<S extends t.Schema<any, any>> {
       itemSchema: S
     }

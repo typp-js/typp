@@ -1,9 +1,19 @@
 import type { Typp } from '..'
 import { t } from '../base'
-import type { IsEqual } from '../types'
+import type { IsEqual, Pretty } from '../types'
 
 declare module '../base' {
   namespace t {
+    export interface ShapeEntries<T, Rest extends any[]> {
+      100000: [true extends (
+        | IsEqual<T, ArrayConstructor>
+        // empty array or tuple
+        | IsEqual<T, []>
+        | IsEqual<T, readonly []>
+        // tuple
+        | ([T] extends [readonly [any, ...any[]]] ? true : false)
+      ) ? true : false, ArrayConsume<T, Rest>]
+    }
     export function array<const T extends readonly any[]>(...types: T): Typp<[ArrayConstructor, ...T]>
     export function tuple<const T extends readonly any[]>(...types: T): Typp<[T]>
   }
@@ -23,5 +33,10 @@ export type ArrayConsume<
     | IsEqual<T, []>
     | IsEqual<T, readonly []>
   )
-) ? t.Schema<[], []>
-  : t.Schema<Typp<Rest>[], t.Infer<Typp<Rest>>[]>
+) ? (
+  t.Schema<[], []>
+) : true extends (
+  ([T] extends [readonly [any, ...any[]]] ? true : false)
+) ? (
+  [t.TyppI<T>] extends [infer R] ? t.Schema<R, t.InferI<R>> : never
+) : t.Schema<Typp<Rest>[], t.Infer<Typp<Rest>>[]>

@@ -1,5 +1,5 @@
 import type { t, Typp } from '..'
-import type { IsEqual, Stack } from '../types'
+import type { IsEqual, IsNotEqual, Stack } from '../types'
 
 declare module '../base' {
   namespace t {
@@ -7,6 +7,27 @@ declare module '../base' {
     // TODO omit
     // TODO pick
     // TODO partial
+    export interface ShapeEntries<T, Rest extends any[]> {
+      110000: [true extends (
+        // exclude array
+        & IsNotEqual<T, ArrayConstructor>
+        // exclude empty array or tuple
+        & IsNotEqual<T, []>
+        & IsNotEqual<T, readonly []>
+        // exclude tuple
+        & ([T] extends [readonly [any, ...any[]]] ? false : true)
+        & (
+          | IsEqual<T, ObjectConstructor>
+          | IsEqual<T, {}>
+          | (
+            & ([T] extends [Record<string | number | symbol, any>] ? true : false)
+            & IsNotEqual<T, ObjectConstructor>
+            & ([T] extends [Function] ? false : true)
+            & ([T] extends [t.Schema<any, any>] ? false : true)
+          )
+        )
+      ) ? true : false, ObjectConsume<T, Rest>]
+    }
   }
 }
 
@@ -26,18 +47,7 @@ export type ObjectConsume<
       [k: string | number | symbol]: any
     }>
   ) : [T] extends [Record<string | number | symbol, any>] ? (
-    {
-      -readonly [K in keyof T]: [T[K]] extends [t.Schema<any, any>]
-        ? T[K]
-        : Typp<[T[K]]>
-    } extends infer R ? (
-      t.Schema<R, {
-        [K in keyof R]: [R[K]] extends [t.Schema<any, any>]
-          ? t.Infer<R[K]>
-          // TODO maybe should return `R[K]`?
-          : never
-      }>
-    ) : never
+    [t.TyppI<T>] extends [infer R] ? t.Schema<R, t.InferI<R>> : never
   ) : never
 ) : (
   Stack.Shift<Rest> extends [

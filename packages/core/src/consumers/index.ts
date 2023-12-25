@@ -1,45 +1,25 @@
 import type { t } from '../base'
-import type { IsEqual, IsNotEqual, Stack, UseWhenNoNever } from '../types'
-import type { ArrayConsume } from './array'
-import type { FunctionConsume } from './function'
-import type { MapConsume } from './map'
-import type { ObjectConsume } from './object'
+import type { IsEqual, Stack, UseWhenNoNever, ValueOf } from '../types'
 import type { PrimitiveMapping } from './primitive'
-import type { SetConsume } from './set'
 
-type Consume<
-  T,
-  Rest extends any[]
-> = true extends (
-  | IsEqual<T, ArrayConstructor>
-  | IsEqual<T, []>
-  | IsEqual<T, readonly []>
-) ? (
-  ArrayConsume<T, Rest>
-) : true extends (
-  | IsEqual<T, ObjectConstructor>
-  | IsEqual<T, {}>
-  | (
-    & ([T] extends [Record<string | number | symbol, any>] ? true : false)
-    & IsNotEqual<T, ObjectConstructor>
-    & ([T] extends [Function] ? false : true)
-    & ([T] extends [t.Schema<any, any>] ? false : true)
-  )
-) ? (
-  ObjectConsume<T, Rest>
-) : true extends (
-  IsEqual<T, MapConstructor>
-) ? (
-  MapConsume<T, Rest>
-) : true extends (
-  IsEqual<T, SetConstructor>
-) ? (
-  SetConsume<T, Rest>
-) : true extends (
-  IsEqual<T, FunctionConstructor>
-) ? (
-  FunctionConsume<T, Rest>
-) : never
+declare module '../base' {
+  namespace t {
+    export interface ShapeEntries<T, Rest extends any[]> {
+      [key: number & {}]: [boolean, t.Schema<any, any>]
+    }
+  }
+}
+
+type ShapeMapping<
+  T, Rest extends any[],
+  Entries extends t.ShapeEntries<T, Rest> = t.ShapeEntries<T, Rest>
+> = ValueOf<{
+  [ K in keyof Entries
+      as true extends (
+        IsEqual<Entries[K & number][0], true>
+      ) ? K : never
+  ]: Entries[K & number][1]
+}>
 
 type InferSpecialShape<
   T,
@@ -73,7 +53,7 @@ export type Consumer<
       UseWhenNoNever<
         // TODO ShapeMapping
         // TODO merge SpecialShapeMapping and ShapeMapping
-        Consume<L, Rest>,
+        ShapeMapping<L, Rest>,
         UseWhenNoNever<
           PrimitiveMapping<L>,
           [L] extends [t.Schema<any, any>] ? L : never

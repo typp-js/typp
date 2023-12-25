@@ -3,6 +3,9 @@ import type { IsEqual, Stack } from '../types'
 
 declare module '../base' {
   namespace t {
+    export interface ShapeEntries<T, Rest extends any[]> {
+      111000: [IsEqual<T, MapConstructor>, MapConsume<T, Rest>]
+    }
     export interface Map<
       KSchema extends t.Schema<any, any>,
       VSchema extends t.Schema<any, any>

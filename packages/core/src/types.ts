@@ -159,7 +159,7 @@ export namespace Stack {
   export type Shift<T extends readonly any[]> =
     T extends readonly [infer L, ...infer Rest]
       ? [L, Rest]
-      : [never, never]
+      : [never, []]
   export type Push<T extends readonly any[], V> =
     [...T, V]
 }

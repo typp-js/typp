@@ -21,7 +21,7 @@ declare module '../base' {
     export interface SchemaFieldsAll<Shape, T> {
       and<
         const U,
-        Shapes extends readonly [any, ...any[]] = [Shape, U]
+        const S extends Shape = Shape
       >(u: U): true extends (
         & ([T] extends [string] ? true : false)
         & (
@@ -31,11 +31,11 @@ declare module '../base' {
           | IsEqual<U, t.Schema<typeof t.Symbols.unknown, unknown>>
         )
       ) ? t.Schema<StringConstructor, string & {}>
-        : Intersect<Shapes>
+        : Intersect<[S, U]>
       or<
         const U,
-        Shapes extends readonly [any, ...any[]] = [Shape, U]
-      >(t: U): Union<Shapes>
+        const S extends Shape = Shape
+      >(t: U): Union<[S, U]>
     }
     export type Union<
       Shapes extends readonly any[],

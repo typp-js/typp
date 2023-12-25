@@ -6,6 +6,9 @@ const functionSymbol = Symbol('function')
 const genericSymbol = Symbol('generic')
 declare module '../base' {
   namespace t {
+    export interface ShapeEntries<T, Rest extends any[]> {
+      200000: [IsEqual<T, FunctionConstructor>, FunctionConsume<T, Rest>]
+    }
     export function fn<
       const Args extends readonly any[],
       RT extends readonly any[] = []

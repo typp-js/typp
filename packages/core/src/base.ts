@@ -143,6 +143,16 @@ export namespace t {
   ] ? (
     [Infer<Item>, ...InferT<Rest>]
   ) : []
+
+  export type TyppI<T> = {
+    -readonly [K in keyof T]: t.TyppWhenNotATypp<T[K]>
+  }
+  export type InferI<T> = {
+    [K in keyof T]: [T[K]] extends [infer Field extends t.Schema<any, any>]
+      ? t.Infer<Field>
+      // TODO maybe should return `R[K]`?
+      : never
+  }
 }
 // Extensible
 export namespace t {
