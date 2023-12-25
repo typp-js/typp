@@ -1,6 +1,5 @@
 import type { t } from '../base'
 import type { IsEqual, Stack, UseWhenNoNever, ValueOf } from '../types'
-import type { PrimitiveMapping } from './primitive'
 
 declare module '../base' {
   namespace t {
@@ -51,13 +50,9 @@ export type Consumer<
       // TODO SpecialShapeMapping
       InferSpecialShape<L>,
       UseWhenNoNever<
-        // TODO ShapeMapping
         // TODO merge SpecialShapeMapping and ShapeMapping
         ShapeMapping<L, Rest>,
-        UseWhenNoNever<
-          PrimitiveMapping<L>,
-          [L] extends [t.Schema<any, any>] ? L : never
-        >
+        [L] extends [t.Schema<any, any>] ? L : never
       >
     >
   : never

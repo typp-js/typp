@@ -4,6 +4,19 @@ import type { IsEqual, NoIndexSignature, ValueOf, Values } from '../types'
 
 declare module '../base' {
   namespace t {
+    export interface ShapeEntries<T, Rest extends any[]> {
+      500000: [true extends (
+        | ([T] extends [(
+          | string | number | bigint | boolean | symbol
+          | Values<NoIndexSignature<ConstructorEntries>>[0]
+        )] ? true : false)
+        | IsEqual<T, null>
+        | IsEqual<T, undefined>
+        | IsEqual<T, void>
+        | IsEqual<T, unknown>
+        | IsEqual<T, never>
+      ) ? true : false, PrimitiveConsume<T>]
+    }
     /**
      * rename and export to user
      */
@@ -155,7 +168,7 @@ export type ConstructorMapping<
   ]: Entries[K & number][1]
 }>
 
-export type PrimitiveMapping<T> = true extends (
+export type PrimitiveConsume<T> = true extends (
   [T] extends [Values<NoIndexSignature<ConstructorEntries>>[0]] ? true : false
 ) ? (
   t.Schema<T, ConstructorMapping<T>>
