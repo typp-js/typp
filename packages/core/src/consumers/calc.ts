@@ -1,6 +1,6 @@
 import { t } from '../base'
 import type { Typp } from '../index'
-import type { IsEqual, T2I } from '../types'
+import type { IsEqual, Stack, T2I } from '../types'
 
 const unionSymbol = Symbol('union')
 const intersectionSymbol = Symbol('intersection')
@@ -63,15 +63,27 @@ declare module '../base' {
       Shapes extends readonly [any, ...any[]]
     > = Shapes['length'] extends 1
       ? t.TyppWhenNotATypp<Shapes[0]>
-      : t.TyppT<Shapes> extends (
-        infer Schemas extends readonly t.Schema<any, any>[]
-      ) ? (
-        [Schemas] extends [never]
-          ? t.Schema<typeof t.Symbols.never, never>
-          : t.Schema<
-            t.SpecialShape<t.SpecialShapeTypeMapping['intersection'], Schemas>,
-            T2I<t.InferT<Schemas>>
-          >
+      : Stack.Shift<Shapes> extends [
+        infer Head,
+        infer Tail
+      ] ? (
+        [Head] extends [never] ? (
+          // never & xx => never
+          t.Schema<typeof t.Symbols.never, never>
+        ) : true extends IsEqual<Head, any> ? (
+          // any & xx => any
+          // TODO any & never => never
+          t.Schema<any, any>
+        ) : t.TyppT<Shapes> extends (
+            infer Schemas extends readonly t.Schema<any, any>[]
+          ) ? (
+            [Schemas] extends [never]
+              ? t.Schema<typeof t.Symbols.never, never>
+              : t.Schema<
+                t.SpecialShape<t.SpecialShapeTypeMapping['intersection'], Schemas>,
+                T2I<t.InferT<Schemas>>
+              >
+          ) : never
       ) : never
     export function intersect<const T extends readonly [any, ...any[]]>(i: T): Intersect<T>
     export { intersect as and }
