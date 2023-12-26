@@ -199,9 +199,8 @@ export namespace t {
     override?: boolean
   }
   export function defineStatic<
-    K extends Exclude<keyof typeof t, CantRefine>,
-    V extends typeof t[K]
-  >(key: K, value: V, options: DefineStaticOptions = {}) {
+    K extends Exclude<keyof typeof t, CantRefine>
+  >(key: K, value: typeof t[K], options: DefineStaticOptions = {}) {
     if ((
       CANT_REFINE as unknown as string[]
     ).includes(key)) {
