@@ -55,9 +55,6 @@ describe('infer', () => {
     const number = t(t(Number))
     expectTypeOf<typeof number>().toEqualTypeOf<t.Schema<NumberConstructor, number>>()
   })
-  test('union and intersection', () => {
-    // TODO
-  })
   test('instance method', () => {
     const NumberSchema = t(Number)
     const number0 = NumberSchema.infer(0)
