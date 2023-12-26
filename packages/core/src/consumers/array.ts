@@ -18,8 +18,8 @@ declare module '../base' {
     export function tuple<const T extends readonly any[]>(...types: T): Typp<[T]>
   }
 }
-t.defineStatic('array', <T extends readonly any[]>() => <Typp<[ArrayConstructor, ...T]>>({}))
-t.defineStatic('tuple', <T extends readonly any[]>() => <Typp<[T]>>({}))
+t.defineStatic('array', <const T extends readonly any[]>(...types: T) => <Typp<[ArrayConstructor, ...T]>>({}))
+t.defineStatic('tuple', <const T extends readonly any[]>(...types: T) => <Typp<[T]>>({}))
 
 export type ArrayConsume<
   T,

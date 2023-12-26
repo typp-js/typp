@@ -4,10 +4,8 @@ import type { IsEqual, Stack, ValueOf } from '../types'
 declare module '../base' {
   namespace t {
     export interface ShapeEntries<T, Rest extends any[]> {
-      0: [(
-        [T] extends [t.Schema<any, any>] ? true : false
-      ), T]
-      [key: number & {}]: [boolean, t.Schema<any, any>]
+      0: [t.IsSchema<T>, T]
+      [key: number & {}]: [boolean, any]
     }
   }
 }

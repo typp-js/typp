@@ -107,6 +107,8 @@ export namespace t {
     & SchemaFields<Shape, T>
     & SchemaBase<Shape, T>
     & { [__typp__]: true }
+  export type IsSchema<T> = T extends { [__typp__]: true } ? true : false
+  export type IsNotSchema<T> = T extends { [__typp__]: true } ? false : true
   export function isSchema(obj: any): obj is Schema<any, any> {
     return obj[__typp__] === true
   }
