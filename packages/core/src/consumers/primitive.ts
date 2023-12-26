@@ -169,11 +169,13 @@ export type ConstructorMapping<
 }>
 
 export type PrimitiveConsume<T> = true extends (
-  [T] extends [Values<NoIndexSignature<ConstructorEntries>>[0]] ? true : false
+  & IsNotEqual<T, never>
+  & ([T] extends [Values<NoIndexSignature<ConstructorEntries>>[0]] ? true : false)
 ) ? (
   t.Schema<T, ConstructorMapping<T>>
 ) : true extends (
-  [T] extends [string | number | bigint | boolean | symbol] ? true : false
+  & ([T] extends [string | number | bigint | boolean | symbol] ? true : false)
+  & IsNotEqual<T, never>
 ) ? (
   [T] extends [string] ? (
     JoinLiteral<SplitLiteral<T>> extends infer S
