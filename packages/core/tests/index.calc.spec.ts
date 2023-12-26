@@ -1,5 +1,3 @@
-import '../src/consumers/calc'
-
 import { describe, expectTypeOf, test } from 'vitest'
 
 import { t } from '../src'
