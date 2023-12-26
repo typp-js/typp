@@ -35,10 +35,6 @@ type InferSpecialShape<
     IsEqual<T['type'], t.SpecialShapeTypeMapping['intersection']>
   ) ? (
     t.Intersect<T['schemas']>
-  ) : true extends (
-    IsEqual<T['type'], t.SpecialShapeTypeMapping['generic']>
-  ) ? (
-    t.GenericSchema<T['schemas']>
   ) : never
 ) : never
 

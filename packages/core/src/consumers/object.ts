@@ -10,6 +10,8 @@ declare module '../base' {
     export interface ShapeEntries<T, Rest extends any[]> {
       110000: [true extends (
         // exclude array
+        & (T extends { type: t.SpecialShapeTypes } ? false : true)
+        // exclude array
         & IsNotEqual<T, ArrayConstructor>
         // exclude empty array or tuple
         & IsNotEqual<T, []>

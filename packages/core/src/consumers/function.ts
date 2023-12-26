@@ -8,6 +8,13 @@ declare module '../base' {
   namespace t {
     export interface ShapeEntries<T, Rest extends any[]> {
       200000: [IsEqual<T, FunctionConstructor>, FunctionConsume<T, Rest>]
+      200001: [(
+        [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
+          IsEqual<T['type'], t.SpecialShapeTypeMapping['generic']>
+        ) : false
+      ), [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
+        t.GenericSchema<T['schemas']>
+      ) : never]
     }
     export function fn<
       const Args extends readonly any[],
