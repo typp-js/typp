@@ -107,6 +107,6 @@ declare module '../base' {
   }
 }
 // TODO
-t.defineStatic('union', () => ({} as any))
+t.defineStatic('union', <const T extends readonly any[]>(i: T) => (<t.Union<T>>{}))
 // TODO
-t.defineStatic('intersect', () => ({} as any))
+t.defineStatic('intersect', <const T extends readonly [any, ...any[]]>(i: T) => (<t.Intersect<T>>{}))
