@@ -79,6 +79,12 @@ export namespace t {
     type: T
     schemas: S
   }
+  export function specialShape<
+    T extends SpecialShapeTypes,
+    S extends SpecialShapeSchemaMapping[T]
+  >(type: T, schemas: S): SpecialShape<T, S> {
+    return { type, schemas }
+  }
 }
 // Base
 const registers = new Set<t.FieldsRegister>()
