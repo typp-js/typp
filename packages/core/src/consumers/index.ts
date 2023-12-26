@@ -1,5 +1,5 @@
 import type { t } from '../base'
-import type { IsEqual, Stack, ValueOf } from '../types'
+import type { IsEqual, ValueOf } from '../types'
 
 declare module '../base' {
   namespace t {
@@ -10,7 +10,7 @@ declare module '../base' {
   }
 }
 
-type ShapeMapping<
+export type ShapeMapping<
   T, Rest extends any[],
   Entries extends t.ShapeEntries<T, Rest> = t.ShapeEntries<T, Rest>
 > = ValueOf<{
@@ -20,12 +20,6 @@ type ShapeMapping<
       ) ? K : never
   ]: Entries[K & number][1]
 }>
-
-export type Consumer<
-  T extends readonly any[]
-> = Stack.Shift<T> extends [infer L, infer Rest extends any[]]
-  ? ShapeMapping<L, Rest>
-  : never
 
 export * from './array'
 export * from './calc'

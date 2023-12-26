@@ -1,12 +1,16 @@
-import type { Consumer } from './consumers'
-import type { IsEqual, IsNotEqual, Nonexistentable, Pretty, U2I, ValueOf } from './types'
+import type { ShapeMapping } from './consumers'
+import type { IsEqual, IsNotEqual, Nonexistentable, Pretty, Stack, U2I, ValueOf } from './types'
 
 const __typp__: unique symbol = Symbol('typp')
 
 export type Typp<T extends readonly any[]> = true extends (
   | IsEqual<T, []>
   | IsEqual<T, readonly []>
-) ? t.Schema<any, any> : Consumer<T>
+) ? t.Schema<any, any> : (
+  Stack.Shift<T> extends [infer L, infer Rest extends any[]]
+    ? ShapeMapping<L, Rest>
+    : never
+)
 
 export function t<const T extends any[]>(...types: T): Typp<T> {
   let shape: any
