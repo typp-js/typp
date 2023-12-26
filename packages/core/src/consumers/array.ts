@@ -1,6 +1,6 @@
 import type { Typp } from '..'
 import { t } from '../base'
-import type { IsEqual, Pretty } from '../types'
+import type { IsEqual, IsNotEqual } from '../types'
 
 declare module '../base' {
   namespace t {
@@ -11,7 +11,10 @@ declare module '../base' {
         | IsEqual<T, []>
         | IsEqual<T, readonly []>
         // tuple
-        | ([T] extends [readonly [any, ...any[]]] ? true : false)
+        | (
+          & IsNotEqual<T, never>
+          & ([T] extends [readonly [any, ...any[]]] ? true : false)
+        )
       ) ? true : false, ArrayConsume<T, Rest>]
     }
     export function array<const T extends readonly any[]>(...types: T): Typp<[ArrayConstructor, ...T]>
