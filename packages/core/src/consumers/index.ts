@@ -20,36 +20,13 @@ type ShapeMapping<
   ]: Entries[K & number][1]
 }>
 
-type InferSpecialShape<
-  T,
-  Rest extends any[] = []
-> = [T] extends [
-  t.SpecialShape<t.SpecialShapeTypes, any>
-] ? (
-  true extends (
-    IsEqual<T['type'], t.SpecialShapeTypeMapping['union']>
-  ) ? (
-    // TODO no `t.InferT`?
-    t.Union<t.InferT<T['schemas']>>
-  ) : true extends (
-    IsEqual<T['type'], t.SpecialShapeTypeMapping['intersection']>
-  ) ? (
-    t.Intersect<T['schemas']>
-  ) : never
-) : never
-
 export type Consumer<
   T extends readonly any[]
 > = Stack.Shift<T> extends [infer L, infer Rest extends any[]]
   // TODO simplify code
   ? UseWhenNoNever<
-      // TODO SpecialShapeMapping
-      InferSpecialShape<L>,
-      UseWhenNoNever<
-        // TODO merge SpecialShapeMapping and ShapeMapping
-        ShapeMapping<L, Rest>,
-        [L] extends [t.Schema<any, any>] ? L : never
-      >
+      ShapeMapping<L, Rest>,
+      [L] extends [t.Schema<any, any>] ? L : never
     >
   : never
 
