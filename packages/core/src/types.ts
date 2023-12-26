@@ -147,6 +147,7 @@ export type Narrow<T> = Cast<T, unknown[] | [] | (T extends Primitive ? T : neve
     : Narrow<T[K]>
 })>
 
+// @ts-ignore FIXME error TS2313: Type parameter 'K' has a circular constraint.
 export type ValueOf<T extends {}> = { [K in keyof T]: T[K] } extends infer X ? X[keyof X] : never
 
 export type UseWhenNoNever<T, U = never> = [T] extends [never] ? U : T
