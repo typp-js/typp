@@ -1,9 +1,12 @@
 import type { t } from '../base'
-import type { IsEqual, Stack, UseWhenNoNever, ValueOf } from '../types'
+import type { IsEqual, Stack, ValueOf } from '../types'
 
 declare module '../base' {
   namespace t {
     export interface ShapeEntries<T, Rest extends any[]> {
+      0: [(
+        [T] extends [t.Schema<any, any>] ? true : false
+      ), T]
       [key: number & {}]: [boolean, t.Schema<any, any>]
     }
   }
@@ -23,11 +26,7 @@ type ShapeMapping<
 export type Consumer<
   T extends readonly any[]
 > = Stack.Shift<T> extends [infer L, infer Rest extends any[]]
-  // TODO simplify code
-  ? UseWhenNoNever<
-      ShapeMapping<L, Rest>,
-      [L] extends [t.Schema<any, any>] ? L : never
-    >
+  ? ShapeMapping<L, Rest>
   : never
 
 export * from './array'

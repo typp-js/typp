@@ -51,6 +51,10 @@ describe('infer', () => {
     // expectTypeOf<GenericFunc>().toEqualTypeOf<GenericFuncTypeof>()
     // expectTypeOf(genericFunc).toEqualTypeOf<GenericFunc>()
   })
+  test('passing schema and rerun itself', () => {
+    const number = t(t(Number))
+    expectTypeOf<typeof number>().toEqualTypeOf<t.Schema<NumberConstructor, number>>()
+  })
   test('union and intersection', () => {
     // TODO
   })
