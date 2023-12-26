@@ -1,50 +1,6 @@
 import type { Typp } from '..'
 import { t } from '../base'
-import type { IsEqual, NoIndexSignature, ValueOf, Values } from '../types'
-
-declare module '../base' {
-  namespace t {
-    export interface ShapeEntries<T, Rest extends any[]> {
-      500000: [true extends (
-        | ([T] extends [(
-          | string | number | bigint | boolean | symbol
-          | Values<NoIndexSignature<ConstructorEntries>>[0]
-        )] ? true : false)
-        | IsEqual<T, null>
-        | IsEqual<T, undefined>
-        | IsEqual<T, void>
-        | IsEqual<T, unknown>
-        | IsEqual<T, never>
-      ) ? true : false, PrimitiveConsume<T>]
-    }
-    /**
-     * rename and export to user
-     */
-    export const Symbols: typeof symbols
-
-    export function any(): t.Schema<any, any>
-    export function unknown(): t.Schema<typeof Symbols.unknown, unknown>
-    export function string(): t.Schema<StringConstructor, string>
-    export function number(): t.Schema<NumberConstructor, number>
-    export function bigint(): t.Schema<BigIntConstructor, bigint>
-    export function boolean(): t.Schema<BooleanConstructor, boolean>
-    export function symbol(): t.Schema<SymbolConstructor, symbol>
-    export function date(): t.Schema<DateConstructor, Date>
-    export function regexp(): t.Schema<RegExpConstructor, RegExp>
-    export function undefined(): t.Schema<undefined, undefined>
-    export function never(): t.Schema<typeof Symbols.never, never>
-
-    function _null(): t.Schema<null, null>
-    function _void(): t.Schema<typeof Symbols.void, void>
-    export { _null as null, _void as void }
-
-    const _literal: typeof literal
-    export {
-      _literal as const,
-      _literal as literal
-    }
-  }
-}
+import type { IsEqual, IsNotEqual, NoIndexSignature, ValueOf, Values } from '../types'
 
 const symbols = Object.freeze({
   any: Symbol('any'),
@@ -59,6 +15,88 @@ const symbols = Object.freeze({
 }
 t.defineStatic('Symbols', symbols)
 
+declare module '../base' {
+  namespace t {
+    export interface DynamicSpecialShapeTypeMapping {
+      readonly any: typeof Symbols.any
+      readonly void: typeof Symbols.void
+      readonly unknown: typeof Symbols.unknown
+      readonly never: typeof Symbols.never
+    }
+    export interface SpecialShapeSchemaMapping {
+      [t.specialShapeTypeMapping
+        .any]: []
+      [t.specialShapeTypeMapping
+        .void]: []
+      [t.specialShapeTypeMapping
+        .unknown]: []
+      [t.specialShapeTypeMapping
+        .never]: []
+    }
+    export interface ShapeEntries<T, Rest extends any[]> {
+      500000: [true extends (
+        | ([T] extends [(
+          | string | number | bigint | boolean | symbol
+          | Values<NoIndexSignature<ConstructorEntries>>[0]
+        )] ? true : false)
+        | IsEqual<T, null>
+        | IsEqual<T, undefined>
+        | IsEqual<T, void>
+        | IsEqual<T, unknown>
+        | IsEqual<T, never>
+      ) ? true : false, PrimitiveConsume<T>]
+      500001: [(
+        [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
+          IsEqual<T['type'], t.SpecialShapeTypeMapping['any']>
+        ) : false
+      ), t.Schema<any, any>]
+      500002: [(
+        [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
+          IsEqual<T['type'], t.SpecialShapeTypeMapping['void']>
+        ) : false
+      ), t.Schema<T, void>]
+      500003: [(
+        [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
+          IsEqual<T['type'], t.SpecialShapeTypeMapping['unknown']>
+        ) : false
+      ), t.Schema<T, unknown>]
+      500004: [(
+        [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
+          IsEqual<T['type'], t.SpecialShapeTypeMapping['never']>
+        ) : false
+      ), t.Schema<T, never>]
+    }
+    /**
+     * rename and export to user
+     */
+    export const Symbols: typeof symbols
+
+    export function any(): t.Schema<any, any>
+    export function unknown(): Typp<[unknown]>
+    export function string(): t.Schema<StringConstructor, string>
+    export function number(): t.Schema<NumberConstructor, number>
+    export function bigint(): t.Schema<BigIntConstructor, bigint>
+    export function boolean(): t.Schema<BooleanConstructor, boolean>
+    export function symbol(): t.Schema<SymbolConstructor, symbol>
+    export function date(): t.Schema<DateConstructor, Date>
+    export function regexp(): t.Schema<RegExpConstructor, RegExp>
+    export function undefined(): t.Schema<undefined, undefined>
+    // FIXME unable compute [never] for `Typp`
+    // export function never(): Typp<[never]>
+    export function never(): t.Schema<t.SpecialShape<typeof t.Symbols.never, []>, never>
+
+    function _null(): t.Schema<null, null>
+    function _void(): Typp<[void]>
+    export { _null as null, _void as void }
+
+    const _literal: typeof literal
+    export {
+      _literal as const,
+      _literal as literal
+    }
+  }
+}
+
 t.defineConsumer((first, ...rest) => {
   if ([
     String,
@@ -69,13 +107,17 @@ t.defineConsumer((first, ...rest) => {
     Date,
     RegExp,
     undefined,
-    null
+    null,
+    symbols.any,
+    symbols.void,
+    symbols.unknown,
+    symbols.never
   ].includes(first)) {
     return [first] as const
   }
 })
-t.defineStatic('any', () => <t.Schema<any, any>>({}))
-t.defineStatic('unknown', () => <t.Schema<typeof symbols.unknown, unknown>>({}))
+t.defineStatic('any', () => t(t.specialShape(t.Symbols.any, [])))
+t.defineStatic('unknown', () => t(t.specialShape(t.Symbols.unknown, [])))
 t.defineStatic('string', () => t(String))
 t.defineStatic('number', () => t(Number))
 t.defineStatic('bigint', () => t(BigInt))
@@ -85,8 +127,8 @@ t.defineStatic('date', () => t(Date))
 t.defineStatic('regexp', () => t(RegExp))
 t.defineStatic('undefined', () => t(undefined))
 t.defineStatic('null', () => t(null))
-t.defineStatic('never', () => <t.Schema<typeof symbols.never, never>>({}))
-t.defineStatic('void', () => <t.Schema<typeof symbols.void, void>>({}))
+t.defineStatic('never', () =>t(t.specialShape(t.Symbols.never, [])))
+t.defineStatic('void', () => t(t.specialShape(t.Symbols.void, [])))
 
 function literal<
   T extends string | number | bigint | symbol | null | boolean | undefined
@@ -190,9 +232,9 @@ export type PrimitiveConsume<T> = true extends (
 ) ? (
   t.Schema<T, T>
 ) : true extends IsEqual<T, void> ? (
-  t.Schema<typeof t.Symbols.void, void>
+  t.Schema<t.SpecialShape<typeof t.Symbols.void, []>, void>
 ) : true extends IsEqual<T, unknown> ? (
-  t.Schema<typeof t.Symbols.unknown, unknown>
+  t.Schema<t.SpecialShape<typeof t.Symbols.unknown, []>, unknown>
 ) : true extends IsEqual<T, never> ? (
-  t.Schema<typeof t.Symbols.never, never>
+  t.Schema<t.SpecialShape<typeof t.Symbols.never, []>, never>
 ) : never

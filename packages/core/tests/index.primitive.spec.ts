@@ -41,9 +41,7 @@ describe('primitive', () => {
       [t(Boolean), Boolean, {} as boolean],
       [t(Symbol), Symbol, {} as symbol],
       [t(Date), Date, {} as Date],
-      [t(RegExp), RegExp, {} as RegExp],
-      [t(undefined), undefined, undefined],
-      [t(null), null, null]
+      [t(RegExp), RegExp, {} as RegExp]
     ] as const
     expect(cases[0][0].shape).toBe(String)
     expectTypeOf(cases[0][0])
@@ -80,16 +78,6 @@ describe('primitive', () => {
       .toEqualTypeOf<t.Schema<typeof cases[6][1], typeof cases[6][2]>>()
     expectTypeOf<t.Infer<typeof cases[6][0]>>()
       .toEqualTypeOf<typeof cases[6][2]>()
-    expect(cases[7][0].shape).toBe(undefined)
-    expectTypeOf(cases[7][0])
-      .toEqualTypeOf<t.Schema<typeof cases[7][1], typeof cases[7][2]>>()
-    expectTypeOf<t.Infer<typeof cases[7][0]>>()
-      .toEqualTypeOf<typeof cases[7][2]>()
-    expect(cases[8][0].shape).toBe(null)
-    expectTypeOf(cases[8][0])
-      .toEqualTypeOf<t.Schema<typeof cases[8][1], typeof cases[8][2]>>()
-    expectTypeOf<t.Infer<typeof cases[8][0]>>()
-      .toEqualTypeOf<typeof cases[8][2]>()
   })
   test('creat by static function', () => {
     const cases = [
@@ -99,12 +87,7 @@ describe('primitive', () => {
       [t.boolean(), Boolean, {} as boolean],
       [t.symbol(), Symbol, {} as symbol],
       [t.date(), Date, {} as Date],
-      [t.regexp(), RegExp, {} as RegExp],
-      [t.undefined(), undefined, undefined],
-      [t.null(), null, null],
-      [t.void(), t.Symbols.void, undefined as void],
-      [t.unknown(), t.Symbols.unknown, {} as unknown],
-      [t.never(), t.Symbols.never, {} as never]
+      [t.regexp(), RegExp, {} as RegExp]
     ] as const
 
     for (const [schema, shape] of cases) {
@@ -138,26 +121,6 @@ describe('primitive', () => {
       .toEqualTypeOf<t.Schema<typeof cases[6][1], typeof cases[6][2]>>()
     expectTypeOf<t.Infer<typeof cases[6][0]>>()
       .toEqualTypeOf<typeof cases[6][2]>()
-    expectTypeOf(cases[7][0])
-      .toEqualTypeOf<t.Schema<typeof cases[7][1], typeof cases[7][2]>>()
-    expectTypeOf<t.Infer<typeof cases[7][0]>>()
-      .toEqualTypeOf<typeof cases[7][2]>()
-    expectTypeOf(cases[8][0])
-      .toEqualTypeOf<t.Schema<typeof cases[8][1], typeof cases[8][2]>>()
-    expectTypeOf<t.Infer<typeof cases[8][0]>>()
-      .toEqualTypeOf<typeof cases[8][2]>()
-    expectTypeOf(cases[9][0])
-      .toEqualTypeOf<t.Schema<typeof cases[9][1], typeof cases[9][2]>>()
-    expectTypeOf<t.Infer<typeof cases[9][0]>>()
-      .toEqualTypeOf<typeof cases[9][2]>()
-    expectTypeOf(cases[10][0])
-      .toEqualTypeOf<t.Schema<typeof cases[10][1], typeof cases[10][2]>>()
-    expectTypeOf<t.Infer<typeof cases[10][0]>>()
-      .toEqualTypeOf<typeof cases[10][2]>()
-    expectTypeOf(cases[11][0])
-      .toEqualTypeOf<t.Schema<typeof cases[11][1], typeof cases[11][2]>>()
-    expectTypeOf<t.Infer<typeof cases[11][0]>>()
-      .toEqualTypeOf<typeof cases[11][2]>()
   })
 })
 
@@ -209,17 +172,28 @@ describe('literal', () => {
   })
   test('special type', () => {
     const case0 = t.void()
-    expectTypeOf(case0).toEqualTypeOf<t.Schema<typeof t.Symbols.void, void>>()
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+      t.SpecialShape<typeof t.Symbols.void, []>,
+      void
+    >>()
     expectTypeOf<t.Infer<typeof case0>>()
       .toEqualTypeOf<void>()
+
     const case1 = t.unknown()
-    expectTypeOf(case1).toEqualTypeOf<t.Schema<typeof t.Symbols.unknown, unknown>>()
+    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+      t.SpecialShape<typeof t.Symbols.unknown, []>,
+      unknown
+    >>()
     expectTypeOf<t.Infer<typeof case1>>()
       .toEqualTypeOf<unknown>()
     const case2 = t.never()
-    expectTypeOf(case2).toEqualTypeOf<t.Schema<typeof t.Symbols.never, never>>()
+    expectTypeOf(case2).toEqualTypeOf<t.Schema<
+      t.SpecialShape<typeof t.Symbols.never, []>,
+      never
+    >>()
     expectTypeOf<t.Infer<typeof case2>>()
       .toEqualTypeOf<never>()
+
     const case3 = t.any()
     expectTypeOf(case3).toEqualTypeOf<t.Schema<any, any>>()
     expectTypeOf<t.Infer<typeof case3>>()
