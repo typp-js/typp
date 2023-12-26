@@ -1,4 +1,3 @@
-import type { ShapeMapping } from './consumers'
 import type { IsEqual, IsNotEqual, Nonexistentable, Pretty, Stack, U2I, ValueOf } from './types'
 
 const __typp__: unique symbol = Symbol('typp')
@@ -8,7 +7,7 @@ export type Typp<T extends readonly any[]> = true extends (
   | IsEqual<T, readonly []>
 ) ? t.Schema<any, any> : (
   Stack.Shift<T> extends [infer L, infer Rest extends any[]]
-    ? ShapeMapping<L, Rest>
+    ? t.ShapeMapping<L, Rest>
     : never
 )
 
@@ -43,6 +42,20 @@ export namespace t {
 }
 // Shape
 export namespace t {
+  export interface ShapeEntries<T, Rest extends any[]> {
+    0: [t.IsSchema<T>, T]
+    [key: number & {}]: [boolean, any]
+  }
+  export type ShapeMapping<
+    T, Rest extends any[],
+    Entries extends t.ShapeEntries<T, Rest> = t.ShapeEntries<T, Rest>
+  > = ValueOf<{
+    [ K in keyof Entries
+        as true extends (
+          IsEqual<Entries[K & number][0], true>
+        ) ? K : never
+    ]: Entries[K & number][1]
+  }>
   export interface DynamicSpecialShapeTypeMapping {
     readonly [key: string]: symbol
   }
