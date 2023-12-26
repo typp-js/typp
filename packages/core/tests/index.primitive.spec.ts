@@ -3,7 +3,7 @@ import { describe, expectTypeOf, test } from 'vitest'
 import { t } from '../src'
 import type { ConstructorMapping } from '../src/consumers/primitive'
 
-test('base', () => {
+test('ConstructorMapping', () => {
   expectTypeOf<ConstructorMapping<StringConstructor>>()
     .toMatchTypeOf<string>()
 
