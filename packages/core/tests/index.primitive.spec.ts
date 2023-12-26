@@ -1,4 +1,4 @@
-import { describe, expectTypeOf, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 
 import { t } from '../src'
 import type { ConstructorMapping } from '../src/consumers/primitive'
@@ -45,39 +45,47 @@ describe('primitive', () => {
       [t(undefined), undefined, undefined],
       [t(null), null, null]
     ] as const
-
+    expect(cases[0][0].shape).toBe(String)
     expectTypeOf(cases[0][0])
       .toEqualTypeOf<t.Schema<typeof cases[0][1], typeof cases[0][2]>>()
     expectTypeOf<t.Infer<typeof cases[0][0]>>()
       .toEqualTypeOf<typeof cases[0][2]>()
+    expect(cases[1][0].shape).toBe(Number)
     expectTypeOf(cases[1][0])
       .toEqualTypeOf<t.Schema<typeof cases[1][1], typeof cases[1][2]>>()
     expectTypeOf<t.Infer<typeof cases[1][0]>>()
       .toEqualTypeOf<typeof cases[1][2]>()
+    expect(cases[2][0].shape).toBe(BigInt)
     expectTypeOf(cases[2][0])
       .toEqualTypeOf<t.Schema<typeof cases[2][1], typeof cases[2][2]>>()
     expectTypeOf<t.Infer<typeof cases[2][0]>>()
       .toEqualTypeOf<typeof cases[2][2]>()
+    expect(cases[3][0].shape).toBe(Boolean)
     expectTypeOf(cases[3][0])
       .toEqualTypeOf<t.Schema<typeof cases[3][1], typeof cases[3][2]>>()
     expectTypeOf<t.Infer<typeof cases[3][0]>>()
       .toEqualTypeOf<typeof cases[3][2]>()
+    expect(cases[4][0].shape).toBe(Symbol)
     expectTypeOf(cases[4][0])
       .toEqualTypeOf<t.Schema<typeof cases[4][1], typeof cases[4][2]>>()
     expectTypeOf<t.Infer<typeof cases[4][0]>>()
       .toEqualTypeOf<typeof cases[4][2]>()
+    expect(cases[5][0].shape).toBe(Date)
     expectTypeOf(cases[5][0])
       .toEqualTypeOf<t.Schema<typeof cases[5][1], typeof cases[5][2]>>()
     expectTypeOf<t.Infer<typeof cases[5][0]>>()
       .toEqualTypeOf<typeof cases[5][2]>()
+    expect(cases[6][0].shape).toBe(RegExp)
     expectTypeOf(cases[6][0])
       .toEqualTypeOf<t.Schema<typeof cases[6][1], typeof cases[6][2]>>()
     expectTypeOf<t.Infer<typeof cases[6][0]>>()
       .toEqualTypeOf<typeof cases[6][2]>()
+    expect(cases[7][0].shape).toBe(undefined)
     expectTypeOf(cases[7][0])
       .toEqualTypeOf<t.Schema<typeof cases[7][1], typeof cases[7][2]>>()
     expectTypeOf<t.Infer<typeof cases[7][0]>>()
       .toEqualTypeOf<typeof cases[7][2]>()
+    expect(cases[8][0].shape).toBe(null)
     expectTypeOf(cases[8][0])
       .toEqualTypeOf<t.Schema<typeof cases[8][1], typeof cases[8][2]>>()
     expectTypeOf<t.Infer<typeof cases[8][0]>>()
@@ -99,6 +107,9 @@ describe('primitive', () => {
       [t.never(), t.Symbols.never, {} as never]
     ] as const
 
+    for (const [schema, shape] of cases) {
+      expect(schema.shape).toBe(shape)
+    }
     expectTypeOf(cases[0][0])
       .toEqualTypeOf<t.Schema<typeof cases[0][1], typeof cases[0][2]>>()
     expectTypeOf<t.Infer<typeof cases[0][0]>>()
