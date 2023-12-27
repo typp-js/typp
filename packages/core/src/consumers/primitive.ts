@@ -133,7 +133,7 @@ t.defineStatic('void', () => t(t.specialShape(t.Symbols.void, [])))
 function literal<
   T extends string | number | bigint | symbol | null | boolean | undefined
 >(value: T): Typp<[T]> {
-  return {} as Typp<[T]>
+  return t(value)
 }
 literal.String = `__DO_NOT_USE_SAME_LITERAL_${
   'STRING'
