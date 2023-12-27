@@ -127,13 +127,16 @@ describe('primitive', () => {
 describe('literal', () => {
   test('base', () => {
     const case0 = t(null)
+    expect(case0.shape).toBe(null)
     expectTypeOf(case0).toEqualTypeOf<t.Schema<null, null>>()
     expectTypeOf<t.Infer<typeof case0>>()
       .toEqualTypeOf<null>()
     const case1 = t(undefined)
+    expect(case1.shape).toBe(undefined)
     expectTypeOf(case1).toEqualTypeOf<t.Schema<undefined, undefined>>()
     expectTypeOf<t.Infer<typeof case1>>()
       .toEqualTypeOf<undefined>()
+
     const case2 = t(true)
     expectTypeOf(case2).toEqualTypeOf<t.Schema<true, true>>()
     expectTypeOf<t.Infer<typeof case2>>()
