@@ -14,6 +14,10 @@ const symbols = Object.freeze({
   readonly never: unique symbol
 }
 t.defineStatic('Symbols', symbols)
+t.defineSpecialShapeType('any', symbols.any)
+t.defineSpecialShapeType('void', symbols.void)
+t.defineSpecialShapeType('unknown', symbols.unknown)
+t.defineSpecialShapeType('never', symbols.never)
 
 declare module '../base' {
   namespace t {
@@ -107,11 +111,7 @@ t.defineConsumer((first, ...rest) => {
     Date,
     RegExp,
     undefined,
-    null,
-    symbols.any,
-    symbols.void,
-    symbols.unknown,
-    symbols.never
+    null
   ].includes(first)) {
     return [first] as const
   }

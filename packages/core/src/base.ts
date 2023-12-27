@@ -85,7 +85,21 @@ export namespace t {
   >(type: T, schemas: S): SpecialShape<T, S> {
     return { type, schemas }
   }
+  export function isSpecialShape(obj: any): obj is SpecialShape<any, any> {
+    return obj
+      && typeof obj === 'object'
+      && typeof obj.type === 'symbol'
+      && Object
+        .values(specialShapeTypeMapping)
+        .includes(obj.type)
+  }
 }
+t.defineConsumer((first) => {
+  // special shapes
+  if (t.isSpecialShape(first)) {
+    return [first]
+  }
+})
 // Base
 const registers = new Set<t.FieldsRegister>()
 export namespace t {

@@ -172,6 +172,8 @@ describe('literal', () => {
   })
   test('special type', () => {
     const case0 = t.void()
+    expect(case0.shape.type).toBe(t.Symbols.void)
+    expect(case0.shape.schemas).toEqual([])
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
       t.SpecialShape<typeof t.Symbols.void, []>,
       void
@@ -180,13 +182,18 @@ describe('literal', () => {
       .toEqualTypeOf<void>()
 
     const case1 = t.unknown()
+    expect(case1.shape.type).toBe(t.Symbols.unknown)
+    expect(case1.shape.schemas).toEqual([])
     expectTypeOf(case1).toEqualTypeOf<t.Schema<
       t.SpecialShape<typeof t.Symbols.unknown, []>,
       unknown
     >>()
     expectTypeOf<t.Infer<typeof case1>>()
       .toEqualTypeOf<unknown>()
+
     const case2 = t.never()
+    expect(case2.shape.type).toBe(t.Symbols.never)
+    expect(case2.shape.schemas).toEqual([])
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
       t.SpecialShape<typeof t.Symbols.never, []>,
       never
@@ -195,6 +202,8 @@ describe('literal', () => {
       .toEqualTypeOf<never>()
 
     const case3 = t.any()
+    expect(case3.shape.type).toBe(t.Symbols.any)
+    expect(case3.shape.schemas).toEqual([])
     expectTypeOf(case3).toEqualTypeOf<t.Schema<any, any>>()
     expectTypeOf<t.Infer<typeof case3>>()
       .toEqualTypeOf<any>()
