@@ -220,45 +220,48 @@ describe('object', () => {
       .toEqualTypeOf<{ [x: string | number | symbol]: any }>()
 
     const case1 = t(Object, Number)
-    expectTypeOf(case1).toEqualTypeOf<t.Schema<{
-      [x: number]: t.Schema<any, any>
-    }, {
-      [x: number]: any
-    }>>()
+    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
+        [t.Schema<NumberConstructor, number>],
+        t.Schema<any, any>
+      ]>, {
+        [x: number]: any
+      }>
+    >()
     expectTypeOf<t.Infer<typeof case1>>()
       .toEqualTypeOf<{ [x: number]: any }>()
 
     const case2 = t(Object, Number, String)
-    expectTypeOf(case2)
-      .toEqualTypeOf<
-        t.Schema<{
-          [x: number]: t.Schema<StringConstructor, string>
-        }, {
-          [x: number]: string
-        }>
-      >()
+    expectTypeOf(case2).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
+        [t.Schema<NumberConstructor, number>],
+        t.Schema<StringConstructor, string>
+      ]>, {
+        [x: number]: string
+      }>
+    >()
     expectTypeOf<t.Infer<typeof case2>>()
       .toEqualTypeOf<{ [x: number]: string }>()
     const case3 = t(Object, Number, Object)
-    expectTypeOf(case3)
-      .toEqualTypeOf<
-        t.Schema<{
-          [x: number]: t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
-            [
-              t.Schema<StringConstructor, string>,
-              t.Schema<NumberConstructor, number>,
-              t.Schema<SymbolConstructor, symbol>,
-            ],
-            t.Schema<any, any>
-          ]>, {
-            [x: string | number | symbol]: any
-          }>
-        }, {
-          [x: number]: {
-            [x: string | number | symbol]: any
-          }
+    expectTypeOf(case3).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
+        [t.Schema<NumberConstructor, number>],
+        t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
+          [
+            t.Schema<StringConstructor, string>,
+            t.Schema<NumberConstructor, number>,
+            t.Schema<SymbolConstructor, symbol>,
+          ],
+          t.Schema<any, any>
+        ]>, {
+          [x: string | number | symbol]: any
         }>
-      >()
+      ]>, {
+        [x: number]: {
+          [x: string | number | symbol]: any
+        }
+      }>
+    >()
     expectTypeOf<t.Infer<typeof case3>>()
       .toEqualTypeOf<{ [x: number]: { [x: string | number | symbol]: any } }>()
     const case4 = t(Object, Object)

@@ -9,6 +9,11 @@ declare module '../base' {
     // TODO omit
     // TODO pick
     // TODO partial
+
+    // TODO record
+    // TODO object
+    // TODO interface
+    // TODO class
     export interface ShapeEntries<T, Rest extends any[]> {
       110000: [true extends (
         // exclude array
@@ -60,12 +65,10 @@ t.defineConsumer((first, ...rest) => {
     // t({})
     if (isEmptyObject) return [{}]
   } else {
-    // t(Object, String)
-    // t({}, String)
-    // t(Object, String, Number)
-    // t({}, String, Number)
+    // t({} | ObjectConstructor, [key: string | number | symbol, value: ...any[]])
     if (isObjectConstructor || isEmptyObject) {
       const [key, ...valueRest] = rest
+      // TODO check key is `string | number | symbol`, if not, throw error
       return [t.specialShape(recordSymbol, [
         [t(key)], t(...valueRest)
       ])]
@@ -105,20 +108,21 @@ export type ObjectConsume<
     [t.TyppI<T>] extends [infer R] ? t.Schema<R, t.InferI<R>> : never
   ) : never
 ) : (
+  // ObjectConsume<{} | ObjectConstructor, [key: string | number | symbol, value: ...any[]]>
   Stack.Shift<Rest> extends [
-    infer L extends StringConstructor | NumberConstructor | SymbolConstructor,
-    infer Rest extends any[]
+    infer L, infer Rest extends any[]
   ] ? (
     // @ts-ignore
-    t.Infer<Typp<[L]>> extends (
-      infer Keys extends string | number | symbol
-    ) ? t.Schema<{
-        // TODO union
-        [k in Keys]: Typp<Rest>
-      }, {
-        // TODO union
-        [k in Keys]: t.Infer<Typp<Rest>>
+    Typp<[L]> extends (
+      infer KeySchema extends t.Schema<any, any>
+    ) ? t.Infer<KeySchema> extends (
+      infer Key extends string | number | symbol
+    ) ? t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
+        [KeySchema], Typp<Rest>
+      ]>, {
+        [k in Key]: t.Infer<Typp<Rest>>
       }>
+      : never
       : never
   ) : never
 )
