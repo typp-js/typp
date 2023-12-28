@@ -45,7 +45,7 @@ declare module '../base' {
           | IsEqual<U, {}>
           | IsEqual<U, unknown>
           | IsEqual<U, t.Schema<{}, {}>>
-          | IsEqual<U, t.Schema<typeof t.Symbols.unknown, unknown>>
+          | IsEqual<U, t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['unknown'], []>, unknown>>
         )
       ) ? t.Schema<StringConstructor, string & {}>
         : Intersect<[S, U]>

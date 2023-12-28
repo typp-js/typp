@@ -84,12 +84,10 @@ describe('intersect', () => {
 
     const case3 = t.intersect([Number, t.unknown()])
     expectTypeOf(case3).toEqualTypeOf<t.Schema<
-      t.SpecialShape<
-        t.SpecialShapeTypeMapping['intersection'], [
-          t.Schema<NumberConstructor, number>,
-          t.Schema<typeof t.Symbols.unknown, unknown>
-        ]
-      >,
+      t.SpecialShape<t.SpecialShapeTypeMapping['intersection'], [
+        t.Schema<NumberConstructor, number>,
+        t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['unknown'], []>, unknown>
+      ]>,
       number
     >>()
     expectTypeOf<t.Infer<typeof case3>>()
@@ -100,7 +98,7 @@ describe('intersect', () => {
       t.SpecialShape<
         t.SpecialShapeTypeMapping['intersection'], [
           t.Schema<NumberConstructor, number>,
-          t.Schema<typeof t.Symbols.never, never>
+          t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], []>, never>
         ]
       >,
       never
