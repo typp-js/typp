@@ -101,8 +101,8 @@ declare module '../base' {
   }
 }
 
-t.defineConsumer((args) => {
-  if (args === undefined || args?.length === 0) {
+t.defineConsumer((...args) => {
+  if (args.length === 0) {
     return [t.specialShape(t.Symbols.any, [])]
   }
   const [first, ...rest] = args
