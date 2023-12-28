@@ -51,10 +51,12 @@ t.defineSpecialShapeType('record', recordSymbol)
 
 t.defineConsumer((first, ...rest) => {
   if (
-    t.isSchema(first)
-    || typeof first === 'function'
-    || typeof first === 'symbol'
+    (typeof first !== 'object' && first !== Object)
+    // TODO extensible
+    || t.isSpecialShape(first)
+    || t.isSchema(first)
     || Array.isArray(first)
+    // TODO Promise like
   ) return
   const isEmptyObject = Object.keys(first).length === 0
   const isObjectConstructor = first === Object
