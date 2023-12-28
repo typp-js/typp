@@ -21,6 +21,17 @@ declare module '../base' {
     export function tuple<const T extends readonly any[]>(...types: T): Typp<[T]>
   }
 }
+t.defineConsumer((first, ...rest) => {
+  if (first === Array) {
+    return [[t(...rest)]]
+  }
+  if (Array.isArray(first)) {
+    if (first.length === 0 && rest.length > 0) {
+      return [[t(...rest)]]
+    }
+    return [first.map(item => t(item))]
+  }
+})
 t.defineStatic('array', <const T extends readonly any[]>(...types: T) => <Typp<[ArrayConstructor, ...T]>>({}))
 t.defineStatic('tuple', <const T extends readonly any[]>(...types: T) => <Typp<[T]>>({}))
 

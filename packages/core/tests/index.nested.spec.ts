@@ -1,4 +1,4 @@
-import { describe, expectTypeOf, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 
 import { t } from '../src'
 
@@ -12,6 +12,11 @@ describe('array and tuple', () => {
     expectTypeOf<t.Infer<typeof case0_0>>()
       .toEqualTypeOf<any[]>()
     expectTypeOf(case0_0).toEqualTypeOf<typeof case0_1>()
+    const [item] = case0_0.shape
+    expect(item.shape.type).toBe(t.Symbols.any)
+    expectTypeOf(item).toEqualTypeOf<t.Schema<any, any>>()
+    expectTypeOf<t.Infer<typeof item>>()
+      .toEqualTypeOf<any>()
 
     const case1_0 = t(Array, Number)
     const case1_1 = t.array(Number)
