@@ -122,6 +122,13 @@ describe('primitive', () => {
     expectTypeOf<t.Infer<typeof cases[6][0]>>()
       .toEqualTypeOf<typeof cases[6][2]>()
   })
+  test('empty args', () => {
+    const anySchema = t()
+    expect(anySchema.shape.type).toBe(t.Symbols.any)
+    expectTypeOf(anySchema).toEqualTypeOf<t.Schema<any, any>>()
+    expectTypeOf<t.Infer<typeof anySchema>>()
+      .toEqualTypeOf<any>()
+  })
 })
 
 describe('literal', () => {
