@@ -12,10 +12,15 @@ describe('array and tuple', () => {
     expectTypeOf<t.Infer<typeof case0_0>>()
       .toEqualTypeOf<any[]>()
     expectTypeOf(case0_0).toEqualTypeOf<typeof case0_1>()
-    const [item] = case0_0.shape
-    expect(item.shape.type).toBe(t.Symbols.any)
-    expectTypeOf(item).toEqualTypeOf<t.Schema<any, any>>()
-    expectTypeOf<t.Infer<typeof item>>()
+    const [item0_0] = case0_0.shape
+    const [item0_1] = case0_1.shape
+    expect(item0_0.shape.type).toBe(t.Symbols.any)
+    expect(item0_1.shape.type).toBe(t.Symbols.any)
+    expectTypeOf(item0_0).toEqualTypeOf<t.Schema<any, any>>()
+    expectTypeOf(item0_1).toEqualTypeOf<t.Schema<any, any>>()
+    expectTypeOf<t.Infer<typeof item0_0>>()
+      .toEqualTypeOf<any>()
+    expectTypeOf<t.Infer<typeof item0_1>>()
       .toEqualTypeOf<any>()
 
     const case1_0 = t(Array, Number)
@@ -29,6 +34,13 @@ describe('array and tuple', () => {
       .toEqualTypeOf<number[]>()
     expectTypeOf(case1_0).toEqualTypeOf<typeof case1_1>()
     expectTypeOf(case1_0).toEqualTypeOf<typeof case1_2>()
+    const [item1_0] = case1_0.shape
+    const [item1_1] = case1_1.shape
+    // TODO item1_2
+    expect(item1_0.shape).toBe(Number)
+    expect(item1_1.shape).toBe(Number)
+    expectTypeOf(item1_0).toEqualTypeOf<t.Schema<NumberConstructor, number>>()
+    expectTypeOf(item1_1).toEqualTypeOf<t.Schema<NumberConstructor, number>>()
 
     const case2_0 = t(Array, Array, Number)
     const case2_1 = t.array(Array, Number)
@@ -61,15 +73,38 @@ describe('array and tuple', () => {
     expectTypeOf(case3_0).toEqualTypeOf<typeof case3_2>()
   })
   test('define array by `[]`', () => {
-    expectTypeOf(t([])).toEqualTypeOf<t.Schema<[], []>>()
-    expectTypeOf(t([], Number)).toEqualTypeOf<t.Schema<
+    const emptyTuple = t([])
+    expectTypeOf(emptyTuple).toEqualTypeOf<t.Schema<[], []>>()
+    expectTypeOf<t.Infer<typeof emptyTuple>>()
+      .toEqualTypeOf<[]>()
+    expect(emptyTuple.shape).toEqual([])
+    expectTypeOf(emptyTuple.shape).toEqualTypeOf<[]>()
+
+    const numberArray = t([], Number)
+    expectTypeOf(numberArray).toEqualTypeOf<t.Schema<
       t.Schema<NumberConstructor, number>[],
       number[]
     >>()
-    expectTypeOf(t([], [], Number)).toEqualTypeOf<t.Schema<
+    expectTypeOf<t.Infer<typeof numberArray>>()
+      .toEqualTypeOf<number[]>()
+    const [item] = numberArray.shape
+    expect(item.shape).toBe(Number)
+    expectTypeOf(item).toEqualTypeOf<t.Schema<NumberConstructor, number>>()
+    expectTypeOf<t.Infer<typeof item>>()
+      .toEqualTypeOf<number>()
+    const numberMatrix = t([], [], Number)
+    expectTypeOf(numberMatrix).toEqualTypeOf<t.Schema<
       t.Schema<t.Schema<NumberConstructor, number>[], number[]>[],
       number[][]
     >>()
+    expectTypeOf<t.Infer<typeof numberMatrix>>()
+      .toEqualTypeOf<number[][]>()
+    const [row] = numberMatrix.shape
+    const [item2] = row.shape
+    expect(item2.shape).toBe(Number)
+    expectTypeOf(item2).toEqualTypeOf<t.Schema<NumberConstructor, number>>()
+    expectTypeOf<t.Infer<typeof item2>>()
+      .toEqualTypeOf<number>()
   })
   test('tuple', () => {
     const case0_0 = t([Number])
