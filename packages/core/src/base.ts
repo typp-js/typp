@@ -287,4 +287,4 @@ export namespace t {
   // TODO defineField
 }
 
-t.defineConsumer(first => t.isSchema(first) ? [first] : undefined)
+t.defineConsumer(first => t.isSchema(first) ? [first.shape] : undefined)
