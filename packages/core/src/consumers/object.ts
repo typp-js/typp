@@ -47,6 +47,7 @@ declare module '../base' {
     }
   }
 }
+t.defineSpecialShapeType('record', recordSymbol)
 
 t.defineConsumer((first, ...rest) => {
   if (
@@ -112,7 +113,6 @@ export type ObjectConsume<
   Stack.Shift<Rest> extends [
     infer L, infer Rest extends any[]
   ] ? (
-    // @ts-ignore
     Typp<[L]> extends (
       infer KeySchema extends t.Schema<any, any>
     ) ? t.Infer<KeySchema> extends (
