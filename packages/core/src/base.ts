@@ -286,3 +286,5 @@ export namespace t {
   // TODO static.pipe
   // TODO defineField
 }
+
+t.defineConsumer(first => t.isSchema(first) ? [first] : undefined)
