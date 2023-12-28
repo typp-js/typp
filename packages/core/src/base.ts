@@ -147,7 +147,7 @@ export namespace t {
   export type IsSchema<T> = T extends { [__typp__]: true } ? true : false
   export type IsNotSchema<T> = T extends { [__typp__]: true } ? false : true
   export function isSchema(obj: any): obj is Schema<any, any> {
-    return obj[__typp__] === true
+    return obj?.[__typp__] === true
   }
   export function isSchemas(arr: any[]): arr is Schema<any, any>[] {
     return arr.every(isSchema)
