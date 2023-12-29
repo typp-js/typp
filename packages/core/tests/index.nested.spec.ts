@@ -478,9 +478,52 @@ describe('object', () => {
       }>
     }>()
 
-    // t({}, String, Number)
     // t.record(String, Number)
     // t.object(String, Number)
+  })
+  test('define record by `{}`', () => {
+    const case0 = t({}, Number)
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
+        [t.Schema<NumberConstructor, number>],
+        t.Schema<any, any>
+      ]>, {
+        [x: number]: any
+      }
+    >>()
+    expectTypeOf<t.Infer<typeof case0>>()
+      .toEqualTypeOf<{ [x: number]: any }>()
+    const shape0 = case0.shape
+    expect(shape0.type).toBe(t.specialShapeTypeMapping.record)
+    expect(shape0.schemas).toEqual([[t(Number)], t()])
+    expectTypeOf(shape0).toEqualTypeOf<t.SpecialShape<
+      t.SpecialShapeTypeMapping['record'], [
+        [t.Schema<NumberConstructor, number>],
+        t.Schema<any, any>
+      ]
+    >>()
+    const case1 = t({}, String, Number)
+    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
+        [
+          t.Schema<StringConstructor, string>
+        ],
+        t.Schema<NumberConstructor, number>
+      ]>, {
+      [x: string]: number
+    }
+    >>()
+    expectTypeOf<t.Infer<typeof case1>>()
+      .toEqualTypeOf<{ [x: string]: number }>()
+    const shape1 = case1.shape
+    expect(shape1.type).toBe(t.specialShapeTypeMapping.record)
+    expect(shape1.schemas).toEqual([[t(String)], t(Number)])
+    expectTypeOf(shape1).toEqualTypeOf<t.SpecialShape<
+      t.SpecialShapeTypeMapping['record'], [
+        [t.Schema<StringConstructor, string>],
+        t.Schema<NumberConstructor, number>
+      ]
+    >>()
   })
   test('Map', () => {
     const case0 = t(Map)
