@@ -1,5 +1,5 @@
 import type { Typp } from '..'
-import { t } from '..'
+import { t } from '../base'
 import type { IsEqual, IsNotEqual, Stack } from '../types'
 
 const recordSymbol = Symbol('record')
