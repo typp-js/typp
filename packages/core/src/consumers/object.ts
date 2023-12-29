@@ -57,6 +57,11 @@ declare module '../base' {
 }
 t.defineSpecialShapeType('record', recordSymbol)
 
+function isEmpty(obj: any) {
+  for (const _ in obj) return false
+  return true
+}
+
 t.defineConsumer((first, ...rest) => {
   if (
     (typeof first !== 'object' && first !== Object)
@@ -66,7 +71,7 @@ t.defineConsumer((first, ...rest) => {
     || Array.isArray(first)
     // TODO Promise like
   ) return
-  const isEmptyObject = Object.keys(first).length === 0
+  const isEmptyObject = isEmpty(first)
   const isObjectConstructor = first === Object
   if (rest.length === 0) {
     // t(Object)
