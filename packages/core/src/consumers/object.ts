@@ -5,15 +5,6 @@ import type { IsEqual, IsNotEqual, Stack } from '../types'
 const recordSymbol = Symbol('record')
 declare module '../base' {
   namespace t {
-    // TODO keyof
-    // TODO omit
-    // TODO pick
-    // TODO partial
-
-    // TODO record
-    // TODO object
-    // TODO interface
-    // TODO class
     export interface ShapeEntries<T, Rest extends any[]> {
       110000: [true extends (
         // exclude array
@@ -45,6 +36,23 @@ declare module '../base' {
       [t.specialShapeTypeMapping
         .record]: [keys: readonly t.Schema<any, any>[], value: t.Schema<any, any>]
     }
+    // TODO keyof
+    // TODO omit
+    // TODO pick
+    // TODO partial
+
+    // TODO record
+    // record() => { [k: string | number | symbol]: any }
+    // record(String) => { [k: string]: any }
+    // record(String, Number) => { [k: string]: number }
+    export function record<const T extends readonly any[]>(...types: T): Typp<[ObjectConstructor, ...T]>
+    // TODO object
+    // object() => {}
+    // object(String) => { [k: string]: any }
+    // object(String, Number) => { [k: string]: number }
+    export function object<const T extends readonly any[]>(...types: T): Typp<[{}, ...T]>
+    // TODO interface
+    // TODO class
   }
 }
 t.defineSpecialShapeType('record', recordSymbol)
