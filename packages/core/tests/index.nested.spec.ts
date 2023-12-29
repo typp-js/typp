@@ -368,6 +368,10 @@ describe('object', () => {
     expectTypeOf(case0).toEqualTypeOf<t.Schema<{}, {}>>()
     expectTypeOf<t.Infer<typeof case0>>()
       .toEqualTypeOf<{}>()
+    const shape0 = case0.shape
+    expect(shape0).toEqual({})
+    expectTypeOf(shape0).toEqualTypeOf<{}>()
+
     const case1 = t({ a: Number, b: String })
     expectTypeOf(case1).toEqualTypeOf<t.Schema<{
       a: t.Schema<NumberConstructor, number>
@@ -378,6 +382,16 @@ describe('object', () => {
     }>>()
     expectTypeOf<t.Infer<typeof case1>>()
       .toEqualTypeOf<{ a: number; b: string }>()
+    const shape1 = case1.shape
+    expect(shape1).toEqual({
+      a: t(Number),
+      b: t(String),
+    })
+    expectTypeOf(shape1).toEqualTypeOf<{
+      a: t.Schema<NumberConstructor, number>
+      b: t.Schema<StringConstructor, string>
+    }>()
+
     const case2 = t({ a: Number, b: { c: String } })
     expectTypeOf(case2).toEqualTypeOf<t.Schema<{
       a: t.Schema<NumberConstructor, number>
@@ -394,6 +408,20 @@ describe('object', () => {
     }>>()
     expectTypeOf<t.Infer<typeof case2>>()
       .toEqualTypeOf<{ a: number; b: { c: string } }>()
+    const shape2 = case2.shape
+    expect(shape2).toEqual({
+      a: t(Number),
+      b: t({ c: t(String) }),
+    })
+    expectTypeOf(shape2).toEqualTypeOf<{
+      a: t.Schema<NumberConstructor, number>
+      b: t.Schema<{
+        c: t.Schema<StringConstructor, string>
+      }, {
+        c: string
+      }>
+    }>()
+
     const case3 = t({ a: t([], Number) })
     expectTypeOf(case3).toEqualTypeOf<t.Schema<{
       a: t.Schema<t.Schema<NumberConstructor, number>[], number[]>
@@ -402,6 +430,14 @@ describe('object', () => {
     }>>()
     expectTypeOf<t.Infer<typeof case3>>()
       .toEqualTypeOf<{ a: number[] }>()
+    const shape3 = case3.shape
+    expect(shape3).toEqual({
+      a: t([], Number),
+    })
+    expectTypeOf(shape3).toEqualTypeOf<{
+      a: t.Schema<t.Schema<NumberConstructor, number>[], number[]>
+    }>()
+
     const case4 = t({ a: Number, b: Object })
     expectTypeOf(case4).toEqualTypeOf<t.Schema<{
       a: t.Schema<NumberConstructor, number>
@@ -423,6 +459,25 @@ describe('object', () => {
     }>>()
     expectTypeOf<t.Infer<typeof case4>>()
       .toEqualTypeOf<{ a: number; b: { [x: string | number | symbol]: any } }>()
+    const shape4 = case4.shape
+    expect(shape4).toEqual({
+      a: t(Number),
+      b: t(Object),
+    })
+    expectTypeOf(shape4).toEqualTypeOf<{
+      a: t.Schema<NumberConstructor, number>
+      b: t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
+        [
+          t.Schema<StringConstructor, string>,
+          t.Schema<NumberConstructor, number>,
+          t.Schema<SymbolConstructor, symbol>,
+        ],
+        t.Schema<any, any>
+      ]>, {
+        [x: string | number | symbol]: any
+      }>
+    }>()
+
     // t({}, String, Number)
     // t.record(String, Number)
     // t.object(String, Number)
