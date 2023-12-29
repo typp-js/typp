@@ -1,4 +1,4 @@
-import type { Typp } from '..'
+import type { Typp } from '../base'
 import { t } from '../base'
 import type { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../types'
 
