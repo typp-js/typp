@@ -54,6 +54,9 @@ declare module '../base' {
     }
 
     export interface FunctionSchemaFields<Shape, T> {
+      /**
+       * forward to `{{Schema}}.infer`
+       */
       implement(func: T): T
       // TODO args()
       // TODO returns()
