@@ -103,7 +103,7 @@ declare module '../base' {
           ) : never
       ) : never
     export function intersect<const T extends readonly [any, ...any[]]>(i: T): Intersect<T>
-    export { intersect as and }
+    export { intersect as and, intersect as intersection }
   }
 }
 t.defineSpecialShapeType('union', unionSymbol)
@@ -112,3 +112,5 @@ t.defineSpecialShapeType('intersection', intersectionSymbol)
 t.defineStatic('union', <const T extends readonly any[]>(i: T) => (<t.Union<T>>{}))
 // TODO
 t.defineStatic('intersect', <const T extends readonly [any, ...any[]]>(i: T) => (<t.Intersect<T>>{}))
+t.defineStatic.proxy('intersect', 'and')
+t.defineStatic.proxy('intersect', 'intersection')
