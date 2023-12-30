@@ -106,6 +106,8 @@ declare module '../base' {
     export { intersect as and }
   }
 }
+t.defineSpecialShapeType('union', unionSymbol)
+t.defineSpecialShapeType('intersection', intersectionSymbol)
 // TODO
 t.defineStatic('union', <const T extends readonly any[]>(i: T) => (<t.Union<T>>{}))
 // TODO
