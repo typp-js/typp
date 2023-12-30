@@ -75,21 +75,25 @@ declare module '../base' {
      */
     export const Symbols: typeof symbols
 
-    export function any(): t.Schema<any, any>
+    // TODO replace `Typp` to `t.Schema`, maybe get better performance?
+    //      It should be tested.
+    // 或许统一逻辑会比性能优化更重要，当完成项目后可以考虑测试该部分内容，如果对性能影响比较大
+    // 则可考虑优化这部分实现，或者当影响不大的时候不优化了
+    export function any(): Typp<[]>
     export function unknown(): Typp<[unknown]>
-    export function string(): t.Schema<StringConstructor, string>
-    export function number(): t.Schema<NumberConstructor, number>
-    export function bigint(): t.Schema<BigIntConstructor, bigint>
-    export function boolean(): t.Schema<BooleanConstructor, boolean>
-    export function symbol(): t.Schema<SymbolConstructor, symbol>
-    export function date(): t.Schema<DateConstructor, Date>
-    export function regexp(): t.Schema<RegExpConstructor, RegExp>
-    export function undefined(): t.Schema<undefined, undefined>
+    export function string(): Typp<[StringConstructor]>
+    export function number(): Typp<[NumberConstructor]>
+    export function bigint(): Typp<[BigIntConstructor]>
+    export function boolean(): Typp<[BooleanConstructor]>
+    export function symbol(): Typp<[SymbolConstructor]>
+    export function date(): Typp<[DateConstructor]>
+    export function regexp(): Typp<[RegExpConstructor]>
+    export function undefined(): Typp<[undefined]>
     // FIXME unable compute [never] for `Typp`
     // export function never(): Typp<[never]>
     export function never(): t.Schema<t.SpecialShape<typeof t.Symbols.never, []>, never>
 
-    function _null(): t.Schema<null, null>
+    function _null(): Typp<[null]>
     function _void(): Typp<[void]>
     export { _null as null, _void as void }
 
