@@ -53,7 +53,12 @@ declare module '../base' {
     // object({ a: String, b: Number }) => { a: string, b: number }
     export function object<const T extends readonly any[]>(...types: T): Typp<[{}, ...T]>
     // TODO interface
+    // interface()/interface({}) => {}
+    // interface({ a: String, b: Number }) => { a: string, b: number }
+    // TODO generic support of interface
     // TODO class
+    // class(class { a = String, b = Number }) => { a: string, b: number }
+    // class(class This { label = String, children = array(This) }) => { label: string, children: This[] }
   }
 }
 t.defineSpecialShapeType('record', recordSymbol)
