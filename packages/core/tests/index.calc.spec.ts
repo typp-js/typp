@@ -6,14 +6,21 @@ describe('union', () => {
   test('base', () => {
     const case0 = t.union([])
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
-      typeof t.Symbols.never, never
+      t.SpecialShape<t.SpecialShapeTypeMapping['never'], []>,
+      never
     >>()
     expectTypeOf<t.Infer<typeof case0>>()
       .toEqualTypeOf<never>()
-    const case1 = t.union([Number])
-    expectTypeOf(case1).toEqualTypeOf<t.Schema<NumberConstructor, number>>()
-    expectTypeOf<t.Infer<typeof case1>>()
+
+    const case1_0 = t.union([Number])
+    const case1_1 = t.union([t(Number)])
+    expectTypeOf(case1_0).toEqualTypeOf<t.Schema<NumberConstructor, number>>()
+    expectTypeOf<t.Infer<typeof case1_0>>()
       .toEqualTypeOf<number>()
+    expectTypeOf(case1_1).toEqualTypeOf<typeof case1_0>()
+    expectTypeOf<t.Infer<typeof case1_1>>()
+      .toEqualTypeOf<number>()
+
     const case2 = t.union([Number, String])
     const case2_1 = t(Number).or(String)
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
