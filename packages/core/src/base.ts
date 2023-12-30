@@ -130,7 +130,19 @@ export namespace t {
     // TODO nonNullable
     // TODO required
     // TODO optional
+    /**
+     * @example
+     * ```ts
+     * type Foo = string
+     * const foo = 'foo' as Foo
+     * // You can use `'foo' as string` by `{{Schema}}.infer('foo')`
+     * const FooSchema = t(String)
+     * const foo = FooSchema.infer('foo')
+     * ```
+     */
     infer(t: T): T
+    // TODO like satisfies
+    strictInfer(t: T): T
   }
   export type SchemaFields<Shape, T> =
     & SchemaFieldsMapping<Shape, T>

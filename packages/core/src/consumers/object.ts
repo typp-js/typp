@@ -47,9 +47,10 @@ declare module '../base' {
     // record(String, Number) => { [k: string]: number }
     export function record<const T extends readonly any[]>(...types: T): Typp<[ObjectConstructor, ...T]>
     // TODO object
-    // object() => {}
+    // object()/object({}) => {}
     // object(String) => { [k: string]: any }
     // object(String, Number) => { [k: string]: number }
+    // object({ a: String, b: Number }) => { a: string, b: number }
     export function object<const T extends readonly any[]>(...types: T): Typp<[{}, ...T]>
     // TODO interface
     // TODO class
