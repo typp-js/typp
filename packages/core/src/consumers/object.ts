@@ -65,7 +65,8 @@ t.defineSpecialShapeType('record', recordSymbol)
 
 t.defineConsumer((first, ...rest) => {
   if (
-    (typeof first !== 'object' && first !== Object && first === null)
+    (typeof first !== 'object' && first !== Object)
+    || first === null
     // TODO extensible
     || t.isSpecialShape(first)
     || t.isSchema(first)
