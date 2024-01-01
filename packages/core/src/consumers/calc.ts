@@ -1,5 +1,4 @@
 import { t } from '../base'
-import type { Typp } from '../index'
 import type { IsEqual, Stack, T2I } from '../types'
 
 const unionSymbol = Symbol('union')
@@ -113,8 +112,19 @@ declare module '../base' {
 t.defineSpecialShapeType('union', unionSymbol)
 t.defineSpecialShapeType('intersection', intersectionSymbol)
 // TODO
-t.defineStatic('union', <const T extends readonly any[]>(i: T) => {
-  return <t.Union<T>>{}
+t.defineStatic('union', <const T extends readonly any[]>(types: T) => {
+  if (types.length === 0) return t(t.specialShape(
+    t.specialShapeTypeMapping.never,
+    []
+  )) as unknown as t.Union<T>
+  if (types.length === 1) return t(
+    types[0]
+  ) as unknown as t.Union<T>
+
+  return t(t.specialShape(
+    t.specialShapeTypeMapping.union,
+    types.map(type => t(type))
+  )) as unknown as t.Union<T>
 })
 // TODO
 t.defineStatic('intersect', <const T extends readonly [any, ...any[]]>(i: T) => (<t.Intersect<T>>{}))

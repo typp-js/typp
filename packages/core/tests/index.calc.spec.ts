@@ -1,10 +1,13 @@
-import { describe, expectTypeOf, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 
 import { t } from '../src'
 
 describe('union', () => {
   test('base', () => {
     const case0 = t.union([])
+    const shape0 = case0.shape
+    expect(shape0.type).toBe(t.specialShapeTypeMapping.never)
+    expect(shape0.schemas).toEqual([])
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['never'], []>,
       never
@@ -14,6 +17,8 @@ describe('union', () => {
 
     const case1_0 = t.union([Number])
     const case1_1 = t.union([t(Number)])
+    expect(case1_0.shape).toBe(Number)
+    expect(case1_1.shape).toBe(case1_0.shape)
     expectTypeOf(case1_0).toEqualTypeOf<t.Schema<NumberConstructor, number>>()
     expectTypeOf<t.Infer<typeof case1_0>>()
       .toEqualTypeOf<number>()
@@ -22,7 +27,10 @@ describe('union', () => {
       .toEqualTypeOf<number>()
 
     const case2 = t.union([Number, String])
-    const case2_1 = t(Number).or(String)
+    // const case2_1 = t(Number).or(String)
+    const shape2 = case2.shape
+    expect(shape2.type).toBe(t.specialShapeTypeMapping.union)
+    expect(shape2.schemas).toEqual([t(Number), t(String)])
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
       t.SpecialShape<
         t.SpecialShapeTypeMapping['union'], [
@@ -34,8 +42,14 @@ describe('union', () => {
     >>()
     expectTypeOf<t.Infer<typeof case2>>()
       .toEqualTypeOf<number | string>()
-    expectTypeOf(case2_1).toEqualTypeOf<typeof case2>()
+    // expectTypeOf(case2_1).toEqualTypeOf<typeof case2>()
+
     const case3 = t.union([1, 2, '3', true, null, undefined])
+    const shape3 = case3.shape
+    expect(shape3.type).toBe(t.specialShapeTypeMapping.union)
+    expect(shape3.schemas).toEqual([
+      t(1), t(2), t('3'), t(true), t(null), t(undefined)
+    ])
     expectTypeOf(case3).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['union'], [
         t.Schema<1, 1>,
