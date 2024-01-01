@@ -111,7 +111,6 @@ declare module '../base' {
 }
 t.defineSpecialShapeType('union', unionSymbol)
 t.defineSpecialShapeType('intersection', intersectionSymbol)
-// TODO
 t.defineStatic('union', <const T extends readonly any[]>(types: T) => {
   if (types.length === 0) return t(t.specialShape(
     t.specialShapeTypeMapping.never,
