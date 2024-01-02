@@ -27,7 +27,6 @@ describe('union', () => {
       .toEqualTypeOf<number>()
 
     const case2 = t.union([Number, String])
-    // const case2_1 = t(Number).or(String)
     const shape2 = case2.shape
     expect(shape2.type).toBe(t.specialShapeTypeMapping.union)
     expect(shape2.schemas).toEqual([t(Number), t(String)])
@@ -42,7 +41,6 @@ describe('union', () => {
     >>()
     expectTypeOf<t.Infer<typeof case2>>()
       .toEqualTypeOf<number | string>()
-    // expectTypeOf(case2_1).toEqualTypeOf<typeof case2>()
 
     const case3 = t.union([1, 2, '3', true, null, undefined])
     const shape3 = case3.shape
@@ -63,6 +61,54 @@ describe('union', () => {
     >>()
     expectTypeOf<t.Infer<typeof case3>>()
       .toEqualTypeOf<1 | 2 | '3' | true | null | undefined>()
+  })
+  test('instance.or', () => {
+    const case0 = t(Number).or(String)
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+      t.SpecialShape<
+        t.SpecialShapeTypeMapping['union'], [
+          t.Schema<NumberConstructor, number>,
+          t.Schema<StringConstructor, string>
+        ]
+      >,
+      number | string
+    >>()
+    expectTypeOf<t.Infer<typeof case0>>()
+      .toEqualTypeOf<number | string>()
+
+    const case1 = t(Number).or(t(String))
+    expectTypeOf(case1).toEqualTypeOf<typeof case0>()
+    expectTypeOf<t.Infer<typeof case1>>()
+      .toEqualTypeOf<number | string>()
+
+    const case2 = t(Number).or(String).or(Boolean)
+    expectTypeOf(case2).toEqualTypeOf<t.Schema<
+      t.SpecialShape<
+        t.SpecialShapeTypeMapping['union'], [
+          t.Schema<NumberConstructor, number>,
+          t.Schema<StringConstructor, string>,
+          t.Schema<BooleanConstructor, boolean>
+        ]
+      >,
+      number | string | boolean
+    >>()
+    expectTypeOf<t.Infer<typeof case2>>()
+      .toEqualTypeOf<number | string | boolean>()
+
+    const case3 = t.union([1, 2, '3']).or(Boolean)
+    expectTypeOf(case3).toEqualTypeOf<t.Schema<
+      t.SpecialShape<
+        t.SpecialShapeTypeMapping['union'], [
+          t.Schema<1, 1>,
+          t.Schema<2, 2>,
+          t.Schema<'3', '3'>,
+          t.Schema<BooleanConstructor, boolean>
+        ]
+      >,
+      1 | 2 | '3' | boolean
+    >>()
+    expectTypeOf<t.Infer<typeof case3>>()
+      .toEqualTypeOf<1 | 2 | '3' | boolean>()
   })
 })
 

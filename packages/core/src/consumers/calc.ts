@@ -52,7 +52,11 @@ declare module '../base' {
       or<
         const U,
         const S extends Shape = Shape
-      >(t: U): Union<[S, U]>
+      >(t: U): (
+        S extends t.SpecialShape<t.SpecialShapeTypeMapping['union'], infer Schemas>
+          ? Union<[...Schemas, U]>
+          : Union<[S, U]>
+      )
     }
     export type Union<
       Shapes extends readonly any[],
