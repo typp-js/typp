@@ -135,15 +135,17 @@ describe('union', () => {
 
 describe('intersect', () => {
   test('base', () => {
-    // @ts-expect-error - Source has 0 element(s) but target requires 1
-    t.intersect([])
-
     const case0 = t.intersect([1])
+    const shape0 = case0.shape
+    expect(shape0).toBe(1)
     expectTypeOf(case0).toEqualTypeOf<t.Schema<1, 1>>()
     expectTypeOf<t.Infer<typeof case0>>()
       .toEqualTypeOf<1>()
 
     const case1 = t.intersect([1, Number])
+    const shape1 = case1.shape
+    expect(shape1.type).toBe(t.specialShapeTypeMapping.intersection)
+    expect(shape1.schemas).toEqual([t(1), t(Number)])
     expectTypeOf(case1).toEqualTypeOf<t.Schema<
       t.SpecialShape<
         t.SpecialShapeTypeMapping['intersection'], [
@@ -157,6 +159,9 @@ describe('intersect', () => {
       .toEqualTypeOf<1>()
 
     const case2 = t.intersect([1, Number, String])
+    const shape2 = case2.shape
+    expect(shape2.type).toBe(t.specialShapeTypeMapping.intersection)
+    expect(shape2.schemas).toEqual([t(1), t(Number), t(String)])
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
       t.SpecialShape<
         t.SpecialShapeTypeMapping['intersection'], [
@@ -171,6 +176,9 @@ describe('intersect', () => {
       .toEqualTypeOf<never>()
 
     const case3 = t.intersect([Number, t.unknown()])
+    const shape3 = case3.shape
+    expect(shape3.type).toBe(t.specialShapeTypeMapping.intersection)
+    expect(shape3.schemas).toEqual([t(Number), t.unknown()])
     expectTypeOf(case3).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['intersection'], [
         t.Schema<NumberConstructor, number>,
@@ -182,6 +190,9 @@ describe('intersect', () => {
       .toEqualTypeOf<number>()
 
     const case4 = t.intersect([Number, t.never()])
+    const shape4 = case4.shape
+    expect(shape4.type).toBe(t.specialShapeTypeMapping.intersection)
+    expect(shape4.schemas).toEqual([t(Number), t.never()])
     expectTypeOf(case4).toEqualTypeOf<t.Schema<
       t.SpecialShape<
         t.SpecialShapeTypeMapping['intersection'], [
@@ -195,6 +206,9 @@ describe('intersect', () => {
       .toEqualTypeOf<never>()
 
     const case5 = t.intersect([Number, t.any()])
+    const shape5 = case5.shape
+    expect(shape5.type).toBe(t.specialShapeTypeMapping.intersection)
+    expect(shape5.schemas).toEqual([t(Number), t.any()])
     expectTypeOf(case5).toEqualTypeOf<t.Schema<
       t.SpecialShape<
         t.SpecialShapeTypeMapping['intersection'], [
@@ -212,6 +226,9 @@ describe('intersect', () => {
     // That meant that we were able to rewrite NonNullable to just use an intersection with {},
     // because {} & null and {} & undefined just get tossed away.
     const case6 = t.intersect([Number, {}])
+    const shape6 = case6.shape
+    expect(shape6.type).toBe(t.specialShapeTypeMapping.intersection)
+    expect(shape6.schemas).toEqual([t(Number), t({})])
     expectTypeOf(case6).toEqualTypeOf<t.Schema<
       t.SpecialShape<
         t.SpecialShapeTypeMapping['intersection'], [
@@ -223,7 +240,11 @@ describe('intersect', () => {
     >>()
     expectTypeOf<t.Infer<typeof case6>>()
       .toEqualTypeOf<number>()
+
     const case7 = t.intersect([Number, t({})])
+    const shape7 = case7.shape
+    expect(shape7.type).toBe(t.specialShapeTypeMapping.intersection)
+    expect(shape7.schemas).toEqual([t(Number), t({})])
     expectTypeOf(case7).toEqualTypeOf<t.Schema<
       t.SpecialShape<
         t.SpecialShapeTypeMapping['intersection'], [
@@ -235,6 +256,12 @@ describe('intersect', () => {
     >>()
     expectTypeOf<t.Infer<typeof case7>>()
       .toEqualTypeOf<number>()
+  })
+  test('throw error when no args', () => {
+    expect(() => (
+      // @ts-expect-error - TS2345: Argument of type [] is not assignable to parameter of type readonly [any, ...any[]]
+      t.intersect([])
+    )).toThrowError()
   })
   test('instance.and', () => {
     const case0 = t.union([1, 2, '3']).and(String)

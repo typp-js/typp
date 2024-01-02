@@ -129,7 +129,16 @@ t.defineStatic('union', <const T extends readonly any[]>(types: T) => {
     types.map(type => t(type))
   )) as unknown as t.Union<T>
 })
-// TODO
-t.defineStatic('intersect', <const T extends readonly [any, ...any[]]>(i: T) => (<t.Intersect<T>>{}))
+t.defineStatic('intersect', <const T extends readonly [any, ...any[]]>(i: T) => {
+  if (i.length === 0) throw new Error('intersect() requires at least one argument')
+  if (i.length === 1) return t(
+    i[0]
+  ) as unknown as t.Intersect<T>
+
+  return t(t.specialShape(
+    t.specialShapeTypeMapping.intersection,
+    i.map(type => t(type))
+  )) as unknown as t.Intersect<T>
+})
 t.defineStatic.proxy('intersect', 'and')
 t.defineStatic.proxy('intersect', 'intersection')
