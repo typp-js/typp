@@ -316,6 +316,24 @@ describe('intersect', () => {
       .toEqualTypeOf<'11' | '22' | '33' | (string & {})>()
     type Case4 = t.Infer<typeof case4>
     //   ^?
+    const case5 = t
+      .union(['a1', 'ab', 'atrue'])
+      .and(t.literal(`a${t.literal.String}`))
+      .and(t.literal(`a${t.literal.Number}`))
+    expectTypeOf(case5).toEqualTypeOf<t.Schema<
+      t.SpecialShape<
+        t.SpecialShapeTypeMapping['intersection'], [
+          t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['union'], [
+            t.Schema<'a1', 'a1'>,
+            t.Schema<'ab', 'ab'>,
+            t.Schema<'atrue', 'atrue'>
+          ]>, 'a1' | 'ab' | 'atrue'>,
+          t.Schema<`a${string}`, `a${string}`>,
+          t.Schema<`a${number}`, `a${number}`>
+        ]
+      >,
+      'a1'
+    >>()
   })
   test('pick up literal', () => {
     type T0 = ('a' | 'ab' | 'b') & `a${string}`

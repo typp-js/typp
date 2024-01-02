@@ -48,7 +48,13 @@ declare module '../base' {
           | IsEqual<U, t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['unknown'], []>, unknown>>
         )
       ) ? t.Schema<StringConstructor, string & {}>
-        : Intersect<[S, U]>
+        : (
+          S extends t.SpecialShape<
+            t.SpecialShapeTypeMapping['intersection'],
+            infer Schemas extends readonly [any, ...any]
+          > ? Intersect<[...Schemas, U]>
+            : Intersect<[S, U]>
+        )
       or<
         const U,
         const S extends Shape = Shape
