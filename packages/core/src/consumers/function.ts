@@ -74,6 +74,20 @@ declare module '../base' {
 t.defineSpecialShapeType('function', functionSymbol)
 t.defineSpecialShapeType('generic', genericSymbol)
 
+t.defineConsumer((first, ...rest) => {
+  if (first !== Function) return
+
+  const [args, ...rt] = rest as [readonly any[], ...any[]]
+  const argsSchemas = args.map(arg => t(arg))
+  let rtSchema: t.Schema<any, any>
+  if (rt.length === 0) {
+    rtSchema = t.void()
+  } else {
+    rtSchema = t(...rt)
+  }
+  return [t.specialShape(functionSymbol, [argsSchemas, rtSchema])]
+})
+
 t.defineStatic('fn', <
   const Args extends readonly any[],
   RT extends readonly any[] = []
