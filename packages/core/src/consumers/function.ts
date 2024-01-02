@@ -92,7 +92,7 @@ t.defineStatic('fn', <
   const Args extends readonly any[],
   RT extends readonly any[] = []
 >(args: Args, ...rt: RT) => t(Function, args, ...rt))
-// TODO proxy `function` to `fn`
+t.defineStatic.proxy('fn', 'function')
 
 export type FunctionConsume<
   T,
