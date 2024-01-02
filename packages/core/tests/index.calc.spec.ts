@@ -109,6 +109,27 @@ describe('union', () => {
     >>()
     expectTypeOf<t.Infer<typeof case3>>()
       .toEqualTypeOf<1 | 2 | '3' | boolean>()
+
+    const case4 = t.union([1, 2, '3']).or(t.union([true, false]))
+    expectTypeOf(case4).toEqualTypeOf<t.Schema<
+      t.SpecialShape<
+        t.SpecialShapeTypeMapping['union'], [
+          t.Schema<1, 1>,
+          t.Schema<2, 2>,
+          t.Schema<'3', '3'>,
+          t.Schema<
+            t.SpecialShape<t.SpecialShapeTypeMapping['union'], [
+              t.Schema<true, true>,
+              t.Schema<false, false>
+            ]>,
+            true | false
+          >
+        ]
+      >,
+      1 | 2 | '3' | true | false
+    >>()
+    expectTypeOf<t.Infer<typeof case4>>()
+      .toEqualTypeOf<1 | 2 | '3' | true | false>()
   })
 })
 
