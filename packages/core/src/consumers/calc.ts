@@ -61,25 +61,25 @@ declare module '../base' {
     export type Union<
       Shapes extends readonly any[],
       T = Shapes[number]
-    > = Shapes['length'] extends 0
+    > = Shapes['length'] extends 0 ? (
       // TODO replace to Typp<[never]>
-      ? t.Schema<t.SpecialShape<typeof t.Symbols.never, []>, never>
-      : Shapes['length'] extends 1
-      ? t.TyppWhenNotATypp<Shapes[0]>
-      : [
-        t.Typps<T>,
-        t.TyppT<Shapes>
-      ] extends [
-        infer Schemas extends t.Schema<any, any>,
-        infer SchemaT extends t.Schema<any, any>[]
-      ] ? (
-        [Schemas] extends [never]
-          ? t.Schema<typeof t.Symbols.never, never>
-          : t.Schema<
-            t.SpecialShape<t.SpecialShapeTypeMapping['union'], SchemaT>,
-            t.Infers<Schemas>
-          >
-      ) : never
+      t.Schema<t.SpecialShape<typeof t.Symbols.never, []>, never>
+    ) : Shapes['length'] extends 1 ? (
+        t.TyppWhenNotATypp<Shapes[0]>
+    ) : [
+      t.Typps<T>,
+      t.TyppT<Shapes>
+    ] extends [
+      infer Schemas extends t.Schema<any, any>,
+      infer SchemaT extends t.Schema<any, any>[]
+    ] ? (
+      [Schemas] extends [never]
+        ? t.Schema<typeof t.Symbols.never, never>
+        : t.Schema<
+          t.SpecialShape<t.SpecialShapeTypeMapping['union'], SchemaT>,
+          t.Infers<Schemas>
+        >
+    ) : never
     export function union<const T extends readonly any[]>(t: T): Union<T>
     export { union as or }
 
