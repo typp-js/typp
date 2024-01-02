@@ -91,7 +91,7 @@ t.defineConsumer((first, ...rest) => {
 t.defineStatic('fn', <
   const Args extends readonly any[],
   RT extends readonly any[] = []
->(args: Args, ...rt: RT) => <Typp<[FunctionConstructor, Args, ...RT]>>({}))
+>(args: Args, ...rt: RT) => t(Function, args, ...rt))
 // TODO proxy `function` to `fn`
 
 export type FunctionConsume<
