@@ -13,6 +13,10 @@ declare module '../base' {
       kSchema: KSchema
       vSchema: VSchema
     }
+    export function map<
+      Key, Value extends readonly any[],
+      Args extends [key?: Key, ...value: Value]
+    >(...args: Args): Typp<[MapConstructor, ...Args]>
   }
 }
 
