@@ -1,4 +1,5 @@
-import type { t, Typp } from '..'
+import type { Typp } from '..'
+import { t } from '../base'
 import type { IsEqual, Stack } from '../types'
 
 declare module '../base' {
@@ -19,6 +20,15 @@ declare module '../base' {
     >(...args: Args): Typp<[MapConstructor, ...Args]>
   }
 }
+t.defineConsumer((first, ...rest) => {
+  if (first !== Map) return
+
+  const [key, ...value] = rest
+  const kSchema = t(key) ?? t.any()
+  const vSchema = t(...value) ?? t.any()
+  // TODO refactor to special shape
+  return [<t.Map<any, any>>{ kSchema, vSchema }]
+})
 
 export type MapConsume<
   T,
