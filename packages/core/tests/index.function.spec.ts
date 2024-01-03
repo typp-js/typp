@@ -1,4 +1,4 @@
-import { describe, expectTypeOf, test } from 'vitest'
+import { describe, expect, expectTypeOf, test } from 'vitest'
 
 import { t } from '../src'
 
@@ -6,6 +6,12 @@ describe('function', () => {
   test('base', () => {
     const base0_0 = t.function([])
     const base0_1 = t(Function)
+    const [shape0_0, shape0_1] = [base0_0.shape, base0_1.shape]
+    expect(shape0_0).toEqual(shape0_1)
+    expect(shape0_0).toEqual(t.specialShape(t.specialShapeTypeMapping.function, [
+      [],
+      t.void()
+    ]))
     expectTypeOf(base0_0).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
         [],
@@ -19,6 +25,12 @@ describe('function', () => {
 
     const base1_0 = t.function([String, Number])
     const base1_1 = t(Function, [String, Number])
+    const [shape1_0, shape1_1] = [base1_0.shape, base1_1.shape]
+    expect(shape1_0).toEqual(shape1_1)
+    expect(shape1_0).toEqual(t.specialShape(t.specialShapeTypeMapping.function, [
+      [t.string(), t.number()],
+      t.void()
+    ]))
     expectTypeOf(base1_0).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
         [t.Schema<StringConstructor, string>, t.Schema<NumberConstructor, number>],
@@ -32,6 +44,12 @@ describe('function', () => {
 
     const base2_0 = t.function([String, Number], String)
     const base2_1 = t(Function, [String, Number], String)
+    const [shape2_0, shape2_1] = [base2_0.shape, base2_1.shape]
+    expect(shape2_0).toEqual(shape2_1)
+    expect(shape2_0).toEqual(t.specialShape(t.specialShapeTypeMapping.function, [
+      [t.string(), t.number()],
+      t.string()
+    ]))
     expectTypeOf(base2_0).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
         [t.Schema<StringConstructor, string>, t.Schema<NumberConstructor, number>],
