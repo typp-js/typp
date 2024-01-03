@@ -89,10 +89,7 @@ declare module '../base' {
     export function date(): Typp<[DateConstructor]>
     export function regexp(): Typp<[RegExpConstructor]>
     export function undefined(): Typp<[undefined]>
-    // FIXME unable compute [never] for `Typp`
-    //       [link](./calc.ts#replace to Typp<[never]>)
-    // export function never(): Typp<[never]>
-    export function never(): t.Schema<t.SpecialShape<typeof t.Symbols.never, []>, never>
+    export function never(): Typp<[never]>
 
     function _null(): Typp<[null]>
     function _void(): Typp<[void]>

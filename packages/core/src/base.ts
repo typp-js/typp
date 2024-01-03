@@ -1,4 +1,4 @@
-import type { IsEqual, IsNotEqual, Nonexistentable, Pretty, Stack, U2I, ValueOf } from './types'
+import type { IsEqual, IsNotEqual, IsTrue, Nonexistentable, Pretty, Stack, U2I, ValueOf } from './types'
 
 const __typp__: unique symbol = Symbol('typp')
 
@@ -52,7 +52,7 @@ export namespace t {
   > = ValueOf<{
     [ K in keyof Entries
         as true extends (
-          IsEqual<Entries[K & number][0], true>
+          IsTrue<Entries[K & number][0]>
         ) ? K : never
     ]: Entries[K & number][1]
   }>

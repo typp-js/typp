@@ -1,3 +1,4 @@
+import type { Typp } from '../base'
 import { t } from '../base'
 import type { IsEqual, Stack, T2I } from '../types'
 
@@ -68,8 +69,7 @@ declare module '../base' {
       Shapes extends readonly any[],
       T = Shapes[number]
     > = Shapes['length'] extends 0 ? (
-      // TODO replace to Typp<[never]>
-      t.Schema<t.SpecialShape<typeof t.Symbols.never, []>, never>
+      Typp<[never]>
     ) : Shapes['length'] extends 1 ? (
         t.TyppWhenNotATypp<Shapes[0]>
     ) : [
