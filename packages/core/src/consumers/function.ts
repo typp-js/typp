@@ -77,7 +77,7 @@ t.defineSpecialShapeType('generic', genericSymbol)
 t.defineConsumer((first, ...rest) => {
   if (first !== Function) return
 
-  const [args, ...rt] = rest as [readonly any[], ...any[]]
+  const [args = [], ...rt] = rest as [(readonly any[])?, ...any[]]
   const argsSchemas = args.map(arg => t(arg))
   let rtSchema: t.Schema<any, any>
   if (rt.length === 0) {
