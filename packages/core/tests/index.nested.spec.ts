@@ -212,21 +212,21 @@ describe('array and tuple', () => {
   test('Set', () => {
     const case0 = t(Set)
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
-      t.Set<t.Schema<any, any>>,
+      t.SetShape<t.Schema<any, any>>,
       Set<any>
     >>()
     expectTypeOf<t.Infer<typeof case0>>()
       .toEqualTypeOf<Set<any>>()
     const case1 = t(Set, Number)
     expectTypeOf(case1).toEqualTypeOf<t.Schema<
-      t.Set<t.Schema<NumberConstructor, number>>,
+      t.SetShape<t.Schema<NumberConstructor, number>>,
       Set<number>
     >>()
     expectTypeOf<t.Infer<typeof case1>>()
       .toEqualTypeOf<Set<number>>()
     const case2 = t(Set, { a: Number })
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
-      t.Set<t.Schema<{
+      t.SetShape<t.Schema<{
         a: t.Schema<NumberConstructor, number>
       }, {
         a: number
