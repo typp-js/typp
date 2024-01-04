@@ -33,15 +33,11 @@ t.defineSpecialShapeType('map', mapSymbol)
 t.defineConsumer((first, ...rest) => {
   if (first !== Map) return
 
-  if (rest.length === 0) return [t.specialShape(
-    t.specialShapeTypeMapping.map,
-    [t(), t()]
-  )]
   const [key, ...value] = rest
-  return [t.specialShape(
-    t.specialShapeTypeMapping.map,
-    [t(key) ?? t(), t(...value) ?? t()]
-  )]
+  return [t.specialShape(t.specialShapeTypeMapping.map, [
+    key ? t(key) : t(),
+    value.length > 0 ? t(...value) : t()
+  ])]
 })
 t.defineStatic('map', (...args) => t(Map, ...args))
 
