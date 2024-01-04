@@ -13,7 +13,7 @@ function _generic<
   return t.specialShape(genericSymbol, {
     label,
     extends: _extends ?? t(),
-    default: _default ?? t()
+    default: _default
   }) as t.SpecialShape<
     t.SpecialShapeTypeMapping['generic'],
     t.Generic<L, E, D>
