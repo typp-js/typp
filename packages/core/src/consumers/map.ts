@@ -29,6 +29,7 @@ declare module '../base' {
     }
   }
 }
+t.defineSpecialShapeType('map', mapSymbol)
 t.defineConsumer((first, ...rest) => {
   if (first !== Map) return
 
