@@ -37,7 +37,6 @@ t.defineConsumer((first, ...rest) => {
     [t(), t()]
   )]
   const [key, ...value] = rest
-  // TODO refactor to special shape
   return [t.specialShape(
     t.specialShapeTypeMapping.map,
     [t(key) ?? t(), t(...value) ?? t()]
