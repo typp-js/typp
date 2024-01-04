@@ -19,6 +19,12 @@ function _generic<
     t.Generic<L, E, D>
   >
 }
+function _fn<
+  const Args extends readonly any[],
+  RT extends readonly any[] = []
+>(args: Args, ...rt: RT): Typp<[FunctionConstructor, Args, ...RT]> {
+  return t(Function, args, ...rt)
+}
 
 declare module '../base' {
   namespace t {
@@ -32,10 +38,7 @@ declare module '../base' {
         t.GenericSchema<T['schemas']>
       ) : never]
     }
-    export function fn<
-      const Args extends readonly any[],
-      RT extends readonly any[] = []
-    >(args: Args, ...rt: RT): Typp<[FunctionConstructor, Args, ...RT]>
+    export const fn: typeof _fn
     export { fn as function }
     export interface Generic<
       L extends string,
@@ -97,10 +100,7 @@ t.defineConsumer((first, ...rest) => {
   return [t.specialShape(functionSymbol, [argsSchemas, rtSchema])]
 })
 
-t.defineStatic('fn', <
-  const Args extends readonly any[],
-  RT extends readonly any[] = []
->(args: Args, ...rt: RT) => t(Function, args, ...rt))
+t.defineStatic('fn', _fn)
 t.defineStatic.proxy('fn', 'function')
 t.defineStatic('generic', _generic)
 
