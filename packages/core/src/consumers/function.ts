@@ -5,7 +5,7 @@ import type { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../types'
 const functionSymbol = Symbol('function')
 const genericSymbol = Symbol('generic')
 
-export function _generic<
+function _generic<
   const L extends string,
   E extends t.Schema<any, any> = t.Schema<any, any>,
   D extends t.Infer<E> = never
