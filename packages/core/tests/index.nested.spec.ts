@@ -526,33 +526,69 @@ describe('object', () => {
     >>()
   })
   test('Map', () => {
-    const case0 = t(Map)
-    expectTypeOf(case0).toEqualTypeOf<
+    const case0_0 = t(Map)
+    const case0_1 = t.map()
+    const [shape0_0, shape0_1] = [case0_0.shape, case0_1.shape]
+    expect(shape0_0).toEqual(shape0_1)
+    expect(shape0_0).toEqual(t.specialShape(t.specialShapeTypeMapping.map, [t(), t()]))
+    expectTypeOf(case0_0).toEqualTypeOf<
       t.Schema<
         t.MapShape<t.Schema<any, any>, t.Schema<any, any>>,
         Map<any, any>
       >
     >()
-    expectTypeOf<t.Infer<typeof case0>>()
+    expectTypeOf<typeof case0_1>().toEqualTypeOf<typeof case0_0>()
+    expectTypeOf<t.Infer<typeof case0_0>>()
       .toEqualTypeOf<Map<any, any>>()
 
-    const case1 = t(Map, Number)
-    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+    const case1_0 = t(Map, Number)
+    const case1_1 = t.map(Number)
+    const [shape1_0, shape1_1] = [case1_0.shape, case1_1.shape]
+    expect(shape1_0).toEqual(shape1_1)
+    expect(shape1_0).toEqual(t.specialShape(t.specialShapeTypeMapping.map, [t(Number), t()]))
+    expectTypeOf(case1_0).toEqualTypeOf<t.Schema<
       t.MapShape<t.Schema<NumberConstructor, number>, t.Schema<any, any>>,
       Map<number, any>
     >>()
-    expectTypeOf<t.Infer<typeof case1>>()
+    expectTypeOf<typeof case1_1>().toEqualTypeOf<typeof case1_0>()
+    expectTypeOf<t.Infer<typeof case1_0>>()
       .toEqualTypeOf<Map<number, any>>()
 
-    const case2 = t(Map, Number, String)
-    expectTypeOf(case2).toEqualTypeOf<t.Schema<
+    const case2_0 = t(Map, Number, String)
+    const case2_1 = t.map(Number, String)
+    const [shape2_0, shape2_1] = [case2_0.shape, case2_1.shape]
+    expect(shape2_0).toEqual(shape2_1)
+    expect(shape2_0).toEqual(t.specialShape(t.specialShapeTypeMapping.map, [t(Number), t(String)]))
+    expectTypeOf(case2_0).toEqualTypeOf<t.Schema<
       t.MapShape<
         t.Schema<NumberConstructor, number>,
         t.Schema<StringConstructor, string>
       >,
       Map<number, string>
     >>()
-    expectTypeOf<t.Infer<typeof case2>>()
+    expectTypeOf<typeof case2_1>().toEqualTypeOf<typeof case2_0>()
+    expectTypeOf<t.Infer<typeof case2_0>>()
       .toEqualTypeOf<Map<number, string>>()
+
+    const case3_0 = t(Map, Number, Map, String, Number)
+    const case3_1 = t.map(Number, Map, String, Number)
+    const case3_2 = t.map(Number, t.map(String, Number))
+    const [shape3_0, shape3_1, shape3_2] = [case3_0.shape, case3_1.shape, case3_2.shape]
+    expect(shape3_0).toEqual(shape3_1)
+    expect(shape3_0).toEqual(shape3_2)
+    expect(shape3_0).toEqual(t.specialShape(t.specialShapeTypeMapping.map, [
+      t(Number),
+      t(Map, String, Number)
+    ]))
+    expectTypeOf(case3_0).toEqualTypeOf<t.Schema<
+      t.MapShape<
+        t.Schema<NumberConstructor, number>,
+        t.Schema<t.MapShape<
+          t.Schema<StringConstructor, string>,
+          t.Schema<NumberConstructor, number>
+        >, Map<string, number>>
+      >,
+      Map<number, Map<string, number>>
+    >>()
   })
 })
