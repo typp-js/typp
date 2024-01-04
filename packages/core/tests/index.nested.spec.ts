@@ -385,7 +385,7 @@ describe('object', () => {
     const shape1 = case1.shape
     expect(shape1).toEqual({
       a: t(Number),
-      b: t(String),
+      b: t(String)
     })
     expectTypeOf(shape1).toEqualTypeOf<{
       a: t.Schema<NumberConstructor, number>
@@ -411,7 +411,7 @@ describe('object', () => {
     const shape2 = case2.shape
     expect(shape2).toEqual({
       a: t(Number),
-      b: t({ c: t(String) }),
+      b: t({ c: t(String) })
     })
     expectTypeOf(shape2).toEqualTypeOf<{
       a: t.Schema<NumberConstructor, number>
@@ -432,7 +432,7 @@ describe('object', () => {
       .toEqualTypeOf<{ a: number[] }>()
     const shape3 = case3.shape
     expect(shape3).toEqual({
-      a: t([], Number),
+      a: t([], Number)
     })
     expectTypeOf(shape3).toEqualTypeOf<{
       a: t.Schema<t.Schema<NumberConstructor, number>[], number[]>
@@ -462,7 +462,7 @@ describe('object', () => {
     const shape4 = case4.shape
     expect(shape4).toEqual({
       a: t(Number),
-      b: t(Object),
+      b: t(Object)
     })
     expectTypeOf(shape4).toEqualTypeOf<{
       a: t.Schema<NumberConstructor, number>
