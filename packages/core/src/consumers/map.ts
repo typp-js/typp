@@ -43,6 +43,7 @@ t.defineConsumer((first, ...rest) => {
     [t(key) ?? t(), t(...value) ?? t()]
   )]
 })
+t.defineStatic('map', (...args) => t(Map, ...args))
 
 export type MapConsume<
   T,
