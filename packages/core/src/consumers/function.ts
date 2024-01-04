@@ -4,6 +4,22 @@ import type { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../types'
 
 const functionSymbol = Symbol('function')
 const genericSymbol = Symbol('generic')
+
+export function _generic<
+  const L extends string,
+  E extends t.Schema<any, any> = t.Schema<any, any>,
+  D extends t.Infer<E> = never
+>(label: L, _extends?: E, _default?: D) {
+  return t.specialShape(genericSymbol, {
+    label,
+    extends: _extends ?? t(),
+    default: _default ?? t()
+  }) as t.SpecialShape<
+    t.SpecialShapeTypeMapping['generic'],
+    t.Generic<L, E, D>
+  >
+}
+
 declare module '../base' {
   namespace t {
     export interface ShapeEntries<T, Rest extends any[]> {
@@ -33,14 +49,7 @@ declare module '../base' {
     export type GenericSchema<G extends Generic<string>> = t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['generic'], G>, G
     >
-    export function generic<
-      const L extends string,
-      E extends t.Schema<any, any> = t.Schema<any, any>,
-      D extends t.Infer<E> = never
-    >(label: L, _extends?: E, _default?: D): t.SpecialShape<
-      t.SpecialShapeTypeMapping['generic'],
-      Generic<L, E, D>
-    >
+    export const generic: typeof _generic
 
     export interface DynamicSpecialShapeTypeMapping {
       readonly function: typeof functionSymbol
@@ -93,6 +102,7 @@ t.defineStatic('fn', <
   RT extends readonly any[] = []
 >(args: Args, ...rt: RT) => t(Function, args, ...rt))
 t.defineStatic.proxy('fn', 'function')
+t.defineStatic('generic', _generic)
 
 export type FunctionConsume<
   T,
