@@ -63,6 +63,11 @@ describe('function', () => {
 
     const base3_0 = t.function([], Map, Number, String)
     const base3_1 = t(Function, [], Map, Number, String)
+    const [shape3_0, shape3_1] = [base3_0.shape, base3_1.shape]
+    expect(shape3_0).toEqual(shape3_1)
+    expect(shape3_0).toEqual(t.specialShape(t.specialShapeTypeMapping.function, [
+      [], t(Map, Number, String)
+    ]))
     expectTypeOf(base3_0).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
         [],
