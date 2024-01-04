@@ -529,7 +529,7 @@ describe('object', () => {
     const case0 = t(Map)
     expectTypeOf(case0).toEqualTypeOf<
       t.Schema<
-        t.Map<t.Schema<any, any>, t.Schema<any, any>>,
+        t.MapShape<t.Schema<any, any>, t.Schema<any, any>>,
         Map<any, any>
       >
     >()
@@ -538,7 +538,7 @@ describe('object', () => {
 
     const case1 = t(Map, Number)
     expectTypeOf(case1).toEqualTypeOf<t.Schema<
-      t.Map<t.Schema<NumberConstructor, number>, t.Schema<any, any>>,
+      t.MapShape<t.Schema<NumberConstructor, number>, t.Schema<any, any>>,
       Map<number, any>
     >>()
     expectTypeOf<t.Infer<typeof case1>>()
@@ -546,7 +546,7 @@ describe('object', () => {
 
     const case2 = t(Map, Number, String)
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
-      t.Map<
+      t.MapShape<
         t.Schema<NumberConstructor, number>,
         t.Schema<StringConstructor, string>
       >,

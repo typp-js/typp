@@ -2,32 +2,42 @@ import type { Typp } from '..'
 import { t } from '../base'
 import type { IsEqual, Stack } from '../types'
 
+const mapSymbol = Symbol('map')
 declare module '../base' {
   namespace t {
     export interface ShapeEntries<T, Rest extends any[]> {
       111000: [IsEqual<T, MapConstructor>, MapConsume<T, Rest>]
     }
-    export interface Map<
+    export type MapShape<
       KSchema extends t.Schema<any, any>,
       VSchema extends t.Schema<any, any>
-    > {
-      kSchema: KSchema
-      vSchema: VSchema
-    }
+    > = t.SpecialShape<
+      t.SpecialShapeTypeMapping['map'],
+      [KSchema, VSchema]
+    >
     export function map<
       Key, Value extends readonly any[],
       Args extends [key?: Key, ...value: Value]
     >(...args: Args): Typp<[MapConstructor, ...Args]>
+
+    export interface DynamicSpecialShapeTypeMapping {
+      readonly map: typeof mapSymbol
+    }
+    export interface SpecialShapeSchemaMapping {
+      [t.specialShapeTypeMapping
+        .map]: [key: t.Schema<any, any>, value: t.Schema<any, any>]
+    }
   }
 }
 t.defineConsumer((first, ...rest) => {
   if (first !== Map) return
 
   const [key, ...value] = rest
-  const kSchema = t(key) ?? t.any()
-  const vSchema = t(...value) ?? t.any()
   // TODO refactor to special shape
-  return [<t.Map<any, any>>{ kSchema, vSchema }]
+  return [t.specialShape(
+    t.specialShapeTypeMapping.map,
+    [t(key) ?? t(), t(...value) ?? t()]
+  )]
 })
 
 export type MapConsume<
@@ -38,7 +48,7 @@ export type MapConsume<
   | IsEqual<Rest, readonly []>
 ) ? (
   t.Schema<
-    t.Map<t.Schema<any, any>, t.Schema<any, any>>,
+    t.MapShape<t.Schema<any, any>, t.Schema<any, any>>,
     Map<any, any>
   >
 ) : (
@@ -49,7 +59,7 @@ export type MapConsume<
     [Typp<[L]>, Typp<Rest>] extends [
       infer KT extends t.Schema<any, any>,
       infer VT extends t.Schema<any, any>
-    ] ? t.Schema<t.Map<KT, VT>, Map<t.Infer<KT>, t.Infer<VT>>>
+    ] ? t.Schema<t.MapShape<KT, VT>, Map<t.Infer<KT>, t.Infer<VT>>>
       : never
   ) : never
 )

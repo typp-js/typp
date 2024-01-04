@@ -67,7 +67,7 @@ describe('function', () => {
       t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
         [],
         t.Schema<
-          t.Map<
+          t.MapShape<
             t.Schema<NumberConstructor, number>,
             t.Schema<StringConstructor, string>
           >,
