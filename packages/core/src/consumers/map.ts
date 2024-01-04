@@ -32,6 +32,10 @@ declare module '../base' {
 t.defineConsumer((first, ...rest) => {
   if (first !== Map) return
 
+  if (rest.length === 0) return [t.specialShape(
+    t.specialShapeTypeMapping.map,
+    [t(), t()]
+  )]
   const [key, ...value] = rest
   // TODO refactor to special shape
   return [t.specialShape(
