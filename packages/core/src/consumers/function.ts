@@ -7,16 +7,17 @@ const genericSymbol = Symbol('generic')
 
 function _generic<
   const L extends string,
-  E extends t.Schema<any, any> = t.Schema<any, any>,
-  D extends t.Infer<E> = never
+  E = any,
+  ES extends t.Schema<any, any> = t.TyppWhenNotATypp<E>,
+  D extends t.Infer<ES> = never
 >(label: L, _extends?: E, _default?: D) {
   return t.specialShape(genericSymbol, {
     label,
-    extends: _extends ?? t(),
+    extends: _extends ? t(_extends) : t(),
     default: _default
   }) as t.SpecialShape<
     t.SpecialShapeTypeMapping['generic'],
-    t.Generic<L, E, D>
+    t.Generic<L, ES, D>
   >
 }
 function _fn<
