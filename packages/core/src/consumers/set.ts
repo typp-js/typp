@@ -1,4 +1,5 @@
-import type { t, Typp } from '..'
+import type { Typp } from '..'
+import { t } from '../base'
 import type { IsEqual } from '../types'
 
 const setSymbol = Symbol('set')
@@ -10,10 +11,9 @@ declare module '../base' {
     export type SetShape<
       S extends t.Schema<any, any>
     > = t.SpecialShape<t.SpecialShapeTypeMapping['set'], S>
-    export function map<
-      Key, Value extends readonly any[],
-      Args extends [key?: Key, ...value: Value]
-    >(...args: Args): Typp<[MapConstructor, ...Args]>
+    export function set<
+      Value extends readonly any[]
+    >(...item: Value): Typp<[SetConstructor, ...Value]>
 
     export interface DynamicSpecialShapeTypeMapping {
       readonly set: typeof setSymbol
@@ -24,6 +24,16 @@ declare module '../base' {
     }
   }
 }
+t.defineSpecialShapeType('set', setSymbol)
+t.defineConsumer((first, ...rest) => {
+  if (first !== Set) return
+
+  return [t.specialShape(
+    t.specialShapeTypeMapping.set,
+    rest.length === 0 ? t() : t(...rest)
+  )]
+})
+t.defineStatic('set', (...args) => t(Set, ...args))
 
 export type SetConsume<
   T,

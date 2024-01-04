@@ -210,22 +210,36 @@ describe('array and tuple', () => {
     >()
   })
   test('Set', () => {
-    const case0 = t(Set)
-    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+    const case0_0 = t(Set)
+    const case0_1 = t.set()
+    const [shape0_0, shape0_1] = [case0_0.shape, case0_1.shape]
+    expect(shape0_0).toEqual(shape0_1)
+    expect(shape0_0).toEqual(t.specialShape(t.specialShapeTypeMapping.set, t()))
+    expectTypeOf(case0_0).toEqualTypeOf<t.Schema<
       t.SetShape<t.Schema<any, any>>,
       Set<any>
     >>()
-    expectTypeOf<t.Infer<typeof case0>>()
+    expectTypeOf<t.Infer<typeof case0_0>>()
       .toEqualTypeOf<Set<any>>()
-    const case1 = t(Set, Number)
-    expectTypeOf(case1).toEqualTypeOf<t.Schema<
+    const case1_0 = t(Set, Number)
+    const case1_1 = t.set(Number)
+    const [shape1_0, shape1_1] = [case1_0.shape, case1_1.shape]
+    expect(shape1_0).toEqual(shape1_1)
+    expect(shape1_0).toEqual(t.specialShape(t.specialShapeTypeMapping.set, t(Number)))
+    expectTypeOf(case1_0).toEqualTypeOf<t.Schema<
       t.SetShape<t.Schema<NumberConstructor, number>>,
       Set<number>
     >>()
-    expectTypeOf<t.Infer<typeof case1>>()
+    expectTypeOf<t.Infer<typeof case1_0>>()
       .toEqualTypeOf<Set<number>>()
-    const case2 = t(Set, { a: Number })
-    expectTypeOf(case2).toEqualTypeOf<t.Schema<
+    const case2_0 = t(Set, { a: Number })
+    const case2_1 = t.set({ a: Number })
+    const [shape2_0, shape2_1] = [case2_0.shape, case2_1.shape]
+    expect(shape2_0).toEqual(shape2_1)
+    expect(shape2_0).toEqual(t.specialShape(t.specialShapeTypeMapping.set, t({
+      a: t(Number)
+    })))
+    expectTypeOf(case2_0).toEqualTypeOf<t.Schema<
       t.SetShape<t.Schema<{
         a: t.Schema<NumberConstructor, number>
       }, {
@@ -235,7 +249,7 @@ describe('array and tuple', () => {
         a: number
       }>
     >>()
-    expectTypeOf<t.Infer<typeof case2>>()
+    expectTypeOf<t.Infer<typeof case2_0>>()
       .toEqualTypeOf<Set<{ a: number }>>()
   })
 })
