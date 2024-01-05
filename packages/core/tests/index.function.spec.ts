@@ -87,6 +87,11 @@ describe('function', () => {
   })
   test('generic in args', () => {
     const skm = t(Function, [t.generic('T', String)])
+    expect(skm.shape.type).toEqual(t.specialShapeTypeMapping.function)
+    expect(skm.shape.schemas).toEqual([
+      [t(t.generic('T', String))],
+      t.void()
+    ])
     expectTypeOf(skm).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
         [t.GenericSchema<t.Generic<'T', t.Schema<StringConstructor, string>, never>>],
