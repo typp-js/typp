@@ -121,6 +121,11 @@ describe('function', () => {
     const case0 = t(
       Function, [t.generic('T', t.string())], t.generic('T', t.string())
     )
+    expect(case0.shape.type).toEqual(t.specialShapeTypeMapping.function)
+    expect(case0.shape.schemas).toEqual([
+      [t(t.generic('T', t.string()))],
+      t(t.generic('T', t.string()))
+    ])
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
         [t.GenericSchema<t.Generic<'T', t.Schema<StringConstructor, string>, never>>],
@@ -151,6 +156,11 @@ describe('function', () => {
     const T = t.generic('T', t.string())
     const arraySkm = t(Function, [t(Array, T)])
     type TSkm = typeof T
+    expect(arraySkm.shape.type).toEqual(t.specialShapeTypeMapping.function)
+    expect(arraySkm.shape.schemas).toEqual([
+      [t.array(T)],
+      t.void()
+    ])
     expectTypeOf(arraySkm).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
         [t.Schema<
@@ -165,6 +175,11 @@ describe('function', () => {
       .toEqualTypeOf<<T extends string = never>(args_0: T[]) => void>()
 
     const tupleSkm = t(Function, [t([T])])
+    expect(tupleSkm.shape.type).toEqual(t.specialShapeTypeMapping.function)
+    expect(tupleSkm.shape.schemas).toEqual([
+      [t.tuple(T)],
+      t.void()
+    ])
     expectTypeOf(tupleSkm).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
         [t.Schema<
@@ -187,6 +202,11 @@ describe('function', () => {
     tupleSkmT([])
 
     const objectSkm = t(Function, [t({ foo: T })])
+    expect(objectSkm.shape.type).toEqual(t.specialShapeTypeMapping.function)
+    expect(objectSkm.shape.schemas).toEqual([
+      [t({ foo: T })],
+      t.void()
+    ])
     expectTypeOf(objectSkm).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['function'], [
         [t.Schema<
