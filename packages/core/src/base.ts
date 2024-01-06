@@ -101,7 +101,6 @@ t.defineConsumer((first) => {
   }
 })
 // Base
-const registers = new Set<t.FieldsRegister>()
 export namespace t {
   export interface SchemaMeta<Shape, T> {
   }
@@ -147,10 +146,6 @@ export namespace t {
   export type SchemaFields<Shape, T> =
     & SchemaFieldsMapping<Shape, T>
     & SchemaFieldsAll<Shape, T>
-  export type FieldsRegister = <Shape>(shape: Shape) => Nonexistentable<SchemaFieldsMapping<Shape>>
-  export function defineFieldsRegister(register: FieldsRegister) {
-    registers.add(register)
-  }
 
   export type Schema<Shape, T> =
     & SchemaFields<Shape, T>
