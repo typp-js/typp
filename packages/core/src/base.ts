@@ -49,6 +49,19 @@ export namespace t {
     consumers.add(consumer)
   }
 }
+// Fields Register
+const registers = new Set<readonly [t.IsWhatShape, t.FieldsInjector]>()
+export namespace t {
+  export type IsWhatShape<S = any> = (shape: any) => shape is S
+  export type FieldsInjector<S = any> = <Shape extends S>(shape: Shape) => Nonexistentable<SchemaFieldsMapping<Shape>>
+  export function defineFields<S>(
+    is: IsWhatShape<S>, inj: FieldsInjector<S>
+  ) {
+    const register = [is, inj] as const
+    registers.add(register)
+    return () => registers.delete(register)
+  }
+}
 // Shape
 export namespace t {
   export interface ShapeEntries<T, Rest extends any[]> {
@@ -209,7 +222,6 @@ export namespace t {
       : never
   }
 }
-const registers = new Set<readonly [t.IsWhatShape, t.FieldsInjector]>()
 // Extensible
 export namespace t {
   export const CANT_REFINE = Object.freeze([
@@ -301,15 +313,6 @@ export namespace t {
     }
   }
   // TODO static.pipe
-  export type IsWhatShape<S = any> = (shape: any) => shape is S
-  export type FieldsInjector<S = any> = <Shape extends S>(shape: Shape) => Nonexistentable<SchemaFieldsMapping<Shape>>
-  export function defineFields<S>(
-    is: IsWhatShape<S>, inj: FieldsInjector<S>
-  ) {
-    const register = [is, inj] as const
-    registers.add(register)
-    return () => registers.delete(register)
-  }
 }
 
 // TODO `consumer` support return `Schema` self
