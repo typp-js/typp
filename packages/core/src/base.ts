@@ -50,13 +50,24 @@ export namespace t {
   }
 }
 // Fields Register
-const registers = new Set<readonly [t.IsWhatShape, t.FieldsInjector]>()
+const registers = new Set<readonly [t.IsWhatShape | (() => boolean), Function]>()
 export namespace t {
   export type IsWhatShape<S = any> = (shape: any) => shape is S
   export type FieldsInjector<S = any> = <Shape extends S>(shape: Shape) => Nonexistentable<SchemaFieldsMapping<Shape>>
-  export function defineFields<S>(
-    is: IsWhatShape<S>, inj: FieldsInjector<S>
-  ) {
+  export type AllFieldsInjector = <SK extends Schema<any, any>>(schema: SK) => Nonexistentable<
+    SchemaFieldsAll<SK['shape'], Infer<SK>>
+  >
+  export function defineFields(inj: AllFieldsInjector): () => void
+  export function defineFields<S>(is: IsWhatShape<S>, inj: FieldsInjector<S>): () => void
+  export function defineFields<S>(...args: any[]) {
+    if (args.length === 1) {
+      const [inj] = args as [AllFieldsInjector]
+      const register = [() => true, inj] as const
+      registers.add(register)
+      return () => registers.delete(register)
+    }
+
+    const [is, inj] = args as [IsWhatShape<S>, FieldsInjector<S>]
     const register = [is, inj] as const
     registers.add(register)
     return () => registers.delete(register)
