@@ -16,6 +16,8 @@ export function t<const T extends any[]>(...types: T): Typp<T> {
   for (const consumer of consumers) {
     const result = consumer(...types)
     if (result) {
+      if (t.isSchema(result)) return result as Typp<T>
+
       const [s] = result
       shape = s
       break
@@ -44,7 +46,7 @@ interface SchemaBase<Shape, T> {
 // Consumer
 const consumers = new Set<t.Consumer>()
 export namespace t {
-  export type Consumer = (...args: any[]) => Nonexistentable<[shape: any]>
+  export type Consumer = (...args: any[]) => Nonexistentable<[shape: any] | Schema<any, any>>
   export function defineConsumer(consumer: Consumer) {
     consumers.add(consumer)
   }
@@ -326,5 +328,4 @@ export namespace t {
   // TODO static.pipe
 }
 
-// TODO `consumer` support return `Schema` self
-t.defineConsumer(first => t.isSchema(first) ? [first.shape] : undefined)
+t.defineConsumer(first => t.isSchema(first) ? first : undefined)
