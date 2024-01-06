@@ -21,10 +21,19 @@ export function t<const T extends any[]>(...types: T): Typp<T> {
       break
     }
   }
-  return {
-    shape,
-    [__typp__]: true
-  } as Typp<T>
+
+  const fields: any = {}
+  for (const [is, inject] of registers) {
+    if (is(shape)) {
+      Object.assign(fields, inject(shape))
+    }
+  }
+
+  return Object.assign(
+    { [__typp__]: true },
+    { shape },
+    fields
+  ) as Typp<T>
 }
 
 interface SchemaBase<Shape, T> {
@@ -200,6 +209,7 @@ export namespace t {
       : never
   }
 }
+const registers = new Set<readonly [t.IsWhatShape, t.FieldsInjector]>()
 // Extensible
 export namespace t {
   export const CANT_REFINE = Object.freeze([
@@ -291,7 +301,15 @@ export namespace t {
     }
   }
   // TODO static.pipe
-  // TODO defineField
+  export type IsWhatShape<S = any> = (shape: any) => shape is S
+  export type FieldsInjector<S = any> = <Shape extends S>(shape: Shape) => Nonexistentable<SchemaFieldsMapping<Shape>>
+  export function defineFields<S>(
+    is: IsWhatShape<S>, inj: FieldsInjector<S>
+  ) {
+    const register = [is, inj] as const
+    registers.add(register)
+    return () => registers.delete(register)
+  }
 }
 
 t.defineConsumer(first => t.isSchema(first) ? [first.shape] : undefined)
