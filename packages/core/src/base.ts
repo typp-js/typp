@@ -312,4 +312,5 @@ export namespace t {
   }
 }
 
+// TODO `consumer` support return `Schema` self
 t.defineConsumer(first => t.isSchema(first) ? [first.shape] : undefined)
