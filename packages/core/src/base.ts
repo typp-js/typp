@@ -115,9 +115,13 @@ export namespace t {
   }
   export function specialShape<
     T extends SpecialShapeTypes,
-    S extends SpecialShapeSchemaMapping[T]
-  >(type: T, schemas: S): SpecialShape<T, S> {
-    return { type, schemas }
+    S extends SpecialShapeSchemaMapping[T],
+  >(
+    ...[type, schemas]: [S] extends [undefined]
+      ? readonly [type: T]
+      : readonly [type: T, schemas: S]
+  ): SpecialShape<T, S> {
+    return { type, schemas } as SpecialShape<T, S>
   }
   export function isSpecialShape(obj: any): obj is SpecialShape<any, any> {
     return obj
