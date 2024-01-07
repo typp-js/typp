@@ -73,7 +73,7 @@ declare module '../base' {
     > = Shapes['length'] extends 0 ? (
       Typp<[never]>
     ) : Shapes['length'] extends 1 ? (
-        t.TyppWhenNotATypp<Shapes[0]>
+      t.TyppWhenNotATypp<Shapes[0]>
     ) : [
       t.Typps<T>,
       t.TyppT<Shapes>
