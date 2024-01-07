@@ -142,12 +142,12 @@ t.defineConsumer((first) => {
 export namespace t {
   export interface SchemaMeta<Shape, T> {
   }
-  export interface SchemaFieldsEntries<A = any, B = any, C = any> {
+  export interface SchemaFieldsEntries<Shape = any, T = any> {
     [key: number & {}]: [boolean, any]
   }
   export type SchemaFieldsMapping<
-    A = any, B = any, C = any,
-    Entries extends SchemaFieldsEntries<A, B, C> = SchemaFieldsEntries<A, B, C>
+    Shape = any, T = any,
+    Entries extends SchemaFieldsEntries<Shape, T> = SchemaFieldsEntries<Shape, T>
   > = [keyof Entries] extends [infer Keys extends number] ? Pretty<U2I<
     ValueOf<{
       [ K in Keys
