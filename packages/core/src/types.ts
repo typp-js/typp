@@ -4,7 +4,6 @@ export type NoIndexSignature<T> = {
   [K in keyof T as string extends K ? never : number extends K ? never : K]: T[K]
 }
 
-// @ts-ignore FIXME error TS2313: Type parameter 'K' has a circular constraint.
 export type ValueOf<T extends {}> = { [K in keyof T]: T[K] } extends infer X ? X[keyof X] : never
 
 export type Values<T> = T[keyof T]
