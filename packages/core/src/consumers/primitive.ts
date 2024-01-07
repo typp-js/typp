@@ -33,7 +33,7 @@ declare module '../base' {
       [t.specialShapeTypeMapping
         .void]: undefined
       [t.specialShapeTypeMapping
-        .unknown]: []
+        .unknown]: undefined
       [t.specialShapeTypeMapping
         .never]: []
     }
@@ -123,7 +123,7 @@ t.defineConsumer((...args) => {
   }
 })
 t.defineStatic('any', () => t(t.specialShape(t.Symbols.any)))
-t.defineStatic('unknown', () => t(t.specialShape(t.Symbols.unknown, [])))
+t.defineStatic('unknown', () => t(t.specialShape(t.Symbols.unknown)))
 t.defineStatic('string', () => t(String))
 t.defineStatic('number', () => t(Number))
 t.defineStatic('bigint', () => t(BigInt))
@@ -251,7 +251,7 @@ export type PrimitiveConsume<T> = true extends (
 ) : true extends IsEqual<T, void> ? (
   t.Schema<t.SpecialShape<typeof t.Symbols.void, undefined>, void>
 ) : true extends IsEqual<T, unknown> ? (
-  t.Schema<t.SpecialShape<typeof t.Symbols.unknown, []>, unknown>
+  t.Schema<t.SpecialShape<typeof t.Symbols.unknown, undefined>, unknown>
 ) : true extends IsEqual<T, never> ? (
   t.Schema<t.SpecialShape<typeof t.Symbols.never, []>, never>
 ) : never

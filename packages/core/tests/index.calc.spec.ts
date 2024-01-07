@@ -182,7 +182,7 @@ describe('intersect', () => {
     expectTypeOf(case3).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['intersection'], [
         t.Schema<NumberConstructor, number>,
-        t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['unknown'], []>, unknown>
+        t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['unknown'], undefined>, unknown>
       ]>,
       number
     >>()
