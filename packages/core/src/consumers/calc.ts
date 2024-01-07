@@ -71,8 +71,7 @@ declare module '../base' {
       Shapes extends readonly any[],
       T = Shapes[number]
     > = Shapes['length'] extends infer L ? L extends 0 ? (
-      // TODO replace to `Typp<[never]>`
-      t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>, never>
+      Typp<[never]>
     ) : L extends 1 ? (
       t.TyppWhenNotATypp<Shapes[0]>
     ) : [
@@ -83,8 +82,7 @@ declare module '../base' {
       infer SchemaT extends t.Schema<any, any>[]
     ] ? (
       [Schemas] extends [never]
-        // TODO replace to `Typp<[never]>`
-        ? t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>, never>
+        ? Typp<[never]>
         : t.Schema<
           t.SpecialShape<t.SpecialShapeTypeMapping['union'], SchemaT>,
           t.Infers<Schemas>
@@ -101,8 +99,7 @@ declare module '../base' {
       Stack.Shift<Shapes> extends [infer Head, infer Tail] ? (
         [Head] extends [never] ? (
           // never & xx => never
-          // TODO replace to `Typp<[never]>`
-          t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>, never>
+          Typp<[never]>
         ) : true extends IsEqual<Head, any> ? (
           // any & xx => any
           // TODO any & never => never
@@ -111,8 +108,7 @@ declare module '../base' {
             infer Schemas extends readonly t.Schema<any, any>[]
           ) ? (
             [Schemas] extends [never]
-              // TODO replace to `Typp<[never]>`
-              ? t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>, never>
+              ? Typp<[never]>
               : t.Schema<
                 t.SpecialShape<t.SpecialShapeTypeMapping['intersection'], Schemas>,
                 T2I<t.InferT<Schemas>>
