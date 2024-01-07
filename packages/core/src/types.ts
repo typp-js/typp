@@ -6,8 +6,10 @@ export type NoIndexSignature<T> = {
 
 export type Values<T> = T[keyof T]
 
-export type IsTrue<A extends boolean> =
-  [A] extends [true] ? [true] extends [A] ? true : false : false
+export type IsWhat<A, B> =
+  [A] extends [B] ? [B] extends [A] ? true : false : false
+
+export type IsTrue<A extends boolean> = IsWhat<A, true>
 
 export type IsEqual<A, B> =
   (<T>() => T extends A ? 1 : 2) extends
