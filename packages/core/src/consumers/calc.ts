@@ -125,7 +125,9 @@ declare module '../base' {
 t.defineSpecialShapeType('union', unionSymbol)
 t.defineSpecialShapeType('intersection', intersectionSymbol)
 t.defineStatic('union', <const T extends readonly any[]>(types: T) => {
-  if (types.length === 0) return t(t.specialShape(t.specialShapeTypeMapping.never)) as unknown as t.Union<T>
+  if (types.length === 0) return t(
+    t.specialShape(t.specialShapeTypeMapping.never)
+  ) as unknown as t.Union<T>
   if (types.length === 1) return t(
     types[0]
   ) as unknown as t.Union<T>
