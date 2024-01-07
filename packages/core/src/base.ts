@@ -84,7 +84,7 @@ export namespace t {
   }
   export type ShapeMapping<
     T, Rest extends any[],
-    Entries extends t.ShapeEntries<T, Rest> = t.ShapeEntries<T, Rest>
+    Entries extends ShapeEntries<T, Rest> = ShapeEntries<T, Rest>
   > = ValueOf<{
     [ K in keyof Entries
         as true extends (
