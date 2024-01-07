@@ -29,7 +29,7 @@ declare module '../base' {
     }
     export interface SpecialShapeSchemaMapping {
       [t.specialShapeTypeMapping
-        .any]: []
+        .any]: undefined
       [t.specialShapeTypeMapping
         .void]: []
       [t.specialShapeTypeMapping
@@ -105,7 +105,7 @@ declare module '../base' {
 
 t.defineConsumer((...args) => {
   if (args.length === 0) {
-    return [t.specialShape(t.Symbols.any, [])]
+    return [t.specialShape(t.Symbols.any)]
   }
   const [first, ...rest] = args
   if ([
@@ -122,7 +122,7 @@ t.defineConsumer((...args) => {
     return [first] as const
   }
 })
-t.defineStatic('any', () => t(t.specialShape(t.Symbols.any, [])))
+t.defineStatic('any', () => t(t.specialShape(t.Symbols.any)))
 t.defineStatic('unknown', () => t(t.specialShape(t.Symbols.unknown, [])))
 t.defineStatic('string', () => t(String))
 t.defineStatic('number', () => t(Number))
