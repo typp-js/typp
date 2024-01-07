@@ -1,14 +1,19 @@
 import type { Typp } from '../base'
 import { t } from '../base'
-import type { IsEqual, IsNotEqual, Stack } from '../types'
+import type { IsEqual, IsNotEqual, Stack, Values } from '../types'
 
 const recordSymbol = Symbol('record')
 declare module '../base' {
   namespace t {
+    // TODO unit test
+    export interface ObjectExcludeShapes {
+    }
     export interface ShapeEntries<T, Rest extends any[]> {
       110000: [true extends (
         // exclude specialShape
         & (T extends { type: t.SpecialShapeTypes } ? false : true)
+        // exclude ObjectExcludeShapes
+        & (T extends Values<ObjectExcludeShapes> ? false : true)
         // exclude array
         & IsNotEqual<T, ArrayConstructor>
         // exclude empty array or tuple
