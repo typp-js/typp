@@ -108,7 +108,7 @@ export namespace t {
   export type SpecialShapeTypes = SpecialShapeTypeMapping[keyof SpecialShapeTypeMapping]
   export interface SpecialShape<
     T extends SpecialShapeTypes,
-    S extends SpecialShapeSchemaMapping[T]
+    S extends SpecialShapeSchemaMapping[T] = SpecialShapeSchemaMapping[T]
   > {
     type: T
     schemas: S
