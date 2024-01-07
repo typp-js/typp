@@ -49,6 +49,7 @@ export namespace t {
   export type Consumer = (...args: any[]) => Nonexistentable<[shape: any] | Schema<any, any>>
   export function defineConsumer(consumer: Consumer) {
     consumers.add(consumer)
+    return () => consumers.delete(consumer)
   }
 }
 // Fields Register
