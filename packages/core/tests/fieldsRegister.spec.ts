@@ -54,9 +54,11 @@ test('base - with getter', () => {
   expect(t().__test_getter).toBeUndefined()
 })
 test('base - with `IsWhatShape`', () => {
+  // TODO refactor to describe
   const disposeConsumer = t.defineConsumer(first => {
     if (first[onlySymbol]) return [first]
   })
+
   const isOnlyShape = (shape => true) as t.IsWhatShape<{ [onlySymbol]: true }>
   const disposeFieldsRegister = t.defineFields(isOnlyShape, shape => {
     expectTypeOf(shape).toEqualTypeOf<{ [onlySymbol]: true }>()
