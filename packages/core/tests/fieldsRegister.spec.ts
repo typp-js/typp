@@ -2,12 +2,30 @@ import { expect, expectTypeOf, test, vi } from 'vitest'
 
 // no default consumers, so we should import from the `base` path module
 import { t } from '../src/base'
+import type { IsNotEqual } from '../src/types'
 
+const onlySymbol = Symbol('only')
 declare module '../src/base' {
   namespace t {
     interface SchemaFieldsAll<Shape, T> {
       __test: number
       readonly __test_getter: string
+    }
+    interface SchemaFieldsEntries<Shape = any, T = any> {
+      0: [(
+        & ([Shape] extends [{ [onlySymbol]: true }] ? true : false)
+        & IsNotEqual<Shape, any>
+      ), {
+        __test_forSpecialShape: number
+      }]
+    }
+  }
+  namespace t {
+    export interface ObjectExcludeShapes {
+      [onlySymbol]: { [onlySymbol]: true }
+    }
+    export interface ShapeEntries<T, Rest extends any[]> {
+      0: [T extends { [onlySymbol]: true } ? true : false, t.Schema<T, 'This is a unit test special shape type'>]
     }
   }
 }
@@ -34,4 +52,22 @@ test('base - with getter', () => {
   expect(skm.__test_getter).toBe('2')
   dispose()
   expect(t().__test_getter).toBeUndefined()
+})
+test('base - with `IsWhatShape`', () => {
+  const disposeConsumer = t.defineConsumer(first => {
+    if (first[onlySymbol]) return [first]
+  })
+  const isOnlyShape = (shape => true) as t.IsWhatShape<{ [onlySymbol]: true }>
+  const disposeFieldsRegister = t.defineFields(isOnlyShape, shape => {
+    expectTypeOf(shape).toEqualTypeOf<{ [onlySymbol]: true }>()
+    return {
+      __test_forSpecialShape: 1
+    }
+  })
+  const skm = t({ [onlySymbol]: true })
+  expectTypeOf(skm.__test_forSpecialShape).toEqualTypeOf<number>()
+  expect(skm.__test_forSpecialShape).toBe(1)
+  disposeFieldsRegister()
+  expect(t({ [onlySymbol]: true }).__test_forSpecialShape).toBeUndefined()
+  disposeConsumer()
 })
