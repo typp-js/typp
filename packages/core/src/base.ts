@@ -80,7 +80,7 @@ export namespace t {
 export namespace t {
   export interface ShapeEntries<T, Rest extends any[]> {
     0: [t.IsSchema<T>, T]
-    [key: number & {}]: [boolean, any]
+    [key: number & {}]: [boolean, unknown]
   }
   export type ShapeMapping<
     T, Rest extends any[],
