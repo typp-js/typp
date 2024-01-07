@@ -31,7 +31,7 @@ declare module '../base' {
       [t.specialShapeTypeMapping
         .any]: undefined
       [t.specialShapeTypeMapping
-        .void]: []
+        .void]: undefined
       [t.specialShapeTypeMapping
         .unknown]: []
       [t.specialShapeTypeMapping
@@ -134,7 +134,7 @@ t.defineStatic('regexp', () => t(RegExp))
 t.defineStatic('undefined', () => t(undefined))
 t.defineStatic('null', () => t(null))
 t.defineStatic('never', () =>t(t.specialShape(t.Symbols.never, [])))
-t.defineStatic('void', () => t(t.specialShape(t.Symbols.void, [])))
+t.defineStatic('void', () => t(t.specialShape(t.Symbols.void)))
 
 function literal<
   T extends string | number | bigint | symbol | null | boolean | undefined
@@ -249,7 +249,7 @@ export type PrimitiveConsume<T> = true extends (
 ) ? (
   t.Schema<T, T>
 ) : true extends IsEqual<T, void> ? (
-  t.Schema<t.SpecialShape<typeof t.Symbols.void, []>, void>
+  t.Schema<t.SpecialShape<typeof t.Symbols.void, undefined>, void>
 ) : true extends IsEqual<T, unknown> ? (
   t.Schema<t.SpecialShape<typeof t.Symbols.unknown, []>, unknown>
 ) : true extends IsEqual<T, never> ? (
