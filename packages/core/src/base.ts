@@ -58,7 +58,7 @@ export namespace t {
   export type IsWhatShape<S = any> = (shape: any) => shape is S
   export type FieldsInjector<S = any> = <Shape extends S>(shape: Shape) => Nonexistentable<SchemaFieldsMapping<Shape>>
   export type AllFieldsInjector = <SK extends Schema<any, any>>(schema: SK) => Nonexistentable<
-    SchemaFieldsAll<SK['shape'], Infer<SK>>
+    Partial<SchemaFieldsAll<SK['shape'], Infer<SK>>>
   >
   export function defineFields(inj: AllFieldsInjector): () => void
   export function defineFields<S>(is: IsWhatShape<S>, inj: FieldsInjector<S>): () => void
