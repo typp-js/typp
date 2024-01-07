@@ -9,3 +9,16 @@ test('base', () => {
   dispose()
   expect(t().shape).toEqual(undefined)
 })
+
+test('return `Schema` shelf when argument is `Schema`', () => {
+  const dispose = t.defineConsumer((...args) => {
+    if (args.length === 0) return [1]
+  })
+  expect(t().shape).toEqual(1)
+  expect(t(1).shape).toEqual(undefined)
+
+  const skmWithSymbol = Object.assign(t(), {
+    __test__: Symbol('test')
+  })
+  expect(t(skmWithSymbol)).toEqual(skmWithSymbol)
+})
