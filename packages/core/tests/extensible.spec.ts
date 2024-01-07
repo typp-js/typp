@@ -22,10 +22,11 @@ describe('defineStatic', () => {
     dispose()
   })
   test('throw Error when static field is existed', () => {
-    t.defineStatic('____bar', 1)
+    const dispose = t.defineStatic('____bar', 1)
     expect(() => {
       t.defineStatic('____bar', 2)
     }).toThrow()
+    dispose()
   })
   test('when override is true, will override the existed static field and not throw Error', () => {
     t.defineStatic('____bar', 1)
