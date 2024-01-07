@@ -4,6 +4,8 @@ import { expect, test } from 'vitest'
 import { t } from '../src/base'
 
 test('base', () => {
-  t.defineConsumer(() => [1])
+  const dispose = t.defineConsumer(() => [1])
   expect(t().shape).toEqual(1)
+  dispose()
+  expect(t().shape).toEqual(undefined)
 })
