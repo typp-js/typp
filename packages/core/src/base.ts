@@ -87,9 +87,7 @@ export namespace t {
     Entries extends ShapeEntries<T, Rest> = ShapeEntries<T, Rest>
   > = ValueOf<{
     [ K in keyof Entries
-        as true extends (
-          IsTrue<Entries[K & number][0]>
-        ) ? K : never
+        as [true] extends [IsTrue<Entries[K & number][0]>] ? K : never
     ]: Entries[K & number][1]
   }>
   export interface DynamicSpecialShapeTypeMapping {
