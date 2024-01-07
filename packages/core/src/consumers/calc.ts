@@ -10,21 +10,23 @@ declare module '../base' {
     // TODO exclude
     // TODO extract
     export interface ShapeEntries<T, Rest extends any[]> {
-      300000: [(
+      300000: [
         [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
           IsEqual<T['type'], t.SpecialShapeTypeMapping['union']>
-          ) : false
-        ), [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
-        // TODO no `t.InferT`?
-        t.Union<t.InferT<T['schemas']>>
-        ) : never]
-      300001: [(
+        ) : false,
+        [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
+          // TODO no `t.InferT`?
+          t.Union<t.InferT<T['schemas']>>
+        ) : never
+      ]
+      300001: [
         [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
           IsEqual<T['type'], t.SpecialShapeTypeMapping['intersection']>
-          ) : false
-        ), [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
-        Intersect<T['schemas']>
-        ) : never]
+        ) : false,
+        [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
+          Intersect<T['schemas']>
+        ) : never
+      ]
     }
     export interface DynamicSpecialShapeTypeMapping {
       readonly union: typeof unionSymbol
