@@ -71,7 +71,7 @@ declare module '../base' {
       Shapes extends readonly any[],
       T = Shapes[number]
     > = Shapes['length'] extends 0 ? (
-      // Typp<[never]>
+      // TODO replace to `Typp<[never]>`
       t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>, never>
     ) : Shapes['length'] extends 1 ? (
       t.TyppWhenNotATypp<Shapes[0]>
@@ -102,6 +102,7 @@ declare module '../base' {
       ] ? (
         [Head] extends [never] ? (
           // never & xx => never
+          // TODO replace to `Typp<[never]>`
           t.Schema<typeof t.Symbols.never, never>
         ) : true extends IsEqual<Head, any> ? (
           // any & xx => any
