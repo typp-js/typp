@@ -103,7 +103,7 @@ declare module '../base' {
         [Head] extends [never] ? (
           // never & xx => never
           // TODO replace to `Typp<[never]>`
-          t.Schema<typeof t.Symbols.never, never>
+          t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>, never>
         ) : true extends IsEqual<Head, any> ? (
           // any & xx => any
           // TODO any & never => never
@@ -112,7 +112,8 @@ declare module '../base' {
             infer Schemas extends readonly t.Schema<any, any>[]
           ) ? (
             [Schemas] extends [never]
-              ? t.Schema<typeof t.Symbols.never, never>
+              // TODO replace to `Typp<[never]>`
+              ? t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>, never>
               : t.Schema<
                 t.SpecialShape<t.SpecialShapeTypeMapping['intersection'], Schemas>,
                 T2I<t.InferT<Schemas>>
