@@ -47,8 +47,8 @@ declare module '../base' {
         & (
           | IsEqual<U, {}>
           | IsEqual<U, unknown>
-          | IsEqual<U, t.Schema<{}, {}>>
-          | IsEqual<U, t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['unknown'], []>, unknown>>
+          | IsEqual<U, Typp<[{}]>>
+          | IsEqual<U, Typp<[unknown]>>
         )
       ) ? t.Schema<StringConstructor, string & {}>
         : (
