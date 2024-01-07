@@ -1,6 +1,6 @@
 import type { Typp } from '../base'
 import { t } from '../base'
-import type { IsEqual, IsNotEqual, NoIndexSignature, ValueOf, Values } from '../types'
+import type { IsEqual, IsNotEqual, IsWhat, NoIndexSignature, ValueOf, Values } from '../types'
 
 const symbols = Object.freeze({
   any: Symbol('any'),
@@ -43,11 +43,11 @@ declare module '../base' {
           | string | number | bigint | boolean | symbol
           | Values<NoIndexSignature<ConstructorEntries>>[0]
         )] ? true : false)
-        | IsEqual<T, null>
-        | IsEqual<T, undefined>
-        | IsEqual<T, void>
-        | IsEqual<T, unknown>
-        | IsEqual<T, never>
+        | IsWhat<T, null>
+        | IsWhat<T, undefined>
+        | IsWhat<T, void>
+        | IsWhat<T, unknown>
+        | IsWhat<T, never>
       ) ? true : false, PrimitiveConsume<T>]
       500001: [(
         [T] extends [t.SpecialShape<t.SpecialShapeTypes, any>] ? (
