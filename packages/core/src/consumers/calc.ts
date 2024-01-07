@@ -70,10 +70,10 @@ declare module '../base' {
     export type Union<
       Shapes extends readonly any[],
       T = Shapes[number]
-    > = Shapes['length'] extends 0 ? (
+    > = Shapes['length'] extends infer L ? L extends 0 ? (
       // TODO replace to `Typp<[never]>`
       t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>, never>
-    ) : Shapes['length'] extends 1 ? (
+    ) : L extends 1 ? (
       t.TyppWhenNotATypp<Shapes[0]>
     ) : [
       t.Typps<T>,
@@ -89,18 +89,16 @@ declare module '../base' {
           t.SpecialShape<t.SpecialShapeTypeMapping['union'], SchemaT>,
           t.Infers<Schemas>
         >
-    ) : never
+    ) : never : never
     export function union<const T extends readonly any[]>(t: T): Union<T>
     export { union as or }
 
     export type Intersect<
       Shapes extends readonly [any, ...any[]]
-    > = Shapes['length'] extends 1
-      ? t.TyppWhenNotATypp<Shapes[0]>
-      : Stack.Shift<Shapes> extends [
-        infer Head,
-        infer Tail
-      ] ? (
+    > = Shapes['length'] extends infer L ? L extends 1 ? (
+      t.TyppWhenNotATypp<Shapes[0]>
+    ) : (
+      Stack.Shift<Shapes> extends [infer Head, infer Tail] ? (
         [Head] extends [never] ? (
           // never & xx => never
           // TODO replace to `Typp<[never]>`
@@ -121,6 +119,7 @@ declare module '../base' {
               >
           ) : never
       ) : never
+    ) : never
     export function intersect<const T extends readonly [any, ...any[]]>(i: T): Intersect<T>
     export { intersect as and, intersect as intersection }
   }
