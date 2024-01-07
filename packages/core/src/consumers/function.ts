@@ -271,7 +271,7 @@ declare module '../base' {
       // TODO getter parameters
       // TODO getter returnType
     }
-    export interface SchemaFieldsEntries<Shape = any, T = any, C = any> {10000: [
+    export interface SchemaFieldsEntries<Shape = any, T = any> {10000: [
       (
         & ([Shape] extends [t.SpecialShape<t.SpecialShapeTypeMapping['function'], any>] ? true : false)
         & IsNotEqual<Shape, any>
