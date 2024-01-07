@@ -9,7 +9,7 @@ describe('union', () => {
     expect(shape0.type).toBe(t.specialShapeTypeMapping.never)
     expect(shape0.schemas).toEqual([])
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
-      t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>,
+      t.SpecialShape<t.SpecialShapeTypeMapping['never']>,
       never
     >>()
     expectTypeOf<t.Infer<typeof case0>>()
@@ -182,7 +182,7 @@ describe('intersect', () => {
     expectTypeOf(case3).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['intersection'], [
         t.Schema<NumberConstructor, number>,
-        t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['unknown'], undefined>, unknown>
+        t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['unknown']>, unknown>
       ]>,
       number
     >>()
@@ -197,7 +197,7 @@ describe('intersect', () => {
       t.SpecialShape<
         t.SpecialShapeTypeMapping['intersection'], [
           t.Schema<NumberConstructor, number>,
-          t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>, never>
+          t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never']>, never>
         ]
       >,
       never
