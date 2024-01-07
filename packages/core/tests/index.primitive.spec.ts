@@ -213,7 +213,7 @@ describe('literal', () => {
     expect(case2.shape.type).toBe(t.Symbols.never)
     expect(case2.shape.schemas).toEqual([])
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
-      t.SpecialShape<typeof t.Symbols.never, []>,
+      t.SpecialShape<typeof t.Symbols.never, undefined>,
       never
     >>()
     expectTypeOf<t.Infer<typeof case2>>()

@@ -72,7 +72,7 @@ declare module '../base' {
       T = Shapes[number]
     > = Shapes['length'] extends 0 ? (
       // Typp<[never]>
-      t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], []>, never>
+      t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>, never>
     ) : Shapes['length'] extends 1 ? (
       t.TyppWhenNotATypp<Shapes[0]>
     ) : [
@@ -125,10 +125,7 @@ declare module '../base' {
 t.defineSpecialShapeType('union', unionSymbol)
 t.defineSpecialShapeType('intersection', intersectionSymbol)
 t.defineStatic('union', <const T extends readonly any[]>(types: T) => {
-  if (types.length === 0) return t(t.specialShape(
-    t.specialShapeTypeMapping.never,
-    []
-  )) as unknown as t.Union<T>
+  if (types.length === 0) return t(t.specialShape(t.specialShapeTypeMapping.never)) as unknown as t.Union<T>
   if (types.length === 1) return t(
     types[0]
   ) as unknown as t.Union<T>

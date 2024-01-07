@@ -35,7 +35,7 @@ declare module '../base' {
       [t.specialShapeTypeMapping
         .unknown]: undefined
       [t.specialShapeTypeMapping
-        .never]: []
+        .never]: undefined
     }
     export interface ShapeEntries<T, Rest extends any[]> {
       500000: [true extends (
@@ -133,7 +133,7 @@ t.defineStatic('date', () => t(Date))
 t.defineStatic('regexp', () => t(RegExp))
 t.defineStatic('undefined', () => t(undefined))
 t.defineStatic('null', () => t(null))
-t.defineStatic('never', () =>t(t.specialShape(t.Symbols.never, [])))
+t.defineStatic('never', () =>t(t.specialShape(t.Symbols.never)))
 t.defineStatic('void', () => t(t.specialShape(t.Symbols.void)))
 
 function literal<
@@ -253,5 +253,5 @@ export type PrimitiveConsume<T> = true extends (
 ) : true extends IsEqual<T, unknown> ? (
   t.Schema<t.SpecialShape<typeof t.Symbols.unknown, undefined>, unknown>
 ) : true extends IsEqual<T, never> ? (
-  t.Schema<t.SpecialShape<typeof t.Symbols.never, []>, never>
+  t.Schema<t.SpecialShape<typeof t.Symbols.never, undefined>, never>
 ) : never
