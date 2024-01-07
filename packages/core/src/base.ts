@@ -56,7 +56,7 @@ export namespace t {
 const registers = new Set<readonly [t.IsWhatShape | (() => boolean), Function]>()
 export namespace t {
   export type IsWhatShape<S = any> = (shape: any) => shape is S
-  export type FieldsInjector<S = any> = <Shape extends S>(shape: Shape) => Nonexistentable<SchemaFieldsMapping<Shape>>
+  export type FieldsInjector<S = any> = (shape: S) => Nonexistentable<SchemaFieldsMapping<S>>
   export type AllFieldsInjector = <SK extends Schema<any, any>>(schema: SK) => Nonexistentable<
     Partial<SchemaFieldsAll<SK['shape'], Infer<SK>>>
   >
