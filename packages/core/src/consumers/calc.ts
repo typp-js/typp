@@ -83,7 +83,8 @@ declare module '../base' {
       infer SchemaT extends t.Schema<any, any>[]
     ] ? (
       [Schemas] extends [never]
-        ? t.Schema<typeof t.Symbols.never, never>
+        // TODO replace to `Typp<[never]>`
+        ? t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>, never>
         : t.Schema<
           t.SpecialShape<t.SpecialShapeTypeMapping['union'], SchemaT>,
           t.Infers<Schemas>
