@@ -249,9 +249,9 @@ export type PrimitiveConsume<T> = true extends (
 ) ? (
   t.Schema<T, T>
 ) : true extends IsEqual<T, void> ? (
-  t.Schema<t.SpecialShape<typeof t.Symbols.void, undefined>, void>
+  t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['void'], undefined>, void>
 ) : true extends IsEqual<T, unknown> ? (
-  t.Schema<t.SpecialShape<typeof t.Symbols.unknown, undefined>, unknown>
+  t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['unknown'], undefined>, unknown>
 ) : true extends IsEqual<T, never> ? (
-  t.Schema<t.SpecialShape<typeof t.Symbols.never, undefined>, never>
+  t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>, never>
 ) : never

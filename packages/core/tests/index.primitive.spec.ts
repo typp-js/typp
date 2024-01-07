@@ -193,7 +193,7 @@ describe('literal', () => {
     expect(case0.shape.type).toBe(t.Symbols.void)
     expect(case0.shape.schemas).toEqual([])
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
-      t.SpecialShape<typeof t.Symbols.void, undefined>,
+      t.SpecialShape<t.SpecialShapeTypeMapping['void'], undefined>,
       void
     >>()
     expectTypeOf<t.Infer<typeof case0>>()
@@ -203,7 +203,7 @@ describe('literal', () => {
     expect(case1.shape.type).toBe(t.Symbols.unknown)
     expect(case1.shape.schemas).toEqual([])
     expectTypeOf(case1).toEqualTypeOf<t.Schema<
-      t.SpecialShape<typeof t.Symbols.unknown, undefined>,
+      t.SpecialShape<t.SpecialShapeTypeMapping['unknown'], undefined>,
       unknown
     >>()
     expectTypeOf<t.Infer<typeof case1>>()
@@ -213,7 +213,7 @@ describe('literal', () => {
     expect(case2.shape.type).toBe(t.Symbols.never)
     expect(case2.shape.schemas).toEqual([])
     expectTypeOf(case2).toEqualTypeOf<t.Schema<
-      t.SpecialShape<typeof t.Symbols.never, undefined>,
+      t.SpecialShape<t.SpecialShapeTypeMapping['never'], undefined>,
       never
     >>()
     expectTypeOf<t.Infer<typeof case2>>()
