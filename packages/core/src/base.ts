@@ -11,6 +11,20 @@ export type Typp<T extends readonly any[]> = true extends (
     : never
 )
 
+function completeAssign<T extends object, U extends object>(target: T, source: U): T & U {
+  const descriptors = Object.getOwnPropertyDescriptors(source) as Record<PropertyKey, PropertyDescriptor>
+  Object
+    .getOwnPropertySymbols(source)
+    .forEach(sym => {
+      const descriptor = Object.getOwnPropertyDescriptor(source, sym)
+      if (descriptor?.enumerable) {
+        descriptors[sym] = descriptor
+      }
+    })
+  Object.defineProperties(target, descriptors)
+  return target as T & U
+}
+
 export function t<const T extends any[]>(...types: T): Typp<T> {
   let shape: any
   for (const consumer of consumers) {
@@ -24,18 +38,16 @@ export function t<const T extends any[]>(...types: T): Typp<T> {
     }
   }
 
-  const fields: any = {}
+  let skm = Object.assign({ [__typp__]: true }, { shape })
   for (const [is, inject] of registers) {
-    if (is(shape)) {
-      Object.assign(fields, inject(shape))
-    }
-  }
+    if (!is(shape)) continue
 
-  return Object.assign(
-    { [__typp__]: true },
-    { shape },
-    fields
-  ) as Typp<T>
+    // TODO [[Getter]], [[Setter]], Function, Proxy, Class
+    //      * [[Getter]]: `t.defineFields(() => ({ get foo() {} }))`
+    //      * [[Setter]]: `t.defineFields(() => ({ set foo(value) {} }))`
+    skm = completeAssign(skm, inject(shape))
+  }
+  return skm as Typp<T>
 }
 
 interface SchemaBase<Shape, T> {
