@@ -58,7 +58,7 @@ test('skip when return falsely', () => {
   expectTypeOf(skm.__test).toEqualTypeOf<number>()
   expect(skm.__test).toBe(1)
   disposes.forEach(dispose => dispose())
-  expect(t().__test).toBeUndefined()
+  expect(t()).not.toHaveProperty('__test')
 })
 test('get schema', () => {
   const disposes = [
@@ -140,5 +140,5 @@ test('`IsWhatShape`', () => {
   expectTypeOf(skm.__test_forSpecialShape).toEqualTypeOf<number>()
   expect(skm.__test_forSpecialShape).toBe(1)
   disposeFieldsRegister()
-  expect(t({ [onlySymbol]: true }).__test_forSpecialShape).toBeUndefined()
+  expect(t({ [onlySymbol]: true })).not.toHaveProperty('__test_forSpecialShape')
 })
