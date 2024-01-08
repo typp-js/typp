@@ -31,7 +31,7 @@ declare module '../src/base' {
 }
 
 beforeAll(() => t.defineConsumer(first => {
-  if (first[onlySymbol]) return [first]
+  if (first?.[onlySymbol]) return [first]
 }))
 test('base', () => {
   const dispose = t.defineFields(() => ({ __test: 1 }))
