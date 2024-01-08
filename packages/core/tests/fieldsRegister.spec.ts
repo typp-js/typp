@@ -81,6 +81,22 @@ test('setter', () => {
   const badDispose = t.defineFields(() => ({ set __test_setter(v: number) {} }))
   badDispose()
 })
+test('`this`', () => {
+  const dispose = t.defineFields(() => ({
+    __test: 1,
+    get __test_getter() {
+      expectTypeOf(this.__test).toEqualTypeOf<number | undefined>()
+      return String(this.__test)
+    }
+  }))
+  const skm = t()
+  expect(skm.__test).toBe(1)
+  expect(skm.__test_getter).toBe('1')
+  skm.__test = 2
+  expect(skm.__test_getter).toBe('2')
+  dispose()
+  expect(t().__test).toBeUndefined()
+})
 test('`IsWhatShape`', () => {
   const isOnlyShape = (shape => true) as t.IsWhatShape<{ [onlySymbol]: true }>
   const disposeFieldsRegister = t.defineFields(isOnlyShape, shape => {
