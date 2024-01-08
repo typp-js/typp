@@ -10,6 +10,7 @@ declare module '../src/base' {
     interface SchemaFieldsAll<Shape, T> {
       __test: number
       readonly __test_getter: string
+      __test_setter: string
     }
     interface SchemaFieldsEntries<Shape = any, T = any> {
       0: [(
@@ -59,6 +60,26 @@ test('base - with getter', () => {
   expect(skm.__test_getter).toBe('2')
   dispose()
   expect(t()).not.toHaveProperty('__test_getter')
+})
+test('base - with setter', () => {
+  let testStr = '1'
+  const dispose = t.defineFields(() => ({
+    set __test_setter(v: string) {
+      testStr = v
+    }
+  }))
+  const skm = t()
+  expectTypeOf(skm.__test_setter).toEqualTypeOf<string>()
+  skm.__test_setter = '2'
+  expect(testStr).toBe('2')
+  dispose()
+  expect(t()).not.toHaveProperty('__test_setter')
+
+  // @ts-expect-error
+  skm.__test_setter = 1
+  // @ts-expect-error
+  const badDispose = t.defineFields(() => ({ set __test_setter(v: number) {} }))
+  badDispose()
 })
 test('base - with `IsWhatShape`', () => {
   const isOnlyShape = (shape => true) as t.IsWhatShape<{ [onlySymbol]: true }>
