@@ -86,6 +86,13 @@ test('throw error when access schema fields in fields register function', () => 
   dispose()
   expect(() => t()).not.toThrow()
 })
+test('throw error when override special fields', () => {
+  const dispose = t.defineFields(() => ({ meta: 1 }))
+  expect(() => t())
+    .toThrow('You can\'t override the property "meta", "shape" of schema')
+  dispose()
+  expect(() => t()).not.toThrow()
+})
 test('getter', () => {
   let testStr = '1'
   const dispose = t.defineFields(() => ({

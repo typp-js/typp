@@ -25,6 +25,10 @@ function completeAssign<T extends object, U extends object>(target: T, source: U
   return target as T & U
 }
 
+const CANT_OVERRIDE = Object.freeze([
+  'meta',
+  'shape'
+] as const)
 export function t<const T extends any[]>(...types: T): Typp<T> {
   let shape: any
   for (const consumer of consumers) {
@@ -60,6 +64,9 @@ export function t<const T extends any[]>(...types: T): Typp<T> {
     }
     const injectResult = inject(proxySkm)
     if (!injectResult) continue
+    if (CANT_OVERRIDE.some(key => Object.hasOwnProperty.call(injectResult, key))) {
+      throw new Error(`You can't override the property "${CANT_OVERRIDE.join('", "')}" of schema`)
+    }
     completeAssign(skm, injectResult)
   }
 
