@@ -77,6 +77,15 @@ test('get schema', () => {
   expect(t()).not.toHaveProperty('__test')
   expect(t()).not.toHaveProperty('__test_getter')
 })
+test('throw error when reveal schema fields in fields register function', () => {
+  const dispose = t.defineFields(skm => {
+    skm.__test
+  })
+  expect(() => t())
+    .toThrow('You can\'t access the property "__test" of schema, because the schema is not fully defined')
+  dispose()
+  expect(() => t()).not.toThrow()
+})
 test('getter', () => {
   let testStr = '1'
   const dispose = t.defineFields(() => ({

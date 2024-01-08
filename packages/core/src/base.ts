@@ -39,16 +39,31 @@ export function t<const T extends any[]>(...types: T): Typp<T> {
   }
 
   const skm = Object.assign({ [__typp__]: true }, { shape }) as t.Schema<any, any>
+  let skmIsFullyDefined = false
   for (const [is, inject] of registers) {
     if (!is(shape)) continue
 
     // TODO [[Getter]], [[Setter]], Function, Proxy, Class
     //      * [[Getter]]: `t.defineFields(() => ({ get foo() {} }))`
     //      * [[Setter]]: `t.defineFields(() => ({ set foo(value) {} }))`
-    const injectResult = inject(skm)
+    let proxySkm = skm
+    if (typeof Proxy !== 'undefined') {
+      proxySkm = new Proxy(skm, {
+        get(target, key, receiver) {
+          if (skmIsFullyDefined)
+            return Reflect.get(target, key, receiver)
+
+          if (key === 'shape') return shape
+          throw new Error(`You can't access the property "${String(key)}" of schema, because the schema is not fully defined`)
+        }
+      })
+    }
+    const injectResult = inject(proxySkm)
     if (!injectResult) continue
     completeAssign(skm, injectResult)
   }
+
+  skmIsFullyDefined = true
   return skm as Typp<T>
 }
 
