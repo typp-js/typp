@@ -46,6 +46,20 @@ test('base', () => {
   const badDispose = t.defineFields(() => ({ __test: '1' }))
   badDispose()
 })
+test('skip when return falsely', () => {
+  const disposes = [
+    // TODO the next lines can't test, it should be test it by better way
+    t.defineFields(() => false),
+    t.defineFields(() => null),
+    t.defineFields(() => undefined),
+    t.defineFields(() => ({ __test: 1 }))
+  ]
+  const skm = t()
+  expectTypeOf(skm.__test).toEqualTypeOf<number>()
+  expect(skm.__test).toBe(1)
+  disposes.forEach(dispose => dispose())
+  expect(t().__test).toBeUndefined()
+})
 test('getter', () => {
   let testStr = '1'
   const dispose = t.defineFields(() => ({
