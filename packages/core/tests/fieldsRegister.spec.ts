@@ -46,7 +46,7 @@ test('base', () => {
   const badDispose = t.defineFields(() => ({ __test: '1' }))
   badDispose()
 })
-test('base - with getter', () => {
+test('getter', () => {
   let testStr = '1'
   const dispose = t.defineFields(() => ({
     get __test_getter() {
@@ -61,7 +61,7 @@ test('base - with getter', () => {
   dispose()
   expect(t()).not.toHaveProperty('__test_getter')
 })
-test('base - with setter', () => {
+test('setter', () => {
   let testStr = '1'
   const dispose = t.defineFields(() => ({
     set __test_setter(v: string) {
@@ -81,7 +81,7 @@ test('base - with setter', () => {
   const badDispose = t.defineFields(() => ({ set __test_setter(v: number) {} }))
   badDispose()
 })
-test('base - with `IsWhatShape`', () => {
+test('`IsWhatShape`', () => {
   const isOnlyShape = (shape => true) as t.IsWhatShape<{ [onlySymbol]: true }>
   const disposeFieldsRegister = t.defineFields(isOnlyShape, shape => {
     expectTypeOf(shape).toEqualTypeOf<{ [onlySymbol]: true }>()
