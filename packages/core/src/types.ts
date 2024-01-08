@@ -1,3 +1,5 @@
+export type WithThis<T> = T & ThisType<T>
+
 export type Nonexistentable<T> = T | false | null | undefined | void
 
 export type NoIndexSignature<T> = {

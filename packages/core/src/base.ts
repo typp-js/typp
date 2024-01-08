@@ -1,4 +1,4 @@
-import type { IsEqual, IsNotEqual, IsTrue, Nonexistentable, Pretty, Stack, U2I, ValueOf } from './types'
+import type { IsEqual, IsNotEqual, IsTrue, Nonexistentable, Pretty, Stack, U2I, ValueOf, WithThis } from './types'
 
 const __typp__: unique symbol = Symbol('typp')
 
@@ -70,7 +70,7 @@ export namespace t {
   export type IsWhatShape<S = any> = (shape: any) => shape is S
   export type FieldsInjector<S = any> = (shape: S) => Nonexistentable<SchemaFieldsMapping<S>>
   export type AllFieldsInjector = <SK extends Schema<any, any>>(schema: SK) => Nonexistentable<
-    Partial<SchemaFieldsAll<SK['shape'], Infer<SK>>>
+    WithThis<Partial<SchemaFieldsAll<SK['shape'], Infer<SK>>>>
   >
   export function defineFields(inj: AllFieldsInjector): () => void
   export function defineFields<S>(is: IsWhatShape<S>, inj: FieldsInjector<S>): () => void
