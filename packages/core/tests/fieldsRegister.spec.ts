@@ -58,7 +58,7 @@ test('base - with getter', () => {
   testStr = '2'
   expect(skm.__test_getter).toBe('2')
   dispose()
-  expect(t().__test_getter).toBeUndefined()
+  expect(t()).not.toHaveProperty('__test_getter')
 })
 test('base - with `IsWhatShape`', () => {
   const isOnlyShape = (shape => true) as t.IsWhatShape<{ [onlySymbol]: true }>
