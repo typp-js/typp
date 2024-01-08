@@ -1,5 +1,4 @@
-import type { Typp } from '../base'
-import { t } from '../base'
+import type { t, Typp } from '../base'
 import type { IsEqual, IsNotEqual } from '../types'
 
 declare module '../base' {
@@ -40,16 +39,20 @@ declare module '../base' {
     export function tuple<const T extends readonly any[]>(...types: T): Typp<[T]>
   }
 }
-t.defineConsumer((first, ...rest) => {
-  if (first === Array) {
-    return [[t(...rest)]]
-  }
-  if (Array.isArray(first)) {
-    if (first.length === 0 && rest.length > 0) {
-      return [[t(...rest)]]
+
+export default function (ctx: typeof t) {
+  const typp = ctx
+  ctx.defineConsumer((first, ...rest) => {
+    if (first === Array) {
+      return [[typp(...rest)]]
     }
-    return [first.map(item => t(item))]
-  }
-})
-t.defineStatic('array', <const T extends readonly any[]>(...types: T) => t(Array, ...types))
-t.defineStatic('tuple', <const T extends readonly any[]>(...types: T) => t(types))
+    if (Array.isArray(first)) {
+      if (first.length === 0 && rest.length > 0) {
+        return [[typp(...rest)]]
+      }
+      return [first.map(item => typp(item))]
+    }
+  })
+  ctx.defineStatic('array', <const T extends readonly any[]>(...types: T) => typp(Array, ...types))
+  ctx.defineStatic('tuple', <const T extends readonly any[]>(...types: T) => typp(types))
+}
