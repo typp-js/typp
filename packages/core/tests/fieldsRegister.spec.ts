@@ -60,6 +60,23 @@ test('skip when return falsely', () => {
   disposes.forEach(dispose => dispose())
   expect(t().__test).toBeUndefined()
 })
+test('get schema', () => {
+  const disposes = [
+    t.defineFields(() => ({ __test: 1 })),
+    t.defineFields(skm => ({
+      get __test_getter() {
+        expectTypeOf(skm).toEqualTypeOf<t.Schema<any, any>>()
+        return String(skm.__test)
+      }
+    }))
+  ]
+  const skm = t()
+  expect(skm.__test).toBe(1)
+  expect(skm.__test_getter).toBe('1')
+  disposes.forEach(dispose => dispose())
+  expect(t()).not.toHaveProperty('__test')
+  expect(t()).not.toHaveProperty('__test_getter')
+})
 test('getter', () => {
   let testStr = '1'
   const dispose = t.defineFields(() => ({

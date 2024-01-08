@@ -71,7 +71,9 @@ const registers = new Set<readonly [t.IsWhatShape | (() => boolean), t.FieldsInj
 export namespace t {
   export type IsWhatShape<S = any> = (shape: any) => shape is S
   export type FieldsInjector<S = any> = (schema: Schema<S, any>) => Nonexistentable<SchemaFieldsMapping<S>>
-  export type AllFieldsInjector = <SK extends Schema<any, any>>(schema: SK) => Nonexistentable<
+  export type AllFieldsInjector<
+    SK extends Schema<any, any> = Schema<any, any>
+  > = (schema: SK) => Nonexistentable<
     WithThis<Partial<SchemaFieldsAll<SK['shape'], Infer<SK>>>>
   >
   export function defineFields(inj: AllFieldsInjector): () => void
