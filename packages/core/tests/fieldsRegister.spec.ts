@@ -40,6 +40,10 @@ test('base', () => {
   expect(skm.__test).toBe(1)
   dispose()
   expect(t().__test).toBeUndefined()
+
+  // @ts-expect-error
+  const badDispose = t.defineFields(() => ({ __test: '1' }))
+  badDispose()
 })
 test('base - with getter', () => {
   let testStr = '1'
