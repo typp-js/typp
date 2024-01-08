@@ -266,11 +266,11 @@ describe('object', () => {
         ],
         t.Schema<any, any>
       ]>, {
-        [k: string | number | symbol]: any
+        [k: PropertyKey]: any
       }>
     >()
     expectTypeOf<t.Infer<typeof case0>>()
-      .toEqualTypeOf<{ [x: string | number | symbol]: any }>()
+      .toEqualTypeOf<{ [x: PropertyKey]: any }>()
     const shape0 = case0.shape
     expect(shape0.type).toBe(t.specialShapeTypeMapping.record)
     expect(shape0.schemas).toEqual([
@@ -345,16 +345,16 @@ describe('object', () => {
           ],
           t.Schema<any, any>
         ]>, {
-          [x: string | number | symbol]: any
+          [x: PropertyKey]: any
         }>
       ]>, {
         [x: number]: {
-          [x: string | number | symbol]: any
+          [x: PropertyKey]: any
         }
       }>
     >()
     expectTypeOf<t.Infer<typeof case3>>()
-      .toEqualTypeOf<{ [x: number]: { [x: string | number | symbol]: any } }>()
+      .toEqualTypeOf<{ [x: number]: { [x: PropertyKey]: any } }>()
     const shape3 = case3.shape
     expect(shape3.type).toBe(t.specialShapeTypeMapping.record)
     expect(shape3.schemas).toEqual([[t(Number)], t(Object)])
@@ -369,7 +369,7 @@ describe('object', () => {
           ],
           t.Schema<any, any>
         ]>, {
-          [x: string | number | symbol]: any
+          [x: PropertyKey]: any
         }>
       ]
     >>()
@@ -463,16 +463,16 @@ describe('object', () => {
         ],
         t.Schema<any, any>
       ]>, {
-        [x: string | number | symbol]: any
+        [x: PropertyKey]: any
       }>
     }, {
       a: number
       b: {
-        [x: string | number | symbol]: any
+        [x: PropertyKey]: any
       }
     }>>()
     expectTypeOf<t.Infer<typeof case4>>()
-      .toEqualTypeOf<{ a: number; b: { [x: string | number | symbol]: any } }>()
+      .toEqualTypeOf<{ a: number; b: { [x: PropertyKey]: any } }>()
     const shape4 = case4.shape
     expect(shape4).toEqual({
       a: t(Number),
@@ -488,7 +488,7 @@ describe('object', () => {
         ],
         t.Schema<any, any>
       ]>, {
-        [x: string | number | symbol]: any
+        [x: PropertyKey]: any
       }>
     }>()
 

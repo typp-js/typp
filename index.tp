@@ -40,7 +40,7 @@ t({}, String, Number)
 t({}, String, {}, String, Number)
 // { [x: string]: { [x: string]: number } }
 t({}, {}, String, Number)
-// { [x: string | number | symbol]: { [x: string]: number } }
+// { [x: PropertyKey]: { [x: string]: number } }
 
 t({ name: String })
 // { name: string }

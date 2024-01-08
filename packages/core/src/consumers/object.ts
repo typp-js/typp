@@ -25,7 +25,7 @@ declare module '../base' {
           | IsEqual<T, ObjectConstructor>
           | IsEqual<T, {}>
           | (
-            & ([T] extends [Record<string | number | symbol, any>] ? true : false)
+            & ([T] extends [Record<PropertyKey, any>] ? true : false)
             & IsNotEqual<T, ObjectConstructor>
             & ([T] extends [Function] ? false : true)
             // TODO maybe remove next line
@@ -47,7 +47,7 @@ declare module '../base' {
     // TODO partial
 
     // TODO record
-    // record() => { [k: string | number | symbol]: any }
+    // record() => { [k: PropertyKey]: any }
     // record(String) => { [k: string]: any }
     // record(String, Number) => { [k: string]: number }
     export function record<const T extends readonly any[]>(...types: T): Typp<[ObjectConstructor, ...T]>
@@ -88,10 +88,10 @@ t.defineConsumer((first, ...rest) => {
     // t({})
     if (isEmptyObject) return [{}]
   } else {
-    // t({} | ObjectConstructor, [key: string | number | symbol, value: ...any[]])
+    // t({} | ObjectConstructor, [key: PropertyKey, value: ...any[]])
     if (isObjectConstructor || isEmptyObject) {
       const [key, ...valueRest] = rest
-      // TODO check key is `string | number | symbol`, if not, throw error
+      // TODO check key is `PropertyKey`, if not, throw error
       return [t.specialShape(recordSymbol, [
         [t(key)], t(...valueRest)
       ])]
@@ -124,21 +124,21 @@ export type ObjectConsume<
       ],
       t.Schema<any, any>
     ]>, {
-      [k: string | number | symbol]: any
+      [k: PropertyKey]: any
     }>
   // ObjectConsume<{ a: String, b: Number }, []>
-  ) : [T] extends [Record<string | number | symbol, any>] ? (
+  ) : [T] extends [Record<PropertyKey, any>] ? (
     [t.TyppI<T>] extends [infer R] ? t.Schema<R, t.InferI<R>> : never
   ) : never
 ) : (
-  // ObjectConsume<{} | ObjectConstructor, [key: string | number | symbol, value: ...any[]]>
+  // ObjectConsume<{} | ObjectConstructor, [key: PropertyKey, value: ...any[]]>
   Stack.Shift<Rest> extends [
     infer L, infer Rest extends any[]
   ] ? (
     Typp<[L]> extends (
       infer KeySchema extends t.Schema<any, any>
     ) ? t.Infer<KeySchema> extends (
-      infer Key extends string | number | symbol
+      infer Key extends PropertyKey
     ) ? t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
         [KeySchema], Typp<Rest>
       ]>, {
