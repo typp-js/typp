@@ -77,7 +77,7 @@ test('get schema', () => {
   expect(t()).not.toHaveProperty('__test')
   expect(t()).not.toHaveProperty('__test_getter')
 })
-test('throw error when reveal schema fields in fields register function', () => {
+test('throw error when access schema fields in fields register function', () => {
   const dispose = t.defineFields(skm => {
     skm.__test
   })
