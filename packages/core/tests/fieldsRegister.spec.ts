@@ -1,4 +1,4 @@
-import { expect, expectTypeOf, test } from 'vitest'
+import { beforeAll, expect, expectTypeOf, test } from 'vitest'
 
 // no default consumers, so we should import from the `base` path module
 import { t } from '../src/base'
@@ -30,6 +30,9 @@ declare module '../src/base' {
   }
 }
 
+beforeAll(() => t.defineConsumer(first => {
+  if (first[onlySymbol]) return [first]
+}))
 test('base', () => {
   const dispose = t.defineFields(() => ({ __test: 1 }))
   const skm = t()
@@ -54,11 +57,6 @@ test('base - with getter', () => {
   expect(t().__test_getter).toBeUndefined()
 })
 test('base - with `IsWhatShape`', () => {
-  // TODO refactor to describe
-  const disposeConsumer = t.defineConsumer(first => {
-    if (first[onlySymbol]) return [first]
-  })
-
   const isOnlyShape = (shape => true) as t.IsWhatShape<{ [onlySymbol]: true }>
   const disposeFieldsRegister = t.defineFields(isOnlyShape, shape => {
     expectTypeOf(shape).toEqualTypeOf<{ [onlySymbol]: true }>()
@@ -71,5 +69,4 @@ test('base - with `IsWhatShape`', () => {
   expect(skm.__test_forSpecialShape).toBe(1)
   disposeFieldsRegister()
   expect(t({ [onlySymbol]: true }).__test_forSpecialShape).toBeUndefined()
-  disposeConsumer()
 })
