@@ -38,14 +38,16 @@ export function t<const T extends any[]>(...types: T): Typp<T> {
     }
   }
 
-  let skm = Object.assign({ [__typp__]: true }, { shape })
+  const skm = Object.assign({ [__typp__]: true }, { shape }) as t.Schema<any, any>
   for (const [is, inject] of registers) {
     if (!is(shape)) continue
 
     // TODO [[Getter]], [[Setter]], Function, Proxy, Class
     //      * [[Getter]]: `t.defineFields(() => ({ get foo() {} }))`
     //      * [[Setter]]: `t.defineFields(() => ({ set foo(value) {} }))`
-    skm = completeAssign(skm, inject(shape))
+    const injectResult = inject(skm)
+    if (!injectResult) continue
+    completeAssign(skm, injectResult)
   }
   return skm as Typp<T>
 }
@@ -65,10 +67,10 @@ export namespace t {
   }
 }
 // Fields Register
-const registers = new Set<readonly [t.IsWhatShape | (() => boolean), Function]>()
+const registers = new Set<readonly [t.IsWhatShape | (() => boolean), t.FieldsInjector | t.AllFieldsInjector]>()
 export namespace t {
   export type IsWhatShape<S = any> = (shape: any) => shape is S
-  export type FieldsInjector<S = any> = (shape: S) => Nonexistentable<SchemaFieldsMapping<S>>
+  export type FieldsInjector<S = any> = (shape: Schema<S, any>) => Nonexistentable<SchemaFieldsMapping<S>>
   export type AllFieldsInjector = <SK extends Schema<any, any>>(schema: SK) => Nonexistentable<
     WithThis<Partial<SchemaFieldsAll<SK['shape'], Infer<SK>>>>
   >

@@ -99,8 +99,8 @@ test('`this`', () => {
 })
 test('`IsWhatShape`', () => {
   const isOnlyShape = (shape => true) as t.IsWhatShape<{ [onlySymbol]: true }>
-  const disposeFieldsRegister = t.defineFields(isOnlyShape, shape => {
-    expectTypeOf(shape).toEqualTypeOf<{ [onlySymbol]: true }>()
+  const disposeFieldsRegister = t.defineFields(isOnlyShape, skm => {
+    expectTypeOf(skm.shape).toEqualTypeOf<{ [onlySymbol]: true }>()
     return {
       __test_forSpecialShape: 1
     }
