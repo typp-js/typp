@@ -269,6 +269,10 @@ export namespace t {
       : never
   }
 }
+t.defineFields(() => ({
+  infer: t => t,
+  strictInfer: t => t
+}))
 // Extensible
 export namespace t {
   export const CANT_REFINE = Object.freeze([
