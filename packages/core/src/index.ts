@@ -1,10 +1,4 @@
-import './consumers/array'
-import './consumers/calc'
-import './consumers/function'
-import './consumers/map'
-import './consumers/object'
-import './consumers/primitive'
-import './consumers/set'
+import './consumers'
 
 export * from './base'
 export { t as typp } from './base'
