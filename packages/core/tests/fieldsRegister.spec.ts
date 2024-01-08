@@ -1,4 +1,4 @@
-import { expect, expectTypeOf, test, vi } from 'vitest'
+import { expect, expectTypeOf, test } from 'vitest'
 
 // no default consumers, so we should import from the `base` path module
 import { t } from '../src/base'
