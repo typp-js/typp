@@ -1,51 +1,50 @@
-import type { Typp } from '../base'
-import { t } from '../base'
+import type { t, Typp } from '../base'
 import type { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../types'
 
 const functionSymbol = Symbol('function')
 const genericSymbol = Symbol('generic')
 
-function _generic<
-  const L extends string,
-  E = any,
-  ES extends t.Schema<any, any> = t.TyppWhenNotATypp<E>,
-  D extends t.Infer<ES> = never
->(label: L, _extends?: E, _default?: D) {
-  return t.specialShape(genericSymbol, {
-    label,
-    extends: _extends ? t(_extends) : t(),
-    default: _default
-  }) as t.SpecialShape<
-    t.SpecialShapeTypeMapping['generic'],
-    t.Generic<L, ES, D>
-  >
+export default function (ctx: typeof t) {
+  const t = ctx
+  t.defineSpecialShapeType('function', functionSymbol)
+  t.defineSpecialShapeType('generic', genericSymbol)
+
+  t.defineConsumer((first, ...rest) => {
+    if (first !== Function) return
+
+    const [args = [], ...rt] = rest as [(readonly any[])?, ...any[]]
+    const argsSchemas = args.map(arg => t(arg))
+    let rtSchema: t.Schema<any, any>
+    if (rt.length === 0) {
+      rtSchema = t.void()
+    } else {
+      rtSchema = t(...rt)
+    }
+    return [t.specialShape(functionSymbol, [argsSchemas, rtSchema])]
+  })
+
+  t.defineStatic('fn', <
+    const Args extends readonly any[], RT extends readonly any[] = []
+  >(args: Args, ...rt: RT) => {
+    return t(Function, args, ...rt)
+  })
+  t.defineStatic.proxy('fn', 'function')
+  t.defineStatic('generic', function _generic<
+    const L extends string,
+    E = any,
+    ES extends t.Schema<any, any> = t.TyppWhenNotATypp<E>,
+    D extends t.Infer<ES> = never
+  >(label: L, _extends?: E, _default?: D) {
+    return t.specialShape(genericSymbol, {
+      label,
+      extends: _extends ? t(_extends) : t(),
+      default: _default
+    }) as t.SpecialShape<
+      t.SpecialShapeTypeMapping['generic'],
+      t.Generic<L, ES, D>
+    >
+  })
 }
-function _fn<
-  const Args extends readonly any[],
-  RT extends readonly any[] = []
->(args: Args, ...rt: RT): Typp<[FunctionConstructor, Args, ...RT]> {
-  return t(Function, args, ...rt)
-}
-t.defineSpecialShapeType('function', functionSymbol)
-t.defineSpecialShapeType('generic', genericSymbol)
-
-t.defineConsumer((first, ...rest) => {
-  if (first !== Function) return
-
-  const [args = [], ...rt] = rest as [(readonly any[])?, ...any[]]
-  const argsSchemas = args.map(arg => t(arg))
-  let rtSchema: t.Schema<any, any>
-  if (rt.length === 0) {
-    rtSchema = t.void()
-  } else {
-    rtSchema = t(...rt)
-  }
-  return [t.specialShape(functionSymbol, [argsSchemas, rtSchema])]
-})
-
-t.defineStatic('fn', _fn)
-t.defineStatic.proxy('fn', 'function')
-t.defineStatic('generic', _generic)
 
 declare module '../base' {
   namespace t {
@@ -234,7 +233,9 @@ declare module '../base' {
         t.GenericSchema<T['schemas']>
       ) : never]
     }
-    export const fn: typeof _fn
+    export function fn<
+      const Args extends readonly any[], RT extends readonly any[] = []
+    >(args: Args, ...rt: RT): Typp<[FunctionConstructor, Args, ...RT]>
     export { fn as function }
     export interface Generic<
       L extends string,
@@ -248,7 +249,15 @@ declare module '../base' {
     export type GenericSchema<G extends Generic<string>> = t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['generic'], G>, G
     >
-    export const generic: typeof _generic
+    export function generic<
+      const L extends string,
+      E = any,
+      ES extends t.Schema<any, any> = t.TyppWhenNotATypp<E>,
+      D extends t.Infer<ES> = never
+    >(label: L, _extends?: E, _default?: D): t.SpecialShape<
+      t.SpecialShapeTypeMapping['generic'],
+      t.Generic<L, ES, D>
+    >
 
     export interface DynamicSpecialShapeTypeMapping {
       readonly function: typeof functionSymbol
