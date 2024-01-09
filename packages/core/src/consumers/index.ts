@@ -1,5 +1,3 @@
-import './map'
-import './object'
 import './primitive'
 import './set'
 
@@ -12,3 +10,9 @@ export {
 export {
   default as function
 } from './function'
+export {
+  default as map
+} from './map'
+export {
+  default as object
+} from './object'
