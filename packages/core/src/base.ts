@@ -1,4 +1,5 @@
 import type { IsEqual, IsNotEqual, IsTrue, Nonexistentable, Pretty, Stack, U2I, ValueOf, WithThis } from './types'
+import { completeAssign } from './utils/completeAssign'
 
 const __typp__: unique symbol = Symbol('typp')
 
@@ -10,20 +11,6 @@ export type Typp<T extends readonly any[]> = true extends (
     ? t.ShapeMapping<L, Rest>
     : never
 )
-
-function completeAssign<T extends object, U extends object>(target: T, source: U): T & U {
-  const descriptors = Object.getOwnPropertyDescriptors(source) as Record<PropertyKey, PropertyDescriptor>
-  Object
-    .getOwnPropertySymbols(source)
-    .forEach(sym => {
-      const descriptor = Object.getOwnPropertyDescriptor(source, sym)
-      if (descriptor?.enumerable) {
-        descriptors[sym] = descriptor
-      }
-    })
-  Object.defineProperties(target, descriptors)
-  return target as T & U
-}
 
 const CANT_OVERRIDE = Object.freeze([
   'meta',
