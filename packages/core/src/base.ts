@@ -128,8 +128,11 @@ export namespace t {
   export function defineSpecialShapeType<
     T extends keyof DynamicSpecialShapeTypeMapping,
     S extends DynamicSpecialShapeTypeMapping[T]
-  >(type: T, symbol: S): void {
+  >(type: T, symbol: S) {
     specialShapeTypeMapping[type] = symbol
+    return () => {
+      delete specialShapeTypeMapping[type]
+    }
   }
   export interface SpecialShapeSchemaMapping {
     [k: SpecialShapeTypes]: any
