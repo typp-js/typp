@@ -1,10 +1,54 @@
-import type { Typp } from '../base'
-import { t } from '../base'
+import type { t, Typp } from '../base'
 import type { IsEqual, IsNotEqual, Stack, Values } from '../types'
 
 const recordSymbol = Symbol('record')
+
 declare module '../base' {
   namespace t {
+    export type ObjectConsume<
+      T,
+      Rest extends any[]
+    > = true extends (
+      | IsEqual<Rest, []>
+      | IsEqual<Rest, readonly []>
+    ) ? (
+      // ObjectConsume<{}, []>
+      true extends IsEqual<T, {}> ? (
+        t.Schema<{}, {}>
+      // ObjectConsume<ObjectConstructor, []>
+      ) : true extends IsEqual<T, ObjectConstructor> ? (
+        t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
+          [
+            t.Schema<StringConstructor, string>,
+            t.Schema<NumberConstructor, number>,
+            t.Schema<SymbolConstructor, symbol>,
+          ],
+          t.Schema<any, any>
+        ]>, {
+          [k: PropertyKey]: any
+        }>
+      // ObjectConsume<{ a: String, b: Number }, []>
+      ) : [T] extends [Record<PropertyKey, any>] ? (
+        [t.TyppI<T>] extends [infer R] ? t.Schema<R, t.InferI<R>> : never
+      ) : never
+    ) : (
+      // ObjectConsume<{} | ObjectConstructor, [key: PropertyKey, value: ...any[]]>
+      Stack.Shift<Rest> extends [
+        infer L, infer Rest extends any[]
+      ] ? (
+        Typp<[L]> extends (
+          infer KeySchema extends t.Schema<any, any>
+        ) ? t.Infer<KeySchema> extends (
+          infer Key extends PropertyKey
+        ) ? t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
+            [KeySchema], Typp<Rest>
+          ]>, {
+            [k in Key]: t.Infer<Typp<Rest>>
+          }>
+          : never
+          : never
+      ) : never
+    )
     // TODO unit test
     export interface ObjectExcludeShapes {
     }
@@ -66,85 +110,44 @@ declare module '../base' {
     // class(class This { label = String, children = array(This) }) => { label: string, children: This[] }
   }
 }
-t.defineSpecialShapeType('record', recordSymbol)
 
-t.defineConsumer((first, ...rest) => {
-  if (
-    (typeof first !== 'object' && first !== Object)
-    || first === null
-    // TODO extensible
-    || t.isSpecialShape(first)
-    || t.isSchema(first)
-    || Array.isArray(first)
-    // TODO Promise like
-  ) return
-  const isEmptyObject = Object.keys(first).length === 0
-  const isObjectConstructor = first === Object
-  if (rest.length === 0) {
-    // t(Object)
-    if (isObjectConstructor) return [t.specialShape(recordSymbol, [
-      [t(String), t(Number), t(Symbol)], t()
-    ])]
-    // t({})
-    if (isEmptyObject) return [{}]
-  } else {
-    // t({} | ObjectConstructor, [key: PropertyKey, value: ...any[]])
-    if (isObjectConstructor || isEmptyObject) {
-      const [key, ...valueRest] = rest
-      // TODO check key is `PropertyKey`, if not, throw error
-      return [t.specialShape(recordSymbol, [
-        [t(key)], t(...valueRest)
+export default function (ctx: typeof t) {
+  const t = ctx
+  t.defineSpecialShapeType('record', recordSymbol)
+
+  t.defineConsumer((first, ...rest) => {
+    if (
+      (typeof first !== 'object' && first !== Object)
+      || first === null
+      // TODO extensible
+      || t.isSpecialShape(first)
+      || t.isSchema(first)
+      || Array.isArray(first)
+      // TODO Promise like
+    ) return
+    const isEmptyObject = Object.keys(first).length === 0
+    const isObjectConstructor = first === Object
+    if (rest.length === 0) {
+      // t(Object)
+      if (isObjectConstructor) return [t.specialShape(recordSymbol, [
+        [t(String), t(Number), t(Symbol)], t()
       ])]
+      // t({})
+      if (isEmptyObject) return [{}]
+    } else {
+      // t({} | ObjectConstructor, [key: PropertyKey, value: ...any[]])
+      if (isObjectConstructor || isEmptyObject) {
+        const [key, ...valueRest] = rest
+        // TODO check key is `PropertyKey`, if not, throw error
+        return [t.specialShape(recordSymbol, [
+          [t(key)], t(...valueRest)
+        ])]
+      }
     }
-  }
-  // t({ a: String, b: Number })
-  if (!isEmptyObject) return [Object.entries(first).reduce((acc, [k, v]) => ({
-    ...acc,
-    [k]: t(v)
-  }), {})]
-})
-
-export type ObjectConsume<
-  T,
-  Rest extends any[]
-> = true extends (
-  | IsEqual<Rest, []>
-  | IsEqual<Rest, readonly []>
-) ? (
-  // ObjectConsume<{}, []>
-  true extends IsEqual<T, {}> ? (
-    t.Schema<{}, {}>
-  // ObjectConsume<ObjectConstructor, []>
-  ) : true extends IsEqual<T, ObjectConstructor> ? (
-    t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
-      [
-        t.Schema<StringConstructor, string>,
-        t.Schema<NumberConstructor, number>,
-        t.Schema<SymbolConstructor, symbol>,
-      ],
-      t.Schema<any, any>
-    ]>, {
-      [k: PropertyKey]: any
-    }>
-  // ObjectConsume<{ a: String, b: Number }, []>
-  ) : [T] extends [Record<PropertyKey, any>] ? (
-    [t.TyppI<T>] extends [infer R] ? t.Schema<R, t.InferI<R>> : never
-  ) : never
-) : (
-  // ObjectConsume<{} | ObjectConstructor, [key: PropertyKey, value: ...any[]]>
-  Stack.Shift<Rest> extends [
-    infer L, infer Rest extends any[]
-  ] ? (
-    Typp<[L]> extends (
-      infer KeySchema extends t.Schema<any, any>
-    ) ? t.Infer<KeySchema> extends (
-      infer Key extends PropertyKey
-    ) ? t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['record'], [
-        [KeySchema], Typp<Rest>
-      ]>, {
-        [k in Key]: t.Infer<Typp<Rest>>
-      }>
-      : never
-      : never
-  ) : never
-)
+    // t({ a: String, b: Number })
+    if (!isEmptyObject) return [Object.entries(first).reduce((acc, [k, v]) => ({
+      ...acc,
+      [k]: t(v)
+    }), {})]
+  })
+}
