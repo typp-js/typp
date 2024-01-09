@@ -85,7 +85,13 @@ export namespace t {
   > = (schema: SK) => Nonexistentable<
     WithThis<Partial<SchemaFieldsAll<SK['shape'], Infer<SK>>>>
   >
-  export function defineFields(inj: Partial<SchemaFieldsAll<any, any>>): () => void
+
+  export function defineFields(fields: (
+    & Partial<SchemaFieldsAll<any, any>>
+    // TODO support `this` type
+    //      https://github.com/microsoft/TypeScript/issues/56995
+    // & ThisType<Schema<any, any>>
+  )): () => void
   export function defineFields(inj: AllFieldsInjector): () => void
   export function defineFields<S>(is: IsWhatShape<S>, inj: FieldsInjector<S>): () => void
   export function defineFields<S>(...args: any[]) {
