@@ -1,5 +1,4 @@
-import type { Typp } from '../base'
-import { t } from '../base'
+import type { t, Typp } from '../base'
 import type { IsEqual, IsNotEqual, IsWhat, NoIndexSignature, ValueOf, Values } from '../types'
 
 const symbols = Object.freeze({
@@ -176,7 +175,30 @@ declare module '../base' {
     function _void(): Typp<[void]>
     export { _null as null, _void as void }
 
-    const _literal: typeof literal
+    interface Literal {
+      <
+        T extends string | number | bigint | symbol | null | boolean | undefined
+      >(value: T): Typp<[T]>
+      String: `__DO_NOT_USE_SAME_LITERAL_${
+        'STRING'
+      }__IF_YOU_WANT_TO_USE_IT__`
+      Number: `__DO_NOT_USE_SAME_LITERAL_${
+        'NUMBER'
+      }__IF_YOU_WANT_TO_USE_IT__`
+      BigInt: `__DO_NOT_USE_SAME_LITERAL_${
+        'BIGINT'
+      }__IF_YOU_WANT_TO_USE_IT__`
+      Null: `__DO_NOT_USE_SAME_LITERAL_${
+        'NULL'
+      }__IF_YOU_WANT_TO_USE_IT__`
+      Boolean: `__DO_NOT_USE_SAME_LITERAL_${
+        'BOOLEAN'
+      }__IF_YOU_WANT_TO_USE_IT__`
+      Undefined: `__DO_NOT_USE_SAME_LITERAL_${
+        'UNDEFINED'
+      }__IF_YOU_WANT_TO_USE_IT__`
+    }
+    const _literal: Literal
     export {
       _literal as const,
       _literal as literal
@@ -185,6 +207,31 @@ declare module '../base' {
 }
 
 export default function (ctx: typeof t) {
+  const t = ctx
+
+  function literal<
+    T extends string | number | bigint | symbol | null | boolean | undefined
+  >(value: T): Typp<[T]> {
+    return t(value)
+  }
+  literal.String = `__DO_NOT_USE_SAME_LITERAL_${
+    'STRING'
+  }__IF_YOU_WANT_TO_USE_IT__` as const
+  literal.Number = `__DO_NOT_USE_SAME_LITERAL_${
+    'NUMBER'
+  }__IF_YOU_WANT_TO_USE_IT__` as const
+  literal.BigInt = `__DO_NOT_USE_SAME_LITERAL_${
+    'BIGINT'
+  }__IF_YOU_WANT_TO_USE_IT__` as const
+  literal.Null = `__DO_NOT_USE_SAME_LITERAL_${
+    'NULL'
+  }__IF_YOU_WANT_TO_USE_IT__` as const
+  literal.Boolean = `__DO_NOT_USE_SAME_LITERAL_${
+    'BOOLEAN'
+  }__IF_YOU_WANT_TO_USE_IT__` as const
+  literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
+    'UNDEFINED'
+  }__IF_YOU_WANT_TO_USE_IT__` as const
   t.defineConsumer(first => {
     if ([
       'string',
@@ -233,30 +280,6 @@ export default function (ctx: typeof t) {
   t.defineStatic('null', () => t(null))
   t.defineStatic('never', () =>t(t.specialShape(t.Symbols.never)))
   t.defineStatic('void', () => t(t.specialShape(t.Symbols.void)))
+  t.defineStatic('literal', literal)
+  t.defineStatic.proxy('literal', 'const')
 }
-
-function literal<
-  T extends string | number | bigint | symbol | null | boolean | undefined
->(value: T): Typp<[T]> {
-  return t(value)
-}
-literal.String = `__DO_NOT_USE_SAME_LITERAL_${
-  'STRING'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.Number = `__DO_NOT_USE_SAME_LITERAL_${
-  'NUMBER'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.BigInt = `__DO_NOT_USE_SAME_LITERAL_${
-  'BIGINT'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.Null = `__DO_NOT_USE_SAME_LITERAL_${
-  'NULL'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.Boolean = `__DO_NOT_USE_SAME_LITERAL_${
-  'BOOLEAN'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
-  'UNDEFINED'
-}__IF_YOU_WANT_TO_USE_IT__` as const
-t.defineStatic('literal', literal)
-t.defineStatic.proxy('literal', 'const')
