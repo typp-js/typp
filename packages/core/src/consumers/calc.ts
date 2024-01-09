@@ -1,5 +1,5 @@
 import type { Typp } from '../base'
-import { t } from '../base'
+import type { t } from '../base'
 import type { IsEqual, Stack, T2I } from '../types'
 
 const unionSymbol = Symbol('union')
@@ -120,31 +120,35 @@ declare module '../base' {
     export { intersect as and, intersect as intersection }
   }
 }
-t.defineSpecialShapeType('union', unionSymbol)
-t.defineSpecialShapeType('intersection', intersectionSymbol)
-t.defineStatic('union', <const T extends readonly any[]>(types: T) => {
-  if (types.length === 0) return t(
-    t.specialShape(t.specialShapeTypeMapping.never)
-  ) as unknown as t.Union<T>
-  if (types.length === 1) return t(
-    types[0]
-  ) as unknown as t.Union<T>
 
-  return t(t.specialShape(
-    t.specialShapeTypeMapping.union,
-    types.map(type => t(type))
-  )) as unknown as t.Union<T>
-})
-t.defineStatic('intersect', <const T extends readonly [any, ...any[]]>(i: T) => {
-  if (i.length === 0) throw new Error('intersect() requires at least one argument')
-  if (i.length === 1) return t(
-    i[0]
-  ) as unknown as t.Intersect<T>
+export default function (ctx: typeof t) {
+  const t = ctx
+  t.defineSpecialShapeType('union', unionSymbol)
+  t.defineSpecialShapeType('intersection', intersectionSymbol)
+  t.defineStatic('union', <const T extends readonly any[]>(types: T) => {
+    if (types.length === 0) return t(
+      t.specialShape(t.specialShapeTypeMapping.never)
+    ) as unknown as t.Union<T>
+    if (types.length === 1) return t(
+      types[0]
+    ) as unknown as t.Union<T>
 
-  return t(t.specialShape(
-    t.specialShapeTypeMapping.intersection,
-    i.map(type => t(type))
-  )) as unknown as t.Intersect<T>
-})
-t.defineStatic.proxy('intersect', 'and')
-t.defineStatic.proxy('intersect', 'intersection')
+    return t(t.specialShape(
+      t.specialShapeTypeMapping.union,
+      types.map(type => t(type))
+    )) as unknown as t.Union<T>
+  })
+  t.defineStatic('intersect', <const T extends readonly [any, ...any[]]>(i: T) => {
+    if (i.length === 0) throw new Error('intersect() requires at least one argument')
+    if (i.length === 1) return t(
+      i[0]
+    ) as unknown as t.Intersect<T>
+
+    return t(t.specialShape(
+      t.specialShapeTypeMapping.intersection,
+      i.map(type => t(type))
+    )) as unknown as t.Intersect<T>
+  })
+  t.defineStatic.proxy('intersect', 'and')
+  t.defineStatic.proxy('intersect', 'intersection')
+}
