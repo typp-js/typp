@@ -85,12 +85,17 @@ export namespace t {
   > = (schema: SK) => Nonexistentable<
     WithThis<Partial<SchemaFieldsAll<SK['shape'], Infer<SK>>>>
   >
+  export function defineFields(inj: Partial<SchemaFieldsAll<any, any>>): () => void
   export function defineFields(inj: AllFieldsInjector): () => void
   export function defineFields<S>(is: IsWhatShape<S>, inj: FieldsInjector<S>): () => void
   export function defineFields<S>(...args: any[]) {
     if (args.length === 1) {
-      const [inj] = args as [AllFieldsInjector]
-      const register = [() => true, inj] as const
+      const [injectorOrFields] = args as [AllFieldsInjector | Partial<SchemaFieldsAll<any, any>>]
+      let injector = injectorOrFields as AllFieldsInjector
+      if (typeof injectorOrFields !== 'function') {
+        injector = () => injectorOrFields
+      }
+      const register = [() => true, injector] as const
       registers.add(register)
       return () => registers.delete(register)
     }
@@ -350,10 +355,9 @@ export namespace t {
   // TODO static.pipe
 }
 
-const allFields: Partial<t.SchemaFieldsAll<any, any>> = {
+t.defineFields({
   infer: t => t,
   strictInfer: t => t
-}
-t.defineFields(() => allFields)
+})
 t.defineConsumer(first => t.isSpecialShape(first) ? [first] : undefined)
 t.defineConsumer(first => t.isSchema(first) ? first : undefined)
