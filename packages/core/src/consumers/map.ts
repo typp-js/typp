@@ -5,7 +5,7 @@ const mapSymbol = Symbol('map')
 
 declare module '../base' {
   namespace t {
-    type MapConsume<
+    export type MapConsume<
       T,
       Rest extends any[]
     > = true extends (
