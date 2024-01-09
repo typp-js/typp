@@ -276,10 +276,11 @@ export namespace t {
       : never
   }
 }
-t.defineFields(() => ({
+const allFields: Partial<t.SchemaFieldsAll<any, any>> = {
   infer: t => t,
   strictInfer: t => t
-}))
+}
+t.defineFields(() => allFields)
 // Extensible
 export namespace t {
   export const CANT_REFINE = Object.freeze([
