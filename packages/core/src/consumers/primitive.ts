@@ -13,13 +13,94 @@ const symbols = Object.freeze({
   readonly unknown: unique symbol
   readonly never: unique symbol
 }
-t.defineStatic('Symbols', symbols)
-t.defineSpecialShapeType('any', symbols.any)
-t.defineSpecialShapeType('void', symbols.void)
-t.defineSpecialShapeType('unknown', symbols.unknown)
-t.defineSpecialShapeType('never', symbols.never)
 
 declare module '../base' {
+  // Consumer
+  namespace t {
+    type LiteralPlaceholder<T extends string = string> = `__DO_NOT_USE_SAME_LITERAL_${T}__IF_YOU_WANT_TO_USE_IT__`
+    interface LiteralStringMapping {
+      STRING: string
+      NUMBER: number
+      BIGINT: bigint
+      NULL: null
+      BOOLEAN: boolean
+      UNDEFINED: undefined
+    }
+    type SplitLiteral<T extends string> = string extends T
+      ? string[]
+      : T extends ''
+        ? []
+        : T extends `${infer L}${LiteralPlaceholder}${infer R}`
+          ? T extends `${L}${infer S}${R}`
+            ? S extends LiteralPlaceholder<infer S extends keyof LiteralStringMapping>
+              ? [L, LiteralStringMapping[S], ...SplitLiteral<R>]
+              : never
+            : [T]
+          : [T]
+    type JoinLiteral<T extends readonly any[]> = T extends readonly [
+        infer L extends LiteralStringMapping[keyof LiteralStringMapping],
+        infer R extends LiteralStringMapping[keyof LiteralStringMapping],
+        ...infer Rest
+      ] ? `${L}${R}${JoinLiteral<Rest>}`
+      : T extends readonly [infer L]
+        ? L extends string ? L : never
+        : ''
+
+    export interface ConstructorEntries<
+      A = any, B = any, C = any, D = any, E = any
+    > {
+      1000: [StringConstructor, string]
+      1001: [NumberConstructor, number]
+      1002: [BigIntConstructor, bigint]
+      1003: [BooleanConstructor, boolean]
+      1004: [SymbolConstructor, symbol]
+      1005: [DateConstructor, Date]
+      1006: [RegExpConstructor, RegExp]
+      [key: number]: [Function, any]
+    }
+
+    export type ConstructorMapping<
+      T,
+      A = any, B = any, C = any, D = any, E = any,
+      Entries extends ConstructorEntries<A, B, C> = ConstructorEntries<A, B, C>
+    > = ValueOf<{
+      [ K in keyof Entries
+          as IsEqual<
+            Entries[K & number][0], T
+          > extends true ? number : never
+      ]: Entries[K & number][1]
+    }>
+
+    export type PrimitiveConsume<T> = true extends (
+      & IsNotEqual<T, never>
+      & ([T] extends [Values<NoIndexSignature<ConstructorEntries>>[0]] ? true : false)
+    ) ? (
+      t.Schema<T, ConstructorMapping<T>>
+    ) : true extends (
+      & ([T] extends [string | number | bigint | boolean | symbol] ? true : false)
+      & IsNotEqual<T, never>
+    ) ? (
+      [T] extends [string] ? (
+        JoinLiteral<SplitLiteral<T>> extends infer S
+          ? [S] extends [string]
+            ? t.Schema<S, S>
+            : never
+          : never
+      ) : t.Schema<T, T>
+    ) : true extends (
+      | IsEqual<T, null>
+      | IsEqual<T, undefined>
+    ) ? (
+      t.Schema<T, T>
+    ) : true extends IsEqual<T, void> ? (
+      t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['void']>, void>
+    ) : true extends IsEqual<T, unknown> ? (
+      t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['unknown']>, unknown>
+    ) : true extends IsEqual<T, never> ? (
+      t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never']>, never>
+    ) : never
+  }
+  // Extend
   namespace t {
     export interface DynamicSpecialShapeTypeMapping {
       readonly any: typeof Symbols.any
@@ -103,38 +184,56 @@ declare module '../base' {
   }
 }
 
-t.defineConsumer((...args) => {
-  if (args.length === 0) {
-    return [t.specialShape(t.Symbols.any)]
-  }
-  const [first, ...rest] = args
-  if ([
-    String,
-    Number,
-    BigInt,
-    Boolean,
-    Symbol,
-    Date,
-    RegExp,
-    undefined,
-    null
-  ].includes(first)) {
-    return [first] as const
-  }
-})
-t.defineStatic('any', () => t(t.specialShape(t.Symbols.any)))
-t.defineStatic('unknown', () => t(t.specialShape(t.Symbols.unknown)))
-t.defineStatic('string', () => t(String))
-t.defineStatic('number', () => t(Number))
-t.defineStatic('bigint', () => t(BigInt))
-t.defineStatic('boolean', () => t(Boolean))
-t.defineStatic('symbol', () => t(Symbol))
-t.defineStatic('date', () => t(Date))
-t.defineStatic('regexp', () => t(RegExp))
-t.defineStatic('undefined', () => t(undefined))
-t.defineStatic('null', () => t(null))
-t.defineStatic('never', () =>t(t.specialShape(t.Symbols.never)))
-t.defineStatic('void', () => t(t.specialShape(t.Symbols.void)))
+export default function (ctx: typeof t) {
+  t.defineConsumer(first => {
+    if ([
+      'string',
+      'number',
+      'bigint',
+      'boolean',
+      'symbol'
+    ].includes(typeof first)) {
+      return [first]
+    }
+  })
+  t.defineConsumer((...args) => {
+    if (args.length === 0) {
+      return [t.specialShape(t.Symbols.any)]
+    }
+    const [first, ...rest] = args
+    if ([
+      String,
+      Number,
+      BigInt,
+      Boolean,
+      Symbol,
+      Date,
+      RegExp,
+      undefined,
+      null
+    ].includes(first)) {
+      return [first] as const
+    }
+  })
+  t.defineStatic('Symbols', symbols)
+  t.defineSpecialShapeType('any', symbols.any)
+  t.defineSpecialShapeType('void', symbols.void)
+  t.defineSpecialShapeType('unknown', symbols.unknown)
+  t.defineSpecialShapeType('never', symbols.never)
+  t.defineStatic('any', () => t(t.specialShape(t.Symbols.any)))
+  t.defineStatic('unknown', () => t(t.specialShape(t.Symbols.unknown)))
+  t.defineStatic('string', () => t(String))
+  t.defineStatic('number', () => t(Number))
+  t.defineStatic('bigint', () => t(BigInt))
+  t.defineStatic('boolean', () => t(Boolean))
+  t.defineStatic('symbol', () => t(Symbol))
+  t.defineStatic('date', () => t(Date))
+  t.defineStatic('regexp', () => t(RegExp))
+  t.defineStatic('undefined', () => t(undefined))
+  t.defineStatic('null', () => t(null))
+  t.defineStatic('never', () =>t(t.specialShape(t.Symbols.never)))
+  t.defineStatic('void', () => t(t.specialShape(t.Symbols.void)))
+}
 
 function literal<
   T extends string | number | bigint | symbol | null | boolean | undefined
@@ -161,97 +260,3 @@ literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
 }__IF_YOU_WANT_TO_USE_IT__` as const
 t.defineStatic('literal', literal)
 t.defineStatic.proxy('literal', 'const')
-t.defineConsumer((first) => {
-  if ([
-    'string',
-    'number',
-    'bigint',
-    'boolean',
-    'symbol'
-  ].includes(typeof first)) {
-    return [first]
-  }
-})
-
-type LiteralPlaceholder<T extends string = string> = `__DO_NOT_USE_SAME_LITERAL_${T}__IF_YOU_WANT_TO_USE_IT__`
-interface LiteralStringMapping {
-  STRING: string
-  NUMBER: number
-  BIGINT: bigint
-  NULL: null
-  BOOLEAN: boolean
-  UNDEFINED: undefined
-}
-type SplitLiteral<T extends string> = string extends T
-  ? string[]
-  : T extends ''
-    ? []
-    : T extends `${infer L}${LiteralPlaceholder}${infer R}`
-      ? T extends `${L}${infer S}${R}`
-        ? S extends LiteralPlaceholder<infer S extends keyof LiteralStringMapping>
-          ? [L, LiteralStringMapping[S], ...SplitLiteral<R>]
-          : never
-        : [T]
-      : [T]
-type JoinLiteral<T extends readonly any[]> = T extends readonly [
-    infer L extends LiteralStringMapping[keyof LiteralStringMapping],
-    infer R extends LiteralStringMapping[keyof LiteralStringMapping],
-    ...infer Rest
-  ] ? `${L}${R}${JoinLiteral<Rest>}`
-  : T extends readonly [infer L]
-    ? L extends string ? L : never
-    : ''
-
-export interface ConstructorEntries<
-  A = any, B = any, C = any, D = any, E = any
-> {
-  1000: [StringConstructor, string]
-  1001: [NumberConstructor, number]
-  1002: [BigIntConstructor, bigint]
-  1003: [BooleanConstructor, boolean]
-  1004: [SymbolConstructor, symbol]
-  1005: [DateConstructor, Date]
-  1006: [RegExpConstructor, RegExp]
-  [key: number]: [Function, any]
-}
-
-export type ConstructorMapping<
-  T,
-  A = any, B = any, C = any, D = any, E = any,
-  Entries extends ConstructorEntries<A, B, C> = ConstructorEntries<A, B, C>
-> = ValueOf<{
-  [ K in keyof Entries
-      as IsEqual<
-        Entries[K & number][0], T
-      > extends true ? number : never
-  ]: Entries[K & number][1]
-}>
-
-export type PrimitiveConsume<T> = true extends (
-  & IsNotEqual<T, never>
-  & ([T] extends [Values<NoIndexSignature<ConstructorEntries>>[0]] ? true : false)
-) ? (
-  t.Schema<T, ConstructorMapping<T>>
-) : true extends (
-  & ([T] extends [string | number | bigint | boolean | symbol] ? true : false)
-  & IsNotEqual<T, never>
-) ? (
-  [T] extends [string] ? (
-    JoinLiteral<SplitLiteral<T>> extends infer S
-      ? [S] extends [string]
-        ? t.Schema<S, S>
-        : never
-      : never
-  ) : t.Schema<T, T>
-) : true extends (
-  | IsEqual<T, null>
-  | IsEqual<T, undefined>
-) ? (
-  t.Schema<T, T>
-) : true extends IsEqual<T, void> ? (
-  t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['void']>, void>
-) : true extends IsEqual<T, unknown> ? (
-  t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['unknown']>, unknown>
-) : true extends IsEqual<T, never> ? (
-  t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['never']>, never>
-) : never

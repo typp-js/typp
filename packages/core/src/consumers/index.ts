@@ -1,4 +1,3 @@
-import './primitive'
 import './set'
 
 export {
@@ -16,3 +15,6 @@ export {
 export {
   default as object
 } from './object'
+export {
+  default as primitive
+} from './primitive'
