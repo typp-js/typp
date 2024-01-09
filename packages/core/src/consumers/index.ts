@@ -1,5 +1,3 @@
-import './set'
-
 export {
   default as array
 } from './array'
@@ -18,3 +16,6 @@ export {
 export {
   default as primitive
 } from './primitive'
+export {
+  default as set
+} from './set'

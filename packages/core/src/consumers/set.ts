@@ -1,9 +1,28 @@
-import type { Typp } from '../base'
-import { t } from '../base'
+import type { t, Typp } from '../base'
 import type { IsEqual } from '../types'
 
 const setSymbol = Symbol('set')
 declare module '../base' {
+  // consumer
+  namespace t {
+    export type SetConsume<
+      T,
+      Rest extends any[]
+    > = true extends (
+      | IsEqual<Rest, []>
+      | IsEqual<Rest, readonly []>
+    ) ? (
+      t.Schema<
+        t.SetShape<t.Schema<any, any>>,
+        Set<any>
+      >
+    ) : (
+      Typp<Rest> extends infer IT extends t.Schema<any, any>
+        ? t.Schema<t.SetShape<IT>, Set<t.Infer<IT>>>
+        : never
+    )
+  }
+  // extend
   namespace t {
     export interface ShapeEntries<T, Rest extends any[]> {
       101000: [IsEqual<T, SetConstructor>, SetConsume<T, Rest>]
@@ -24,30 +43,17 @@ declare module '../base' {
     }
   }
 }
-t.defineSpecialShapeType('set', setSymbol)
-t.defineConsumer((first, ...rest) => {
-  if (first !== Set) return
 
-  return [t.specialShape(
-    t.specialShapeTypeMapping.set,
-    rest.length === 0 ? t() : t(...rest)
-  )]
-})
-t.defineStatic('set', (...args) => t(Set, ...args))
+export default function (ctx: typeof t) {
+  const t = ctx
+  t.defineSpecialShapeType('set', setSymbol)
+  t.defineConsumer((first, ...rest) => {
+    if (first !== Set) return
 
-export type SetConsume<
-  T,
-  Rest extends any[]
-> = true extends (
-  | IsEqual<Rest, []>
-  | IsEqual<Rest, readonly []>
-) ? (
-  t.Schema<
-    t.SetShape<t.Schema<any, any>>,
-    Set<any>
-  >
-) : (
-  Typp<Rest> extends infer IT extends t.Schema<any, any>
-    ? t.Schema<t.SetShape<IT>, Set<t.Infer<IT>>>
-    : never
-)
+    return [t.specialShape(
+      t.specialShapeTypeMapping.set,
+      rest.length === 0 ? t() : t(...rest)
+    )]
+  })
+  t.defineStatic('set', (...args) => t(Set, ...args))
+}
