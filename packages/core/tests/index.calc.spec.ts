@@ -7,7 +7,7 @@ describe('union', () => {
     const case0 = t.union([])
     const shape0 = case0.shape
     expect(shape0.type).toBe(t.specialShapeTypeMapping.never)
-    expect(shape0.schemas).toEqual([])
+    expect(shape0.schemas).toEqual(undefined)
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
       t.SpecialShape<t.SpecialShapeTypeMapping['never']>,
       never
