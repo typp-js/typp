@@ -170,12 +170,6 @@ export namespace t {
         .includes(obj.type)
   }
 }
-t.defineConsumer((first) => {
-  // special shapes
-  if (t.isSpecialShape(first)) {
-    return [first]
-  }
-})
 // Base
 export namespace t {
   export interface SchemaMeta<Shape, T> {
@@ -276,11 +270,6 @@ export namespace t {
       : never
   }
 }
-const allFields: Partial<t.SchemaFieldsAll<any, any>> = {
-  infer: t => t,
-  strictInfer: t => t
-}
-t.defineFields(() => allFields)
 // Extensible
 export namespace t {
   export const CANT_REFINE = Object.freeze([
@@ -374,4 +363,10 @@ export namespace t {
   // TODO static.pipe
 }
 
+const allFields: Partial<t.SchemaFieldsAll<any, any>> = {
+  infer: t => t,
+  strictInfer: t => t
+}
+t.defineFields(() => allFields)
+t.defineConsumer(first => t.isSpecialShape(first) ? [first] : undefined)
 t.defineConsumer(first => t.isSchema(first) ? first : undefined)
