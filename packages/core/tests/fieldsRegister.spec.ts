@@ -129,6 +129,14 @@ test('setter', () => {
   badDispose()
 })
 test('`this`', () => {
+  function testThis(this: any) {
+    const skm = t()
+    expect(skm.__test).toBe(1)
+    expect(skm.__test_getter).toBe('1')
+    skm.__test = 2
+    expect(skm.__test_getter).toBe('2')
+  }
+
   const dispose = t.defineFields(() => ({
     __test: 1,
     get __test_getter() {
@@ -136,12 +144,19 @@ test('`this`', () => {
       return String(this.__test)
     }
   }))
-  const skm = t()
-  expect(skm.__test).toBe(1)
-  expect(skm.__test_getter).toBe('1')
-  skm.__test = 2
-  expect(skm.__test_getter).toBe('2')
+  testThis()
   dispose()
+  expect(t().__test).toBeUndefined()
+
+  const disposeObject = t.defineFields({
+    __test: 1,
+    get __test_getter() {
+      expectTypeOf(this.__test).toEqualTypeOf<number | undefined>()
+      return String(this.__test)
+    }
+  })
+  testThis()
+  disposeObject()
   expect(t().__test).toBeUndefined()
 })
 test('`IsWhatShape`', () => {
