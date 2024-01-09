@@ -41,18 +41,18 @@ declare module '../base' {
 }
 
 export default function (ctx: typeof t) {
-  const typp = ctx
-  ctx.defineConsumer((first, ...rest) => {
+  const t = ctx
+  t.defineConsumer((first, ...rest) => {
     if (first === Array) {
-      return [[typp(...rest)]]
+      return [[t(...rest)]]
     }
     if (Array.isArray(first)) {
       if (first.length === 0 && rest.length > 0) {
-        return [[typp(...rest)]]
+        return [[t(...rest)]]
       }
-      return [first.map(item => typp(item))]
+      return [first.map(item => t(item))]
     }
   })
-  ctx.defineStatic('array', <const T extends readonly any[]>(...types: T) => typp(Array, ...types))
-  ctx.defineStatic('tuple', <const T extends readonly any[]>(...types: T) => typp(types))
+  t.defineStatic('array', <const T extends readonly any[]>(...types: T) => t(Array, ...types))
+  t.defineStatic('tuple', <const T extends readonly any[]>(...types: T) => t(types))
 }
