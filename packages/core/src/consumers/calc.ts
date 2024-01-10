@@ -125,7 +125,7 @@ export default function (ctx: typeof t) {
   const t = ctx
   t.useSpecialShapeType('union', unionSymbol)
   t.useSpecialShapeType('intersection', intersectionSymbol)
-  t.defineStatic('union', <const T extends readonly any[]>(types: T) => {
+  t.useStatic('union', <const T extends readonly any[]>(types: T) => {
     if (types.length === 0) return t(
       t.specialShape(t.specialShapeTypeMapping.never)
     ) as unknown as t.Union<T>
@@ -138,7 +138,7 @@ export default function (ctx: typeof t) {
       types.map(type => t(type))
     )) as unknown as t.Union<T>
   })
-  t.defineStatic('intersect', <const T extends readonly [any, ...any[]]>(i: T) => {
+  t.useStatic('intersect', <const T extends readonly [any, ...any[]]>(i: T) => {
     if (i.length === 0) throw new Error('intersect() requires at least one argument')
     if (i.length === 1) return t(
       i[0]
@@ -149,6 +149,6 @@ export default function (ctx: typeof t) {
       i.map(type => t(type))
     )) as unknown as t.Intersect<T>
   })
-  t.defineStatic.proxy('intersect', 'and')
-  t.defineStatic.proxy('intersect', 'intersection')
+  t.useStatic.proxy('intersect', 'and')
+  t.useStatic.proxy('intersect', 'intersection')
 }

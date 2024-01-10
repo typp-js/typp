@@ -65,5 +65,5 @@ export default function (ctx: typeof t) {
       value.length > 0 ? t(...value) : t()
     ])]
   })
-  t.defineStatic('map', (...args) => t(Map, ...args))
+  t.useStatic('map', (...args) => t(Map, ...args))
 }

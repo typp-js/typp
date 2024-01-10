@@ -53,6 +53,6 @@ export default function (ctx: typeof t) {
       return [first.map(item => t(item))]
     }
   })
-  t.defineStatic('array', <const T extends readonly any[]>(...types: T) => t(Array, ...types))
-  t.defineStatic('tuple', <const T extends readonly any[]>(...types: T) => t(types))
+  t.useStatic('array', <const T extends readonly any[]>(...types: T) => t(Array, ...types))
+  t.useStatic('tuple', <const T extends readonly any[]>(...types: T) => t(types))
 }

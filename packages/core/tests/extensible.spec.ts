@@ -10,45 +10,45 @@ declare module '@typp/core' {
   }
 }
 
-describe('defineStatic', () => {
+describe('useStatic', () => {
   test('base', () => {
     let dispose: () => void
-    dispose = t.defineStatic('____foo', () => 'foo')
+    dispose = t.useStatic('____foo', () => 'foo')
     expect(t.____foo()).toBe('foo')
     dispose()
     expect(t.____foo).toBeUndefined()
     // @ts-expect-error
-    dispose = t.defineStatic('____foo', 'foo')
+    dispose = t.useStatic('____foo', 'foo')
     dispose()
   })
   test('throw Error when static field is existed', () => {
-    const dispose = t.defineStatic('____bar', 1)
+    const dispose = t.useStatic('____bar', 1)
     expect(() => {
-      t.defineStatic('____bar', 2)
+      t.useStatic('____bar', 2)
     }).toThrow()
     dispose()
   })
   test('when override is true, will override the existed static field and not throw Error', () => {
-    t.defineStatic('____bar', 1)
-    t.defineStatic('____bar', 2, { override: true })
+    t.useStatic('____bar', 1)
+    t.useStatic('____bar', 2, { override: true })
     expect(t.____bar).toBe(2)
   })
   test('can not refine static field "CANT_REFINE"', () => {
     expect(() => {
       // @ts-expect-error
-      t.defineStatic('CANT_REFINE', 1)
+      t.useStatic('CANT_REFINE', 1)
     }).toThrow()
   })
 })
-describe('defineStatic.proxy', () => {
+describe('useStatic.proxy', () => {
   test('base', () => {
-    const disposeBarStaticDefine0 = t.defineStatic('____bar', 1)
+    const disposeBarStaticDefine0 = t.useStatic('____bar', 1)
     expect(t.____bar).toBe(1)
-    const disposeBazStaticDefine = t.defineStatic.proxy('____bar', '____baz')
+    const disposeBazStaticDefine = t.useStatic.proxy('____bar', '____baz')
     expect(t.____baz).toBe(1)
 
     disposeBarStaticDefine0()
-    const disposeBarStaticDefine1 = t.defineStatic('____bar', 2)
+    const disposeBarStaticDefine1 = t.useStatic('____bar', 2)
     expect(t.____baz).toBe(2)
 
     disposeBarStaticDefine1()
@@ -58,24 +58,24 @@ describe('defineStatic.proxy', () => {
   })
   test('throw Error when nativeKey is not existed', () => {
     expect(() => {
-      t.defineStatic.proxy('____foo', '____bar')
+      t.useStatic.proxy('____foo', '____bar')
     }).toThrow()
   })
   test('throw Error when proxyKey is existed', () => {
     expect(() => {
-      t.defineStatic.proxy('____bar', '____foo')
+      t.useStatic.proxy('____bar', '____foo')
     }).toThrow()
   })
   test('can not refine static field "CANT_REFINE"', () => {
     expect(() => {
       // @ts-expect-error
-      t.defineStatic.proxy('____foo', 'CANT_REFINE')
+      t.useStatic.proxy('____foo', 'CANT_REFINE')
     }).toThrow()
   })
   test('can not refine self', () => {
     expect(() => {
       // @ts-expect-error
-      t.defineStatic.proxy('____foo', '____foo')
+      t.useStatic.proxy('____foo', '____foo')
     }).toThrow()
   })
 })

@@ -286,14 +286,14 @@ export namespace t {
 // Extensible
 export namespace t {
   export const CANT_REFINE = Object.freeze([
-    'defineStatic',
+    'useStatic',
     'useConsumer',
     'useFields',
     'useSpecialShapeType',
     'CANT_REFINE'
   ] as const)
   type CantRefine = typeof CANT_REFINE[number]
-  export interface DefineStaticOptions {
+  export interface useStaticOptions {
     /**
      * if `true`, will override the existed static function.
      * else, will throw an error when override the existed static function.
@@ -303,9 +303,9 @@ export namespace t {
     override?: boolean
   }
   type Refineble = Exclude<keyof typeof t, CantRefine>
-  export function defineStatic<K extends Refineble>(
+  export function useStatic<K extends Refineble>(
     key: K, value: typeof t[K],
-    options: DefineStaticOptions = {}
+    options: useStaticOptions = {}
   ) {
     if ((
       CANT_REFINE as unknown as string[]
@@ -336,7 +336,7 @@ export namespace t {
     }
   }
   // TODO static.alias
-  defineStatic.proxy = <
+  useStatic.proxy = <
     NK extends Refineble
   >(nativeKey: NK, proxyKey: Exclude<Refineble, NK>) => {
     if (nativeKey === proxyKey as string) {

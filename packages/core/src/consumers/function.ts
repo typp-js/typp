@@ -23,13 +23,13 @@ export default function (ctx: typeof t) {
     return [t.specialShape(functionSymbol, [argsSchemas, rtSchema])]
   })
 
-  t.defineStatic('fn', <
+  t.useStatic('fn', <
     const Args extends readonly any[], RT extends readonly any[] = []
   >(args: Args, ...rt: RT) => {
     return t(Function, args, ...rt)
   })
-  t.defineStatic.proxy('fn', 'function')
-  t.defineStatic('generic', function _generic<
+  t.useStatic.proxy('fn', 'function')
+  t.useStatic('generic', function _generic<
     const L extends string,
     E = any,
     ES extends t.Schema<any, any> = t.TyppWhenNotATypp<E>,

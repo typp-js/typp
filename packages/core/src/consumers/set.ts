@@ -55,5 +55,5 @@ export default function (ctx: typeof t) {
       rest.length === 0 ? t() : t(...rest)
     )]
   })
-  t.defineStatic('set', (...args) => t(Set, ...args))
+  t.useStatic('set', (...args) => t(Set, ...args))
 }
