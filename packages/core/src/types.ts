@@ -1,5 +1,11 @@
 export type WithThis<T> = T & ThisType<T>
 
+export type AtLeastOneProperty<T> = keyof T extends infer Keys ? Keys extends (
+  infer Key extends keyof T
+) ? (
+  Partial<Omit<T, Key>> & Pick<T, Key>
+) : never : never
+
 export type Nonexistentable<T> = T | false | null | undefined | void
 
 export type NoIndexSignature<T> = {

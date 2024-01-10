@@ -1,4 +1,15 @@
-import type { IsEqual, IsNotEqual, IsTrue, Nonexistentable, Pretty, Stack, U2I, ValueOf, WithThis } from './types'
+import type {
+  AtLeastOneProperty,
+  IsEqual,
+  IsNotEqual,
+  IsTrue,
+  Nonexistentable,
+  Pretty,
+  Stack,
+  U2I,
+  ValueOf,
+  WithThis
+} from './types'
 import { completeAssign } from './utils/completeAssign'
 
 const __typp__: unique symbol = Symbol('typp')
@@ -88,10 +99,10 @@ export namespace t {
   >
 
   export function defineFields(fields: (
-    & Partial<SchemaFieldsAll<any, any>>
     // TODO support `this` type
     //      https://github.com/microsoft/TypeScript/issues/56995
-    // & ThisType<Schema<any, any>>
+    & AtLeastOneProperty<SchemaFieldsAll<any, any>>
+    & ThisType<Schema<any, any>>
   )): () => void
   export function defineFields(inj: AllFieldsInjector): () => void
   export function defineFields<S>(is: IsWhatShape<S>, inj: FieldsInjector<S>): () => void

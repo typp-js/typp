@@ -152,7 +152,8 @@ test('`this`', () => {
   const disposeObject = t.defineFields({
     __test: 1,
     get __test_getter() {
-      expectTypeOf(this.__test).toEqualTypeOf<number | undefined>()
+      expectTypeOf(this).toEqualTypeOf<t.Schema<any, any>>()
+      expectTypeOf(this.__test).toEqualTypeOf<number>()
       return String(this.__test)
     }
   })
