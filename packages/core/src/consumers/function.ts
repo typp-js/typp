@@ -6,10 +6,10 @@ const genericSymbol = Symbol('generic')
 
 export default function (ctx: typeof t) {
   const t = ctx
-  t.defineSpecialShapeType('function', functionSymbol)
-  t.defineSpecialShapeType('generic', genericSymbol)
+  t.useSpecialShapeType('function', functionSymbol)
+  t.useSpecialShapeType('generic', genericSymbol)
 
-  t.defineConsumer((first, ...rest) => {
+  t.useConsumer((first, ...rest) => {
     if (first !== Function) return
 
     const [args = [], ...rt] = rest as [(readonly any[])?, ...any[]]

@@ -123,8 +123,8 @@ declare module '../base' {
 
 export default function (ctx: typeof t) {
   const t = ctx
-  t.defineSpecialShapeType('union', unionSymbol)
-  t.defineSpecialShapeType('intersection', intersectionSymbol)
+  t.useSpecialShapeType('union', unionSymbol)
+  t.useSpecialShapeType('intersection', intersectionSymbol)
   t.defineStatic('union', <const T extends readonly any[]>(types: T) => {
     if (types.length === 0) return t(
       t.specialShape(t.specialShapeTypeMapping.never)

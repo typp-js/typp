@@ -46,8 +46,8 @@ export function t<const T extends any[]>(...types: T): Typp<T> {
     if (!is(shape)) continue
 
     // TODO [[Getter]], [[Setter]], Function, Proxy, Class
-    //      * [[Getter]]: `t.defineFields(() => ({ get foo() {} }))`
-    //      * [[Setter]]: `t.defineFields(() => ({ set foo(value) {} }))`
+    //      * [[Getter]]: `t.useFields(() => ({ get foo() {} }))`
+    //      * [[Setter]]: `t.useFields(() => ({ set foo(value) {} }))`
     let proxySkm = skm
     if (typeof Proxy !== 'undefined') {
       proxySkm = new Proxy(skm, {
@@ -81,7 +81,7 @@ interface SchemaBase<Shape, T> {
 const consumers = new Set<t.Consumer>()
 export namespace t {
   export type Consumer = (...args: any[]) => Nonexistentable<[shape: any] | Schema<any, any>>
-  export function defineConsumer(consumer: Consumer) {
+  export function useConsumer(consumer: Consumer) {
     consumers.add(consumer)
     return () => consumers.delete(consumer)
   }
@@ -98,15 +98,15 @@ export namespace t {
     & ThisType<SK>
   >
 
-  export function defineFields(fields: (
+  export function useFields(fields: (
     // TODO No `AtLeastOneProperty` for next line
     //      https://github.com/microsoft/TypeScript/issues/56995
     & AtLeastOneProperty<SchemaFieldsAll<any, any>>
     & ThisType<Schema<any, any>>
   )): () => void
-  export function defineFields(inj: AllFieldsInjector): () => void
-  export function defineFields<S>(is: IsWhatShape<S>, inj: FieldsInjector<S>): () => void
-  export function defineFields<S>(...args: any[]) {
+  export function useFields(inj: AllFieldsInjector): () => void
+  export function useFields<S>(is: IsWhatShape<S>, inj: FieldsInjector<S>): () => void
+  export function useFields<S>(...args: any[]) {
     if (args.length === 1) {
       const [injectorOrFields] = args as [AllFieldsInjector | Partial<SchemaFieldsAll<any, any>>]
       let injector = injectorOrFields as AllFieldsInjector
@@ -143,7 +143,7 @@ export namespace t {
   }
   export const specialShapeTypeMapping = {
   } as DynamicSpecialShapeTypeMapping
-  export function defineSpecialShapeType<
+  export function useSpecialShapeType<
     T extends keyof DynamicSpecialShapeTypeMapping,
     S extends DynamicSpecialShapeTypeMapping[T]
   >(type: T, symbol: S) {
@@ -287,9 +287,9 @@ export namespace t {
 export namespace t {
   export const CANT_REFINE = Object.freeze([
     'defineStatic',
-    'defineConsumer',
-    'defineFields',
-    'defineSpecialShapeType',
+    'useConsumer',
+    'useFields',
+    'useSpecialShapeType',
     'CANT_REFINE'
   ] as const)
   type CantRefine = typeof CANT_REFINE[number]
@@ -376,9 +376,9 @@ export namespace t {
   // TODO static.pipe
 }
 
-t.defineFields({
+t.useFields({
   infer: t => t,
   strictInfer: t => t
 })
-t.defineConsumer(first => t.isSpecialShape(first) ? [first] : undefined)
-t.defineConsumer(first => t.isSchema(first) ? first : undefined)
+t.useConsumer(first => t.isSpecialShape(first) ? [first] : undefined)
+t.useConsumer(first => t.isSchema(first) ? first : undefined)

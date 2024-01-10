@@ -42,7 +42,7 @@ declare module '../base' {
 
 export default function (ctx: typeof t) {
   const t = ctx
-  t.defineConsumer((first, ...rest) => {
+  t.useConsumer((first, ...rest) => {
     if (first === Array) {
       return [[t(...rest)]]
     }

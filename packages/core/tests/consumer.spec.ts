@@ -4,14 +4,14 @@ import { expect, test } from 'vitest'
 import { t } from '../src/base'
 
 test('base', () => {
-  const dispose = t.defineConsumer(() => [1])
+  const dispose = t.useConsumer(() => [1])
   expect(t().shape).toEqual(1)
   dispose()
   expect(t().shape).toEqual(undefined)
 })
 
 test('return `Schema` shelf when argument is `Schema`', () => {
-  const dispose = t.defineConsumer((...args) => {
+  const dispose = t.useConsumer((...args) => {
     if (args.length === 0) return [1]
   })
   expect(t().shape).toEqual(1)

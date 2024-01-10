@@ -113,9 +113,9 @@ declare module '../base' {
 
 export default function (ctx: typeof t) {
   const t = ctx
-  t.defineSpecialShapeType('record', recordSymbol)
+  t.useSpecialShapeType('record', recordSymbol)
 
-  t.defineConsumer((first, ...rest) => {
+  t.useConsumer((first, ...rest) => {
     if (
       (typeof first !== 'object' && first !== Object)
       || first === null

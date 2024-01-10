@@ -55,8 +55,8 @@ declare module '../base' {
 
 export default function (ctx: typeof t) {
   const t = ctx
-  t.defineSpecialShapeType('map', mapSymbol)
-  t.defineConsumer((first, ...rest) => {
+  t.useSpecialShapeType('map', mapSymbol)
+  t.useConsumer((first, ...rest) => {
     if (first !== Map) return
 
     const [key, ...value] = rest

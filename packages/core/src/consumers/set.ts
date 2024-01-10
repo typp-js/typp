@@ -46,8 +46,8 @@ declare module '../base' {
 
 export default function (ctx: typeof t) {
   const t = ctx
-  t.defineSpecialShapeType('set', setSymbol)
-  t.defineConsumer((first, ...rest) => {
+  t.useSpecialShapeType('set', setSymbol)
+  t.useConsumer((first, ...rest) => {
     if (first !== Set) return
 
     return [t.specialShape(

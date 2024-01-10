@@ -232,7 +232,7 @@ export default function (ctx: typeof t) {
   literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
     'UNDEFINED'
   }__IF_YOU_WANT_TO_USE_IT__` as const
-  t.defineConsumer(first => {
+  t.useConsumer(first => {
     if ([
       'string',
       'number',
@@ -243,7 +243,7 @@ export default function (ctx: typeof t) {
       return [first]
     }
   })
-  t.defineConsumer((...args) => {
+  t.useConsumer((...args) => {
     if (args.length === 0) {
       return [t.specialShape(t.Symbols.any)]
     }
@@ -263,10 +263,10 @@ export default function (ctx: typeof t) {
     }
   })
   t.defineStatic('Symbols', symbols)
-  t.defineSpecialShapeType('any', symbols.any)
-  t.defineSpecialShapeType('void', symbols.void)
-  t.defineSpecialShapeType('unknown', symbols.unknown)
-  t.defineSpecialShapeType('never', symbols.never)
+  t.useSpecialShapeType('any', symbols.any)
+  t.useSpecialShapeType('void', symbols.void)
+  t.useSpecialShapeType('unknown', symbols.unknown)
+  t.useSpecialShapeType('never', symbols.never)
   t.defineStatic('any', () => t(t.specialShape(t.Symbols.any)))
   t.defineStatic('unknown', () => t(t.specialShape(t.Symbols.unknown)))
   t.defineStatic('string', () => t(String))
