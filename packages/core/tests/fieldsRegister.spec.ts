@@ -146,7 +146,7 @@ test('`this`', () => {
   }))
   testThis()
   dispose()
-  expect(t().__test).toBeUndefined()
+  expect(t()).not.toHaveProperty('__test')
 
   const disposeObject = t.defineFields({
     __test: 1,
@@ -157,7 +157,7 @@ test('`this`', () => {
   })
   testThis()
   disposeObject()
-  expect(t().__test).toBeUndefined()
+  expect(t()).not.toHaveProperty('__test')
 })
 test('`IsWhatShape`', () => {
   const isOnlyShape = (shape => true) as t.IsWhatShape<{ [onlySymbol]: true }>
