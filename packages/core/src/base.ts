@@ -310,11 +310,11 @@ export namespace t {
     if ((
       CANT_REFINE as unknown as string[]
     ).includes(key)) {
-      throw new Error(`can not refine static field "${key}" for typp, because it is always static`)
+      throw new Error(`You can't refine static field "${key}" for typp, because it is always static`)
     }
     const isExisted = Object.hasOwnProperty.call(t, key)
     if (isExisted && !options.override) {
-      throw new Error(`can not refine static field "${key}" for typp, because it is existed and if you want to override it, please set the option "override" to true`)
+      throw new Error(`You can't refine static field "${key}" for typp, because it is existed and if you want to override it, please set the option "override" to true`)
     }
     Object.defineProperty(t, key, {
       configurable: true,
@@ -340,19 +340,19 @@ export namespace t {
     NK extends Refineble
   >(nativeKey: NK, proxyKey: Exclude<Refineble, NK>) => {
     if (nativeKey === proxyKey as string) {
-      throw new Error(`can not refine static field "${proxyKey}" for typp, because the nativeKey and proxyKey are the same`)
+      throw new Error(`You can't refine static field "${proxyKey}" for typp, because the nativeKey and proxyKey are the same`)
     }
     if (!Object.hasOwnProperty.call(t, nativeKey)) {
-      throw new Error(`can not refine static field "${proxyKey}" for typp, because the native field "${nativeKey}" is not existed`)
+      throw new Error(`You can't refine static field "${proxyKey}" for typp, because the native field "${nativeKey}" is not existed`)
     }
     if ((
       CANT_REFINE as unknown as string[]
     ).includes(proxyKey)) {
-      throw new Error(`can not refine static field "${proxyKey}" for typp, because it is always static`)
+      throw new Error(`You can't refine static field "${proxyKey}" for typp, because it is always static`)
     }
     const isExisted = Object.hasOwnProperty.call(t, proxyKey)
     if (isExisted) {
-      throw new Error(`can not refine static field "${proxyKey}" for typp, because it is existed`)
+      throw new Error(`You can't refine static field "${proxyKey}" for typp, because it is existed`)
     }
     Object.defineProperty(t, proxyKey, {
       configurable: true,
