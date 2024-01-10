@@ -225,6 +225,22 @@ export namespace t {
     infer(t: T): T
     // TODO like satisfies
     strictInfer(t: T): T
+    /**
+     * @example
+     * ```ts
+     * t(String)
+     *   .use(range(5, 10))
+     * t(String)
+     *   .use(range.max(10))
+     *   .use(range.min(5))
+     * t(String)
+     *   .use(test(/^foo/))
+     *   .use(label('Foo String'))
+     *   .use(describe('start with foo'))
+     * ```
+     * @param resolver
+     */
+    use<RT extends Schema<any, any>>(resolver: (schema: Schema<Shape, T>) => RT): RT
   }
   export type SchemaFields<Shape, T> =
     & SchemaFieldsMapping<Shape, T>
