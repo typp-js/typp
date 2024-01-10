@@ -119,4 +119,17 @@ describe('use', () => {
     }).toThrow('You can\'t use plugin for typp, because the field "use_test" is not a function')
     disposeStatic()
   })
+  test('nested use', () => {
+    const dispose = t.use(ctx => {
+      ctx.useStatic('____test_useStaticField0', '1')
+      ctx.use(ctx => {
+        ctx.useStatic('____test_useStaticField1', '2')
+      })
+    })
+    expect(t.____test_useStaticField0).toBe('1')
+    expect(t.____test_useStaticField1).toBe('2')
+    dispose()
+    expect(t).not.toHaveProperty('____test_useStaticField0')
+    expect(t).not.toHaveProperty('____test_useStaticField1')
+  })
 })
