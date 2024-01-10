@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, test } from 'vitest'
 
 import { t } from '../src'
-import type { ConstructorMapping } from '../src/consumers/primitive'
+import ConstructorMapping = t.ConstructorMapping
 
 test('ConstructorMapping', () => {
   expectTypeOf<ConstructorMapping<StringConstructor>>()
