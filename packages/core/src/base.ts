@@ -99,7 +99,7 @@ export namespace t {
   >
 
   export function defineFields(fields: (
-    // TODO support `this` type
+    // TODO No `AtLeastOneProperty` for next line
     //      https://github.com/microsoft/TypeScript/issues/56995
     & AtLeastOneProperty<SchemaFieldsAll<any, any>>
     & ThisType<Schema<any, any>>
