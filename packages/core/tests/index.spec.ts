@@ -78,6 +78,7 @@ declare module '@typp/core' {
   namespace t {
     export const ____test_useStaticField0: string
     export const ____test_useStaticField1: string
+    export const use_test: number
   }
 }
 
@@ -107,5 +108,15 @@ describe('use', () => {
     dispose()
     expect(t).not.toHaveProperty('____test_useStaticField0')
     expect(t).not.toHaveProperty('____test_useStaticField1')
+  })
+  test('throw error when useWhat is not a function', () => {
+    const disposeStatic = t.useStatic('use_test', 1)
+    expect(() => {
+      t.use(ctx => {
+        // @ts-expect-error
+        ctx.use_test()
+      })
+    }).toThrow('You can\'t use plugin for typp, because the field "use_test" is not a function')
+    disposeStatic()
   })
 })

@@ -387,7 +387,7 @@ export namespace t {
         [key]: Object.assign(
           (...args: any[]) => {
             if (typeof field !== 'function')
-              throw new Error(`can not use plugin for typp, because the field "${key}" is not a function`)
+              throw new Error(`You can't use plugin for typp, because the field "${key}" is not a function`)
             const dispose = field.call(
               t,
               // @ts-ignore
@@ -401,7 +401,7 @@ export namespace t {
             .reduce((acc, [key, value]) => {
               if (key === 'prototype') return acc
               if (typeof value !== 'function')
-                throw new Error(`can not use plugin for typp, because the field "${key}" of field "${key}" is not a function`)
+                throw new Error(`You can't use plugin for typp, because the field "${key}" of field "${key}" is not a function`)
               return {
                 ...acc,
                 [key]: (...args: any[]) => {
