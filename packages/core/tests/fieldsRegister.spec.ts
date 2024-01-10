@@ -160,6 +160,10 @@ test('`this`', () => {
   testThis()
   disposeObject()
   expect(t()).not.toHaveProperty('__test')
+
+  // @ts-expect-error
+  const badDispose = t.defineFields({})
+  badDispose()
 })
 test('`IsWhatShape`', () => {
   const isOnlyShape = (shape => true) as t.IsWhatShape<{ [onlySymbol]: true }>
