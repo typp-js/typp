@@ -83,7 +83,8 @@ export namespace t {
   export type AllFieldsInjector<
     SK extends Schema<any, any> = Schema<any, any>
   > = (schema: SK) => Nonexistentable<
-    WithThis<Partial<SchemaFieldsAll<SK['shape'], Infer<SK>>>>
+    & Partial<SchemaFieldsAll<SK['shape'], Infer<SK>>>
+    & ThisType<SK>
   >
 
   export function defineFields(fields: (
