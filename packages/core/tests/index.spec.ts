@@ -96,4 +96,16 @@ describe('use', () => {
     expect(t).not.toHaveProperty('____test_useStaticField0')
     expect(t).not.toHaveProperty('____test_useStaticField1')
   })
+  test('modifier', () => {
+    const dispose = t.use(ctx => {
+      const t = ctx
+      t.useStatic('____test_useStaticField0', '1')
+      t.useStatic.proxy('____test_useStaticField0', '____test_useStaticField1')
+    })
+    expect(t.____test_useStaticField0).toBe('1')
+    expect(t.____test_useStaticField1).toBe('1')
+    dispose()
+    expect(t).not.toHaveProperty('____test_useStaticField0')
+    expect(t).not.toHaveProperty('____test_useStaticField1')
+  })
 })

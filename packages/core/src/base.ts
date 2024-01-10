@@ -384,18 +384,38 @@ export namespace t {
       const field = t[key]
       return {
         ...acc,
-        [key]: Object.assign((...args: any[]) => {
-          if (typeof field !== 'function') {
-            throw new Error(`can not use plugin for typp, because the field "${key}" is not a function`)
-          }
-          const dispose = field.call(
-            t,
-            // @ts-ignore
-            ...args
-          )
-          disposes.push(dispose)
-          return dispose
-        }, field)
+        [key]: Object.assign(
+          (...args: any[]) => {
+            if (typeof field !== 'function')
+              throw new Error(`can not use plugin for typp, because the field "${key}" is not a function`)
+            const dispose = field.call(
+              t,
+              // @ts-ignore
+              ...args
+            )
+            disposes.push(dispose)
+            return dispose
+          },
+          Object
+            .entries(field)
+            .reduce((acc, [key, value]) => {
+              if (key === 'prototype') return acc
+              if (typeof value !== 'function')
+                throw new Error(`can not use plugin for typp, because the field "${key}" of field "${key}" is not a function`)
+              return {
+                ...acc,
+                [key]: (...args: any[]) => {
+                  const dispose = value.call(
+                    field,
+                    // @ts-ignore
+                    ...args
+                  )
+                  disposes.push(dispose)
+                  return dispose
+                }
+              }
+            }, {})
+        )
       }
     }, {})
     const pluginDispose = plugin(Object.assign({}, t, overrideT))
