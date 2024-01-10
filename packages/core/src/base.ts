@@ -374,6 +374,42 @@ export namespace t {
     }
   }
   // TODO static.pipe
+  export function use(plugin: (ctx: typeof t) => (() => void) | void) {
+    const disposes = [] as (() => void)[]
+    type UseKeys = keyof typeof t & `use${string}`
+    const useKeys = Object
+      .keys(t)
+      .filter(key => key.startsWith('use')) as UseKeys[]
+    const overrideT = useKeys.reduce((acc, key) => {
+      const field = t[key]
+      return {
+        ...acc,
+        [key]: Object.assign((...args: any[]) => {
+          if (typeof field !== 'function') {
+            throw new Error(`can not use plugin for typp, because the field "${key}" is not a function`)
+          }
+          const dispose = field.call(
+            t,
+            // @ts-ignore
+            ...args
+          )
+          disposes.push(dispose)
+          return dispose
+        }, field)
+      }
+    }, {})
+    const pluginDispose = plugin(Object.assign({}, t, overrideT))
+    return () => {
+      for (const dispose of disposes) {
+        try {
+          dispose()
+        } catch (err) {
+          console.error(err)
+        }
+      }
+      pluginDispose?.()
+    }
+  }
 }
 
 t.useFields({

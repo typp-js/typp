@@ -73,3 +73,27 @@ describe('infer', () => {
     literal0.infer('0')
   })
 })
+
+declare module '@typp/core' {
+  namespace t {
+    export const ____test_useStaticField0: string
+    export const ____test_useStaticField1: string
+  }
+}
+
+describe('use', () => {
+  test('base', () => {
+    type tNamespace = typeof t
+    const dispose = t.use(ctx => {
+      const t = ctx
+      expectTypeOf(t).toEqualTypeOf<tNamespace>()
+      t.useStatic('____test_useStaticField0', '1')
+      t.useStatic('____test_useStaticField1', '2')
+    })
+    expect(t.____test_useStaticField0).toBe('1')
+    expect(t.____test_useStaticField1).toBe('2')
+    dispose()
+    expect(t).not.toHaveProperty('____test_useStaticField0')
+    expect(t).not.toHaveProperty('____test_useStaticField1')
+  })
+})
