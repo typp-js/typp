@@ -7,8 +7,7 @@ import type {
   Pretty,
   Stack,
   U2I,
-  ValueOf,
-  WithThis
+  ValueOf
 } from './types'
 import { completeAssign } from './utils/completeAssign'
 
