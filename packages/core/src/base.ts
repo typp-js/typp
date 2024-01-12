@@ -10,6 +10,7 @@ import type {
   ValueOf
 } from './types'
 import { completeAssign } from './utils/completeAssign'
+import isResolversCreator = t.isResolversCreator
 
 const __typp__: unique symbol = Symbol('typp')
 
@@ -224,22 +225,6 @@ export namespace t {
     infer(t: T): T
     // TODO like satisfies
     strictInfer(t: T): T
-    /**
-     * @example
-     * ```ts
-     * t(String)
-     *   .use(range(5, 10))
-     * t(String)
-     *   .use(range.max(10))
-     *   .use(range.min(5))
-     * t(String)
-     *   .use(test(/^foo/))
-     *   .use(label('Foo String'))
-     *   .use(describe('start with foo'))
-     * ```
-     * @param resolver
-     */
-    use<RT extends Schema<any, any>>(resolver: (schema: Schema<Shape, T>) => RT): RT
   }
   export type SchemaFields<Shape, T> =
     & SchemaFieldsMapping<Shape, T>
@@ -296,6 +281,64 @@ export namespace t {
       ? t.Infer<Field>
       // TODO maybe should return `R[K]`?
       : never
+  }
+}
+// `use` Support
+const utils: Partial<t.ResolverUtils> = {}
+export namespace t {
+  export interface Resolver<Shape, T, RT> {
+    (schema: Schema<Shape, T>): RT
+  }
+  export interface ResolverUtils {
+    [key: string]: <Shape, T>(schema: Schema<Shape, T>) => Schema<any, any>
+  }
+  const resolverCreator = Symbol('resolverCreator')
+  export interface ResolverCreator<Shape, T, RT> {
+    [resolverCreator]: true
+    (utils: Partial<t.ResolverUtils>): Resolver<Shape, T, RT>
+  }
+  export function defineResolverCreator() {
+    return { [resolverCreator]: true }
+  }
+  export function isResolversCreator<Shape, T, RT>(obj: any): obj is ResolverCreator<Shape, T, RT> {
+    return obj?.[resolverCreator] === true
+  }
+  export interface SchemaFieldsAll<Shape, T> {
+    /**
+     * @example
+     * ```ts
+     * t(String)
+     *   .use(range(5, 10))
+     * t(String)
+     *   .use(range.max(10))
+     *   .use(range.min(5))
+     * t(String)
+     *   .use(label('Foo String'))
+     *   .use(describe('start with foo'))
+     *   .use(test(/^foo/))
+     * t(String)
+     *   .use(
+     *     test(/^foo/),
+     *     label('Foo String'),
+     *     describe('start with foo')
+     *   )
+     *
+     * t(String)
+     *   .use(({ test }) => test(/^foo/))
+     * t(String)
+     *   .use(({ test, label, compose }) => compose(
+     *     test(/^foo/),
+     *     label('Foo String')
+     *   ))
+     *
+     * t(String)
+     *   .use('test', /^foo/)
+     *   .use('label', 'Foo String')
+     *   .use('describe', 'start with foo')
+     * ```
+     */
+    use<RT extends Schema<any, any>>(creator: ResolverCreator<Shape, T, RT>): RT
+    use<RT extends Schema<any, any>>(creator: ResolverCreator<Shape, T, RT>): RT
   }
 }
 // Extensible
@@ -449,7 +492,13 @@ export namespace t {
 
 t.useFields({
   infer: t => t,
-  strictInfer: t => t
+  strictInfer: t => t,
+  use(first) {
+    if (isResolversCreator(first)) {
+      return first(utils)(this)
+    }
+    return this as any
+  }
 })
 t.useConsumer(first => t.isSpecialShape(first) ? [first] : undefined)
 t.useConsumer(first => t.isSchema(first) ? first : undefined)
