@@ -2,7 +2,7 @@ import type {
   AtLeastOneProperty,
   IsEqual,
   IsNotEqual,
-  IsTrue, LastInTuple,
+  IsTrue,
   Nonexistentable, Pipes,
   Pretty,
   Stack,
@@ -326,7 +326,12 @@ export namespace t {
      *   )
      * ```
      */
-    use<T extends readonly Resolver[]>(...args: Pipes<T, this>): ReturnType<LastInTuple<T>>
+    use<T extends readonly Resolver[]>(...args: Pipes<T>): (
+      T extends [
+        ...infer _,
+        infer Last extends (...args: any[]) => any
+      ] ? ReturnType<Last> : never
+    )
     /**
      * @example
      * ```ts

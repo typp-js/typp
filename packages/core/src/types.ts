@@ -182,8 +182,6 @@ export namespace Stack {
   export type Push<T extends readonly any[], V> =
     [...T, V]
 }
-export type SimpleTuple = { [index: number | `${number}`]: any, length: number }
-export type LastInTuple<T extends SimpleTuple> = T[Num.Subtract<T['length'], 1>]
 export type Pipes<T, First = never> = {
   [K in keyof T]: [K] extends [`${infer K extends keyof T & number}`]
     ? [K] extends [0]
