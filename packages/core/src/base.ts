@@ -286,22 +286,23 @@ export namespace t {
 const utils: Partial<t.ResolverUtils> = {}
 export namespace t {
   const resolver = Symbol('resolver')
-  export interface Resolver<Shape, T, RT> {
-    [resolver]: true
-    (schema: Schema<Shape, T>): RT
+  export interface ResolverF {
+    <S extends Schema<any, any>>(schema: S): any
   }
+  export interface ResolverMeta {
+    [resolver]: true
+  }
+  export type Resolver = ResolverF & ResolverMeta
   export interface ResolverUtils {
     [key: string]: <Shape, T>(schema: Schema<Shape, T>) => Schema<any, any>
   }
   export interface ResolverCreator<Shape, T, RT> {
-    (utils: Partial<t.ResolverUtils>): Resolver<Shape, T, RT>
+    (utils: Partial<t.ResolverUtils>): Resolver
   }
-  export function defineResolver<Shape, T, RT>(
-    func: Resolver<Shape, T, RT> & Function
-  ): Resolver<Shape, T, RT> {
-    return Object.assign(func, { [resolver]: true })
+  export function defineResolver<R extends ResolverF>(func: R): R & ResolverMeta {
+    return Object.assign(func, { [resolver]: true as const })
   }
-  export function isResolver<Shape, T, RT>(obj: any): obj is Resolver<Shape, T, RT> {
+  export function isResolver(obj: any): obj is Resolver {
     return obj?.[resolver] === true
   }
   export interface SchemaFieldsAll<Shape, T> {
@@ -325,7 +326,7 @@ export namespace t {
      *   )
      * ```
      */
-    use<T extends readonly (() => any)[]>(...args: Pipes<T>): ReturnType<LastInTuple<T>>
+    use<T extends readonly Resolver[]>(...args: Pipes<T, this>): ReturnType<LastInTuple<T>>
     /**
      * @example
      * ```ts

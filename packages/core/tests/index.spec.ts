@@ -133,3 +133,22 @@ describe('use', () => {
     expect(t).not.toHaveProperty('____test_useStaticField1')
   })
 })
+
+describe('instance.use', () => {
+  test('base', () => {
+    //    _?
+    const test = (reg: RegExp) => t.defineResolver(skm => {
+      // @ts-ignore
+      skm.meta.reg = reg
+      return skm
+    })
+    const t0 = test(/.*/)
+    //    ^?
+    const t1 = t0(t.string())
+    //    _?
+    const skm = t
+      .string()
+      // _?
+      .use(test(/.*/))
+  })
+})
