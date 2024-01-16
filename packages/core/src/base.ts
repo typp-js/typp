@@ -286,8 +286,8 @@ export namespace t {
 const utils: Partial<t.ResolverUtils> = {}
 export namespace t {
   const resolver = Symbol('resolver')
-  export interface ResolverF {
-    <S extends Schema<any, any>>(schema: S): any
+  export interface ResolverF<S extends Schema<any, any> = Schema<any, any>> {
+    (schema: S): any
   }
   export interface ResolverMeta {
     [resolver]: true
