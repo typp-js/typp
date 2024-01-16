@@ -187,7 +187,10 @@ export type Pipes<T, First = never> = {
     ? [K] extends [0]
       ? [First] extends [never]
         ? T[K]
-        : (prev: First) => T[K]
+        : (prev: First) => ReturnType<
+          // @ts-ignore
+          T[K]
+        >
       : (prev: ReturnType<
         // @ts-ignore
         T[Num.Subtract<K, 1>]
