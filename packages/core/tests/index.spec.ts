@@ -1,5 +1,6 @@
 import { describe, expect, expectTypeOf, test } from 'vitest'
 
+import type { Typp } from '../src'
 import { t } from '../src'
 
 describe('infer', () => {
@@ -135,20 +136,19 @@ describe('use', () => {
 })
 
 describe('instance.use', () => {
-  test('base', () => {
-    //    _?
-    const test = (reg: RegExp) => t.defineResolver(skm => {
+  test('defineResolver', () => {
+    const test = (reg: RegExp) => t.defineResolver((skm: Typp<[StringConstructor]>) => {
       // @ts-ignore
       skm.meta.reg = reg
       return skm
     })
     const t0 = test(/.*/)
-    //    ^?
-    const t1 = t0(t.string())
-    //    _?
-    const skm = t
-      .string()
-      // _?
-      .use(test(/.*/))
+
+    const withT0 = t0(t.string())
+    expectTypeOf(withT0)
+      .toEqualTypeOf<Typp<[StringConstructor]>>()
+    // @ts-ignore
+    const reg = withT0.meta?.reg as RegExp
+    expect(reg.source).toBe('.*')
   })
 })
