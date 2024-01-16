@@ -2,8 +2,8 @@ import type {
   AtLeastOneProperty,
   IsEqual,
   IsNotEqual,
-  IsTrue,
-  Nonexistentable,
+  IsTrue, LastInTuple,
+  Nonexistentable, Pipes,
   Pretty,
   Stack,
   U2I,
@@ -317,7 +317,6 @@ export namespace t {
      *   .use(label('Foo String'))
      *   .use(describe('start with foo'))
      *   .use(test(/^foo/))
-     * // TODO maybe have a [try](https://www.typescriptlang.org/play?#code/C4TwDgpgBAyglgWzAGwgFQK4ugXigbygG04A7AEwgA8AuKUjBAIwgCcoAfKAAwBJ8GzNgF9uAXToBDUiAA0UVKQDmwABZ1BLdsIBQO0JCiZsAHjTyAShADOUasAgVbARiJioeNwD4PUAAx2VA5OUM5QAPz0EABubFA0OlBQVtZEAOSKKqpp7vaO5LZoEck28UZYqGbyRAB0dSnyzmJeegbQMBhMwKySAMbAJgCygcEF9Ixa8jAj+baabD54xpWDPnkhtXXLECYwXvJ1NWQAZnEpwO6R5+mZajllpDFsreDQADKS1gNF62PwSKhtosjEQOl0ev0zDdHFkco0vGIXoYPl8AngUQNWBBJOQAPakZAgYjOeQAJmaOgA9JSklAAHrhfSvKAYsLoz4DQh+Ogk0J0UnyW7qKCkqDCFrU2kMpHQACCvgACnBegBrEzSORQDUtJmGJWQawmRLJYC2X62f7YbY6YH4Y1EADSUDIUBVEBAuOOJusEmIDtyQVmxD4+BOcSd5vGQlYokRtOKjoDo1sRD8cfjxQAFABKDw+CymxPG+N0TNgLHROgF1Jg7p9AYO+FiXM4fOF-3FsrVou6XXQABipGsaKg+psJixOPxhOJZIpkqS0raUEH1jZo7gBpMhDSfjSPPkaWc+5Fgphan5YolNMXjL7RhHY8Nk7xBKJRF55LWgZCT5MYfYNAfEiIoNCeVgqRvelGWXNB1z-Hc9wPKAjxPAUFHPYVRXFGZf03ccAKMYCjAecDIKlO9lysYAMFYUg0FeQ1jWrXCxhfaciQ1NwbV8FjI3Yt9iEIt4DjqQiLHTSI3lY2xM0OSRWCUawpBkNwWx8DUE2o2j6NeEw3n2KBDm0uiGK3CwETKbikjobj7wsEcTN0rcBJnIgczzUJ5A81sRXnKDpR0ShemQBToGODBSH6OB8SgY5SCNJJenxL5vQCfjsVfGcuLEWRjWSodgCgWVFLNH8xj-as-BaLw5LqBSlLoEqlM4DdzNNarsyrCAaNMvSMRMZrrC8HUFySAB9RkCtS1gR3izMfJ8XlyxiTyYG6MglDLCts2zciMwooA)
      * t(String)
      *   .use(
      *     test(/^foo/),
@@ -326,7 +325,7 @@ export namespace t {
      *   )
      * ```
      */
-    use<RT extends Schema<any, any>>(resolver: Resolver<Shape, T, RT>): RT
+    use<T extends readonly (() => any)[]>(...args: Pipes<T>): ReturnType<LastInTuple<T>>
     /**
      * @example
      * ```ts
