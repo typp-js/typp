@@ -326,7 +326,7 @@ export namespace t {
      *   )
      * ```
      */
-    use<T extends readonly Resolver[]>(...args: Pipes<T>): (
+    use<T extends readonly Resolver[]>(...args: Pipes<T, this>): (
       T extends [
         ...infer _,
         infer Last extends (...args: any[]) => any
