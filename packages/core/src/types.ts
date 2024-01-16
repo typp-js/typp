@@ -164,6 +164,12 @@ export type Narrow<T> = Cast<T, unknown[] | [] | (T extends Primitive ? T : neve
 
 export type UseWhenNoNever<T, U = never> = [T] extends [never] ? U : T
 
+export namespace Num {
+  type Tuple<T, Res extends 1[] = []> = 0 extends 1 ? never :
+    Res['length'] extends T ? Res : Tuple<T, [...Res, 1]>
+  export type Subtract<M extends number, S extends number> = Tuple<M> extends [...Tuple<S>, ...infer Rest] ? Rest['length'] : never
+}
+
 export namespace Stack {
   export type Pop<T extends readonly any[]> =
     T extends readonly [...infer Rest, infer R]
@@ -175,4 +181,19 @@ export namespace Stack {
       : [never, []]
   export type Push<T extends readonly any[], V> =
     [...T, V]
+}
+export type SimpleTuple = { [index: number | `${number}`]: any, length: number }
+export type LastInTuple<T extends SimpleTuple> = T[Num.Subtract<T['length'], 1>]
+export type Pipes<T> = {
+  [K in keyof T]: [K] extends [`${infer K extends keyof T & number}`]
+    ? [K] extends [0]
+      ? T[K]
+      : (prev: ReturnType<
+        // @ts-ignore
+        T[Num.Subtract<K, 1>]
+      >) => ReturnType<
+        // @ts-ignore
+        T[K]
+      >
+    : T[K]
 }
