@@ -184,10 +184,12 @@ export namespace Stack {
 }
 export type SimpleTuple = { [index: number | `${number}`]: any, length: number }
 export type LastInTuple<T extends SimpleTuple> = T[Num.Subtract<T['length'], 1>]
-export type Pipes<T> = {
+export type Pipes<T, First = never> = {
   [K in keyof T]: [K] extends [`${infer K extends keyof T & number}`]
     ? [K] extends [0]
-      ? T[K]
+      ? [First] extends [never]
+        ? T[K]
+        : (prev: First) => T[K]
       : (prev: ReturnType<
         // @ts-ignore
         T[Num.Subtract<K, 1>]
