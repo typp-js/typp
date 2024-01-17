@@ -166,7 +166,11 @@ describe('instance.use', () => {
       return skm
     }))
     const skm = t.string()
-      .use(({ ____test_regResolver }) => ____test_regResolver(/.*/))
+      .use(({ ____test_regResolver }) => {
+        expectTypeOf(____test_regResolver)
+          .toEqualTypeOf<(reg: RegExp) => t.Resolver>()
+        return ____test_regResolver(/.*/)
+      })
     // @ts-ignore
     const reg = skm.meta?.reg as RegExp
     expect(reg.source).toBe('.*')
