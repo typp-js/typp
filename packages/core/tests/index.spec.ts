@@ -180,4 +180,22 @@ describe('instance.use', () => {
         .use(({ ____test_regResolver }) => ____test_regResolver(/.*/))
     }).toThrow('____test_regResolver is not a function')
   })
+  test('throw error for useResolver', () => {
+    expect(() => {
+      t.string()
+        .use(({ ____test_regResolver }) => ____test_regResolver(/.*/))
+    }).toThrow('____test_regResolver is not a function')
+    const dispose = t.useResolver('____test_regResolver', (reg: RegExp) => t.defineResolver(skm => skm))
+    expect(() => {
+      t.useResolver('____test_regResolver', (reg: RegExp) => t.defineResolver(skm => skm))
+    }).toThrow('You can\'t use resolver for typp, because the resolver "____test_regResolver" is existed and if you want to override it, please set the option "override" to true')
+    dispose()
+    expect(() => {
+      t.useResolver(
+        '____test_regResolver',
+        // @ts-expect-error
+        '123'
+      )
+    }).toThrow('You can\'t use resolver for typp, because the resolver "____test_regResolver" is not a function')
+  })
 })
