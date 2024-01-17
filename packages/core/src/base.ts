@@ -398,6 +398,8 @@ export namespace t {
     'useConsumer',
     'useFields',
     'useSpecialShapeType',
+    'useResolver',
+    'defineResolver',
     'CANT_REFINE'
   ] as const)
   type CantRefine = typeof CANT_REFINE[number]
