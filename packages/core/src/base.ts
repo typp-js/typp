@@ -299,7 +299,7 @@ export namespace t {
   }
   export type Resolver = ResolverF & ResolverMeta
   export interface ResolverUtils {
-    [key: string]: <Shape, T>(schema: Schema<Shape, T>) => Schema<any, any>
+    [key: string]: (...args: any[]) => Resolver
   }
   export interface ResolverCreator<Shape, T, RT> {
     (utils: Partial<t.ResolverUtils>): Resolver
