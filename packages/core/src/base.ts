@@ -291,15 +291,17 @@ export namespace t {
 const utils: Partial<t.ResolverUtils> = {}
 export namespace t {
   const resolver = Symbol('resolver')
-  export interface ResolverF<S extends Schema<any, any> = Schema<any, any>> {
-    (schema: S): any
+  export interface ResolverF<
+    S extends Schema<any, any> = Schema<any, any>, RT = S
+  > {
+    (schema: S): RT
   }
   export interface ResolverMeta {
     [resolver]: true
   }
   export type Resolver = ResolverF & ResolverMeta
   export interface ResolverUtils {
-    [key: string]: (...args: any[]) => Resolver
+    [key: string]: Resolver | ((...args: any[]) => Resolver)
   }
   export interface ResolverCreator<Shape, T, RT> {
     (utils: t.ResolverUtils): Resolver
@@ -557,6 +559,9 @@ t.useFields({
       const fn = utils[first]
       if (typeof fn !== 'function')
         throw new Error(`You can't use "${first}" for schema, because it is not a function`)
+      if (t.isResolver(fn)) {
+        return fn.call(this, this)
+      }
       return fn.call(
         this,
         // @ts-ignore

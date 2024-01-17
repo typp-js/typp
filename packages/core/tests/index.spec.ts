@@ -139,6 +139,7 @@ declare module '../src/base' {
   namespace t {
     export interface ResolverUtils {
       ____test_regResolver: (reg: RegExp) => t.Resolver
+      ____test_dialog: t.Resolver
     }
   }
 }
@@ -197,5 +198,17 @@ describe('instance.use', () => {
         '123'
       )
     }).toThrow('You can\'t use resolver for typp, because the resolver "____test_regResolver" is not a function')
+  })
+  test('resolverCreator for resolver utils', () => {
+    const dispose = t.useResolver('____test_dialog', t.defineResolver(skm => {
+      // @ts-ignore
+      skm.meta.dialog = true
+      return skm
+    }))
+    const skm = t.string()
+      .use(({ ____test_dialog }) => ____test_dialog)
+    // @ts-ignore
+    expect(skm.meta?.dialog).toBe(true)
+    dispose()
   })
 })
