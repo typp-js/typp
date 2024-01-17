@@ -302,7 +302,7 @@ export namespace t {
     [key: string]: (...args: any[]) => Resolver
   }
   export interface ResolverCreator<Shape, T, RT> {
-    (utils: Partial<t.ResolverUtils>): Resolver
+    (utils: t.ResolverUtils): Resolver
   }
   export function defineResolver<R extends ResolverF>(func: R): R & ResolverMeta {
     return Object.assign(func, { [resolver]: true as const })
