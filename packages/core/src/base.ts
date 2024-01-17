@@ -326,7 +326,7 @@ export namespace t {
     if (isExisted && !options.override) {
       throw new Error(`You can't use resolver for typp, because the resolver "${key}" is existed and if you want to override it, please set the option "override" to true`)
     }
-    utils[key] = defineResolver(resolver)
+    utils[key] = resolver
     return () => {
       const isExisted = Object.hasOwnProperty.call(utils, key)
       if (!isExisted)
