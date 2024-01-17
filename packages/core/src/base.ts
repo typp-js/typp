@@ -374,7 +374,7 @@ export namespace t {
     'CANT_REFINE'
   ] as const)
   type CantRefine = typeof CANT_REFINE[number]
-  export interface useStaticOptions {
+  export interface UseStaticOptions {
     /**
      * if `true`, will override the existed static function.
      * else, will throw an error when override the existed static function.
@@ -386,7 +386,7 @@ export namespace t {
   type Refineble = Exclude<keyof typeof t, CantRefine>
   export function useStatic<K extends Refineble>(
     key: K, value: typeof t[K],
-    options: useStaticOptions = {}
+    options: UseStaticOptions = {}
   ) {
     if ((
       CANT_REFINE as unknown as string[]
