@@ -135,6 +135,14 @@ describe('use', () => {
   })
 })
 
+declare module '../src/base' {
+  namespace t {
+    export interface ResolverUtils {
+      ____test_regResolver: (reg: RegExp) => t.Resolver
+    }
+  }
+}
+
 describe('instance.use', () => {
   test('defineResolver', () => {
     const test = (reg: RegExp) => t.defineResolver((skm: Typp<[StringConstructor]>) => {
@@ -150,5 +158,22 @@ describe('instance.use', () => {
     // @ts-ignore
     const reg = withT0.meta?.reg as RegExp
     expect(reg.source).toBe('.*')
+  })
+  test('useResolver', () => {
+    const dispose = t.useResolver('____test_regResolver', (reg: RegExp) => t.defineResolver((skm: Typp<[StringConstructor]>) => {
+      // @ts-ignore
+      skm.meta.reg = reg
+      return skm
+    }))
+    const skm = t.string()
+      .use(({ ____test_regResolver }) => ____test_regResolver(/.*/))
+    // @ts-ignore
+    const reg = skm.meta?.reg as RegExp
+    expect(reg.source).toBe('.*')
+    dispose()
+    expect(() => {
+      t.string()
+        .use(({ ____test_regResolver }) => ____test_regResolver(/.*/))
+    }).toThrow('____test_regResolver is not a function')
   })
 })

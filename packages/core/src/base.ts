@@ -307,6 +307,33 @@ export namespace t {
   export function defineResolver<R extends ResolverF>(func: R): R & ResolverMeta {
     return Object.assign(func, { [resolver]: true as const })
   }
+  export interface UseResolverOptions {
+    /**
+     * if `true`, will override the existed resolver.
+     * else, will throw an error when override the existed resolver.
+     *
+     * @default false
+     */
+    override?: boolean
+  }
+  export function useResolver<K extends keyof ResolverUtils>(
+    key: K, resolver: ResolverUtils[K], options: UseResolverOptions = {}
+  ) {
+    if (typeof resolver !== 'function') {
+      throw new Error(`You can't use resolver for typp, because the resolver "${key}" is not a function`)
+    }
+    const isExisted = Object.hasOwnProperty.call(utils, key)
+    if (isExisted && !options.override) {
+      throw new Error(`You can't use resolver for typp, because the resolver "${key}" is existed and if you want to override it, please set the option "override" to true`)
+    }
+    utils[key] = defineResolver(resolver)
+    return () => {
+      const isExisted = Object.hasOwnProperty.call(utils, key)
+      if (!isExisted)
+        return
+      delete utils[key]
+    }
+  }
   export function isResolver(obj: any): obj is Resolver {
     return obj?.[resolver] === true
   }
