@@ -328,7 +328,6 @@ export namespace t {
       delete utils[key]
     }
   }
-  type LastReturnType<T extends readonly any[]> = Stack.Last<T> extends (...args: any[]) => infer L ? L : unknown
   export interface SchemaFieldsAll<Shape, T> {
     /**
      * @example
