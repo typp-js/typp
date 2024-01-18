@@ -138,8 +138,9 @@ describe('use', () => {
 declare module '../src/base' {
   namespace t {
     export interface ResolverUtils {
-      ____test_regResolver: (reg: RegExp) => t.Resolver
-      ____test_dialog: t.Resolver
+      ____test_regResolver: (reg: RegExp) => t.Resolver<t.Schema<StringConstructor, string>>
+      ____test_dialog: () => t.Resolver<t.Schema<StringConstructor, string>>
+      ____test_castToNum: () => t.Resolver<t.Schema<any, any>, t.Schema<NumberConstructor, number>>
     }
   }
 }
@@ -175,6 +176,31 @@ describe('instance.use', () => {
     const castToNumSkm = t.defineResolver(skm => skm as Typp<[NumberConstructor]>)
     const numSkm = t.string().use(castToNumSkm)
     expectTypeOf(numSkm).toEqualTypeOf<Typp<[NumberConstructor]>>()
+  })
+  test('utils key', () => {
+    const dispose = t.useResolver('____test_regResolver', reg => skm => {
+      expectTypeOf(reg).toEqualTypeOf<RegExp>()
+      expectTypeOf(skm).toEqualTypeOf<Typp<[StringConstructor]>>()
+      // @ts-ignore
+      skm.meta.reg = reg
+      return skm
+    })
+    const skm = t.string().use('____test_regResolver', /.*/)
+    expectTypeOf(skm).toEqualTypeOf<Typp<[StringConstructor]>>()
+    // @ts-ignore
+    const reg = skm.meta?.reg as RegExp
+    expect(reg.source).toBe('.*')
+    dispose()
+
+    const dispose2 = t.useResolver('____test_dialog', () => skm => skm)
+    const skm2 = t.string().use('____test_dialog')
+    expectTypeOf(skm2).toEqualTypeOf<Typp<[StringConstructor]>>()
+    dispose2()
+
+    const dispose3 = t.useResolver('____test_castToNum', () => skm => skm as Typp<[NumberConstructor]>)
+    const skm3 = t.string().use('____test_castToNum')
+    expectTypeOf(skm3).toEqualTypeOf<Typp<[NumberConstructor]>>()
+    dispose3()
   })
   // TODO unit test key mode
   test('useResolver', () => {

@@ -360,9 +360,9 @@ export namespace t {
      *   .use('describe', 'start with foo')
      * ```
      */
-    use<K extends keyof ResolverUtils, RT extends Schema<any, any>>(
+    use<K extends keyof ResolverUtils>(
       key: K, ...args: Parameters<ResolverUtils[K]>
-    ): RT
+    ): ReturnType<ReturnType<ResolverUtils[K]>>
   }
 }
 // Extensible
