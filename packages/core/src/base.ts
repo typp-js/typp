@@ -339,6 +339,7 @@ export namespace t {
   export function isResolver(obj: any): obj is Resolver {
     return obj?.[resolver] === true
   }
+  type LastReturnType<T extends readonly any[]> = Stack.Last<T> extends (...args: any[]) => infer L ? L : unknown
   export interface SchemaFieldsAll<Shape, T> {
     /**
      * @example
@@ -360,12 +361,7 @@ export namespace t {
      *   )
      * ```
      */
-    use<T extends readonly Resolver[]>(...args: Pipes<T, this>): (
-      T extends [
-        ...infer _,
-        infer Last extends (...args: any[]) => any
-      ] ? ReturnType<Last> : never
-    )
+    use<T extends readonly Resolver[]>(...args: Pipes<T, this>): LastReturnType<T>
     /**
      * @example
      * ```ts

@@ -181,6 +181,10 @@ export namespace Stack {
       : [never, []]
   export type Push<T extends readonly any[], V> =
     [...T, V]
+  export type Last<T extends readonly any[]> =
+    T extends readonly [...infer _, infer R]
+      ? R
+      : never
 }
 export type Pipes<T, First = never> = {
   [K in keyof T]: [K] extends [`${infer K extends keyof T & number}`]
