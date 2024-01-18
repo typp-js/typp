@@ -160,31 +160,25 @@ describe('instance.use', () => {
     const reg = withT0.meta?.reg as RegExp
     expect(reg.source).toBe('.*')
   })
+  // TODO unit test key mode
   test('useResolver', () => {
     const dispose = t.useResolver('____test_regResolver', (reg: RegExp) => t.defineResolver((skm: Typp<[StringConstructor]>) => {
       // @ts-ignore
       skm.meta.reg = reg
       return skm
     }))
-    const skm = t.string()
-      .use(({ ____test_regResolver }) => {
-        expectTypeOf(____test_regResolver)
-          .toEqualTypeOf<(reg: RegExp) => t.Resolver>()
-        return ____test_regResolver(/.*/)
-      })
+    const skm = t.string().use('____test_regResolver', /.*/)
     // @ts-ignore
     const reg = skm.meta?.reg as RegExp
     expect(reg.source).toBe('.*')
     dispose()
     expect(() => {
-      t.string()
-        .use(({ ____test_regResolver }) => ____test_regResolver(/.*/))
+      t.string().use('____test_regResolver', /.*/)
     }).toThrow('____test_regResolver is not a function')
   })
   test('throw error for useResolver', () => {
     expect(() => {
-      t.string()
-        .use(({ ____test_regResolver }) => ____test_regResolver(/.*/))
+      t.string().use('____test_regResolver', /.*/)
     }).toThrow('____test_regResolver is not a function')
     const dispose = t.useResolver('____test_regResolver', (reg: RegExp) => t.defineResolver(skm => skm))
     expect(() => {
@@ -198,18 +192,6 @@ describe('instance.use', () => {
         '123'
       )
     }).toThrow('You can\'t use resolver for typp, because the resolver "____test_regResolver" is not a function')
-  })
-  test('resolverCreator for resolver utils', () => {
-    const dispose = t.useResolver('____test_dialog', t.defineResolver(skm => {
-      // @ts-ignore
-      skm.meta.dialog = true
-      return skm
-    }))
-    const skm = t.string()
-      .use(({ ____test_dialog }) => ____test_dialog)
-    // @ts-ignore
-    expect(skm.meta?.dialog).toBe(true)
-    dispose()
   })
   test('base', () => {
     const test = (reg: RegExp) => t.defineResolver((skm: Typp<[StringConstructor]>) => {

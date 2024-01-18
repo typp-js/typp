@@ -290,24 +290,16 @@ export namespace t {
 // `use` Support
 const utils: Partial<t.ResolverUtils> = {}
 export namespace t {
-  const resolver = Symbol('resolver')
-  export interface ResolverF<
+  export interface Resolver<
     S extends Schema<any, any> = Schema<any, any>, RT = S
   > {
     (schema: S): RT
   }
-  export interface ResolverMeta {
-    [resolver]: true
-  }
-  export type Resolver = ResolverF & ResolverMeta
   export interface ResolverUtils {
-    [key: string]: Resolver | ((...args: any[]) => Resolver)
+    [key: string]: (...args: any[]) => Resolver
   }
-  export interface ResolverCreator<Shape, T, RT> {
-    (utils: t.ResolverUtils): Resolver
-  }
-  export function defineResolver<R extends ResolverF>(func: R): R & ResolverMeta {
-    return Object.assign(func, { [resolver]: true as const })
+  export function defineResolver<R extends Resolver>(func: R): R {
+    return func
   }
   export interface UseResolverOptions {
     /**
@@ -336,9 +328,6 @@ export namespace t {
       delete utils[key]
     }
   }
-  export function isResolver(obj: any): obj is Resolver {
-    return obj?.[resolver] === true
-  }
   type LastReturnType<T extends readonly any[]> = Stack.Last<T> extends (...args: any[]) => infer L ? L : unknown
   export interface SchemaFieldsAll<Shape, T> {
     /**
@@ -362,19 +351,6 @@ export namespace t {
      * ```
      */
     use<T extends readonly Resolver[]>(...args: Pipes<T, this>): LastReturnType<T>
-    /**
-     * @example
-     * ```ts
-     * t(String)
-     *   .use(({ test }) => test(/^foo/))
-     * t(String)
-     *   .use(({ test, label, compose }) => compose(
-     *     test(/^foo/),
-     *     label('Foo String')
-     *   ))
-     * ```
-     */
-    use<RT extends Schema<any, any>>(creator: ResolverCreator<Shape, T, RT>): RT
     /**
      * @example
      * ```ts
@@ -545,19 +521,12 @@ t.useFields({
   strictInfer: t => t,
   use(first: any, ...rest: any[]) {
     if (typeof first === 'function') {
-      if (t.isResolver(first)) {
-        return first(this)
-      } else {
-        return first(utils)(this)
-      }
+      return first(this)
     }
     if (typeof first === 'string') {
       const fn = utils[first]
       if (typeof fn !== 'function')
         throw new Error(`You can't use "${first}" for schema, because it is not a function`)
-      if (t.isResolver(fn)) {
-        return fn.call(this, this)
-      }
       return fn.call(
         this,
         // @ts-ignore
