@@ -211,4 +211,15 @@ describe('instance.use', () => {
     expect(skm.meta?.dialog).toBe(true)
     dispose()
   })
+  test('base', () => {
+    const test = (reg: RegExp) => t.defineResolver((skm: Typp<[StringConstructor]>) => {
+      // @ts-ignore
+      skm.meta.reg = reg
+      return skm
+    })
+    const skm = t.string().use(test(/.*/))
+    // @ts-ignore
+    const reg = skm.meta?.reg as RegExp
+    expect(reg.source).toBe('.*')
+  })
 })
