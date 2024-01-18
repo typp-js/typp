@@ -218,6 +218,7 @@ describe('instance.use', () => {
       return skm
     })
     const skm = t.string().use(test(/.*/))
+    expectTypeOf(skm).toEqualTypeOf<Typp<[StringConstructor]>>()
     // @ts-ignore
     const reg = skm.meta?.reg as RegExp
     expect(reg.source).toBe('.*')
