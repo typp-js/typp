@@ -222,5 +222,9 @@ describe('instance.use', () => {
     // @ts-ignore
     const reg = skm.meta?.reg as RegExp
     expect(reg.source).toBe('.*')
+
+    const castToNumSkm = t.defineResolver(skm => skm as Typp<[NumberConstructor]>)
+    const numSkm = t.string().use(castToNumSkm)
+    expectTypeOf(numSkm).toEqualTypeOf<Typp<[NumberConstructor]>>()
   })
 })
