@@ -188,19 +188,16 @@ export namespace Stack {
 }
 export type Pipes<T, First = never> = {
   [K in keyof T]: [K] extends [`${infer K extends keyof T & number}`]
-    ? [K] extends [0]
-      ? (
-        ...prev: [First] extends [never] ? [] : [First]
-      ) => ReturnType<
-        // @ts-ignore
-        T[K]
-      >
-      : (prev: ReturnType<
-        // @ts-ignore
-        T[Num.Subtract<K, 1>]
-      >) => ReturnType<
-        // @ts-ignore
-        T[K]
-      >
+    ? (
+      ...args: [K] extends [0]
+        ? [First] extends [never] ? [] : [prev: First]
+        : [prev: ReturnType<
+            // @ts-ignore
+            T[Num.Subtract<K, 1>]
+          >]
+    ) => ReturnType<
+      // @ts-ignore
+      T[K]
+    >
     : T[K]
 }
