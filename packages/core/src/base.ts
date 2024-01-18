@@ -349,9 +349,6 @@ export namespace t {
      *     describe('start with foo')
      *   )
      * ```
-     */
-    use<T extends readonly Resolver[]>(...args: Pipes<T, this>): LastReturnType<T>
-    /**
      * @example
      * ```ts
      * t(String)
@@ -360,9 +357,13 @@ export namespace t {
      *   .use('describe', 'start with foo')
      * ```
      */
-    use<K extends keyof ResolverUtils>(
-      key: K, ...args: Parameters<ResolverUtils[K]>
-    ): ReturnType<ReturnType<ResolverUtils[K]>>
+    use:
+      & Pipes<t.Schema<Shape, T>>
+      & (
+        <K extends keyof ResolverUtils>(
+          key: K, ...args: Parameters<ResolverUtils[K]>
+        ) => ReturnType<ReturnType<ResolverUtils[K]>>
+      )
   }
 }
 // Extensible

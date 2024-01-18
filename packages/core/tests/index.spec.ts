@@ -176,6 +176,19 @@ describe('instance.use', () => {
     const castToNumSkm = t.defineResolver(skm => skm as Typp<[NumberConstructor]>)
     const numSkm = t.string().use(castToNumSkm)
     expectTypeOf(numSkm).toEqualTypeOf<Typp<[NumberConstructor]>>()
+
+    t
+      .string()
+      .use(
+        skm => {
+          expectTypeOf(skm).toEqualTypeOf<Typp<[StringConstructor]>>()
+          return skm as Typp<[StringConstructor]>
+        },
+        skm => {
+          expectTypeOf(skm).toEqualTypeOf<Typp<[StringConstructor]>>()
+          return skm
+        }
+      )
   })
   test('useResolver', () => {
     const dispose = t.useResolver('____test_regResolver', reg => skm => {

@@ -186,18 +186,92 @@ export namespace Stack {
       ? R
       : never
 }
-export type Pipes<T, First = never> = {
-  [K in keyof T]: [K] extends [`${infer K extends keyof T & number}`]
-    ? (
-      ...args: [K] extends [0]
-        ? [First] extends [never] ? [] : [prev: First]
-        : [prev: ReturnType<
-            // @ts-ignore
-            T[Num.Subtract<K, 1>]
-          >]
-    ) => ReturnType<
-      // @ts-ignore
-      T[K]
-    >
-    : T[K]
+type VoidFuncWrap<T, RT> = (...args: [T] extends [void] ? [] : [prev: T]) => RT
+export interface Pipes<Prev = void> {
+  <A0R>(a0: VoidFuncWrap<Prev, A0R>): A0R
+  <A0R, A1R>(
+    a0: VoidFuncWrap<Prev, A0R>,
+    a1: VoidFuncWrap<A0R, A1R>
+  ): A1R
+  <A0R, A1R, A2R>(
+    a0: VoidFuncWrap<Prev, A0R>,
+    a1: VoidFuncWrap<A0R, A1R>,
+    a2: VoidFuncWrap<A1R, A2R>
+  ): A2R
+  <A0R, A1R, A2R, A3R>(
+    a0: VoidFuncWrap<Prev, A0R>,
+    a1: VoidFuncWrap<A0R, A1R>,
+    a2: VoidFuncWrap<A1R, A2R>,
+    a3: VoidFuncWrap<A2R, A3R>
+  ): A3R
+  <A0R, A1R, A2R, A3R, A4R>(
+    a0: VoidFuncWrap<Prev, A0R>,
+    a1: VoidFuncWrap<A0R, A1R>,
+    a2: VoidFuncWrap<A1R, A2R>,
+    a3: VoidFuncWrap<A2R, A3R>,
+    a4: VoidFuncWrap<A3R, A4R>
+  ): A4R
+  <A0R, A1R, A2R, A3R, A4R, A5R>(
+    a0: VoidFuncWrap<Prev, A0R>,
+    a1: VoidFuncWrap<A0R, A1R>,
+    a2: VoidFuncWrap<A1R, A2R>,
+    a3: VoidFuncWrap<A2R, A3R>,
+    a4: VoidFuncWrap<A3R, A4R>,
+    a5: VoidFuncWrap<A4R, A5R>
+  ): A5R
+  <A0R, A1R, A2R, A3R, A4R, A5R, A6R>(
+    a0: VoidFuncWrap<Prev, A0R>,
+    a1: VoidFuncWrap<A0R, A1R>,
+    a2: VoidFuncWrap<A1R, A2R>,
+    a3: VoidFuncWrap<A2R, A3R>,
+    a4: VoidFuncWrap<A3R, A4R>,
+    a5: VoidFuncWrap<A4R, A5R>,
+    a6: VoidFuncWrap<A5R, A6R>
+  ): A6R
+  <A0R, A1R, A2R, A3R, A4R, A5R, A6R, A7R>(
+    a0: VoidFuncWrap<Prev, A0R>,
+    a1: VoidFuncWrap<A0R, A1R>,
+    a2: VoidFuncWrap<A1R, A2R>,
+    a3: VoidFuncWrap<A2R, A3R>,
+    a4: VoidFuncWrap<A3R, A4R>,
+    a5: VoidFuncWrap<A4R, A5R>,
+    a6: VoidFuncWrap<A5R, A6R>,
+    a7: VoidFuncWrap<A6R, A7R>
+  ): A7R
+  <A0R, A1R, A2R, A3R, A4R, A5R, A6R, A7R, A8R>(
+    a0: VoidFuncWrap<Prev, A0R>,
+    a1: VoidFuncWrap<A0R, A1R>,
+    a2: VoidFuncWrap<A1R, A2R>,
+    a3: VoidFuncWrap<A2R, A3R>,
+    a4: VoidFuncWrap<A3R, A4R>,
+    a5: VoidFuncWrap<A4R, A5R>,
+    a6: VoidFuncWrap<A5R, A6R>,
+    a7: VoidFuncWrap<A6R, A7R>,
+    a8: VoidFuncWrap<A7R, A8R>
+  ): A8R
+  <A0R, A1R, A2R, A3R, A4R, A5R, A6R, A7R, A8R, A9R>(
+    a0: VoidFuncWrap<Prev, A0R>,
+    a1: VoidFuncWrap<A0R, A1R>,
+    a2: VoidFuncWrap<A1R, A2R>,
+    a3: VoidFuncWrap<A2R, A3R>,
+    a4: VoidFuncWrap<A3R, A4R>,
+    a5: VoidFuncWrap<A4R, A5R>,
+    a6: VoidFuncWrap<A5R, A6R>,
+    a7: VoidFuncWrap<A6R, A7R>,
+    a8: VoidFuncWrap<A7R, A8R>,
+    a9: VoidFuncWrap<A8R, A9R>
+  ): A9R
+  <A0R, A1R, A2R, A3R, A4R, A5R, A6R, A7R, A8R, A9R>(
+    a0: VoidFuncWrap<Prev, A0R>,
+    a1: VoidFuncWrap<A0R, A1R>,
+    a2: VoidFuncWrap<A1R, A2R>,
+    a3: VoidFuncWrap<A2R, A3R>,
+    a4: VoidFuncWrap<A3R, A4R>,
+    a5: VoidFuncWrap<A4R, A5R>,
+    a6: VoidFuncWrap<A5R, A6R>,
+    a7: VoidFuncWrap<A6R, A7R>,
+    a8: VoidFuncWrap<A7R, A8R>,
+    a9: VoidFuncWrap<A8R, A9R>,
+    ...args: ((prev: unknown) => unknown)[]
+  ): unknown
 }
