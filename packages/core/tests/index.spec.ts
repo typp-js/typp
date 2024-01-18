@@ -194,6 +194,13 @@ describe('instance.use', () => {
         }
       )
     expectTypeOf(skm1).toEqualTypeOf<Typp<[NumberConstructor]>>()
+    // support extends
+    t.string().use((skm: Typp<[]>) => {})
+    t.string().use((skm: Typp<[StringConstructor]>) => {})
+    t
+      .string()
+      // @ts-expect-error
+      .use((skm: Typp<[NumberConstructor]>) => {})
   })
   test('useResolver', () => {
     const dispose = t.useResolver('____test_regResolver', reg => skm => {
