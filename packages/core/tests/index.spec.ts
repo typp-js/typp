@@ -177,10 +177,24 @@ describe('instance.use', () => {
     const numSkm = t.string().use(castToNumSkm)
     expectTypeOf(numSkm).toEqualTypeOf<Typp<[NumberConstructor]>>()
   })
-  test('utils key', () => {
+  test('useResolver', () => {
     const dispose = t.useResolver('____test_regResolver', reg => skm => {
       expectTypeOf(reg).toEqualTypeOf<RegExp>()
       expectTypeOf(skm).toEqualTypeOf<Typp<[StringConstructor]>>()
+      return skm
+    })
+    dispose()
+    const dispose2 = t.useResolver(
+      '____test_regResolver',
+      // @ts-expect-error
+      reg => skm => {
+        return skm as unknown as Typp<[NumberConstructor]>
+      }
+    )
+    dispose2()
+  })
+  test('utils key', () => {
+    const dispose = t.useResolver('____test_regResolver', reg => skm => {
       // @ts-ignore
       skm.meta.reg = reg
       return skm
@@ -191,6 +205,9 @@ describe('instance.use', () => {
     const reg = skm.meta?.reg as RegExp
     expect(reg.source).toBe('.*')
     dispose()
+    expect(() => {
+      t.string().use('____test_regResolver', /.*/)
+    }).toThrow('____test_regResolver is not a function')
 
     const dispose2 = t.useResolver('____test_dialog', () => skm => skm)
     const skm2 = t.string().use('____test_dialog')
@@ -202,29 +219,13 @@ describe('instance.use', () => {
     expectTypeOf(skm3).toEqualTypeOf<Typp<[NumberConstructor]>>()
     dispose3()
   })
-  // TODO unit test key mode
-  test('useResolver', () => {
-    const dispose = t.useResolver('____test_regResolver', (reg: RegExp) => t.defineResolver((skm: Typp<[StringConstructor]>) => {
-      // @ts-ignore
-      skm.meta.reg = reg
-      return skm
-    }))
-    const skm = t.string().use('____test_regResolver', /.*/)
-    // @ts-ignore
-    const reg = skm.meta?.reg as RegExp
-    expect(reg.source).toBe('.*')
-    dispose()
-    expect(() => {
-      t.string().use('____test_regResolver', /.*/)
-    }).toThrow('____test_regResolver is not a function')
-  })
   test('throw error for useResolver', () => {
     expect(() => {
       t.string().use('____test_regResolver', /.*/)
     }).toThrow('____test_regResolver is not a function')
-    const dispose = t.useResolver('____test_regResolver', (reg: RegExp) => t.defineResolver(skm => skm))
+    const dispose = t.useResolver('____test_regResolver', reg => skm => skm)
     expect(() => {
-      t.useResolver('____test_regResolver', (reg: RegExp) => t.defineResolver(skm => skm))
+      t.useResolver('____test_regResolver', reg => skm => skm)
     }).toThrow('You can\'t use resolver for typp, because the resolver "____test_regResolver" is existed and if you want to override it, please set the option "override" to true')
     dispose()
     expect(() => {
