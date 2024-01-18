@@ -201,6 +201,14 @@ describe('instance.use', () => {
       .string()
       // @ts-expect-error
       .use((skm: Typp<[NumberConstructor]>) => {})
+    const skm2 = t
+      .string()
+      .use(skm => skm as unknown as Typp<[NumberConstructor]>)
+      .use(skm => {
+        expectTypeOf(skm).toEqualTypeOf<Typp<[NumberConstructor]>>()
+        return skm as unknown as Typp<[BooleanConstructor]>
+      })
+    expectTypeOf(skm2).toEqualTypeOf<Typp<[BooleanConstructor]>>()
   })
   test('useResolver', () => {
     const dispose = t.useResolver('____test_regResolver', reg => skm => {
