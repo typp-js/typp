@@ -532,7 +532,7 @@ t.useFields({
         this,
         // @ts-ignore
         ...rest
-      )
+      )(this)
     }
     return this as any
   }
