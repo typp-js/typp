@@ -182,11 +182,15 @@ describe('instance.use', () => {
       .use(
         skm => {
           expectTypeOf(skm).toEqualTypeOf<Typp<[StringConstructor]>>()
-          return skm as Typp<[StringConstructor]>
+          return skm as unknown as Typp<[NumberConstructor]>
         },
         skm => {
-          expectTypeOf(skm).toEqualTypeOf<Typp<[StringConstructor]>>()
-          return skm
+          expectTypeOf(skm).toEqualTypeOf<Typp<[NumberConstructor]>>()
+          return skm as unknown as Typp<[BooleanConstructor]>
+        },
+        skm => {
+          expectTypeOf(skm).toEqualTypeOf<Typp<[BooleanConstructor]>>()
+          return skm as unknown as Typp<[NumberConstructor]>
         }
       )
   })
