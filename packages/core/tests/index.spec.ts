@@ -160,6 +160,22 @@ describe('instance.use', () => {
     const reg = withT0.meta?.reg as RegExp
     expect(reg.source).toBe('.*')
   })
+  test('base', () => {
+    const test = (reg: RegExp) => t.defineResolver((skm: Typp<[StringConstructor]>) => {
+      // @ts-ignore
+      skm.meta.reg = reg
+      return skm
+    })
+    const skm = t.string().use(test(/.*/))
+    expectTypeOf(skm).toEqualTypeOf<Typp<[StringConstructor]>>()
+    // @ts-ignore
+    const reg = skm.meta?.reg as RegExp
+    expect(reg.source).toBe('.*')
+
+    const castToNumSkm = t.defineResolver(skm => skm as Typp<[NumberConstructor]>)
+    const numSkm = t.string().use(castToNumSkm)
+    expectTypeOf(numSkm).toEqualTypeOf<Typp<[NumberConstructor]>>()
+  })
   // TODO unit test key mode
   test('useResolver', () => {
     const dispose = t.useResolver('____test_regResolver', (reg: RegExp) => t.defineResolver((skm: Typp<[StringConstructor]>) => {
@@ -192,21 +208,5 @@ describe('instance.use', () => {
         '123'
       )
     }).toThrow('You can\'t use resolver for typp, because the resolver "____test_regResolver" is not a function')
-  })
-  test('base', () => {
-    const test = (reg: RegExp) => t.defineResolver((skm: Typp<[StringConstructor]>) => {
-      // @ts-ignore
-      skm.meta.reg = reg
-      return skm
-    })
-    const skm = t.string().use(test(/.*/))
-    expectTypeOf(skm).toEqualTypeOf<Typp<[StringConstructor]>>()
-    // @ts-ignore
-    const reg = skm.meta?.reg as RegExp
-    expect(reg.source).toBe('.*')
-
-    const castToNumSkm = t.defineResolver(skm => skm as Typp<[NumberConstructor]>)
-    const numSkm = t.string().use(castToNumSkm)
-    expectTypeOf(numSkm).toEqualTypeOf<Typp<[NumberConstructor]>>()
   })
 })
