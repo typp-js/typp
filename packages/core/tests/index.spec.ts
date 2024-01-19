@@ -296,6 +296,11 @@ describe('instance.use', () => {
     expect(newSkm.meta.getter).toEqual(0)
     expect(skmByUsed.meta.getter).toEqual(1)
   })
+  test('return the return value of the last function argument', () => {
+    const rt = t.string().use(skm => skm, skm => skm, () => 2 as const)
+    expectTypeOf(rt).toEqualTypeOf<2>()
+    expect(rt).toBe(2)
+  })
   test('once modified instance by multiple arguments', () => {
     let skmInChain: Typp<[StringConstructor]>
     const str = t.string()
