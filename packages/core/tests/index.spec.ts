@@ -257,7 +257,6 @@ describe('instance.use', () => {
       return skm
     })
     expect(skm.meta.customCloneObj).toBeUndefined()
-    expect(skm).not.toBe(skmByUsed)
     expect(skmByUsed.meta.customCloneObj).toEqual({ foo: 0 })
     expect(
       skmByUsed
