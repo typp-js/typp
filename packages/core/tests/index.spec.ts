@@ -271,6 +271,31 @@ describe('instance.use', () => {
         .meta.customCloneObj
     ).toEqual({ foo: 3 })
   })
+  test('clone instance with getter', () => {
+    const skm = t.string()
+    let i = 0
+    const skmByUsed = skm.use(skm => {
+      Object.defineProperty(skm.meta, 'getter', {
+        enumerable: true,
+        get() { return i }
+      })
+      Object.defineProperty(skm.meta, 'dont clone when getter is not enumerable', {
+        get() { return i }
+      })
+      return skm
+    })
+    expect(skm.meta).not.toHaveProperty('getter')
+    expect(skm.meta).not.toHaveProperty('dont clone when getter is not enumerable')
+    expect(skmByUsed.meta.getter).toEqual(0)
+    expect(skmByUsed.meta['dont clone when getter is not enumerable']).toEqual(0)
+
+    const newSkm = skmByUsed.use(skm => skm)
+    expect(newSkm.meta.getter).toEqual(0)
+    expect(newSkm.meta).not.toHaveProperty('dont clone when getter is not enumerable')
+    i = 1
+    expect(newSkm.meta.getter).toEqual(0)
+    expect(skmByUsed.meta.getter).toEqual(1)
+  })
   test('useResolver', () => {
     const dispose = t.useResolver('____test_regResolver', reg => skm => {
       expectTypeOf(reg).toEqualTypeOf<RegExp>()
