@@ -190,6 +190,7 @@ export namespace t {
 // Base
 export namespace t {
   export interface SchemaMeta<Shape, T> {
+    [k: string | number | symbol]: any
   }
   export interface SchemaFieldsEntries<Shape = any, T = any> {
     [key: number & {}]: [boolean, any]
