@@ -78,7 +78,7 @@ export function t<const T extends any[]>(...types: T): Typp<T> {
 
 interface SchemaBase<Shape, T> {
   shape: Shape
-  meta?: t.SchemaMeta<Shape, T>
+  meta: t.SchemaMeta<Shape, T>
 }
 
 // Consumer
