@@ -556,7 +556,10 @@ t.useFields({
       return Object.assign(completeAssign({}, this), { meta })
     }
     if (typeof first === 'function') {
-      return first(cloneThis())
+      return rest.reduce(
+        (acc, func) => func(acc),
+        first(cloneThis())
+      )
     }
     if (typeof first === 'string') {
       const fn = utils[first]

@@ -296,6 +296,26 @@ describe('instance.use', () => {
     expect(newSkm.meta.getter).toEqual(0)
     expect(skmByUsed.meta.getter).toEqual(1)
   })
+  test('once modified instance by multiple arguments', () => {
+    let skmInChain: Typp<[StringConstructor]>
+    const str = t.string()
+    const skm = str.use(
+      s => {
+        expect(s).not.toBe(str)
+        skmInChain = s
+        s.meta.test = 1
+        return s
+      },
+      s => {
+        expect(s, 's is same when use multiple arguments')
+          .toBe(skmInChain)
+        expect(s.meta.test).toBe(1)
+        return s
+      }
+    )
+    expect(str.meta).not.toHaveProperty('test')
+    expect(skm.meta.test).toBe(1)
+  })
   test('useResolver', () => {
     const dispose = t.useResolver('____test_regResolver', reg => skm => {
       expectTypeOf(reg).toEqualTypeOf<RegExp>()
