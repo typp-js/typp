@@ -366,7 +366,7 @@ describe('instance.use', () => {
   test('throw error for useResolver', () => {
     expect(() => {
       t.string().use('____test_regResolver', /.*/)
-    }).toThrow('____test_regResolver is not a function')
+    }).toThrow('You can\'t use "____test_regResolver" for schema, because it is not a function')
     const dispose = t.useResolver('____test_regResolver', reg => skm => skm)
     expect(() => {
       t.useResolver('____test_regResolver', reg => skm => skm)
