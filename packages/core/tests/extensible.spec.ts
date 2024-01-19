@@ -30,8 +30,9 @@ describe('useStatic', () => {
   })
   test('when override is true, will override the existed static field and not throw Error', () => {
     t.useStatic('____bar', 1)
-    t.useStatic('____bar', 2, { override: true })
+    const dispose = t.useStatic('____bar', 2, { override: true })
     expect(t.____bar).toBe(2)
+    dispose()
   })
   test('can not refine static field "CANT_REFINE"', () => {
     expect(() => {
