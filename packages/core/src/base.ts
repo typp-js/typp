@@ -521,8 +521,30 @@ t.useFields({
   infer: t => t,
   strictInfer: t => t,
   use(first: any, ...rest: any[]) {
+    const cloneThis = () => {
+      const meta = {} as Record<string | number | symbol, any>
+      const thisMeta = this.meta ?? {}
+      const allFieldKeys = (
+        Object.keys(thisMeta) as (string | symbol)[]
+      ).concat(
+        Object.getOwnPropertySymbols(thisMeta)
+      )
+      for (const key of allFieldKeys) {
+        const field = thisMeta[key]
+        if (typeof field !== 'function') {
+          let nField = field
+          if (typeof field === 'object' && field !== null) {
+            nField = Object.assign(Array.isArray(field) ? [] : {}, field)
+          }
+          meta[key] = nField
+          continue
+        }
+        meta[key] = thisMeta[key]
+      }
+      return Object.assign(completeAssign({}, this), { meta })
+    }
     if (typeof first === 'function') {
-      return first(this)
+      return first(cloneThis())
     }
     if (typeof first === 'string') {
       const fn = utils[first]
@@ -532,7 +554,7 @@ t.useFields({
         this,
         // @ts-ignore
         ...rest
-      )(this)
+      )(cloneThis())
     }
     return this as any
   }

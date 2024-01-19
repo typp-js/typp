@@ -210,6 +210,41 @@ describe('instance.use', () => {
       })
     expectTypeOf(skm2).toEqualTypeOf<Typp<[BooleanConstructor]>>()
   })
+  test('return an new instance reference', () => {
+    const skm = t.string()
+    const skmByUsed = skm.use(skm => {
+      skm.meta.test = 1
+      skm.meta.arr = [1]
+      skm.meta.modifiedRefArr = [{ foo: 1 }]
+      return skm
+    })
+    expect(skm.meta.test).toBeUndefined()
+    expect(skm).not.toBe(skmByUsed)
+    expect(skmByUsed.meta.test).toBe(1)
+    expect(skmByUsed.meta.arr).toEqual([1])
+    expect(skmByUsed.meta.modifiedRefArr).toEqual([{ foo: 1 }])
+
+    const clearArrSkm = skmByUsed.use(skm => {
+      skm.meta.arr = []
+      return skm
+    })
+    expect(skmByUsed.meta.arr).toEqual([1])
+    expect(clearArrSkm.meta.arr).toEqual([])
+
+    const pushArrSkm = clearArrSkm.use(skm => {
+      skm.meta.arr.push(2)
+      return skm
+    })
+    expect(clearArrSkm.meta.arr).toEqual([])
+    expect(pushArrSkm.meta.arr).toEqual([2])
+
+    const modifiedSkm = skmByUsed.use(skm => {
+      skm.meta.modifiedRefArr[0].foo = 2
+      return skm
+    })
+    expect(skmByUsed.meta.modifiedRefArr).toEqual([{ foo: 2 }])
+    expect(modifiedSkm.meta.modifiedRefArr).toEqual([{ foo: 2 }])
+  })
   test('useResolver', () => {
     const dispose = t.useResolver('____test_regResolver', reg => skm => {
       expectTypeOf(reg).toEqualTypeOf<RegExp>()
