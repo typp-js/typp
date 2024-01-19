@@ -245,6 +245,33 @@ describe('instance.use', () => {
     expect(skmByUsed.meta.modifiedRefArr).toEqual([{ foo: 2 }])
     expect(modifiedSkm.meta.modifiedRefArr).toEqual([{ foo: 2 }])
   })
+  test('clone instance by clone symbol', () => {
+    const skm = t.string()
+    let i = 0
+    const skmByUsed = skm.use(skm => {
+      skm.meta.customCloneObj = t.defineCloneMetaField({
+        foo: i++
+      }, () => ({
+        foo: i++
+      }))
+      return skm
+    })
+    expect(skm.meta.customCloneObj).toBeUndefined()
+    expect(skm).not.toBe(skmByUsed)
+    expect(skmByUsed.meta.customCloneObj).toEqual({ foo: 0 })
+    expect(
+      skmByUsed
+        .use(skm => skm)
+        .meta.customCloneObj
+    ).toEqual({ foo: 1 })
+    expect(skmByUsed.meta.customCloneObj).toEqual({ foo: 0 })
+    expect(
+      skmByUsed
+        .use(skm => skm)
+        .use(skm => skm)
+        .meta.customCloneObj
+    ).toEqual({ foo: 3 })
+  })
   test('useResolver', () => {
     const dispose = t.useResolver('____test_regResolver', reg => skm => {
       expectTypeOf(reg).toEqualTypeOf<RegExp>()

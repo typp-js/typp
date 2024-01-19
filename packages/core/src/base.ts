@@ -290,6 +290,7 @@ export namespace t {
 }
 // `use` Support
 const utils: Partial<t.ResolverUtils> = {}
+const instanceUseClone = Symbol('clone')
 export namespace t {
   export interface Resolver<
     S extends Schema<any, any> = Schema<any, any>, RT = S
@@ -328,6 +329,13 @@ export namespace t {
         return
       delete utils[key]
     }
+  }
+  export function defineCloneMetaField<T>(obj: T, cloneFn: () => T) {
+    Object.defineProperty(obj, instanceUseClone, {
+      configurable: false, enumerable: false, writable: false,
+      value: () => defineCloneMetaField(cloneFn(), cloneFn)
+    })
+    return obj
   }
   export interface SchemaFieldsAll<Shape, T> {
     /**
@@ -534,7 +542,11 @@ t.useFields({
         if (typeof field !== 'function') {
           let nField = field
           if (typeof field === 'object' && field !== null) {
-            nField = Object.assign(Array.isArray(field) ? [] : {}, field)
+            if (nField[instanceUseClone]) {
+              nField = nField[instanceUseClone]()
+            } else {
+              nField = Object.assign(Array.isArray(field) ? [] : {}, field)
+            }
           }
           meta[key] = nField
           continue
