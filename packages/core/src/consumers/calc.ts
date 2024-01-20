@@ -151,4 +151,21 @@ export default function (ctx: typeof t) {
   })
   t.useStatic.proxy('intersect', 'and')
   t.useStatic.proxy('intersect', 'intersection')
+
+  function isIntersection(s: t.Schema<any, any>): s is t.Schema<
+    t.SpecialShape<t.SpecialShapeTypeMapping['intersection'], readonly t.Schema<any, any>[]>,
+    any
+  > {
+    return s.shape.type === intersectionSymbol
+  }
+  t.useFields({
+    and(u) {
+      if (!isIntersection(this)) {
+        return t.intersect([this, u])
+      }
+      // TODO use `t.clone`
+      this.shape.schemas = [...this.shape.schemas, t(u)]
+      return this as any
+    }
+  })
 }
