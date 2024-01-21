@@ -143,7 +143,7 @@ export namespace t {
     ]: Entries[K & number][1]
   }>
   export interface DynamicSpecialShapeTypeMapping {
-    readonly [key: string]: symbol
+    readonly [key: string & {}]: symbol
   }
   export const specialShapeTypeMapping = {
   } as DynamicSpecialShapeTypeMapping
