@@ -419,6 +419,10 @@ export namespace t {
     'useSpecialShapeType',
     'useResolver',
     'defineResolver',
+    'isSchema',
+    'isSchemas',
+    'isSpecialShape',
+    'isWhatSpecialShape',
     'CANT_REFINE'
   ] as const)
   type CantRefine = typeof CANT_REFINE[number]
