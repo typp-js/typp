@@ -163,9 +163,12 @@ export default function (ctx: typeof t) {
       if (!isIntersection(this)) {
         return t.intersect([this, u])
       }
-      // TODO use `t.clone`
-      this.shape.schemas = [...this.shape.schemas, t(u)]
-      return this as any
+      const nt = t.clone(this)
+      nt.shape = {
+        ...nt.shape,
+        schemas: [...nt.shape.schemas, t(u)]
+      }
+      return nt as any
     }
   })
 }
