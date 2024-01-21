@@ -158,6 +158,8 @@ export default function (ctx: typeof t) {
     t.SpecialShape<t.SpecialShapeTypeMapping[T], readonly t.Schema<any, any>[]>,
     any
   > {
+    if (!s.shape) return false
+    if (!s.shape.type) return false
     return s.shape.type === type
   }
   t.useFields({
