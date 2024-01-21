@@ -186,6 +186,16 @@ export namespace t {
         .values(specialShapeTypeMapping)
         .includes(obj.type)
   }
+  export function isWhatSpecialShape<
+    T extends keyof t.SpecialShapeTypeMapping
+  >(type: T, s: t.Schema<any, any>): s is t.Schema<
+    t.SpecialShape<t.SpecialShapeTypeMapping[T], readonly t.Schema<any, any>[]>,
+    any
+  > {
+    if (!s.shape) return false
+    if (!s.shape.type) return false
+    return s.shape.type === type
+  }
 }
 // Base
 export namespace t {
