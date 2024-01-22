@@ -340,9 +340,7 @@ describe('intersect', () => {
     //   ^?
     const case0 = t.intersect([
       t.union(['a', 'ab', 'b']),
-      t(`a${t.literal.String}`)
-      // TODO support no `t` function wrap?
-      // `a${String}`
+      `a${t.literal.String}`
     ])
     expectTypeOf(case0).toEqualTypeOf<t.Schema<
       t.SpecialShape<
