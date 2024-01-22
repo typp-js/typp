@@ -361,7 +361,7 @@ describe('intersect', () => {
     //   ^?
     const case1 = t.intersect([
       t.union(['a', 'ax', 'a12', 'b']),
-      `a${0 as number}`
+      `a${t.literal.Number}`
     ])
     expectTypeOf(case1).toEqualTypeOf<t.Schema<
       t.SpecialShape<
