@@ -163,8 +163,8 @@ export default function (ctx: typeof t) {
     }
     const nt = t.clone(s)
     nt.shape = {
-      ...nt.shape,
-      schemas: [...nt.shape.schemas, t(i)]
+      type: s.shape.type,
+      schemas: [...s.shape.schemas, t(i)]
     }
     return nt as any
   }
