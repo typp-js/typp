@@ -152,17 +152,28 @@ export default function (ctx: typeof t) {
   t.useStatic.proxy('intersect', 'and')
   t.useStatic.proxy('intersect', 'intersection')
 
+  function merge(s: t.Schema<any, any>, i: any, type: 'union' | 'intersection') {
+    if (!t.isWhatSpecialShape(type, s)) {
+      switch (type) {
+        case 'union':
+          return t.union([s, i])
+        case 'intersection':
+          return t.intersect([s, i])
+      }
+    }
+    const nt = t.clone(s)
+    nt.shape = {
+      ...nt.shape,
+      schemas: [...nt.shape.schemas, t(i)]
+    }
+    return nt as any
+  }
   t.useFields({
     and(u) {
-      if (!t.isWhatSpecialShape('intersection', this)) {
-        return t.intersect([this, u])
-      }
-      const nt = t.clone(this)
-      nt.shape = {
-        ...nt.shape,
-        schemas: [...nt.shape.schemas, t(u)]
-      }
-      return nt as any
+      return merge(this, u, 'intersection')
+    },
+    or(u) {
+      return merge(this, u, 'union')
     }
   })
 }
