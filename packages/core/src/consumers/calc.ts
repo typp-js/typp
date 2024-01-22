@@ -169,11 +169,11 @@ export default function (ctx: typeof t) {
     return nt as any
   }
   t.useFields({
-    and(u) {
-      return merge(this, u, 'intersection')
+    and(t) {
+      return merge(this, t, 'intersection')
     },
-    or(u) {
-      return merge(this, u, 'union')
+    or(t) {
+      return merge(this, t, 'union')
     }
   })
 }
