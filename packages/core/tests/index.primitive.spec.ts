@@ -144,6 +144,37 @@ describe('primitive', () => {
     expectTypeOf<t.Infer<typeof undefinedSkm>>()
       .toEqualTypeOf<undefined>()
   })
+  test('special type', () => {
+    const anySkm = t.any()
+    expect(anySkm.shape.type).toBe(t.Symbols.any)
+    expectTypeOf(anySkm).toEqualTypeOf<t.Schema<any, any>>()
+    expectTypeOf<t.Infer<typeof anySkm>>()
+      .toEqualTypeOf<any>()
+    const unknownSkm = t.unknown()
+    expect(unknownSkm.shape.type).toBe(t.Symbols.unknown)
+    expectTypeOf(unknownSkm).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['unknown']>,
+      unknown
+    >>()
+    expectTypeOf<t.Infer<typeof unknownSkm>>()
+      .toEqualTypeOf<unknown>()
+    const neverSkm = t.never()
+    expect(neverSkm.shape.type).toBe(t.Symbols.never)
+    expectTypeOf(neverSkm).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['never']>,
+      never
+    >>()
+    expectTypeOf<t.Infer<typeof neverSkm>>()
+      .toEqualTypeOf<never>()
+    const voidSkm = t.void()
+    expect(voidSkm.shape.type).toBe(t.Symbols.void)
+    expectTypeOf(voidSkm).toEqualTypeOf<t.Schema<
+      t.SpecialShape<t.SpecialShapeTypeMapping['void']>,
+      void
+    >>()
+    expectTypeOf<t.Infer<typeof voidSkm>>()
+      .toEqualTypeOf<void>()
+  })
 })
 
 describe('literal', () => {
