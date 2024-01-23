@@ -325,7 +325,7 @@ export namespace t {
   }
 }
 // `use` Support
-const utils: Partial<t.ResolverUtils> = {}
+const utils = {} as t.ResolverUtils
 const instanceUseClone = Symbol('clone')
 export namespace t {
   export interface Resolver<
@@ -579,8 +579,6 @@ t.useFields({
       if (!(first in utils))
         throw new Error(`You can't use "${first}" for schema, because it is not in \`ResolverUtils\``)
       const fn = utils[first]
-      if (typeof fn !== 'function')
-        throw new Error(`You can't use "${first}" for schema, because it is not a function`)
       return fn.call(
         this,
         // @ts-ignore
