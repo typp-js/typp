@@ -61,8 +61,7 @@ export default function (ctx: typeof t) {
 
     const [key, ...value] = rest
     return [t.specialShape(t.specialShapeTypeMapping.map, [
-      key ? t(key) : t(),
-      value.length > 0 ? t(...value) : t()
+      key ? t(key) : t(), t(...value)
     ])]
   })
   t.useStatic('map', (...args) => t(Map, ...args))
