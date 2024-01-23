@@ -44,6 +44,10 @@ export default function (ctx: typeof t) {
       t.Generic<L, ES, D>
     >
   })
+
+  t.useFields((shape: any): shape is t.SpecialShape<t.SpecialShapeTypeMapping['function'], any> => {
+    return shape?.type === functionSymbol
+  }, () => ({ implement: func => func }))
 }
 
 declare module '../base' {
