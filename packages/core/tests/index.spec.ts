@@ -380,4 +380,10 @@ describe('instance.use', () => {
       )
     }).toThrow('You can\'t use resolver for typp, because the resolver "____test_regResolver" is not a function')
   })
+  test('throw error when arguments not match', () => {
+    expect(() => {
+      // @ts-expect-error
+      t.string().use(123)
+    }).toThrow('You can\'t use "123" for schema, because it is not a function or string')
+  })
 })

@@ -334,7 +334,7 @@ export namespace t {
     (schema: S): RT
   }
   export interface ResolverUtils {
-    [key: string]: (...args: any[]) => Resolver
+    [key: string & {}]: (...args: any[]) => Resolver
   }
   export function defineResolver<R extends Resolver>(func: R): R {
     return func
@@ -585,7 +585,7 @@ t.useFields({
         ...rest
       )(t.clone(this))
     }
-    return this as any
+    throw new Error(`You can't use "${first}" for schema, because it is not a function or string`)
   }
 })
 t.useConsumer(first => t.isSpecialShape(first) ? [first] : undefined)
