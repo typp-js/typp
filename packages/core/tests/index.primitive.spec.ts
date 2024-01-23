@@ -129,6 +129,18 @@ describe('primitive', () => {
     expectTypeOf<t.Infer<typeof anySchema>>()
       .toEqualTypeOf<any>()
   })
+  test('literal primitive value type', () => {
+    const nullSkm = t(null)
+    expect(nullSkm.shape).toBe(null)
+    expectTypeOf(nullSkm).toEqualTypeOf<t.Schema<null, null>>()
+    expectTypeOf<t.Infer<typeof nullSkm>>()
+      .toEqualTypeOf<null>()
+    const undefinedSkm = t(undefined)
+    expect(undefinedSkm.shape).toBe(undefined)
+    expectTypeOf(undefinedSkm).toEqualTypeOf<t.Schema<undefined, undefined>>()
+    expectTypeOf<t.Infer<typeof undefinedSkm>>()
+      .toEqualTypeOf<undefined>()
+  })
 })
 
 describe('literal', () => {
