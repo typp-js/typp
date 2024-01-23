@@ -269,9 +269,13 @@ describe('intersect', () => {
     )).toThrowError()
   })
   test('instance.and', () => {
-    const case0 = t.union([1, 2, '3']).and(String)
-    //    ^?
-    expectTypeOf(case0).toEqualTypeOf<t.Schema<
+    const case0_0 = t.union([1, 2, '3']).and(String)
+    const case0_1 = t.union([1, 2, '3']).and(t(String))
+    const case0_2 = t.union([1, 2, '3']).and(t.string())
+    expect(case0_0).toStrictEqual(t.intersect([t.union([1, 2, '3']), String]))
+    expect(case0_1).toStrictEqual(case0_0)
+    expect(case0_2).toStrictEqual(case0_0)
+    expectTypeOf(case0_0).toEqualTypeOf<t.Schema<
       t.SpecialShape<
         t.SpecialShapeTypeMapping['intersection'], [
           t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['union'], [
@@ -284,12 +288,23 @@ describe('intersect', () => {
       >,
       '3'
     >>()
-    expectTypeOf<t.Infer<typeof case0>>()
+    expectTypeOf<t.Infer<typeof case0_0>>()
       .toEqualTypeOf<'3'>()
-    const case1 = t.union([1, 2, '3']).and(t.string())
-    expectTypeOf(case1).toEqualTypeOf<typeof case0>()
+    expectTypeOf(case0_0).toEqualTypeOf<typeof case0_1>()
+    expectTypeOf(case0_0).toEqualTypeOf<typeof case0_2>()
 
-    const case2 = t(String).and(t({}))
+    const case1 = t(String).and(t({}))
+    expect(case1).toStrictEqual(t.intersection([t.string(), t({})]))
+    expectTypeOf(case1).toEqualTypeOf<
+      t.Schema<StringConstructor, string & {}>
+    >()
+    expectTypeOf<t.Infer<typeof case1>>()
+      .toEqualTypeOf<string>()
+    type Case1 = t.Infer<typeof case1>
+    //   ^?
+
+    const case2 = t(String).and(t.unknown())
+    expect(case2).toStrictEqual(t.intersection([t.string(), t.unknown()]))
     expectTypeOf(case2).toEqualTypeOf<
       t.Schema<StringConstructor, string & {}>
     >()
@@ -297,16 +312,13 @@ describe('intersect', () => {
       .toEqualTypeOf<string>()
     type Case2 = t.Infer<typeof case2>
     //   ^?
-    const case3 = t(String).and(t.unknown())
-    expectTypeOf(case3).toEqualTypeOf<
-      t.Schema<StringConstructor, string & {}>
-    >()
-    expectTypeOf<t.Infer<typeof case3>>()
-      .toEqualTypeOf<string>()
-    type Case3 = t.Infer<typeof case3>
-    //   ^?
-    const case4 = t.union(['11', '22', '33', t(String).and(t.unknown())])
-    expectTypeOf(case4).toEqualTypeOf<t.Schema<
+
+    const case3 = t.union(['11', '22', '33', t(String).and(t.unknown())])
+    expect(case3).toStrictEqual(t.union([
+      '11', '22', '33',
+      t.intersection([t.string(), t.unknown()])
+    ]))
+    expectTypeOf(case3).toEqualTypeOf<t.Schema<
       t.SpecialShape<
         t.SpecialShapeTypeMapping['union'], [
           t.Schema<'11', '11'>,
@@ -317,15 +329,21 @@ describe('intersect', () => {
       >,
       '11' | '22' | '33' | (string & {})
     >>()
-    expectTypeOf<t.Infer<typeof case4>>()
+    expectTypeOf<t.Infer<typeof case3>>()
       .toEqualTypeOf<'11' | '22' | '33' | (string & {})>()
-    type Case4 = t.Infer<typeof case4>
+    type Case3 = t.Infer<typeof case3>
     //   ^?
-    const case5 = t
+
+    const case4 = t
       .union(['a1', 'ab', 'atrue'])
       .and(t.literal(`a${t.literal.String}`))
       .and(t.literal(`a${t.literal.Number}`))
-    expectTypeOf(case5).toEqualTypeOf<t.Schema<
+    expect(case4).toStrictEqual(t.intersection([
+      t.union(['a1', 'ab', 'atrue']),
+      t.literal(`a${t.literal.String}`),
+      t.literal(`a${t.literal.Number}`)
+    ]))
+    expectTypeOf(case4).toEqualTypeOf<t.Schema<
       t.SpecialShape<
         t.SpecialShapeTypeMapping['intersection'], [
           t.Schema<t.SpecialShape<t.SpecialShapeTypeMapping['union'], [
