@@ -380,6 +380,11 @@ describe('instance.use', () => {
       )
     }).toThrow('You can\'t use resolver for typp, because the resolver "____test_regResolver" is not a function')
   })
+  test('throw error when key is not in utils', () => {
+    expect(() => {
+      t.string().use('____test_not_exist')
+    }).toThrow('You can\'t use "____test_not_exist" for schema, because it is not in `ResolverUtils`')
+  })
   test('throw error when arguments not match', () => {
     expect(() => {
       // @ts-expect-error

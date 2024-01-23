@@ -576,6 +576,8 @@ t.useFields({
       )
     }
     if (typeof first === 'string') {
+      if (!(first in utils))
+        throw new Error(`You can't use "${first}" for schema, because it is not in \`ResolverUtils\``)
       const fn = utils[first]
       if (typeof fn !== 'function')
         throw new Error(`You can't use "${first}" for schema, because it is not a function`)
