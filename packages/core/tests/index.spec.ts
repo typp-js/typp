@@ -351,7 +351,7 @@ describe('instance.use', () => {
     dispose()
     expect(() => {
       t.string().use('____test_regResolver', /.*/)
-    }).toThrow('You can\'t use "____test_regResolver" for schema, because it is not a function')
+    }).toThrow('You can\'t use "____test_regResolver" for schema, because it is not in `ResolverUtils`')
 
     const dispose2 = t.useResolver('____test_dialog', () => skm => skm)
     const skm2 = t.string().use('____test_dialog')
@@ -366,7 +366,7 @@ describe('instance.use', () => {
   test('throw error for useResolver', () => {
     expect(() => {
       t.string().use('____test_regResolver', /.*/)
-    }).toThrow('You can\'t use "____test_regResolver" for schema, because it is not a function')
+    }).toThrow('You can\'t use "____test_regResolver" for schema, because it is not in `ResolverUtils`')
     const dispose = t.useResolver('____test_regResolver', reg => skm => skm)
     expect(() => {
       t.useResolver('____test_regResolver', reg => skm => skm)
