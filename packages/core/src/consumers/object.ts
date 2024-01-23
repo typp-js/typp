@@ -144,8 +144,9 @@ export default function (ctx: typeof t) {
         ])]
       }
     }
-    // t({ a: String, b: Number })
-    if (!isEmptyObject) return [Object.entries(first).reduce((acc, [k, v]) => ({
+    // t(Object | { a: String, b: Number })
+    // t(Object | { a: String, b: Number }, [key: PropertyKey, value: ...any[]])
+    return [Object.entries(first).reduce((acc, [k, v]) => ({
       ...acc,
       [k]: t(v)
     }), {})]
