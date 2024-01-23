@@ -245,7 +245,7 @@ export default function (ctx: typeof t) {
   })
   t.useConsumer((...args) => {
     if (args.length === 0) {
-      return [t.specialShape(t.Symbols.any)]
+      return [t.specialShape(symbols.any)]
     }
     // TODO when pass t.Symbols, return target specialShape schema
     const [first, ...rest] = args
@@ -268,8 +268,8 @@ export default function (ctx: typeof t) {
   t.useSpecialShapeType('void', symbols.void)
   t.useSpecialShapeType('unknown', symbols.unknown)
   t.useSpecialShapeType('never', symbols.never)
-  t.useStatic('any', () => t(t.specialShape(t.Symbols.any)))
-  t.useStatic('unknown', () => t(t.specialShape(t.Symbols.unknown)))
+  t.useStatic('any', () => t(t.specialShape(symbols.any)))
+  t.useStatic('unknown', () => t(t.specialShape(symbols.unknown)))
   t.useStatic('string', () => t(String))
   t.useStatic('number', () => t(Number))
   t.useStatic('bigint', () => t(BigInt))
@@ -279,8 +279,8 @@ export default function (ctx: typeof t) {
   t.useStatic('regexp', () => t(RegExp))
   t.useStatic('undefined', () => t(undefined))
   t.useStatic('null', () => t(null))
-  t.useStatic('never', () =>t(t.specialShape(t.Symbols.never)))
-  t.useStatic('void', () => t(t.specialShape(t.Symbols.void)))
+  t.useStatic('never', () =>t(t.specialShape(symbols.never)))
+  t.useStatic('void', () => t(t.specialShape(symbols.void)))
   t.useStatic('literal', literal)
   t.useStatic.proxy('literal', 'const')
 }
