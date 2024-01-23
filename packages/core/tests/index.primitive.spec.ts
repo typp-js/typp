@@ -1,6 +1,7 @@
-import { describe, expect, expectTypeOf, test } from 'vitest'
+import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 
-import { t } from '../src'
+import { t } from '../src/base'
+import primitive from '../src/consumers/primitive'
 import ConstructorMapping = t.ConstructorMapping
 
 test('ConstructorMapping', () => {
@@ -33,6 +34,7 @@ test('ConstructorMapping', () => {
 })
 
 describe('primitive', () => {
+  beforeAll(() => t.use(primitive))
   test('creat by Constructor', () => {
     const cases = [
       [t(String), String, {} as string],
