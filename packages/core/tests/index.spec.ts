@@ -79,6 +79,7 @@ describe('strictInfer', () => {
     const NumberSchema = t(Number)
     const number0 = NumberSchema.strictInfer(0)
     expect(number0).toBe(0)
+    // TODO type check
   })
 })
 
