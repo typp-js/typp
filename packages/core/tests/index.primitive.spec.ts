@@ -4,6 +4,8 @@ import { t } from '../src/base'
 import primitive from '../src/consumers/primitive'
 import ConstructorMapping = t.ConstructorMapping
 
+beforeAll(() => t.use(primitive))
+
 test('ConstructorMapping', () => {
   expectTypeOf<ConstructorMapping<StringConstructor>>()
     .toMatchTypeOf<string>()
@@ -34,7 +36,6 @@ test('ConstructorMapping', () => {
 })
 
 describe('primitive', () => {
-  beforeAll(() => t.use(primitive))
   test('creat by Constructor', () => {
     const cases = [
       [t(String), String, {} as string],
