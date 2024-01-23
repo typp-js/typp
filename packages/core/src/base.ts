@@ -27,7 +27,7 @@ const CANT_OVERRIDE = Object.freeze([
   'shape'
 ] as const)
 export function t<const T extends any[]>(...types: T): Typp<T> {
-  let shape: any
+  let shape: unknown = undefined
   for (const consumer of consumers) {
     const result = consumer(...types)
     if (result) {
