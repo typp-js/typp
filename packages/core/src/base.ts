@@ -194,7 +194,7 @@ export namespace t {
   > {
     if (!s.shape) return false
     if (!s.shape.type) return false
-    return s.shape.type === type
+    return s.shape.type === t.specialShapeTypeMapping[type]
   }
 }
 // Base
