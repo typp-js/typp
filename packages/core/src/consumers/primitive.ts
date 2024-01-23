@@ -247,6 +247,7 @@ export default function (ctx: typeof t) {
     if (args.length === 0) {
       return [t.specialShape(t.Symbols.any)]
     }
+    // TODO when pass t.Symbols, return target specialShape schema
     const [first, ...rest] = args
     if ([
       String,
