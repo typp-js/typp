@@ -11,6 +11,10 @@ declare module '../base' {
     > = true extends (
       | IsEqual<Rest, []>
       | IsEqual<Rest, readonly []>
+      | (
+        & IsNotEqual<T, ObjectConstructor>
+        & IsNotEqual<T, {}>
+      )
     ) ? (
       // ObjectConsume<{}, []>
       true extends IsEqual<T, {}> ? (

@@ -513,6 +513,20 @@ describe('object', () => {
     // t.record(String, Number)
     // t.object(String, Number)
   })
+  test('with key and value description interface', () => {
+    const case0 = t({ a: Number, b: String }, Number, String)
+    expect(case0.shape).toEqual({
+      a: t(Number),
+      b: t(String)
+    })
+    expectTypeOf(case0).toEqualTypeOf<t.Schema<{
+      a: t.Schema<NumberConstructor, number>
+      b: t.Schema<StringConstructor, string>
+    }, {
+      a: number
+      b: string
+    }>>()
+  })
   test('define record by `{}`', () => {
     const case0_0 = t({}, Number)
     const case0_1 = t(Object, Number)
