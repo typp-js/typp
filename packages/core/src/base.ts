@@ -457,9 +457,6 @@ export namespace t {
       value
     })
     return () => {
-      const isExisted = Object.hasOwnProperty.call(t, key)
-      if (!isExisted)
-        return
       Object.defineProperty(t, key, {
         configurable: true,
         enumerable: true,
