@@ -496,9 +496,6 @@ export namespace t {
       set: (value) => { t[nativeKey] = value }
     })
     return () => {
-      const isExisted = Object.hasOwnProperty.call(t, proxyKey)
-      if (!isExisted)
-        return
       Object.defineProperty(t, proxyKey, {
         configurable: true,
         enumerable: true,
