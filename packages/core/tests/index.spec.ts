@@ -86,7 +86,7 @@ describe('strictInfer', () => {
 declare module '@typp/core' {
   namespace t {
     export const ____test_useStaticField0: string
-    export const ____test_useStaticField1: string
+    export let ____test_useStaticField1: string
     export const use_test: number
     export function use_testFunction(): () => void
     export interface ____use_testFunctionWithFields {
@@ -160,6 +160,20 @@ describe('use', () => {
     dispose()
   })
   describe('proxy', () => {
+    test('setter', () => {
+      const dispose = t.use(ctx => {
+        ctx.useStatic('____test_useStaticField0', '0')
+        ctx.useStatic.proxy('____test_useStaticField0', '____test_useStaticField1')
+      })
+      expect(t.____test_useStaticField0).toBe('0')
+      expect(t.____test_useStaticField1).toBe('0')
+      t.____test_useStaticField1 = '1'
+      expect(t.____test_useStaticField0).toBe('1')
+      expect(t.____test_useStaticField1).toBe('1')
+      dispose()
+      expect(t).not.toHaveProperty('____test_useStaticField0')
+      expect(t).not.toHaveProperty('____test_useStaticField1')
+    })
     test('throw error when refine CantRefine fields', () => {
       expect(() => {
         t.useStatic.proxy(
