@@ -558,11 +558,7 @@ export namespace t {
     const pluginDispose = plugin(Object.assign((...args: any[]) => t(...args), t, overrideT))
     return () => {
       for (const dispose of disposes) {
-        try {
-          dispose()
-        } catch (err) {
-          console.error(err)
-        }
+        dispose()
       }
       pluginDispose?.()
     }
