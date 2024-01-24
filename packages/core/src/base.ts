@@ -470,22 +470,23 @@ export namespace t {
   }
   // TODO static.alias
   useStatic.proxy = <
-    NK extends Refineble
+    NK extends keyof typeof t
   >(nativeKey: NK, proxyKey: Exclude<Refineble, NK>) => {
+    const errorMsgPrefix = `You can't refine static field "${proxyKey}" to "${nativeKey}" for typp`
     if (nativeKey === proxyKey as string) {
-      throw new Error(`You can't refine static field "${proxyKey}" for typp, because the nativeKey and proxyKey are the same`)
+      throw new Error(`${errorMsgPrefix}, because the nativeKey and proxyKey are the same`)
     }
     if (!Object.hasOwnProperty.call(t, nativeKey)) {
-      throw new Error(`You can't refine static field "${proxyKey}" for typp, because the native field "${nativeKey}" is not existed`)
+      throw new Error(`${errorMsgPrefix}, because the native field "${nativeKey}" is not existed`)
     }
     if ((
       CANT_REFINE as unknown as string[]
     ).includes(proxyKey)) {
-      throw new Error(`You can't refine static field "${proxyKey}" for typp, because it is always static`)
+      throw new Error(`${errorMsgPrefix}, because it is always static`)
     }
     const isExisted = Object.hasOwnProperty.call(t, proxyKey)
     if (isExisted) {
-      throw new Error(`You can't refine static field "${proxyKey}" for typp, because it is existed`)
+      throw new Error(`${errorMsgPrefix}, because it is existed`)
     }
     Object.defineProperty(t, proxyKey, {
       configurable: true,

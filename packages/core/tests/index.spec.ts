@@ -159,6 +159,29 @@ describe('use', () => {
     expect(mockFn).toHaveBeenCalled()
     dispose()
   })
+  describe('proxy', () => {
+    test('throw error when refine CantRefine fields', () => {
+      expect(() => {
+        t.useStatic.proxy(
+          'useResolver',
+          // @ts-expect-error
+          'useStatic'
+        )
+      }).toThrow('You can\'t refine static field "useStatic" to "useResolver" for typp, because it is always static')
+    })
+    test('throw error when refine not existed fields', () => {
+      expect(() => {
+        t.useStatic.proxy(
+          'useResolver',
+          '____test_useStaticField0'
+        )
+        t.useStatic.proxy(
+          'useResolver',
+          '____test_useStaticField0'
+        )
+      }).toThrow('You can\'t refine static field "____test_useStaticField0" to "useResolver" for typp, because it is existed')
+    })
+  })
 })
 
 declare module '../src/base' {
