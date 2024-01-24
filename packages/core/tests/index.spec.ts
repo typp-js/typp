@@ -1,4 +1,4 @@
-import { describe, expect, expectTypeOf, test } from 'vitest'
+import { describe, expect, expectTypeOf, test, vi } from 'vitest'
 
 import type { Typp } from '../src'
 import { t } from '../src'
@@ -88,6 +88,12 @@ declare module '@typp/core' {
     export const ____test_useStaticField0: string
     export const ____test_useStaticField1: string
     export const use_test: number
+    export function use_testFunction(): () => void
+    export interface ____use_testFunctionWithFields {
+      foo: number
+      (): () => void
+    }
+    export const use_testFunctionWithFields: ____use_testFunctionWithFields
   }
 }
 
@@ -140,6 +146,18 @@ describe('use', () => {
     dispose()
     expect(t).not.toHaveProperty('____test_useStaticField0')
     expect(t).not.toHaveProperty('____test_useStaticField1')
+  })
+  test('use custom useWhat', () => {
+    const mockFn = vi.fn()
+    const dispose = t.use(ctx => {
+      ctx.useStatic('use_testFunction', () => mockFn)
+    })
+    const disposeUse_testFunction = t.use(ctx => {
+      ctx.use_testFunction()
+    })
+    disposeUse_testFunction()
+    expect(mockFn).toHaveBeenCalled()
+    dispose()
   })
 })
 
