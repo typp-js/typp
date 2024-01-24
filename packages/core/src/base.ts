@@ -533,11 +533,9 @@ export namespace t {
             .entries(field)
             .reduce((acc, [key, value]) => {
               if (key === 'prototype') return acc
-              if (typeof value !== 'function')
-                throw new Error(`You can't use plugin for typp, because the field "${key}" of field "${key}" is not a function`)
-              return {
-                ...acc,
-                [key]: (...args: any[]) => {
+              let v = value
+              if (typeof v === 'function') {
+                v = (...args: any[]) => {
                   const dispose = value.call(
                     field,
                     // @ts-ignore
@@ -545,6 +543,12 @@ export namespace t {
                   )
                   disposes.push(dispose)
                   return dispose
+                }
+              }
+              return {
+                ...acc,
+                get [key]() {
+                  return typeof v === 'function' ? v.bind(this) : v
                 }
               }
             }, {})
