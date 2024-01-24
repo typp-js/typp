@@ -413,6 +413,7 @@ export namespace t {
 // Extensible
 export namespace t {
   export const CANT_REFINE = Object.freeze([
+    'use',
     'useStatic',
     'useConsumer',
     'useFields',
