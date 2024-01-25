@@ -122,6 +122,8 @@ declare module '@typp/core' {
     export const use_test: () => number
     export const use_testWithFields: {
       foo: () => number
+      bar: string
+      bor: { a: number }
       (): () => void
     }
     export function use_testFunction(): () => void
@@ -170,15 +172,29 @@ describe('use', () => {
     disposeStatic()
   })
   test('throw error when field return value of return value of useWhat is not a function', () => {
+    const fooFn = vi.fn()
+    const bar = '1'
+    const bor = { a: 1 }
     const disposeStatic = t.useStatic(
       'use_testWithFields',
-      Object.assign(() => () => void 0, { foo: () => 1 })
+      Object.assign(() => () => void 0, {
+        foo: fooFn,
+        bar,
+        bor
+      })
     )
     expect(() => {
       t.use(ctx => {
         ctx.use_testWithFields.foo()
       })
     }).toThrow('The return value of t.use_testWithFields.foo is not a function')
+    t.use(ctx => {
+      // Proxy will change the reference of function
+      expect(ctx.use_testWithFields.foo).not.toBe(fooFn)
+      // But not change the reference of other fields
+      expect(ctx.use_testWithFields.bar).toBe(bar)
+      expect(ctx.use_testWithFields.bor).toBe(bor)
+    })
     disposeStatic()
   })
   test('nested use', () => {
