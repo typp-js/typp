@@ -79,4 +79,39 @@ describe('useStatic.proxy', () => {
       t.useStatic.proxy('____foo', '____foo')
     }).toThrow()
   })
+  test('setter', () => {
+    const dispose = t.use(ctx => {
+      ctx.useStatic('____test_useStaticField0', '0')
+      ctx.useStatic.proxy('____test_useStaticField0', '____test_useStaticField1')
+    })
+    expect(t.____test_useStaticField0).toBe('0')
+    expect(t.____test_useStaticField1).toBe('0')
+    t.____test_useStaticField1 = '1'
+    expect(t.____test_useStaticField0).toBe('1')
+    expect(t.____test_useStaticField1).toBe('1')
+    dispose()
+    expect(t).not.toHaveProperty('____test_useStaticField0')
+    expect(t).not.toHaveProperty('____test_useStaticField1')
+  })
+  test('throw error when refine CantRefine fields', () => {
+    expect(() => {
+      t.useStatic.proxy(
+        'useResolver',
+        // @ts-expect-error
+        'useStatic'
+      )
+    }).toThrow('You can\'t refine static field "useStatic" to "useResolver" for typp, because it is always static')
+  })
+  test('throw error when refine not existed fields', () => {
+    expect(() => {
+      t.useStatic.proxy(
+        'useResolver',
+        '____test_useStaticField0'
+      )
+      t.useStatic.proxy(
+        'useResolver',
+        '____test_useStaticField0'
+      )
+    }).toThrow('You can\'t refine static field "____test_useStaticField0" to "useResolver" for typp, because it is existed')
+  })
 })
