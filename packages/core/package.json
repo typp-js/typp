@@ -1,6 +1,7 @@
 {
   "name": "@typp/core",
-  "description": "Checking your type in javascript.",
+  "version": "0.1.0",
+  "description": "Type meta system.",
   "scripts": {
     "build": "crrc rollup -c",
     "test": "vitest --typecheck --no-watch",
