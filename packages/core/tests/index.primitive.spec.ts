@@ -134,15 +134,22 @@ describe('primitive', () => {
   })
   test('literal primitive value type', () => {
     const nullSkm = t(null)
+    const nullSkmByStatic = t.null()
     expect(nullSkm.shape).toBe(null)
+    expect(nullSkm).toStrictEqual(nullSkmByStatic)
     expectTypeOf(nullSkm).toEqualTypeOf<t.Schema<null, null>>()
     expectTypeOf<t.Infer<typeof nullSkm>>()
       .toEqualTypeOf<null>()
+    expectTypeOf(nullSkmByStatic).toEqualTypeOf<typeof nullSkm>()
+
     const undefinedSkm = t(undefined)
+    const undefinedSkmByStatic = t.undefined()
     expect(undefinedSkm.shape).toBe(undefined)
+    expect(undefinedSkm).toStrictEqual(undefinedSkmByStatic)
     expectTypeOf(undefinedSkm).toEqualTypeOf<t.Schema<undefined, undefined>>()
     expectTypeOf<t.Infer<typeof undefinedSkm>>()
       .toEqualTypeOf<undefined>()
+    expectTypeOf(undefinedSkmByStatic).toEqualTypeOf<typeof undefinedSkm>()
   })
   test('special type', () => {
     const anySkm = t.any()
