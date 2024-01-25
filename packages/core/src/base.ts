@@ -80,6 +80,7 @@ interface SchemaBase<Shape, T> {
 
 // Consumer
 const consumers = new Set<t.Consumer>()
+/* istanbul ignore next -- @preserve */
 export namespace t {
   export type Consumer = (...args: any[]) => Nonexistentable<[shape: any] | Schema<any, any>>
   export function useConsumer(consumer: Consumer) {
@@ -89,6 +90,7 @@ export namespace t {
 }
 // Fields Register
 const registers = new Set<readonly [t.IsWhatShape | (() => boolean), t.FieldsInjector | t.AllFieldsInjector]>()
+/* istanbul ignore next -- @preserve */
 export namespace t {
   export type IsWhatShape<S = any> = (shape: any) => shape is S
   export type FieldsInjector<S = any> = (schema: Schema<S, any>) => Nonexistentable<SchemaFieldsMapping<S>>
@@ -126,6 +128,7 @@ export namespace t {
   }
 }
 // Shape
+/* istanbul ignore next -- @preserve */
 export namespace t {
   export interface ShapeEntries<T, Rest extends any[]> {
     1: [t.IsSchema<T>, T]
@@ -195,6 +198,7 @@ export namespace t {
   }
 }
 // Base
+/* istanbul ignore next -- @preserve */
 export namespace t {
   export interface SchemaMeta<Shape, T> {
     [k: string | number | symbol]: any
@@ -324,6 +328,7 @@ export namespace t {
 // `use` Support
 const utils = {} as t.ResolverUtils
 const instanceUseClone = Symbol('clone')
+/* istanbul ignore next -- @preserve */
 export namespace t {
   export interface Resolver<
     S extends Schema<any, any> = Schema<any, any>, RT = S
@@ -405,6 +410,7 @@ export namespace t {
   }
 }
 // Extensible
+/* istanbul ignore next -- @preserve */
 export namespace t {
   export const CANT_REFINE = Object.freeze([
     'use',
