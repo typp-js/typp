@@ -502,53 +502,43 @@ export namespace t {
   // TODO static.pipe
   export function use(plugin: (ctx: typeof t) => (() => void) | void) {
     const disposes = [] as (() => void)[]
-    type UseKeys = keyof typeof t & `use${string}`
-    const useKeys = Object
-      .keys(t)
-      .filter(key => key.startsWith('use')) as UseKeys[]
-    const overrideT = useKeys.reduce((acc, key) => {
-      const field = t[key]
-      return {
-        ...acc,
-        [key]: Object.assign(
-          (...args: any[]) => {
-            if (typeof field !== 'function')
-              throw new Error(`You can't use plugin for typp, because the field "${key}" is not a function`)
-            const dispose = field.call(
-              t,
-              // @ts-ignore
-              ...args
-            )
+    const tWatcher = new Proxy(t, {
+      get(target, key: keyof typeof t, receiver) {
+        const field = Reflect.get(target, key, receiver)
+        // noinspection SuspiciousTypeOfGuard
+        if (
+          typeof key === 'symbol'
+          || !key.startsWith('use')
+          || typeof field !== 'function'
+        ) return field
+
+        return new Proxy(field, {
+          get(target, fieldKey, receiver) {
+            const field = Reflect.get(target, fieldKey, receiver)
+            if (typeof field !== 'function') return field
+            return new Proxy(field, {
+              apply(target, thisArg, args) {
+                const dispose = Reflect.apply(target, thisArg, args) as () => void
+                if (typeof dispose !== 'function')
+                  throw new Error(`The return value of t.${key}.${fieldKey.toString()} is not a function`)
+
+                disposes.push(dispose)
+                return dispose
+              }
+            })
+          },
+          apply(target, thisArg, args) {
+            const dispose = Reflect.apply(target, thisArg, args)
+            if (typeof dispose !== 'function')
+              throw new Error(`The return value of t.${key} is not a function`)
+
             disposes.push(dispose)
             return dispose
-          },
-          Object
-            .entries(field)
-            .reduce((acc, [key, value]) => {
-              if (key === 'prototype') return acc
-              let v = value
-              if (typeof v === 'function') {
-                v = (...args: any[]) => {
-                  const dispose = value.call(
-                    field,
-                    // @ts-ignore
-                    ...args
-                  )
-                  disposes.push(dispose)
-                  return dispose
-                }
-              }
-              return {
-                ...acc,
-                get [key]() {
-                  return typeof v === 'function' ? v.bind(this) : v
-                }
-              }
-            }, {})
-        )
+          }
+        })
       }
-    }, {})
-    const pluginDispose = plugin(Object.assign((...args: any[]) => t(...args), t, overrideT))
+    })
+    const pluginDispose = plugin(tWatcher)
     return () => {
       for (const dispose of disposes) {
         dispose()
