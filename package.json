@@ -4,7 +4,8 @@
   "scripts": {
     "lint": "eslint --cache --cache-location=node_modules/.cache/.eslintcache/ ./ --max-warnings=0",
     "test": "pnpm --recursive run test",
-    "coverage": "pnpm --recursive run coverage"
+    "coverage": "pnpm --recursive run coverage",
+    "coverage:badge": "pnpm --recursive run coverage:badge"
   },
   "devDependencies": {
     "@types/node": "^18.19.3",

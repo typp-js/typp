@@ -4,7 +4,8 @@
   "scripts": {
     "build": "crrc rollup -c",
     "test": "vitest --typecheck --no-watch",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "coverage:badge": "istanbul-badges-readme"
   },
   "main": "./dist/index.umd.js",
   "module": "./dist/index.esm.js",
