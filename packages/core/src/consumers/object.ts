@@ -1,4 +1,4 @@
-import type { t, Typp } from '../base'
+import type { t as tn, Typp } from '../base'
 import type { IsEqual, IsNotEqual, Stack, Values } from '../types'
 
 const recordSymbol = Symbol('record')
@@ -115,7 +115,7 @@ declare module '../base' {
   }
 }
 
-export default function (ctx: typeof t) {
+export default function (ctx: typeof tn) {
   const t = ctx
   t.useSpecialShapeType('record', recordSymbol)
 

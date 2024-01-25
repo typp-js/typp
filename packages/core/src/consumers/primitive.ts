@@ -1,4 +1,4 @@
-import type { t, Typp } from '../base'
+import type { t as tn, Typp } from '../base'
 import type { IsEqual, IsNotEqual, IsWhat, NoIndexSignature, ValueOf, Values } from '../types'
 
 const symbols = Object.freeze({
@@ -206,7 +206,7 @@ declare module '../base' {
   }
 }
 
-export default function (ctx: typeof t) {
+export default function (ctx: typeof tn) {
   const t = ctx
 
   function literal<

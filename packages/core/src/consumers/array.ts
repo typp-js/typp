@@ -1,4 +1,4 @@
-import type { t, Typp } from '../base'
+import type { t as tn, Typp } from '../base'
 import type { IsEqual, IsNotEqual } from '../types'
 
 declare module '../base' {
@@ -40,7 +40,7 @@ declare module '../base' {
   }
 }
 
-export default function (ctx: typeof t) {
+export default function (ctx: typeof tn) {
   const t = ctx
   t.useConsumer((first, ...rest) => {
     if (first === Array) {

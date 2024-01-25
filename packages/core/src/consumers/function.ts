@@ -1,10 +1,10 @@
-import type { t, Typp } from '../base'
+import type { t as tn, Typp } from '../base'
 import type { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../types'
 
 const functionSymbol = Symbol('function')
 const genericSymbol = Symbol('generic')
 
-export default function (ctx: typeof t) {
+export default function (ctx: typeof tn) {
   const t = ctx
   t.useSpecialShapeType('function', functionSymbol)
   t.useSpecialShapeType('generic', genericSymbol)
@@ -14,7 +14,7 @@ export default function (ctx: typeof t) {
 
     const [args = [], ...rt] = rest as [(readonly any[])?, ...any[]]
     const argsSchemas = args.map(arg => t(arg))
-    let rtSchema: t.Schema<any, any>
+    let rtSchema: tn.Schema<any, any>
     if (rt.length === 0) {
       rtSchema = t.void()
     } else {
@@ -32,20 +32,20 @@ export default function (ctx: typeof t) {
   t.useStatic('generic', function _generic<
     const L extends string,
     E = any,
-    ES extends t.Schema<any, any> = t.TyppWhenNotATypp<E>,
-    D extends t.Infer<ES> = never
+    ES extends tn.Schema<any, any> = tn.TyppWhenNotATypp<E>,
+    D extends tn.Infer<ES> = never
   >(label: L, _extends?: E, _default?: D) {
     return t.specialShape(genericSymbol, {
       label,
       extends: _extends ? t(_extends) : t(),
       default: _default
-    }) as t.SpecialShape<
-      t.SpecialShapeTypeMapping['generic'],
-      t.Generic<L, ES, D>
+    }) as tn.SpecialShape<
+      tn.SpecialShapeTypeMapping['generic'],
+      tn.Generic<L, ES, D>
     >
   })
 
-  t.useFields((shape: any): shape is t.SpecialShape<t.SpecialShapeTypeMapping['function'], any> => {
+  t.useFields((shape: any): shape is tn.SpecialShape<tn.SpecialShapeTypeMapping['function'], any> => {
     return shape?.type === functionSymbol
   }, () => ({ implement: func => func }))
 }

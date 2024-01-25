@@ -1,5 +1,4 @@
-import type { Typp } from '../base'
-import type { t } from '../base'
+import type { t as tn, Typp } from '../base'
 import type { IsEqual, Stack, T2I } from '../types'
 
 const unionSymbol = Symbol('union')
@@ -121,38 +120,38 @@ declare module '../base' {
   }
 }
 
-export default function (ctx: typeof t) {
+export default function (ctx: typeof tn) {
   const t = ctx
   t.useSpecialShapeType('union', unionSymbol)
   t.useSpecialShapeType('intersection', intersectionSymbol)
   t.useStatic('union', <const T extends readonly any[]>(types: T) => {
     if (types.length === 0) return t(
       t.specialShape(t.specialShapeTypeMapping.never)
-    ) as unknown as t.Union<T>
+    ) as unknown as tn.Union<T>
     if (types.length === 1) return t(
       types[0]
-    ) as unknown as t.Union<T>
+    ) as unknown as tn.Union<T>
 
     return t(t.specialShape(
       t.specialShapeTypeMapping.union,
       types.map(type => t(type))
-    )) as unknown as t.Union<T>
+    )) as unknown as tn.Union<T>
   })
   t.useStatic('intersect', <const T extends readonly [any, ...any[]]>(i: T) => {
     if (i.length === 0) throw new Error('intersect() requires at least one argument')
     if (i.length === 1) return t(
       i[0]
-    ) as unknown as t.Intersect<T>
+    ) as unknown as tn.Intersect<T>
 
     return t(t.specialShape(
       t.specialShapeTypeMapping.intersection,
       i.map(type => t(type))
-    )) as unknown as t.Intersect<T>
+    )) as unknown as tn.Intersect<T>
   })
   t.useStatic.proxy('intersect', 'and')
   t.useStatic.proxy('intersect', 'intersection')
 
-  function merge(s: t.Schema<any, any>, i: any, type: 'union' | 'intersection') {
+  function merge(s: tn.Schema<any, any>, i: any, type: 'union' | 'intersection') {
     if (!t.isWhatSpecialShape(type, s)) {
       switch (type) {
         case 'union':

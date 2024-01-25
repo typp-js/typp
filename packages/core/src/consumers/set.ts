@@ -1,4 +1,4 @@
-import type { t, Typp } from '../base'
+import type { t as tn, Typp } from '../base'
 import type { IsEqual } from '../types'
 
 const setSymbol = Symbol('set')
@@ -44,7 +44,7 @@ declare module '../base' {
   }
 }
 
-export default function (ctx: typeof t) {
+export default function (ctx: typeof tn) {
   const t = ctx
   t.useSpecialShapeType('set', setSymbol)
   t.useConsumer((first, ...rest) => {

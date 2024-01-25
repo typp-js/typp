@@ -1,4 +1,4 @@
-import type { t, Typp } from '../base'
+import type { t as tn, Typp } from '../base'
 import type { IsEqual, Stack } from '../types'
 
 const mapSymbol = Symbol('map')
@@ -53,7 +53,7 @@ declare module '../base' {
   }
 }
 
-export default function (ctx: typeof t) {
+export default function (ctx: typeof tn) {
   const t = ctx
   t.useSpecialShapeType('map', mapSymbol)
   t.useConsumer((first, ...rest) => {
