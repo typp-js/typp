@@ -360,9 +360,6 @@ export namespace t {
     }
     utils[key] = resolver
     return () => {
-      const isExisted = Object.hasOwnProperty.call(utils, key)
-      if (!isExisted)
-        return
       delete utils[key]
     }
   }
