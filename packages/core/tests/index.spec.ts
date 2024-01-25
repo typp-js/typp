@@ -83,6 +83,14 @@ describe('strictInfer', () => {
   })
 })
 
+test('isSchema', () => {
+  expect(t.isSchema(t())).toBe(true)
+  expect(t.isSchema(t(Number))).toBe(true)
+  expect(t.isSchema({})).toBe(false)
+  expect(t.isSchemas([t(), t(Number)])).toBe(true)
+  expect(t.isSchemas([t(), {}])).toBe(false)
+})
+
 declare module '@typp/core' {
   namespace t {
     export const ____test_useStaticField0: string
