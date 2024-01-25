@@ -90,6 +90,30 @@ test('isSchema', () => {
   expect(t.isSchemas([t(), t(Number)])).toBe(true)
   expect(t.isSchemas([t(), {}])).toBe(false)
 })
+test('isWhatSpecialShape', () => {
+  expect(t.isWhatSpecialShape('any', t())).toBe(true)
+  expect(t.isWhatSpecialShape('any', t(Number))).toBe(false)
+  expect(t.isWhatSpecialShape(
+    'any',
+    // @ts-expect-error
+    {}
+  )).toBe(false)
+  expect(t.isWhatSpecialShape(
+    'any',
+    // @ts-expect-error
+    { shape: {} }
+  )).toBe(false)
+  expect(t.isWhatSpecialShape(
+    'any',
+    // @ts-expect-error
+    {}
+  )).toBe(false)
+  expect(t.isWhatSpecialShape(
+    'any',
+    // @ts-expect-error
+    { shape: { type: undefined } }
+  )).toBe(false)
+})
 
 declare module '@typp/core' {
   namespace t {
