@@ -52,18 +52,15 @@ export function t<const T extends any[]>(...types: T): Typp<T> {
     // TODO [[Getter]], [[Setter]], Function, Proxy, Class
     //      * [[Getter]]: `t.useFields(() => ({ get foo() {} }))`
     //      * [[Setter]]: `t.useFields(() => ({ set foo(value) {} }))`
-    let proxySkm = skm
-    if (typeof Proxy !== 'undefined') {
-      proxySkm = new Proxy(skm, {
-        get(target, key, receiver) {
-          if (skmIsFullyDefined)
-            return Reflect.get(target, key, receiver)
+    const proxySkm = new Proxy(skm, {
+      get(target, key, receiver) {
+        if (skmIsFullyDefined)
+          return Reflect.get(target, key, receiver)
 
-          if (key === 'shape') return shape
-          throw new Error(`You can't access the property "${String(key)}" of schema, because the schema is not fully defined`)
-        }
-      })
-    }
+        if (key === 'shape') return shape
+        throw new Error(`You can't access the property "${String(key)}" of schema, because the schema is not fully defined`)
+      }
+    })
     const injectResult = inject(proxySkm)
     if (!injectResult) continue
     if (CANT_OVERRIDE.some(key => Object.hasOwnProperty.call(injectResult, key))) {
