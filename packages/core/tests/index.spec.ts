@@ -316,6 +316,19 @@ describe('instance.use', () => {
     expect(skmByUsed.meta.modifiedRefArr).toEqual([{ foo: 2 }])
     expect(modifiedSkm.meta.modifiedRefArr).toEqual([{ foo: 2 }])
   })
+  test('clone instance only reference when field type is function', () => {
+    const skm = t.string()
+    const fn = vi.fn()
+    const skmByUsed = skm.use(skm => {
+      skm.meta.testFn = fn
+      skm.meta.testField = { a: 1 }
+      return skm
+    })
+    const skmByUsedClone = skmByUsed.use(skm => skm)
+    expect(skmByUsedClone.meta.testFn).toBe(fn)
+    expect(skmByUsedClone.meta.testField).toEqual({ a: 1 })
+    expect(skmByUsedClone.meta.testField).not.toBe(skmByUsed.meta.testField)
+  })
   test('clone instance by clone symbol', () => {
     const skm = t.string()
     let i = 0
