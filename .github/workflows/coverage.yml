@@ -43,7 +43,7 @@ jobs:
       - name: Install dependencies
         run: |
           pnpm install --no-frozen-lockfile
-          pnpm install -g istanbul-badges-readme
+          pnpm install istanbul-badges-readme
 
       - name: Generate coverage and badges
         run: |
@@ -54,6 +54,6 @@ jobs:
         run: |
           ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
           git config --local user.email "yijie4188@gmail.com" && git config --local user.name "YiJie"
-          git add .
+          git add packages/*/README.md
           git commit -m "chore: update coverage and badges"
           git push origin HEAD:${{ github.ref }}
