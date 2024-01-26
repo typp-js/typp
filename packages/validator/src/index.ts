@@ -56,9 +56,6 @@ export class ValidateError extends Error {
   ) {
     super(`Data is ${type}`)
     this.name = 'ValidateError'
-    this.type = type
-    this.expected = expected
-    this.actual = actual
   }
 }
 
