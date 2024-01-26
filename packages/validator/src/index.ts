@@ -49,16 +49,23 @@ declare module '@typp/core' {
 
 export class ValidateError extends Error {
   __TYPP_SYMBOL__ = '__ValidateError__'
-  constructor(message: string) {
-    super(message)
+  constructor(
+    public type: string,
+    public expected: tn.Schema<any, any>,
+    public actual: any
+  ) {
+    super(`Data is ${type}`)
     this.name = 'ValidateError'
+    this.type = type
+    this.expected = expected
+    this.actual = actual
   }
 }
 
 function parse(this: tn.Schema<any, any>, data: any) {
   if (this.shape === Number) {
     if (typeof data !== 'number') {
-      throw new ValidateError(`Expected number, but got \`${JSON.stringify(data)}\``)
+      throw new ValidateError('unexpected', this, data)
     }
   }
   return data
