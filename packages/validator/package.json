@@ -1,0 +1,32 @@
+{
+  "name": "@typp/validator",
+  "version": "0.1.0",
+  "description": "Validate your data by type.",
+  "scripts": {
+    "build": "crrc rollup -c",
+    "test": "vitest --typecheck --no-watch",
+    "coverage": "vitest run --coverage",
+    "coverage:badge": "istanbul-badges-readme"
+  },
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.esm.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "dist/index.umd.min.js",
+  "jsdelivr": "dist/index.umd.min.js",
+  "browser": "dist/index.umd.min.js",
+  "typesVersions": {
+    "<5.0": { "*": [ "*", "dist/*", "dist/*/index.esm.d.ts" ] }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.esm.js",
+      "default": "./dist/index.esm.js",
+      "require": "./dist/index.umd.js",
+      "inner-src": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@typp/core": "workspace:^"
+  }
+}

@@ -142,6 +142,12 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0(eslint@8.56.0)
 
+  packages/validator:
+    dependencies:
+      '@typp/core':
+        specifier: workspace:^
+        version: link:../core
+
 packages:
 
   /@aashutoshrathi/word-wrap@1.2.6:
