@@ -576,3 +576,5 @@ t.useFields({
 })
 t.useConsumer(first => t.isSpecialShape(first) ? [first] : undefined)
 t.useConsumer(first => t.isSchema(first) ? first : undefined)
+
+export * from './types'
