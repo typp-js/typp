@@ -1,3 +1,4 @@
+import tsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -14,5 +15,8 @@ export default defineConfig({
     typecheck: {
       include: ['**/tests/**/*.spec.ts']
     }
-  }
+  },
+  plugins: [
+    tsconfigPaths()
+  ]
 })
