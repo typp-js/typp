@@ -60,6 +60,11 @@ export class ValidateError extends Error {
 }
 
 function parse(this: tn.Schema<any, any>, data: any) {
+  // TODO
+  //  完全匹配
+  //  部分匹配，部分缺失或不匹配: partially
+  //  完全不匹配: unexpected
+  //  完全匹配但超过了原类型: over
   if (this.shape === Number) {
     if (typeof data !== 'number') {
       throw new ValidateError('unexpected', this, data)
