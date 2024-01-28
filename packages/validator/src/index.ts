@@ -46,7 +46,10 @@ declare module '@typp/core' {
        * 但是如果数据不满足格式，则抛出校验异常，外部需要对校验异常和可能存在的其他异常进行处理。
        */
       validate: (
-        & (<Rest, Opts extends ValidateOptions>(data: T, options?: ValidateOptions) => T)
+        & (<Opts extends ValidateOptions>(
+          data: T,
+          options?: ValidateOptions
+        ) => Validate<T, typeof data, Exclude<typeof data, T>, Opts>)
         & {
           narrow<TT extends T>(data: Narrow<TT>): TT
         }
