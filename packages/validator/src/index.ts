@@ -18,14 +18,18 @@ declare module '@typp/core' {
       error: ValidateError
     }
     export type ValidateResult<T> = ValidateSuccess<T> | ValidateError
-    export type Validate<T, Input, InputRest, Opts extends ValidateOptions> = Opts['try'] extends true ? (
+    export type Validate<T, Input, InputRest, Opts extends ValidateOptions> = [
+      Opts['try'], Omit<Opts, 'try'>
+    ] extends [
+      true, infer Next extends ValidateOptions
+    ] ? (
       true extends (
         | IsEqual<InputRest, any>
         | IsEqual<InputRest, unknown>
-      ) ? ValidateResult<T>
-        : [InputRest] extends [T] ? ValidateSuccess<T> : ValidateError
+      ) ? ValidateResult<Validate<T, Input, InputRest, Next>>
+        : [InputRest] extends [T] ? ValidateSuccess<Validate<T, Input, InputRest, Next>> : ValidateError
     ) : (
-      T
+      [Input] extends [T] ? T : never
     )
     interface SchemaFieldsAll<Shape, T> {
       /**
