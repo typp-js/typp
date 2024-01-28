@@ -35,7 +35,10 @@ declare module '@typp/core' {
     ] ? (
       Validate<[Input] extends [T] ? Input : never, Input, InputRest, Next>
     ) : (
-      [Input] extends [T] ? T : never
+      true extends (
+        | ([Input] extends [T] ? true : false)
+        | IsEqual<Input, unknown>
+      ) ? T : never
     )
     interface SchemaFieldsAll<Shape, T> {
       /**
