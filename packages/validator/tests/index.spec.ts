@@ -18,28 +18,28 @@ describe('parse', () => {
   test('unexpected', () => {
     const NumberSchema = t.number()
     // @ts-expect-error
-    expect(() => NumberSchema.validate('a')).toThrow(ValidateError)
+    expect(() => NumberSchema.validate('a')).toThrow(ValidateErrorResult)
     // @ts-expect-error
-    expect(() => NumberSchema.validate.narrow('a')).toThrow(ValidateError)
+    expect(() => NumberSchema.validate.narrow('a')).toThrow(ValidateErrorResult)
   })
   test('tryParse', () => {
     const NumberSchema = t.number()
     const result0 = NumberSchema.tryValidate(1)
     expect(result0.success).toBe(true)
     expect(result0.data).toBe(1)
-    expectTypeOf(result0).toEqualTypeOf<t.ValidateSuccess<number>>()
+    expectTypeOf(result0).toEqualTypeOf<t.ValidateSuccessResult<number>>()
 
     const result1 = NumberSchema.tryValidate('a')
     expect(result1.success).toBe(false)
     expect(result1.error).toBeInstanceOf(ValidateError)
-    expectTypeOf(result1).toEqualTypeOf<t.ValidateError>()
+    expectTypeOf(result1).toEqualTypeOf<t.ValidateErrorResult>()
 
     const result2 = NumberSchema.tryValidate({} as any)
     expectTypeOf(result2).toEqualTypeOf<t.ValidateResult<number>>()
     if (result2.success) {
-      expectTypeOf(result2).toEqualTypeOf<t.ValidateSuccess<number>>()
+      expectTypeOf(result2).toEqualTypeOf<t.ValidateSuccessResult<number>>()
     } else {
-      expectTypeOf(result2).toEqualTypeOf<t.ValidateError>()
+      expectTypeOf(result2).toEqualTypeOf<t.ValidateErrorResult>()
       expect(result2.success).toBe(false)
       expect(result2.error).toBeInstanceOf(ValidateError)
     }
@@ -47,9 +47,9 @@ describe('parse', () => {
     const result3 = NumberSchema.tryValidate({} as unknown)
     expectTypeOf(result3).toEqualTypeOf<t.ValidateResult<number>>()
     if (result3.success) {
-      expectTypeOf(result3).toEqualTypeOf<t.ValidateSuccess<number>>()
+      expectTypeOf(result3).toEqualTypeOf<t.ValidateSuccessResult<number>>()
     } else {
-      expectTypeOf(result3).toEqualTypeOf<t.ValidateError>()
+      expectTypeOf(result3).toEqualTypeOf<t.ValidateErrorResult>()
       expect(result3.error).toBeInstanceOf(ValidateError)
     }
     expect(result2.success).toBe(false)
@@ -83,6 +83,4 @@ describe('parse', () => {
       })
     })
   })
-})
-describe('validate', () => {
 })

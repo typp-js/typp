@@ -10,15 +10,15 @@ declare module '@typp/core' {
       strict?: boolean
       transform?: boolean
     }
-    export type ValidateSuccess<T> = {
+    export type ValidateSuccessResult<T> = {
       success: true
       data: T
     }
-    export type ValidateError = {
+    export type ValidateErrorResult = {
       success: false
       error: ValidateError
     }
-    export type ValidateResult<T> = ValidateSuccess<T> | ValidateError
+    export type ValidateResult<T> = ValidateSuccessResult<T> | ValidateErrorResult
     export type Validate<T, Input, InputRest, Opts extends ValidateOptions> = [
       Opts['try'], Omit<Opts, 'try'>
     ] extends [
@@ -34,7 +34,7 @@ declare module '@typp/core' {
           & IsEqual<InputRest, unknown>
         )
       ) ? ValidateResult<Validate<T, Input, InputRest, Next>>
-        : [InputRest] extends [T] ? ValidateSuccess<Validate<T, Input, InputRest, Next>> : ValidateError
+        : [InputRest] extends [T] ? ValidateSuccessResult<Validate<T, Input, InputRest, Next>> : ValidateErrorResult
     ) : [
       Opts['const'], Omit<Opts, 'const'>
     ] extends [
@@ -79,7 +79,7 @@ declare module '@typp/core' {
           options?: Opts
         ) => Validate<T, T | Rest, Rest, Opts & { try: true }>)
         & {
-          narrow<TT extends T>(data: Narrow<TT>): ValidateSuccess<TT>
+          narrow<TT extends T>(data: Narrow<TT>): ValidateSuccessResult<TT>
         }
       )
       // for zod
