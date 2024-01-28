@@ -22,7 +22,7 @@ declare module '@typp/core' {
        * 但是如果数据不满足格式，则抛出校验异常，外部需要对校验异常和可能存在的其他异常进行处理。
        */
       validate: (
-        & ((data: T) => T)
+        & ((data: T, options?: ValidateOptions) => T)
         & {
           narrow<TT extends T>(data: Narrow<TT>): TT
         }
@@ -31,7 +31,7 @@ declare module '@typp/core' {
        * 与 validate 函数类似，但是在出现异常时会将校验异常捕获并包装后返回。
        */
       tryValidate: (
-        & (<Rest>(data: T | Rest) => (
+        & (<Rest>(data: T | Rest, options?: ValidateOptions) => (
           true extends (
             | IsEqual<Rest, any>
             | IsEqual<Rest, unknown>
@@ -111,7 +111,7 @@ resolverMappingByShape.set(Number, (skm, input, transform) => {
   }
   return data
 })
-function validate(this: tn.Schema<any, any>, data: any) {
+function validate(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions) {
   // TODO
   //  完全匹配
   //  部分匹配，部分缺失或不匹配: partially
@@ -119,7 +119,7 @@ function validate(this: tn.Schema<any, any>, data: any) {
   //  完全匹配但超过了原类型: excessive
   let rt = data
   if (resolverMappingByShape.has(this.shape)) {
-    rt = resolverMappingByShape.get(this.shape)?.(this, data, true)
+    rt = resolverMappingByShape.get(this.shape)?.(this, data, options?.transform)
   }
   return rt
 }
