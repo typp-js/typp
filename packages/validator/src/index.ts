@@ -21,16 +21,16 @@ declare module '@typp/core' {
        * 根据数据定义格式校验数据，当数据满足格式时返回数据本身，引用不变化。
        * 但是如果数据不满足格式，则抛出校验异常，外部需要对校验异常和可能存在的其他异常进行处理。
        */
-      parse: (
+      validate: (
         & ((data: T) => T)
         & {
           narrow<TT extends T>(data: Narrow<TT>): TT
         }
       )
       /**
-       * 与 parse 函数类似，但是在出现异常时会将校验异常捕获并包装后返回。
+       * 与 validate 函数类似，但是在出现异常时会将校验异常捕获并包装后返回。
        */
-      tryParse: (
+      tryValidate: (
         & (<Rest>(data: T | Rest) => (
           true extends (
             | IsEqual<Rest, any>
@@ -43,7 +43,7 @@ declare module '@typp/core' {
         }
       )
       // for zod
-      safeParse: this['tryParse']
+      safeParse: this['tryValidate']
     }
   }
 }
@@ -111,7 +111,7 @@ resolverMappingByShape.set(Number, (skm, input, transform) => {
   }
   return data
 })
-function parse(this: tn.Schema<any, any>, data: any) {
+function validate(this: tn.Schema<any, any>, data: any) {
   // TODO
   //  完全匹配
   //  部分匹配，部分缺失或不匹配: partially
@@ -123,7 +123,7 @@ function parse(this: tn.Schema<any, any>, data: any) {
   }
   return rt
 }
-parse.narrow = parse
+validate.narrow = validate
 
 function catchAndWrap(func: Function): tn.ValidateResult<any> {
   try {
@@ -151,10 +151,10 @@ function catchAndWrapProxy<T extends Function>(func: T, proxyHandler: Omit<Proxy
 
 export default function validator(t: typeof tn) {
   t.useFields({
-    get parse() {
+    get validate() {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const skm = this
-      return new Proxy(parse, {
+      return new Proxy(validate, {
         get(target, key) {
           return (
             Reflect.get(target, key) as Function
@@ -162,10 +162,10 @@ export default function validator(t: typeof tn) {
         }
       })
     },
-    get tryParse() {
+    get tryValidate() {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const skm = this
-      return catchAndWrapProxy(parse, {
+      return catchAndWrapProxy(validate, {
         get(target, key) {
           return catchAndWrapProxy((
             Reflect.get(target, key) as Function
