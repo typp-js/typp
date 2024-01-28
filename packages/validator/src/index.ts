@@ -1,4 +1,4 @@
-import type { IsEqual, Narrow, t as tn } from '@typp/core'
+import type { IsEqual, IsNotEqual, Narrow, t as tn } from '@typp/core'
 
 declare module '@typp/core' {
   namespace t {
@@ -24,8 +24,14 @@ declare module '@typp/core' {
       true, infer Next extends ValidateOptions
     ] ? (
       true extends (
-        | IsEqual<InputRest, any>
-        | IsEqual<InputRest, unknown>
+        | (
+          & IsNotEqual<T, any>
+          & IsEqual<InputRest, any>
+        )
+        | (
+          & IsNotEqual<T, unknown>
+          & IsEqual<InputRest, unknown>
+        )
       ) ? ValidateResult<Validate<T, Input, InputRest, Next>>
         : [InputRest] extends [T] ? ValidateSuccess<Validate<T, Input, InputRest, Next>> : ValidateError
     ) : [
