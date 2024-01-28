@@ -4,6 +4,8 @@ declare module '@typp/core' {
   namespace t {
     export const coerce: typeof t
     interface ValidateOptions {
+      try?: boolean
+      cast?: boolean
       strict?: boolean
       transform?: boolean
     }
@@ -16,13 +18,22 @@ declare module '@typp/core' {
       error: ValidateError
     }
     export type ValidateResult<T> = ValidateSuccess<T> | ValidateError
+    export type Validate<T, Input, InputRest, Opts extends ValidateOptions> = Opts['try'] extends true ? (
+      true extends (
+        | IsEqual<InputRest, any>
+        | IsEqual<InputRest, unknown>
+      ) ? ValidateResult<T>
+        : [InputRest] extends [T] ? ValidateSuccess<T> : ValidateError
+    ) : (
+      T
+    )
     interface SchemaFieldsAll<Shape, T> {
       /**
        * 根据数据定义格式校验数据，当数据满足格式时返回数据本身，引用不变化。
        * 但是如果数据不满足格式，则抛出校验异常，外部需要对校验异常和可能存在的其他异常进行处理。
        */
       validate: (
-        & ((data: T, options?: ValidateOptions) => T)
+        & (<Rest, Opts extends ValidateOptions>(data: T, options?: ValidateOptions) => T)
         & {
           narrow<TT extends T>(data: Narrow<TT>): TT
         }
@@ -31,13 +42,10 @@ declare module '@typp/core' {
        * 与 validate 函数类似，但是在出现异常时会将校验异常捕获并包装后返回。
        */
       tryValidate: (
-        & (<Rest>(data: T | Rest, options?: ValidateOptions) => (
-          true extends (
-            | IsEqual<Rest, any>
-            | IsEqual<Rest, unknown>
-          ) ? ValidateResult<T>
-            : [Rest] extends [T] ? ValidateSuccess<T> : ValidateError
-        ))
+        & (<
+          Rest,
+          Opts extends Omit<ValidateOptions, 'try'>
+        >(data: T | Rest, options?: Opts) => Validate<T, T | Rest, Rest, Opts & { try: true }>)
         & {
           narrow<TT extends T>(data: Narrow<TT>): ValidateSuccess<TT>
         }
