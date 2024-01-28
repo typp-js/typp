@@ -2,7 +2,8 @@ import type { IsEqual, IsNotEqual, Narrow, t as tn } from '@typp/core'
 
 declare module '@typp/core' {
   namespace t {
-    export const coerce: typeof t
+    // TODO https://zod.dev/?id=coercion-for-primitives
+    // export const coerce: typeof tn
     interface ValidateOptions {
       try?: boolean
       const?: boolean
