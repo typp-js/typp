@@ -18,9 +18,9 @@ describe('parse', () => {
   test('unexpected', () => {
     const NumberSchema = t.number()
     // @ts-expect-error
-    expect(() => NumberSchema.parse('1')).toThrow(ValidateError)
+    expect(() => NumberSchema.parse('a')).toThrow(ValidateError)
     // @ts-expect-error
-    expect(() => NumberSchema.parse.narrow('1')).toThrow(ValidateError)
+    expect(() => NumberSchema.parse.narrow('a')).toThrow(ValidateError)
   })
   test('tryParse', () => {
     const NumberSchema = t.number()
@@ -29,7 +29,7 @@ describe('parse', () => {
     expect(result0.data).toBe(1)
     expectTypeOf(result0).toEqualTypeOf<t.ParseSuccess<number>>()
 
-    const result1 = NumberSchema.tryParse('1')
+    const result1 = NumberSchema.tryParse('a')
     expect(result1.success).toBe(false)
     expect(result1.error).toBeInstanceOf(ValidateError)
     expectTypeOf(result1).toEqualTypeOf<t.ParseError>()
