@@ -3,8 +3,9 @@ import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 
 import validator, { ValidateError } from '../src'
 
+beforeAll(() => t.use(validator))
+
 describe('parse', () => {
-  beforeAll(() => t.use(validator))
   test('base', () => {
     const NumberSchema = t.number()
     const a = NumberSchema.parse(1)
@@ -52,5 +53,26 @@ describe('parse', () => {
       expect(result3.error).toBeInstanceOf(ValidateError)
     }
     expect(result2.success).toBe(false)
+  })
+})
+describe('primitive', () => {
+  describe('number', () => {
+    test('base', () => {
+      const skm = t.number()
+      const r0 = skm.parse(1)
+      expect(r0).toBe(1)
+      expectTypeOf(r0).toEqualTypeOf<number>()
+      expect(() => {
+        // @ts-expect-error
+        skm.parse('1')
+      }).toThrow(new ValidateError('unexpected', skm, '1'))
+    })
+    test('NaN', () => {
+      const skm = t.number()
+      expect(() => {
+        // @ts-expect-error
+        skm.parse(NaN)
+      }).toThrow(new ValidateError('unexpected', skm, NaN))
+    })
   })
 })
