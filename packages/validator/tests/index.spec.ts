@@ -79,7 +79,7 @@ describe('primitive', () => {
       const skm = t.number()
       expect(() => {
         // @ts-expect-error
-        skm.parse('1')
+        skm.parse('abc')
       }).toThrow(new ValidateError('unexpected', skm, '1'))
     })
   })
