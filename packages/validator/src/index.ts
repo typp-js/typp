@@ -5,7 +5,7 @@ declare module '@typp/core' {
     export const coerce: typeof t
     interface ValidateOptions {
       try?: boolean
-      cast?: boolean
+      const?: boolean
       strict?: boolean
       transform?: boolean
     }
@@ -28,6 +28,12 @@ declare module '@typp/core' {
         | IsEqual<InputRest, unknown>
       ) ? ValidateResult<Validate<T, Input, InputRest, Next>>
         : [InputRest] extends [T] ? ValidateSuccess<Validate<T, Input, InputRest, Next>> : ValidateError
+    ) : [
+      Opts['const'], Omit<Opts, 'const'>
+    ] extends [
+      true, infer Next extends ValidateOptions
+    ] ? (
+      Validate<[Input] extends [T] ? Input : never, Input, InputRest, Next>
     ) : (
       [Input] extends [T] ? T : never
     )
