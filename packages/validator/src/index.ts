@@ -66,7 +66,7 @@ function parse(this: tn.Schema<any, any>, data: any) {
   //  完全不匹配: unexpected
   //  完全匹配但超过了原类型: excessive
   if (this.shape === Number) {
-    if (typeof data !== 'number') {
+    if (typeof data !== 'number' || Number.isNaN(data)) {
       throw new ValidateError('unexpected', this, data)
     }
   }
