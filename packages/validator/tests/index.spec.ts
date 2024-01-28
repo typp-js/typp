@@ -62,17 +62,13 @@ describe('primitive', () => {
       const r0 = skm.parse(1)
       expect(r0).toBe(1)
       expectTypeOf(r0).toEqualTypeOf<number>()
+      const r1 = skm.parse(NaN)
+      expect(r1).toBeNaN()
+      expectTypeOf(r1).toEqualTypeOf<number>()
       expect(() => {
         // @ts-expect-error
         skm.parse('1')
       }).toThrow(new ValidateError('unexpected', skm, '1'))
-    })
-    test('NaN', () => {
-      const skm = t.number()
-      expect(() => {
-        // @ts-expect-error
-        skm.parse(NaN)
-      }).toThrow(new ValidateError('unexpected', skm, NaN))
     })
   })
 })
