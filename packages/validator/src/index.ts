@@ -3,18 +3,19 @@ import type { IsEqual, Narrow, t as tn } from '@typp/core'
 declare module '@typp/core' {
   namespace t {
     export const coerce: typeof t
-    interface ParseOptions {
+    interface ValidateOptions {
       strict?: boolean
+      transform?: boolean
     }
-    export type ParseSuccess<T> = {
+    export type ValidateSuccess<T> = {
       success: true
       data: T
     }
-    export type ParseError = {
+    export type ValidateError = {
       success: false
       error: ValidateError
     }
-    export type ParseResult<T> = ParseSuccess<T> | ParseError
+    export type ValidateResult<T> = ValidateSuccess<T> | ValidateError
     interface SchemaFieldsAll<Shape, T> {
       /**
        * 根据数据定义格式校验数据，当数据满足格式时返回数据本身，引用不变化。
@@ -34,11 +35,11 @@ declare module '@typp/core' {
           true extends (
             | IsEqual<Rest, any>
             | IsEqual<Rest, unknown>
-          ) ? ParseResult<T>
-            : [Rest] extends [T] ? ParseSuccess<T> : ParseError
+          ) ? ValidateResult<T>
+            : [Rest] extends [T] ? ValidateSuccess<T> : ValidateError
         ))
         & {
-          narrow<TT extends T>(data: Narrow<TT>): ParseSuccess<TT>
+          narrow<TT extends T>(data: Narrow<TT>): ValidateSuccess<TT>
         }
       )
       // for zod
@@ -124,7 +125,7 @@ function parse(this: tn.Schema<any, any>, data: any) {
 }
 parse.narrow = parse
 
-function catchAndWrap(func: Function): tn.ParseResult<any> {
+function catchAndWrap(func: Function): tn.ValidateResult<any> {
   try {
     return { success: true, data: func() }
   } catch (error) {
