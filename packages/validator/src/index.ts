@@ -4,7 +4,7 @@ declare module '@typp/core' {
   namespace t {
     // TODO https://zod.dev/?id=coercion-for-primitives
     // export const coerce: typeof tn
-    interface ValidateOptions {
+    export interface ValidateOptions {
       try?: boolean
       const?: boolean
       strict?: boolean
