@@ -59,18 +59,68 @@ export class ValidateError extends Error {
   }
 }
 
+type Resolver = (s: tn.Schema<any, any>, input: unknown, shouldResolve?: boolean) => unknown
+const resolverMappingByMatcher = [] as [
+  matcher: (s: tn.Schema<any, any>, input: unknown) => boolean, resolver: Resolver
+][]
+const resolverMappingByShape = new Map<unknown, Resolver>()
+
+resolverMappingByShape.set(Number, (skm, input, shouldResolve) => {
+  let data = input
+  if (shouldResolve) {
+    switch (typeof input) {
+      case 'string': {
+        if (input === 'NaN') data = NaN
+        if (input === 'Infinity') data = Infinity
+        if (input === '-Infinity') data = -Infinity
+        if (input === '') data = 0
+        let radix = 10
+        if (input.length > 2) {
+          const radixStr = input.slice(0, 2).toLowerCase()
+          radix = { '0b': 2, '0o': 8, '0x': 16 }[radixStr] ?? radix
+        }
+        const temp = parseInt(input, radix)
+        if (!Number.isNaN(temp)) {
+          data = temp
+        }
+        break
+      }
+      case 'boolean':
+        data = input ? 1 : 0
+        break
+      case 'object':
+        if (input === null) data = 0
+        break
+      case 'undefined':
+        data = 0
+        break
+      case 'bigint':
+        if (input > Number.MAX_SAFE_INTEGER) {
+          return Infinity
+        }
+        if (input < Number.MIN_SAFE_INTEGER) {
+          return -Infinity
+        }
+        data = Number(input)
+        break
+    }
+  }
+  if (typeof data !== 'number') {
+    throw new ValidateError('unexpected', skm, input)
+  }
+  return data
+})
 function parse(this: tn.Schema<any, any>, data: any) {
   // TODO
   //  完全匹配
   //  部分匹配，部分缺失或不匹配: partially
   //  完全不匹配: unexpected
   //  完全匹配但超过了原类型: excessive
-  if (this.shape === Number) {
-    if (typeof data !== 'number') {
-      throw new ValidateError('unexpected', this, data)
-    }
+  let rt = data
+  if (resolverMappingByShape.has(this.shape)) {
+    rt = resolverMappingByShape.get(this.shape)?.(this, data, true)
   }
-  return data
+  return rt
 }
 parse.narrow = parse
 
