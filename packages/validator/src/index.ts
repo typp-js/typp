@@ -39,7 +39,13 @@ declare module '@typp/core' {
     ] extends [
       true, infer Next extends ValidateOptions
     ] ? (
-      Validate<[Input] extends [T] ? Input : never, Input, InputRest, Next>
+      Validate<
+        true extends (
+          | ([Input] extends [T] ? true : false)
+          | IsEqual<InputRest, unknown>
+        ) ? Input : never,
+        Input, InputRest, Next
+      >
     ) : (
       true extends (
         | ([Input] extends [T] ? true : false)
