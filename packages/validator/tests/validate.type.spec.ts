@@ -39,7 +39,7 @@ describe('validate', () => {
     expectTypeOf<t.Validate<string, 1, 1, Opts>>().toEqualTypeOf<never>()
 
     expectTypeOf<t.Validate<number, 1 | unknown, unknown, Opts>>()
-      // TODO maybe should be t.ValidateResult<1>, but typescript can't infer it
+      // TODO maybe should be `1`, but typescript can't infer it
       .toEqualTypeOf<unknown>()
   })
   test('try and const', () => {
