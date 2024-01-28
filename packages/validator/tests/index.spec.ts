@@ -54,33 +54,33 @@ describe('parse', () => {
     }
     expect(result2.success).toBe(false)
   })
-})
-describe('primitive', () => {
-  describe('number', () => {
-    test('base', () => {
-      const r0 = t.number().parse(1)
-      expect(r0).toBe(1)
-      expectTypeOf(r0).toEqualTypeOf<number>()
-    })
-    test('NaN', () => {
-      const r = t.number().parse(NaN)
-      expect(r).toBeNaN()
-      expectTypeOf(r).toEqualTypeOf<number>()
-    })
-    test('Infinity', () => {
-      const r0 = t.number().parse(Infinity)
-      expect(r0).toBe(Infinity)
-      expectTypeOf(r0).toEqualTypeOf<number>()
-      const r1 = t.number().parse(-Infinity)
-      expect(r1).toBe(-Infinity)
-      expectTypeOf(r1).toEqualTypeOf<number>()
-    })
-    test('unexpected', () => {
-      const skm = t.number()
-      expect(() => {
-        // @ts-expect-error
-        skm.parse('abc')
-      }).toThrow(new ValidateError('unexpected', skm, '1'))
+  describe('primitive', () => {
+    describe('number', () => {
+      test('base', () => {
+        const r0 = t.number().parse(1)
+        expect(r0).toBe(1)
+        expectTypeOf(r0).toEqualTypeOf<number>()
+      })
+      test('NaN', () => {
+        const r = t.number().parse(NaN)
+        expect(r).toBeNaN()
+        expectTypeOf(r).toEqualTypeOf<number>()
+      })
+      test('Infinity', () => {
+        const r0 = t.number().parse(Infinity)
+        expect(r0).toBe(Infinity)
+        expectTypeOf(r0).toEqualTypeOf<number>()
+        const r1 = t.number().parse(-Infinity)
+        expect(r1).toBe(-Infinity)
+        expectTypeOf(r1).toEqualTypeOf<number>()
+      })
+      test('unexpected', () => {
+        const skm = t.number()
+        expect(() => {
+          // @ts-expect-error
+          skm.parse('abc')
+        }).toThrow(new ValidateError('unexpected', skm, '1'))
+      })
     })
   })
 })
