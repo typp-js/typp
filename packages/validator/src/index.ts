@@ -124,6 +124,10 @@ function validate(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOpt
   return rt
 }
 validate.narrow = validate
+function parse(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions) {
+  return validate.call(this, data, { transform: true, ...options })
+}
+parse.narrow = parse
 
 function catchAndWrap(func: Function): tn.ValidateResult<any> {
   try {
