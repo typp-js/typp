@@ -59,15 +59,15 @@ export class ValidateError extends Error {
   }
 }
 
-type Resolver = (s: tn.Schema<any, any>, input: unknown, shouldResolve?: boolean) => unknown
+type Resolver = (s: tn.Schema<any, any>, input: unknown, transform?: boolean) => unknown
 const resolverMappingByMatcher = [] as [
   matcher: (s: tn.Schema<any, any>, input: unknown) => boolean, resolver: Resolver
 ][]
 const resolverMappingByShape = new Map<unknown, Resolver>()
 
-resolverMappingByShape.set(Number, (skm, input, shouldResolve) => {
+resolverMappingByShape.set(Number, (skm, input, transform) => {
   let data = input
-  if (shouldResolve) {
+  if (transform) {
     switch (typeof input) {
       case 'string': {
         if (input === 'NaN') data = NaN
