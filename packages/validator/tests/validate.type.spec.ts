@@ -7,4 +7,9 @@ describe('validate', () => {
     expectTypeOf<t.Validate<string, string, string, { }>>().toEqualTypeOf<string>()
     expectTypeOf<t.Validate<string, 1, 1, { }>>().toEqualTypeOf<never>()
   })
+  test('try', () => {
+    expectTypeOf<t.Validate<number, 1, 1, { try: true }>>().toEqualTypeOf<t.ValidateSuccess<number>>()
+    expectTypeOf<t.Validate<string, string, string, { try: true }>>().toEqualTypeOf<t.ValidateSuccess<string>>()
+    expectTypeOf<t.Validate<string, 1, 1, { try: true }>>().toEqualTypeOf<t.ValidateError>()
+  })
 })
