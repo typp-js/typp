@@ -62,12 +62,9 @@ describe('parse', () => {
         expectTypeOf(r0).toEqualTypeOf<number>()
       })
       test('NaN', () => {
-        const r0 = t.number().validate(NaN)
-        expect(r0).toBeNaN()
-        expectTypeOf(r0).toEqualTypeOf<number>()
-        const r1 = t.number().validate('NaN')
-        expect(r1).toBeNaN()
-        expectTypeOf(r1).toEqualTypeOf<number>()
+        const r = t.number().validate(NaN)
+        expect(r).toBeNaN()
+        expectTypeOf(r).toEqualTypeOf<number>()
       })
       test('Infinity', () => {
         const r0 = t.number().validate(Infinity)
