@@ -61,7 +61,7 @@ declare module '@typp/core' {
       validate: (
         & (<Opts extends ValidateOptions>(
           data: T,
-          options?: ValidateOptions
+          options?: Opts
         ) => Validate<T, typeof data, Exclude<typeof data, T>, Opts>)
         & {
           narrow<TT extends T>(data: Narrow<TT>): TT
