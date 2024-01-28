@@ -67,7 +67,10 @@ declare module '@typp/core' {
         & (<
           Rest,
           Opts extends Omit<ValidateOptions, 'try'>
-        >(data: T | Rest, options?: Opts) => Validate<T, T | Rest, Rest, Opts & { try: true }>)
+        >(
+          data: T | Rest,
+          options?: Opts
+        ) => Validate<T, T | Rest, Rest, Opts & { try: true }>)
         & {
           narrow<TT extends T>(data: Narrow<TT>): ValidateSuccess<TT>
         }
