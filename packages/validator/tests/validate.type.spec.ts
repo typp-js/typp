@@ -10,6 +10,10 @@ describe('validate', () => {
   test('unknown or any', () => {
     expectTypeOf<t.Validate<number, unknown, unknown, { }>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, any, any, { }>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<unknown, unknown, unknown, { }>>().toEqualTypeOf<unknown>()
+    expectTypeOf<t.Validate<any, unknown, unknown, { }>>().toEqualTypeOf<any>()
+    expectTypeOf<t.Validate<never, unknown, unknown, { }>>().toEqualTypeOf<never>()
+    expectTypeOf<t.Validate<never, any, any, { }>>().toEqualTypeOf<never>()
 
     expectTypeOf<t.Validate<number, 1 | unknown, 1 | unknown, { }>>().toEqualTypeOf<number>()
   })
