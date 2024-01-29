@@ -53,35 +53,33 @@ declare module '@typp/core' {
         | IsEqual<Input, unknown>
       ) ? T : never
     )
+    /**
+     * 根据数据定义格式校验数据，当数据满足格式时返回数据本身，引用不变化。
+     * 但是如果数据不满足格式，则抛出校验异常，外部需要对校验异常和可能存在的其他异常进行处理。
+     */
+    interface ValidateItf<Shape, T> {
+      <Opts extends ValidateOptions>(
+        data: T,
+        options?: Opts
+      ): Validate<T, typeof data, Exclude<typeof data, T>, Opts>
+      narrow<TT extends T>(data: Narrow<TT>): TT
+    }
+    /**
+     * 与 validate 函数类似，但是在出现异常时会将校验异常捕获并包装后返回。
+     */
+    interface TryValidateItf<Shape, T> {
+      <
+        Rest,
+        Opts extends Omit<ValidateOptions, 'try'>
+      >(
+        data: T | Rest,
+        options?: Opts
+      ): Validate<T, T | Rest, Rest, Opts & { try: true }>
+      narrow<TT extends T>(data: Narrow<TT>): ValidateSuccessResult<TT>
+    }
     interface SchemaFieldsAll<Shape, T> {
-      /**
-       * 根据数据定义格式校验数据，当数据满足格式时返回数据本身，引用不变化。
-       * 但是如果数据不满足格式，则抛出校验异常，外部需要对校验异常和可能存在的其他异常进行处理。
-       */
-      validate: (
-        & (<Opts extends ValidateOptions>(
-          data: T,
-          options?: Opts
-        ) => Validate<T, typeof data, Exclude<typeof data, T>, Opts>)
-        & {
-          narrow<TT extends T>(data: Narrow<TT>): TT
-        }
-      )
-      /**
-       * 与 validate 函数类似，但是在出现异常时会将校验异常捕获并包装后返回。
-       */
-      tryValidate: (
-        & (<
-          Rest,
-          Opts extends Omit<ValidateOptions, 'try'>
-        >(
-          data: T | Rest,
-          options?: Opts
-        ) => Validate<T, T | Rest, Rest, Opts & { try: true }>)
-        & {
-          narrow<TT extends T>(data: Narrow<TT>): ValidateSuccessResult<TT>
-        }
-      )
+      validate: ValidateItf<Shape, T>
+      tryValidate: TryValidateItf<Shape, T>
       // for zod
       safeParse: this['tryValidate']
     }
