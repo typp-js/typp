@@ -57,6 +57,13 @@ describe('parse', () => {
     }
     expect(result2.success).toBe(false)
   })
+  test('try and narrow', () => {
+    const NumberSchema = t.number()
+    const result0 = NumberSchema.tryValidate.narrow(1)
+    expect(result0.success).toBe(true)
+    expect(result0.data).toBe(1)
+    expectTypeOf(result0).toEqualTypeOf<t.ValidateSuccessResult<1>>()
+  })
   describe('primitive', () => {
     describe('number', () => {
       test('base', () => {
