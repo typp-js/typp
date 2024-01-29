@@ -61,7 +61,14 @@ declare module '@typp/core' {
         data: T | Rest,
         options?: Opts
       ): Validate<T, typeof data, Exclude<typeof data, T>, Opts & O>
-      narrow<TT extends T>(data: Narrow<TT>): TT
+      narrow<
+        TT extends T,
+        Rest extends O['try'] extends true ? unknown : never,
+        Opts extends ValidateOptions
+      >(
+        data: Narrow<TT | Rest>,
+        options?: Opts
+      ): Validate<T, typeof data, Exclude<typeof data, T>, Opts & O & { const: true }>
     }
     interface SchemaFieldsAll<Shape, T> {
       validate: ValidateItf<Shape, T>

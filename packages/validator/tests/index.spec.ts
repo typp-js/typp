@@ -8,12 +8,9 @@ beforeAll(() => t.use(validator))
 describe('parse', () => {
   test('base', () => {
     const NumberSchema = t.number()
-    const a = NumberSchema.validate(1)
-    expect(a).toBe(1)
-    expectTypeOf(a).toEqualTypeOf<number>()
-    const b = NumberSchema.validate.narrow(1)
-    expect(b).toBe(1)
-    expectTypeOf(b).toEqualTypeOf<1>()
+    const r = NumberSchema.validate(1)
+    expect(r).toBe(1)
+    expectTypeOf(r).toEqualTypeOf<number>()
   })
   test('unexpected', () => {
     const NumberSchema = t.number()
@@ -21,6 +18,12 @@ describe('parse', () => {
     expect(() => NumberSchema.validate('a')).toThrow(ValidateErrorResult)
     // @ts-expect-error
     expect(() => NumberSchema.validate.narrow('a')).toThrow(ValidateErrorResult)
+  })
+  test('narrow', () => {
+    const NumberSchema = t.number()
+    const r = NumberSchema.validate.narrow(1)
+    expect(r).toBe(1)
+    expectTypeOf(r).toEqualTypeOf<1>()
   })
   test('tryParse', () => {
     const NumberSchema = t.number()
