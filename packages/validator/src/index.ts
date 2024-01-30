@@ -32,7 +32,7 @@ interface TransformExtendsEntries<T, Input> {
       ]
       bigint: [
         [Input] extends [bigint] ? true : false,
-        Input extends bigint ? number : never
+        number
       ]
     }>
   ]
