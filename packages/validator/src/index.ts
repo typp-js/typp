@@ -1,18 +1,35 @@
-import type { IsEqual, IsNotEqual, Narrow, t as tn } from '@typp/core'
+import type { IsEqual, IsNotEqual, Narrow, t as tn, ValueOf } from '@typp/core'
 
 interface TransformExtendsEntries<T, Input> {
+  [key: string]: [boolean, any, any, any]
   number: [
     [T] extends [number] ? true : false,
     number,
     number | string | boolean | null | undefined | bigint,
-    Input extends `${number}` | `0${'b' | 'B'}${string}` | `0${'o' | 'O'}${number}` | `0${'x' | 'X'}${string}`
+    [Input] extends [number]
       ? number
-      : Input extends true ? 1 : Input extends false ? 0
-        : Input extends null ? 0 : Input extends undefined ? 0
-          : Input extends bigint ? number
-            : never
+      : Input extends `${number}` | `0${'b' | 'B'}${string}` | `0${'o' | 'O'}${number}` | `0${'x' | 'X'}${string}`
+        ? number
+        : Input extends true
+          ? 1
+          : Input extends false ? 0
+          : Input extends null
+              ? 0
+              : Input extends undefined
+                ? 0
+                : Input extends bigint
+                  ? number
+                  : never
   ]
 }
+type TransformExtendsMapping<
+  T, Input,
+  Entries extends TransformExtendsEntries<T, Input> = TransformExtendsEntries<T, Input>
+> = ValueOf<{
+  [ K in keyof Entries
+    as [Entries[K][0]] extends [true] ? K : never
+  ]: Entries[K][3]
+}>
 
 declare module '@typp/core' {
   namespace t {
@@ -82,9 +99,7 @@ declare module '@typp/core' {
     ] extends [
       true, infer Next extends ValidateOptions
     ] ? (
-      [T] extends [number]
-        ? TransformExtendsEntries<T, Input>['number'][3]
-        : never
+      TransformExtendsMapping<T, Input>
     ) : (
       true extends (
         | ([Input] extends [T] ? true : false)
