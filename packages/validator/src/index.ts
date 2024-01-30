@@ -1,5 +1,19 @@
 import type { IsEqual, IsNotEqual, Narrow, t as tn } from '@typp/core'
 
+interface TransformExtendsEntries<T, Input> {
+  number: [
+    [T] extends [number] ? true : false,
+    number,
+    number | string | boolean | null | undefined | bigint,
+    Input extends `${number}` | `0${'b' | 'B'}${string}` | `0${'o' | 'O'}${number}` | `0${'x' | 'X'}${string}`
+      ? number
+      : Input extends true ? 1 : Input extends false ? 0
+        : Input extends null ? 0 : Input extends undefined ? 0
+          : Input extends bigint ? number
+            : never
+  ]
+}
+
 declare module '@typp/core' {
   namespace t {
     // TODO https://zod.dev/?id=coercion-for-primitives
@@ -47,6 +61,14 @@ declare module '@typp/core' {
         ) ? Input : never,
         Input, InputRest, Next
       >
+    ) : [
+      Opts['transform'], Omit<Opts, 'transform'>
+    ] extends [
+      true, infer Next extends ValidateOptions
+    ] ? (
+      [T] extends [number]
+        ? TransformExtendsEntries<T, Input>['number'][3]
+        : never
     ) : (
       true extends (
         | ([Input] extends [T] ? true : false)
