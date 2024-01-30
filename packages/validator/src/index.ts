@@ -19,9 +19,25 @@ declare module '@typp/core' {
     // TODO https://zod.dev/?id=coercion-for-primitives
     // export const coerce: typeof tn
     export interface ValidateOptions {
+      /**
+       * Try to validate, wrap the result with `ValidateResult`
+       */
       try?: boolean
+      /**
+       * Narrow input type and return the input value literally
+       */
       const?: boolean
+      /**
+       * Input must exactly match the type
+       */
+      exact?: boolean
+      /**
+       * no transform and exact match
+       */
       strict?: boolean
+      /**
+       * As much as possible transform input value to the type
+       */
       transform?: boolean
     }
     export type ValidateSuccessResult<T> = {
