@@ -1,25 +1,44 @@
 import type { IsEqual, IsNotEqual, Narrow, t as tn, ValueOf } from '@typp/core'
 
+interface NumberTransformEntries<Case> {
+  self: [
+    [Case] extends [number] ? true : false,
+    number
+  ]
+  string: [
+    [Case] extends [string] ? true : false,
+    Case extends `${number}` | `0${'b' | 'B'}${string}` | `0${'o' | 'O'}${number}` | `0${'x' | 'X'}${string}`
+      ? number
+      : never
+  ]
+  boolean: [
+    [Case] extends [boolean] ? true : false,
+    Case extends true ? 1 : Case extends false ? 0 : never
+  ]
+  null: [
+    [Case] extends [null] ? true : false,
+    0
+  ]
+  undefined: [
+    [Case] extends [undefined] ? true : false,
+    0
+  ]
+  bigint: [
+    [Case] extends [bigint] ? true : false,
+    Case extends bigint ? number : never
+  ]
+}
 interface TransformExtendsEntries<T, Input> {
   [key: string]: [boolean, any, any, any]
   number: [
     [T] extends [number] ? true : false,
     number,
     number | string | boolean | null | undefined | bigint,
-    [Input] extends [number]
-      ? number
-      : Input extends `${number}` | `0${'b' | 'B'}${string}` | `0${'o' | 'O'}${number}` | `0${'x' | 'X'}${string}`
-        ? number
-        : Input extends true
-          ? 1
-          : Input extends false ? 0
-          : Input extends null
-              ? 0
-              : Input extends undefined
-                ? 0
-                : Input extends bigint
-                  ? number
-                  : never
+    ValueOf<{
+      [ K in keyof NumberTransformEntries<Input>
+          as [NumberTransformEntries<Input>[K][0]] extends [true] ? K : never
+      ]: NumberTransformEntries<Input>[K][1]
+    }>
   ]
 }
 type TransformExtendsMapping<
