@@ -52,6 +52,19 @@ describe('validate', () => {
   test('transform', () => {
     type Opts = { transform: true }
     expectTypeOf<t.Validate<number, '1', '1', Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<number, true, true, Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<number, false, false, Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<number, boolean, boolean, Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<number, null, null, Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<number, undefined, undefined, Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<number, bigint, bigint, Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<number, 1n, 1n, Opts>>().toEqualTypeOf<number>()
+
+    expectTypeOf<t.Validate<number, 'a', 'a', Opts>>().toEqualTypeOf<never>()
+  })
+  test('transform and const', () => {
+    type Opts = { transform: true, const: true }
+    expectTypeOf<t.Validate<number, '1', '1', Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, true, true, Opts>>().toEqualTypeOf<1>()
     expectTypeOf<t.Validate<number, false, false, Opts>>().toEqualTypeOf<0>()
     expectTypeOf<t.Validate<number, boolean, boolean, Opts>>().toEqualTypeOf<1 | 0>()
@@ -59,8 +72,6 @@ describe('validate', () => {
     expectTypeOf<t.Validate<number, undefined, undefined, Opts>>().toEqualTypeOf<0>()
     expectTypeOf<t.Validate<number, bigint, bigint, Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, 1n, 1n, Opts>>().toEqualTypeOf<number>()
-
-    expectTypeOf<t.Validate<number, 'a', 'a', Opts>>().toEqualTypeOf<never>()
   })
   test('special radix', () => {
     type Opts = { transform: true }
