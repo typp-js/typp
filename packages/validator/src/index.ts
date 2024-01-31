@@ -98,6 +98,17 @@ declare module '@typp/core' {
       ) ? ValidateResult<Validate<T, Input, InputRest, Next>>
         : [InputRest] extends [T] ? ValidateSuccessResult<Validate<T, Input, InputRest, Next>> : ValidateErrorResult
     ) : [
+      Opts['transform'], Omit<Opts, 'transform'>
+    ] extends [
+      true, infer Next extends ValidateOptions
+    ] ? (
+      TransformExtendsMapping<T, Input> extends infer TransformInput ? Validate<
+        T,
+        TransformInput,
+        TransformInput,
+        Next
+      > : never
+    ) : [
       Opts['const'], Omit<Opts, 'const'>
     ] extends [
       true, infer Next extends ValidateOptions
@@ -109,12 +120,6 @@ declare module '@typp/core' {
         ) ? Input : never,
         Input, InputRest, Next
       >
-    ) : [
-      Opts['transform'], Omit<Opts, 'transform'>
-    ] extends [
-      true, infer Next extends ValidateOptions
-    ] ? (
-      TransformExtendsMapping<T, Input>
     ) : (
       true extends (
         | ([Input] extends [T] ? true : false)
