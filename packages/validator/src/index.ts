@@ -122,8 +122,11 @@ declare module '@typp/core' {
       >
     ) : (
       true extends (
-        | ([Input] extends [T] ? true : false)
-        | IsEqual<Input, unknown>
+        (
+          | ([Input] extends [T] ? true : false)
+          | IsEqual<Input, unknown>
+        )
+        & IsNotEqual<Input, never>
       ) ? T : never
     )
     interface ValidateItf<Shape, T, O extends ValidateOptions = {}> {
