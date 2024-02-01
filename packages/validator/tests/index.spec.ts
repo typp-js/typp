@@ -164,24 +164,50 @@ describe('parse', () => {
         const r1 = skm.parse(false)
         expect(r1).toBe(0)
         expectTypeOf(r1).toEqualTypeOf<number>()
+
+        // with const
+        const r2 = skm.parse.narrow(true)
+        expect(r2).toBe(1)
+        expectTypeOf(r2).toEqualTypeOf<1>()
       })
       test('transform - null', () => {
         const skm = t.number()
         const r0 = skm.parse(null)
         expect(r0).toBe(0)
         expectTypeOf(r0).toEqualTypeOf<number>()
+
+        // with const
+        const r1 = skm.parse.narrow(null)
+        expect(r1).toBe(0)
+        expectTypeOf(r1).toEqualTypeOf<0>()
       })
       test('transform - undefined', () => {
         const skm = t.number()
         const r0 = skm.parse(undefined)
         expect(r0).toBe(0)
         expectTypeOf(r0).toEqualTypeOf<number>()
+
+        // with const
+        const r1 = skm.parse.narrow(undefined)
+        expect(r1).toBe(0)
+        expectTypeOf(r1).toEqualTypeOf<0>()
       })
       test('transform - bigint', () => {
         const skm = t.number()
         const r0 = skm.parse(1n)
         expect(r0).toBe(1)
         expectTypeOf(r0).toEqualTypeOf<number>()
+
+        // with const
+        const r1 = skm.parse.narrow(1n)
+        expect(r1).toBe(1)
+        expectTypeOf(r1).toEqualTypeOf<number>()
+        // overflow number
+        const r2 = skm.parse.narrow(BigInt(Number.MAX_SAFE_INTEGER) + 1n)
+        expect(r2).toBe(Infinity)
+        expectTypeOf(r2).toEqualTypeOf<number>()
+        const r3 = skm.parse.narrow(-(BigInt(Number.MAX_SAFE_INTEGER) + 1n))
+        expectTypeOf(r3).toEqualTypeOf<number>()
       })
     })
   })
