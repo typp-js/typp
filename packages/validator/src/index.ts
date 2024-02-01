@@ -269,7 +269,11 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
   return rt
 }
 validate.narrow = validate
-function parse(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions) {
+function parse(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions): any
+function parse(this: tn.Schema<any, any>, ...args: any[]) {
+  if (args.length === 0)
+    throw new Error('No data to validate')
+  const [data, options] = args
   return validate.call(this, data, { transform: true, ...options })
 }
 parse.narrow = parse

@@ -75,6 +75,14 @@ describe('validate', () => {
       NumberSchema.validate(undefined)
     }).toThrow(new ValidateError('unexpected', NumberSchema, 'undefined'))
   })
+  describe('parse', () => {
+    test('no transform input', () => {
+      expect(() => {
+        // @ts-expect-error
+        t.number().parse()
+      }).toThrow('No data to validate')
+    })
+  })
   describe('primitive', () => {
     describe('number', () => {
       test('base', () => {
