@@ -20,8 +20,9 @@ describe('validate', () => {
   })
   test('try', () => {
     type Opts = { try: true }
-    expectTypeOf<t.Validate<number, 1, 1, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<number>>()
-    expectTypeOf<t.Validate<string, string, string, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<string>>()
+    expectTypeOf<t.Validate<number, 1, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<number>>()
+    expectTypeOf<t.Validate<number, number, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<number>>()
+    expectTypeOf<t.Validate<string, string, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<string>>()
     expectTypeOf<t.Validate<string, 1, 1, Opts>>().toEqualTypeOf<t.ValidateErrorResult>()
 
     // unknown or any
@@ -41,8 +42,8 @@ describe('validate', () => {
   })
   test('const', () => {
     type Opts = { const: true }
-    expectTypeOf<t.Validate<number, 1, 1, Opts>>().toEqualTypeOf<1>()
-    expectTypeOf<t.Validate<string, string, string, Opts>>().toEqualTypeOf<string>()
+    expectTypeOf<t.Validate<number, 1, never, Opts>>().toEqualTypeOf<1>()
+    expectTypeOf<t.Validate<string, string, never, Opts>>().toEqualTypeOf<string>()
     expectTypeOf<t.Validate<string, 1, 1, Opts>>().toEqualTypeOf<never>()
 
     expectTypeOf<t.Validate<number, 1 | unknown, unknown, Opts>>()
@@ -51,12 +52,13 @@ describe('validate', () => {
   })
   test('try and const', () => {
     type Opts = { try: true, const: true }
-    expectTypeOf<t.Validate<number, 1, 1, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<1>>()
-    expectTypeOf<t.Validate<string, string, string, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<string>>()
-    expectTypeOf<t.Validate<string, 1, 1, Opts>>().toEqualTypeOf<t.ValidateErrorResult>()
+    expectTypeOf<t.Validate<number, 1, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<1>>()
+    expectTypeOf<t.Validate<string, string, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<string>>()
+    expectTypeOf<t.Validate<string, 1, never, Opts>>().toEqualTypeOf<t.ValidateErrorResult>()
   })
   test('transform', () => {
     type Opts = { transform: true }
+    expectTypeOf<t.Validate<number, 1, never, Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, '1', '1', Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, '1.2', '1.2', Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, '1px', '1px', Opts>>().toEqualTypeOf<number>()
@@ -74,6 +76,7 @@ describe('validate', () => {
   })
   test('transform and const', () => {
     type Opts = { transform: true, const: true }
+    expectTypeOf<t.Validate<number, 1, never, Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, '1', '1', Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, true, true, Opts>>().toEqualTypeOf<1>()
     expectTypeOf<t.Validate<number, false, false, Opts>>().toEqualTypeOf<0>()
