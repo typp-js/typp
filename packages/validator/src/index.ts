@@ -169,8 +169,10 @@ declare module '@typp/core' {
     interface SchemaFieldsAll<Shape, T> {
       validate: ValidateItf<Shape, T>
       tryValidate: ValidateItf<Shape, T, { try: true }>
+      parse: ValidateItf<Shape, T, { transform: true }>
+      tryParse: ValidateItf<Shape, T, { try: true, transform: true }>
       // for zod
-      safeParse: this['tryValidate']
+      safeParse: this['tryParse']
     }
   }
 }
@@ -299,6 +301,28 @@ export default function validator(t: typeof tn) {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const skm = this
       return catchAndWrapProxy(validate, {
+        get(target, key) {
+          return catchAndWrapProxy((
+            Reflect.get(target, key) as Function
+          ).bind(skm))
+        }
+      })
+    },
+    get parse() {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const skm = this
+      return new Proxy(parse, {
+        get(target, key) {
+          return (
+            Reflect.get(target, key) as Function
+          ).bind(skm)
+        }
+      })
+    },
+    get tryParse() {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const skm = this
+      return catchAndWrapProxy(parse, {
         get(target, key) {
           return catchAndWrapProxy((
             Reflect.get(target, key) as Function
