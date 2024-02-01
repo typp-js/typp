@@ -215,9 +215,13 @@ resolverMappingByShape.set(Number, (skm, input, transform) => {
           const radixStr = input.slice(0, 2).toLowerCase()
           radix = { '0b': 2, '0o': 8, '0x': 16 }[radixStr] ?? radix
         }
+        let inputStr = input
+        if (radix !== 10) {
+          inputStr = input.slice(2)
+        }
         const temp = radix === 10
-          ? parseFloat(input)
-          : parseInt(input, radix)
+          ? parseFloat(inputStr)
+          : parseInt(inputStr, radix)
         if (!Number.isNaN(temp)) {
           data = temp
         }
