@@ -99,7 +99,7 @@ declare module '@typp/core' {
     ] extends [
       true, infer Next extends ValidateOptions
     ] ? (
-      TransformExtendsMapping<T, Input> extends infer TransformInput ? Validate<
+      TransformExtendsMapping<T, InputRest> extends infer TransformInput ? Validate<
         T,
         TransformInput,
         TransformInput,

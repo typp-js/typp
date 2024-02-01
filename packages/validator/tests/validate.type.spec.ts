@@ -70,7 +70,7 @@ describe('validate', () => {
     expectTypeOf<t.Validate<number, undefined, undefined, Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, bigint, bigint, Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, 1n, 1n, Opts>>().toEqualTypeOf<number>()
-    expectTypeOf<t.Validate<number, string, string, Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<number, number | string, string, Opts>>().toEqualTypeOf<number>()
 
     expectTypeOf<t.Validate<number, 'a', 'a', Opts>>().toEqualTypeOf<never>()
   })
