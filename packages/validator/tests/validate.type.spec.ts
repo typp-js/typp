@@ -68,6 +68,7 @@ describe('validate', () => {
     expectTypeOf<t.Validate<number, undefined, undefined, Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, bigint, bigint, Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, 1n, 1n, Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<number, string, string, Opts>>().toEqualTypeOf<number>()
 
     expectTypeOf<t.Validate<number, 'a', 'a', Opts>>().toEqualTypeOf<never>()
   })
@@ -90,5 +91,11 @@ describe('validate', () => {
     expectTypeOf<t.Validate<number, '0O1', '0O1', Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, '0x1', '0x1', Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, '0X1', '0X1', Opts>>().toEqualTypeOf<number>()
+  })
+  test('transform and try', () => {
+    type Opts = { transform: true, try: true }
+    expectTypeOf<t.Validate<number, '1', '1', Opts>>().toEqualTypeOf<t.ValidateSuccessResult<number>>()
+    expectTypeOf<t.Validate<number, 'a1', 'a1', Opts>>().toEqualTypeOf<t.ValidateErrorResult>()
+    expectTypeOf<t.Validate<number, string, string, Opts>>().toEqualTypeOf<t.ValidateResult<number>>()
   })
 })

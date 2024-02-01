@@ -26,7 +26,10 @@ interface TransformExtendsEntries<T, Input> {
           | `0${'b' | 'B'}${string}`
           | `0${'o' | 'O'}${number}`
           | `0${'x' | 'X'}${string}`
-        ) ? number : never
+        ) ? number
+          : true extends IsEqual<Input, string>
+            ? unknown
+            : never,
       ]
       boolean: [
         [Input] extends [boolean] ? true : false,
