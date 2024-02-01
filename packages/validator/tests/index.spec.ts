@@ -91,6 +91,12 @@ describe('parse', () => {
           skm.validate('abc')
         }).toThrow(new ValidateError('unexpected', skm, '1'))
       })
+      test('transform', () => {
+        const skm = t.number()
+        const r = skm.parse('1')
+        expect(r).toBe(1)
+        expectTypeOf(r).toEqualTypeOf<number>()
+      })
     })
   })
 })

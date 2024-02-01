@@ -151,7 +151,10 @@ declare module '@typp/core' {
     )
     interface ValidateItf<Shape, T, O extends ValidateOptions = {}> {
       <
-        Rest extends O['try'] extends true ? unknown : never,
+        Rest extends true extends(
+          | (O['try'] extends true ? true : false)
+          | (O['transform'] extends true ? true : false)
+        ) ? unknown : never,
         Opts extends ValidateOptions
       >(
         data: T | Rest,
@@ -159,7 +162,10 @@ declare module '@typp/core' {
       ): Validate<T, typeof data, Exclude<typeof data, T>, Opts & O>
       narrow<
         TT extends T,
-        Rest extends O['try'] extends true ? unknown : never,
+        Rest extends true extends(
+          | (O['try'] extends true ? true : false)
+          | (O['transform'] extends true ? true : false)
+        ) ? unknown : never,
         Opts extends ValidateOptions
       >(
         data: Narrow<TT | Rest>,
