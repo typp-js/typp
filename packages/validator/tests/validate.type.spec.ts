@@ -52,6 +52,9 @@ describe('validate', () => {
   test('transform', () => {
     type Opts = { transform: true }
     expectTypeOf<t.Validate<number, '1', '1', Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<number, '1.2', '1.2', Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<number, '1px', '1px', Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.Validate<number, '1.2px', '1.2px', Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, true, true, Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, false, false, Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.Validate<number, boolean, boolean, Opts>>().toEqualTypeOf<number>()

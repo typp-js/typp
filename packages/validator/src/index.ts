@@ -14,7 +14,7 @@ interface TransformExtendsEntries<T, Input> {
       ]
       string: [
         [Input] extends [string] ? true : false,
-        Input extends `${number}` | `0${'b' | 'B'}${string}` | `0${'o' | 'O'}${number}` | `0${'x' | 'X'}${string}`
+        Input extends `${number}${string}` | `0${'b' | 'B'}${string}` | `0${'o' | 'O'}${number}` | `0${'x' | 'X'}${string}`
           ? number
           : never
       ]
