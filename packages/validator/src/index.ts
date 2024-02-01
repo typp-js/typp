@@ -1,4 +1,11 @@
-import type { IsEqual, IsNotEqual, Narrow, Switch, t as tn, ValueOf } from '@typp/core'
+import type {
+  IsEqual,
+  IsNotEqual,
+  Narrow,
+  Switch,
+  t as tn,
+  ValueOf
+} from '@typp/core'
 
 interface TransformExtendsEntries<T, Input> {
   [key: string]: [boolean, any, any, any]
@@ -101,16 +108,23 @@ declare module '@typp/core' {
       true, infer Next extends ValidateOptions
     ] ? (
       true extends (
-        | (
-          & IsNotEqual<T, any>
-          & IsEqual<InputRest, any>
+        (
+          | (
+            & IsNotEqual<T, any>
+            & IsEqual<InputRest, any>
+          )
+          | (
+            & IsNotEqual<T, unknown>
+            & IsEqual<InputRest, unknown>
+          )
         )
-        | (
-          & IsNotEqual<T, unknown>
-          & IsEqual<InputRest, unknown>
-        )
+        & IsNotEqual<Input, never>
       ) ? ValidateResult<Validate<T, Input, InputRest, Next>>
-        : [InputRest] extends [T] ? ValidateSuccessResult<Validate<T, Input, InputRest, Next>> : ValidateErrorResult
+        : [InputRest] extends [T]
+          ? (true extends (IsNotEqual<T, never> & IsEqual<InputRest, never>)
+            ? ValidateErrorResult
+            : ValidateSuccessResult<Validate<T, Input, InputRest, Next>>)
+          : ValidateErrorResult
     ) : [
       Opts['const'], Omit<Opts, 'const'>
     ] extends [

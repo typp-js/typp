@@ -32,6 +32,12 @@ describe('validate', () => {
     expectTypeOf<t.Validate<unknown, unknown, unknown, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<unknown>>()
     expectTypeOf<t.Validate<any, unknown, unknown, Opts>>().toEqualTypeOf<t.ValidateResult<any>>()
     expectTypeOf<t.Validate<any, any, any, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<any>>()
+
+    // never
+    expectTypeOf<t.Validate<string, never, never, Opts>>().toEqualTypeOf<t.ValidateErrorResult>()
+    expectTypeOf<t.Validate<never, never, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<never>>()
+    expectTypeOf<t.Validate<any, never, never, Opts>>().toEqualTypeOf<t.ValidateErrorResult>()
+    expectTypeOf<t.Validate<unknown, never, never, Opts>>().toEqualTypeOf<t.ValidateErrorResult>()
   })
   test('const', () => {
     type Opts = { const: true }
