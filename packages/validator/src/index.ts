@@ -14,9 +14,12 @@ interface TransformExtendsEntries<T, Input> {
       ]
       string: [
         [Input] extends [string] ? true : false,
-        Input extends `${number}${string}` | `0${'b' | 'B'}${string}` | `0${'o' | 'O'}${number}` | `0${'x' | 'X'}${string}`
-          ? number
-          : never
+        Input extends (
+          | `${number}${string}`
+          | `0${'b' | 'B'}${string}`
+          | `0${'o' | 'O'}${number}`
+          | `0${'x' | 'X'}${string}`
+        ) ? number : never
       ]
       boolean: [
         [Input] extends [boolean] ? true : false,
@@ -82,6 +85,17 @@ declare module '@typp/core' {
     }
     export type ValidateResult<T> = ValidateSuccessResult<T> | ValidateErrorResult
     export type Validate<T, Input, InputRest, Opts extends ValidateOptions> = [
+      Opts['transform'], Omit<Opts, 'transform'>
+    ] extends [
+      true, infer Next extends ValidateOptions
+    ] ? (
+      TransformExtendsMapping<T, Input> extends infer TransformInput ? Validate<
+        T,
+        TransformInput,
+        TransformInput,
+        Next
+      > : never
+    ) : [
       Opts['try'], Omit<Opts, 'try'>
     ] extends [
       true, infer Next extends ValidateOptions
@@ -97,17 +111,6 @@ declare module '@typp/core' {
         )
       ) ? ValidateResult<Validate<T, Input, InputRest, Next>>
         : [InputRest] extends [T] ? ValidateSuccessResult<Validate<T, Input, InputRest, Next>> : ValidateErrorResult
-    ) : [
-      Opts['transform'], Omit<Opts, 'transform'>
-    ] extends [
-      true, infer Next extends ValidateOptions
-    ] ? (
-      TransformExtendsMapping<T, Input> extends infer TransformInput ? Validate<
-        T,
-        TransformInput,
-        TransformInput,
-        Next
-      > : never
     ) : [
       Opts['const'], Omit<Opts, 'const'>
     ] extends [
