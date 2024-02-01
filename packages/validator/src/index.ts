@@ -120,11 +120,11 @@ declare module '@typp/core' {
         )
         & IsNotEqual<Input, never>
       ) ? ValidateResult<Validate<T, Input, InputRest, Next>>
-        : [InputRest] extends [T]
-          ? (true extends (IsNotEqual<T, never> & IsEqual<InputRest, never>)
-            ? ValidateErrorResult
-            : ValidateSuccessResult<Validate<T, Input, InputRest, Next>>)
-          : ValidateErrorResult
+        : true extends (
+          | ([InputRest] extends [T] ? false : true)
+          | (IsNotEqual<T, never> & IsEqual<InputRest, never>)
+        ) ? ValidateErrorResult
+          : ValidateSuccessResult<Validate<T, Input, InputRest, Next>>
     ) : [
       Opts['const'], Omit<Opts, 'const'>
     ] extends [
