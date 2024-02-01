@@ -5,7 +5,7 @@ import validator, { ValidateError } from '../src'
 
 beforeAll(() => t.use(validator))
 
-describe('parse', () => {
+describe('validate', () => {
   test('base', () => {
     const NumberSchema = t.number()
     const r = NumberSchema.validate(1)
@@ -25,7 +25,7 @@ describe('parse', () => {
     expect(r).toBe(1)
     expectTypeOf(r).toEqualTypeOf<1>()
   })
-  test('tryParse', () => {
+  test('try', () => {
     const NumberSchema = t.number()
     const result0 = NumberSchema.tryValidate(1)
     expect(result0.success).toBe(true)
