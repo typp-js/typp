@@ -252,7 +252,11 @@ resolverMappingByShape.set(Number, (skm, input, transform) => {
   }
   return data
 })
-function validate(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions) {
+function validate(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions): any
+function validate(this: tn.Schema<any, any>, ...args: any[]) {
+  if (args.length === 0)
+    throw new Error('No data to validate')
+  const [data, options] = args
   // TODO
   //  完全匹配
   //  部分匹配，部分缺失或不匹配: partially

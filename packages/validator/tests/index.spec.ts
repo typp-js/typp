@@ -64,6 +64,17 @@ describe('parse', () => {
     expect(result0.data).toBe(1)
     expectTypeOf(result0).toEqualTypeOf<t.ValidateSuccessResult<1>>()
   })
+  test('no transform input', () => {
+    const NumberSchema = t.number()
+    expect(() => {
+      // @ts-expect-error
+      NumberSchema.validate()
+    }).toThrow('No data to validate')
+    expect(() => {
+      // @ts-expect-error
+      NumberSchema.validate(undefined)
+    }).toThrow(new ValidateError('unexpected', NumberSchema, 'undefined'))
+  })
   describe('primitive', () => {
     describe('number', () => {
       test('base', () => {
