@@ -152,6 +152,17 @@ describe('parse', () => {
         expect(r15).toBe(0)
         expectTypeOf(r15).toEqualTypeOf<number>()
 
+        // with suffix
+        const r16 = skm.parse('1px')
+        expect(r16).toBe(1)
+        expectTypeOf(r16).toEqualTypeOf<number>()
+        const r17 = skm.parse('1.2px')
+        expect(r17).toBe(1.2)
+        expectTypeOf(r17).toEqualTypeOf<number>()
+        const r18 = skm.parse('1.2e3px')
+        expect(r18).toBe(1200)
+        expectTypeOf(r18).toEqualTypeOf<number>()
+
         expect(() => {
           expectTypeOf(skm.parse('abc')).toEqualTypeOf<number>()
         }).toThrow(new ValidateError('unexpected', skm, 'abc'))
