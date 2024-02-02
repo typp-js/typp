@@ -50,6 +50,12 @@ interface TransformExtendsEntries<T, Input> {
       ]
     }>
   ]
+  string: [
+    [T] extends [string] ? true : false,
+    string,
+    any,
+    string
+  ]
 }
 type TransformExtendsMapping<
   T, Input,
@@ -249,6 +255,16 @@ resolverMappingByShape.set(Number, (skm, input, transform) => {
     }
   }
   if (typeof data !== 'number') {
+    throw new ValidateError('unexpected', skm, input)
+  }
+  return data
+})
+resolverMappingByShape.set(String, (skm, input, transform) => {
+  let data = input
+  if (transform) {
+    data = String(input)
+  }
+  if (typeof data !== 'string') {
     throw new ValidateError('unexpected', skm, input)
   }
   return data
