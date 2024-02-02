@@ -278,16 +278,16 @@ resolverMappingByShape.set(String, (skm, input, transform) => {
   }
   return data
 })
+export const falsely = [
+  0, '0',
+  'false', 'no', 'off',
+  'False', 'No', 'Off',
+  'FALSE', 'NO', 'OFF'
+] as unknown[]
 resolverMappingByShape.set(Boolean, (skm, input, transform) => {
   let data = input
   if (transform && typeof input !== 'boolean') {
-    const truly = [
-      0, '0',
-      'false', 'no', 'off',
-      'False', 'No', 'Off',
-      'FALSE', 'NO', 'OFF'
-    ] as unknown[]
-    if (truly.includes(input)) {
+    if (falsely.includes(input)) {
       data = false
     } else {
       data = Boolean(input)
