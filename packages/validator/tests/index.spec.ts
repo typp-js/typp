@@ -239,6 +239,22 @@ describe('validate', () => {
         const r3 = skm.parse.narrow(-(BigInt(Number.MAX_SAFE_INTEGER) + 1n))
         expectTypeOf(r3).toEqualTypeOf<number>()
       })
+      test('transform - any or unknown', () => {
+        expectTypeOf(
+          t.number().parse(1 as any)
+        ).toEqualTypeOf<number>()
+        expectTypeOf(
+          t.number().parse(1 as unknown)
+        ).toEqualTypeOf<never>()
+      })
+      test('try and transform - any or unknown', () => {
+        expectTypeOf(
+          t.number().tryParse(1 as any)
+        ).toEqualTypeOf<t.ValidateResult<number>>()
+        expectTypeOf(
+          t.number().tryParse(1 as unknown)
+        ).toEqualTypeOf<t.ValidateErrorResult>()
+      })
     })
   })
 })

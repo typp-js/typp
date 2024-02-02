@@ -15,6 +15,7 @@ interface TransformExtendsEntries<T, Input> {
     number | string | boolean | null | undefined | bigint,
     Switch<{
       [k: string]: [boolean, any]
+      any: [IsEqual<Input, any>, unknown]
       self: [
         [Input] extends [number] ? true : false,
         number
