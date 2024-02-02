@@ -306,6 +306,12 @@ describe('validate', () => {
           t.string().tryParse(1 as unknown)
         ).toEqualTypeOf<t.ValidateSuccessResult<string>>()
       })
+      test('transform - toString', () => {
+        const skm = t.string()
+        const r0 = skm.parse({ toString: () => '1' })
+        expect(r0).toBe('1')
+        expectTypeOf(r0).toEqualTypeOf<string>()
+      })
     })
   })
 })
