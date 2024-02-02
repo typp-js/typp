@@ -60,7 +60,7 @@ interface TransformExtendsEntries<T, Input> {
     [T] extends [boolean] ? true : false,
     boolean,
     any,
-    // resolve literal type
+    // TODO resolve literal type
     boolean
   ]
 }
