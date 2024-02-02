@@ -186,6 +186,8 @@ declare module '@typp/core' {
       tryParse: ValidateItf<Shape, T, { try: true, transform: true }>
       // for zod
       safeParse: this['tryParse']
+
+      test: (data: unknown) => data is T
     }
   }
 }
@@ -364,6 +366,19 @@ export default function validator(t: typeof tn) {
           ).bind(skm))
         }
       })
+    }
+  })
+  t.useFields({
+    test(data: unknown): data is any {
+      try {
+        validate.call(this, data)
+        return true
+      } catch (e) {
+        if (e instanceof ValidateError) {
+          return false
+        }
+        throw e
+      }
     }
   })
 }

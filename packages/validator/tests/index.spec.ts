@@ -83,6 +83,17 @@ describe('validate', () => {
       }).toThrow('No data to validate')
     })
   })
+  describe('test', () => {
+    test('base', () => {
+      const NumberSchema = t.number()
+      const val = 1 as string | number
+      if (NumberSchema.test(val)) {
+        expectTypeOf(val).toEqualTypeOf<number>()
+      } else {
+        expectTypeOf(val).toEqualTypeOf<string>()
+      }
+    })
+  })
   describe('primitive', () => {
     describe('number', () => {
       test('base', () => {
