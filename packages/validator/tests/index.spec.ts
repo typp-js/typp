@@ -1,7 +1,7 @@
 import { t } from '@typp/core'
 import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 
-import validator, { ValidateError } from '../src'
+import validator, { falsely, ValidateError } from '../src'
 
 beforeAll(() => t.use(validator))
 
@@ -385,6 +385,19 @@ describe('validate', () => {
         expectTypeOf(
           t.boolean().tryParse(1 as unknown)
         ).toEqualTypeOf<t.ValidateSuccessResult<boolean>>()
+      })
+      test('transform - special falsy', () => {
+        const skm = t.boolean()
+        const r0 = skm.parse(0)
+        expect(r0).toBe(false)
+        expectTypeOf(r0).toEqualTypeOf<boolean>()
+        const r1 = skm.parse('')
+        expect(r1).toBe(false)
+        expectTypeOf(r1).toEqualTypeOf<boolean>()
+        falsely.forEach((falsyValue) => {
+          const r = skm.parse(falsyValue)
+          expect(r).toBe(false)
+        })
       })
     })
   })
