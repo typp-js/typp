@@ -56,6 +56,13 @@ interface TransformExtendsEntries<T, Input> {
     any,
     string
   ]
+  boolean: [
+    [T] extends [boolean] ? true : false,
+    boolean,
+    any,
+    // resolve literal type
+    boolean
+  ]
 }
 type TransformExtendsMapping<
   T, Input,
@@ -267,6 +274,26 @@ resolverMappingByShape.set(String, (skm, input, transform) => {
     data = String(input)
   }
   if (typeof data !== 'string') {
+    throw new ValidateError('unexpected', skm, input)
+  }
+  return data
+})
+resolverMappingByShape.set(Boolean, (skm, input, transform) => {
+  let data = input
+  if (transform && typeof input !== 'boolean') {
+    const truly = [
+      0, '0',
+      'false', 'no', 'off',
+      'False', 'No', 'Off',
+      'FALSE', 'NO', 'OFF'
+    ] as unknown[]
+    if (truly.includes(input)) {
+      data = false
+    } else {
+      data = Boolean(input)
+    }
+  }
+  if (typeof data !== 'boolean') {
     throw new ValidateError('unexpected', skm, input)
   }
   return data
