@@ -86,15 +86,24 @@ describe('validate', () => {
   describe('test', () => {
     test('base', () => {
       const NumberSchema = t.number()
-      const val = 1 as string | number
+      const num = 1 as string | number
       const isRight = vi.fn()
-      if (NumberSchema.test(val)) {
+      if (NumberSchema.test(num)) {
         isRight()
-        expectTypeOf(val).toEqualTypeOf<number>()
+        expectTypeOf(num).toEqualTypeOf<number>()
       } else {
-        expectTypeOf(val).toEqualTypeOf<string>()
+        expectTypeOf(num).toEqualTypeOf<string>()
       }
       expect(isRight).toHaveBeenCalled()
+      const isWrong = vi.fn()
+      const str = 'a' as string | number
+      if (NumberSchema.test(str)) {
+        expectTypeOf(str).toEqualTypeOf<number>()
+      } else {
+        isWrong()
+        expectTypeOf(str).toEqualTypeOf<string>()
+      }
+      expect(isWrong).toHaveBeenCalled()
     })
   })
   describe('primitive', () => {
