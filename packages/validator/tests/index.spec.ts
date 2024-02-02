@@ -1,5 +1,5 @@
 import { t } from '@typp/core'
-import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
+import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 
 import validator, { ValidateError } from '../src'
 
@@ -87,11 +87,14 @@ describe('validate', () => {
     test('base', () => {
       const NumberSchema = t.number()
       const val = 1 as string | number
+      const isRight = vi.fn()
       if (NumberSchema.test(val)) {
+        isRight()
         expectTypeOf(val).toEqualTypeOf<number>()
       } else {
         expectTypeOf(val).toEqualTypeOf<string>()
       }
+      expect(isRight).toHaveBeenCalled()
     })
   })
   describe('primitive', () => {
