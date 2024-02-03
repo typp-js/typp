@@ -9,13 +9,13 @@ export function parseBigInt(inputStr: string): bigint {
     return BigInt(str)
   }
   if (str.length === 2) {
-    if (!/[-|\d]\d/.test(str))
+    if (!/[-+\d]\d/.test(str))
       throw new SyntaxError(`Cannot convert ${inputStr} to a BigInt`)
     return BigInt(str)
   }
   const sign = str[0] === '-' ? -1n : 1n
   let numStr
-  const tenRadixMatchResult = str.match(/^-?(\d+)(?:\.(?:(\d+)?0*)?)?(?:e([+-]?\d+)?)?/)
+  const tenRadixMatchResult = str.match(/^[+-]?(\d+)(?:\.(?:(\d+)?0*)?)?(?:e([+-]?\d+)?)?/)
   if (tenRadixMatchResult) {
     const [, integer, fraction, offsetStr] = tenRadixMatchResult
     const offset = offsetStr ? parseInt(offsetStr) : 0

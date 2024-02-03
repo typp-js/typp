@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest'
+import { describe, expect, test } from 'vitest'
 
 import { parseBigInt } from '../../src/utils'
 
@@ -13,12 +13,16 @@ test('integer', () => {
   expect(parseBigInt('0')).toBe(0n)
   expect(parseBigInt('01')).toBe(1n)
   expect(parseBigInt('-1')).toBe(-1n)
+  expect(parseBigInt('+1')).toBe(1n)
   expect(parseBigInt('00')).toBe(0n)
   expect(parseBigInt('-0')).toBe(0n)
+  expect(parseBigInt('+0')).toBe(0n)
   expect(parseBigInt('001')).toBe(1n)
 
   expect(() => parseBigInt('-'))
     .toThrow(new SyntaxError('Cannot convert - to a BigInt'))
+  expect(() => parseBigInt('+'))
+    .toThrow(new SyntaxError('Cannot convert + to a BigInt'))
   expect(() => parseBigInt('a'))
     .toThrow(new SyntaxError('Cannot convert a to a BigInt'))
   expect(() => parseBigInt('aa'))
@@ -33,6 +37,8 @@ test('integer', () => {
 
   expect(() => parseBigInt(' -'))
     .toThrow(new SyntaxError('Cannot convert  - to a BigInt'))
+  expect(() => parseBigInt(' +'))
+    .toThrow(new SyntaxError('Cannot convert  + to a BigInt'))
   expect(() => parseBigInt(' a'))
     .toThrow(new SyntaxError('Cannot convert  a to a BigInt'))
   expect(() => parseBigInt(' aa'))
@@ -40,6 +46,8 @@ test('integer', () => {
 
   expect(() => parseBigInt(' - '))
     .toThrow(new SyntaxError('Cannot convert  -  to a BigInt'))
+  expect(() => parseBigInt(' + '))
+    .toThrow(new SyntaxError('Cannot convert  +  to a BigInt'))
   expect(() => parseBigInt(' a '))
     .toThrow(new SyntaxError('Cannot convert  a  to a BigInt'))
   expect(() => parseBigInt(' aa '))
@@ -92,4 +100,20 @@ test('with other characters', () => {
   expect(parseBigInt('123.456 e1px')).toBe(123n)
   expect(parseBigInt('123.456 e-1px')).toBe(123n)
   expect(parseBigInt('123.456 e+1px')).toBe(123n)
+})
+
+describe('other radixes', () => {
+  test('like BigInt', () => {
+    expect(parseBigInt('0b0')).toBe(0b0n)
+    expect(parseBigInt('0b11')).toBe(0b11n)
+    expect(parseBigInt('0o11')).toBe(0o11n)
+    expect(parseBigInt('0x11')).toBe(0x11n)
+
+    expect(() => parseBigInt('0b11.11'))
+      .toThrow(new SyntaxError('Cannot convert 0b11.11 to a BigInt'))
+    expect(() => parseBigInt('0b22'))
+      .toThrow(new SyntaxError('Cannot convert 0b22 to a BigInt'))
+    expect(() => parseBigInt('0b'))
+      .toThrow(new SyntaxError('Cannot convert 0b to a BigInt'))
+  })
 })
