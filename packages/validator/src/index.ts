@@ -220,6 +220,7 @@ const resolverMappingByMatcher = [] as [
 const resolverMappingByShape = new Map<unknown, Resolver>()
 
 resolverMappingByShape.set(Number, (skm, input, transform) => {
+  // TODO sticky as template, refactor the next logic
   let data = input
   const notMatched = () => typeof data !== 'number'
   if (transform && notMatched()) {
