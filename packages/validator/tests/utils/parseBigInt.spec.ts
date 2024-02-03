@@ -12,7 +12,9 @@ test('integer', () => {
   expect(parseBigInt('1')).toBe(1n)
   expect(parseBigInt('0')).toBe(0n)
   expect(parseBigInt('01')).toBe(1n)
+  expect(parseBigInt('-1')).toBe(-1n)
   expect(parseBigInt('00')).toBe(0n)
+  expect(parseBigInt('-0')).toBe(0n)
   expect(parseBigInt('001')).toBe(1n)
 
   expect(() => parseBigInt('-'))
