@@ -221,7 +221,7 @@ const resolverMappingByShape = new Map<unknown, Resolver>()
 
 resolverMappingByShape.set(Number, (skm, input, transform) => {
   let data = input
-  if (transform) {
+  if (transform && typeof input !== 'number') {
     switch (typeof input) {
       case 'string': {
         if (input === 'NaN') data = NaN
@@ -284,7 +284,7 @@ export const falsely = [
 ] as unknown[]
 resolverMappingByShape.set(BigInt, (skm, input, transform) => {
   let data = input
-  if (transform) {
+  if (transform && typeof input !== 'bigint') {
     if (falsely.includes(input)) {
       data = 0n
     }
@@ -318,7 +318,7 @@ resolverMappingByShape.set(BigInt, (skm, input, transform) => {
 })
 resolverMappingByShape.set(String, (skm, input, transform) => {
   let data = input
-  if (transform) {
+  if (transform && typeof input !== 'string') {
     data = String(input)
   }
   if (typeof data !== 'string') {
