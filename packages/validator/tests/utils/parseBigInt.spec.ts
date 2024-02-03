@@ -117,36 +117,49 @@ describe('other radixes', () => {
     expect(parseBigInt('0b')).toBe(0n)
     // base2
     expect(parseBigInt('0b0')).toBe(0b0n)
-    expect(parseBigInt('0b0n')).toBe(0b0n)
     expect(parseBigInt('+0b0')).toBe(0b0n)
     expect(parseBigInt('-0b0')).toBe(0b0n)
     expect(parseBigInt('-0b0')).toBe(-0b0n)
     expect(parseBigInt('-0b1')).toBe(-0b1n)
     expect(parseBigInt('0b11')).toBe(0b11n)
-    expect(parseBigInt('0b1.1')).toBe(0b1n)
 
     // base10
     expect(parseBigInt('0o')).toBe(0n)
     // base8
     expect(parseBigInt('0o0')).toBe(0o0n)
-    expect(parseBigInt('0o0n')).toBe(0o0n)
     expect(parseBigInt('+0o0')).toBe(0o0n)
     expect(parseBigInt('-0o0')).toBe(0o0n)
     expect(parseBigInt('-0o0')).toBe(-0o0n)
     expect(parseBigInt('-0o1')).toBe(-0o1n)
     expect(parseBigInt('0o11')).toBe(0o11n)
-    expect(parseBigInt('0o1.1')).toBe(0o1n)
 
     // base10
     expect(parseBigInt('0x')).toBe(0n)
     // base16
     expect(parseBigInt('0x0')).toBe(0x0n)
-    expect(parseBigInt('0x0n')).toBe(0x0n)
     expect(parseBigInt('+0x0')).toBe(0x0n)
     expect(parseBigInt('-0x0')).toBe(0x0n)
     expect(parseBigInt('-0x0')).toBe(-0x0n)
     expect(parseBigInt('-0x1')).toBe(-0x1n)
     expect(parseBigInt('0x11')).toBe(0x11n)
+  })
+  test('resolve float', () => {
+    expect(parseBigInt('0b1.1')).toBe(0b1n)
+    expect(parseBigInt('0o1.1')).toBe(0o1n)
     expect(parseBigInt('0x1.1')).toBe(0x1n)
+  })
+  test('with characters', () => {
+    // radix 2
+    expect(parseBigInt('0b0n')).toBe(0b0n)
+    expect(parseBigInt('0b1n')).toBe(0b1n)
+    // radix 10
+    expect(parseBigInt('0b2n')).toBe(0n)
+    expect(parseBigInt('0bit')).toBe(0n)
+    expect(parseBigInt('0byte')).toBe(0n)
+    // radix 2
+    expect(parseBigInt('0b12x')).toBe(0b1n)
+
+    expect(parseBigInt('0o0n')).toBe(0o0n)
+    expect(parseBigInt('0x0n')).toBe(0x0n)
   })
 })
