@@ -159,7 +159,22 @@ describe('other radixes', () => {
     // radix 2
     expect(parseBigInt('0b12x')).toBe(0b1n)
 
+    // radix 8
     expect(parseBigInt('0o0n')).toBe(0o0n)
+    expect(parseBigInt('0o1n')).toBe(0o1n)
+    // radix 10
+    expect(parseBigInt('0o8n')).toBe(0n)
+    expect(parseBigInt('0oit')).toBe(0n)
+    // radix 8
+    expect(parseBigInt('0o18x')).toBe(0o1n)
+
+    // radix 16
     expect(parseBigInt('0x0n')).toBe(0x0n)
+    expect(parseBigInt('0x1n')).toBe(0x1n)
+    // radix 10
+    expect(parseBigInt('0xgn')).toBe(0n)
+    expect(parseBigInt('0xit')).toBe(0n)
+    // radix 16
+    expect(parseBigInt('0x1gn')).toBe(0x1n)
   })
 })
