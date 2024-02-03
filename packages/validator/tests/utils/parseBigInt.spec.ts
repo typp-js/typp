@@ -21,6 +21,27 @@ test('integer', () => {
     .toThrow(new SyntaxError('Cannot convert a to a BigInt'))
   expect(() => parseBigInt('aa'))
     .toThrow(new SyntaxError('Cannot convert aa to a BigInt'))
+
+  expect(parseBigInt(' ')).toBe(0n)
+  expect(parseBigInt('  ')).toBe(0n)
+  expect(parseBigInt(' 1 ')).toBe(1n)
+  expect(parseBigInt(' 0 ')).toBe(0n)
+  expect(parseBigInt(' 01 ')).toBe(1n)
+  expect(parseBigInt(' 01111 ')).toBe(1111n)
+
+  expect(() => parseBigInt(' -'))
+    .toThrow(new SyntaxError('Cannot convert  - to a BigInt'))
+  expect(() => parseBigInt(' a'))
+    .toThrow(new SyntaxError('Cannot convert  a to a BigInt'))
+  expect(() => parseBigInt(' aa'))
+    .toThrow(new SyntaxError('Cannot convert  aa to a BigInt'))
+
+  expect(() => parseBigInt(' - '))
+    .toThrow(new SyntaxError('Cannot convert  -  to a BigInt'))
+  expect(() => parseBigInt(' a '))
+    .toThrow(new SyntaxError('Cannot convert  a  to a BigInt'))
+  expect(() => parseBigInt(' aa '))
+    .toThrow(new SyntaxError('Cannot convert  aa  to a BigInt'))
 })
 test('float', () => {
   expect(parseBigInt('123.')).toBe(123n)
