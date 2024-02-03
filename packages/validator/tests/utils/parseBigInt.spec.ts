@@ -19,6 +19,15 @@ test('integer', () => {
   expect(parseBigInt('+0')).toBe(0n)
   expect(parseBigInt('001')).toBe(1n)
 
+  expect(parseBigInt('0.')).toBe(0n)
+  expect(parseBigInt('0n')).toBe(0n)
+  expect(parseBigInt('0a')).toBe(0n)
+  expect(parseBigInt('0a0')).toBe(0n)
+  expect(parseBigInt('0a1')).toBe(0n)
+  expect(parseBigInt('1a')).toBe(1n)
+  expect(parseBigInt('1a0')).toBe(1n)
+  expect(parseBigInt('1a1')).toBe(1n)
+
   expect(() => parseBigInt('-'))
     .toThrow(new SyntaxError('Cannot convert - to a BigInt'))
   expect(() => parseBigInt('+'))
@@ -104,16 +113,40 @@ test('with other characters', () => {
 
 describe('other radixes', () => {
   test('like BigInt', () => {
+    // base10
+    expect(parseBigInt('0b')).toBe(0n)
+    // base2
     expect(parseBigInt('0b0')).toBe(0b0n)
+    expect(parseBigInt('0b0n')).toBe(0b0n)
+    expect(parseBigInt('+0b0')).toBe(0b0n)
+    expect(parseBigInt('-0b0')).toBe(0b0n)
+    expect(parseBigInt('-0b0')).toBe(-0b0n)
+    expect(parseBigInt('-0b1')).toBe(-0b1n)
     expect(parseBigInt('0b11')).toBe(0b11n)
-    expect(parseBigInt('0o11')).toBe(0o11n)
-    expect(parseBigInt('0x11')).toBe(0x11n)
+    expect(parseBigInt('0b1.1')).toBe(0b1n)
 
-    expect(() => parseBigInt('0b11.11'))
-      .toThrow(new SyntaxError('Cannot convert 0b11.11 to a BigInt'))
-    expect(() => parseBigInt('0b22'))
-      .toThrow(new SyntaxError('Cannot convert 0b22 to a BigInt'))
-    expect(() => parseBigInt('0b'))
-      .toThrow(new SyntaxError('Cannot convert 0b to a BigInt'))
+    // base10
+    expect(parseBigInt('0o')).toBe(0n)
+    // base8
+    expect(parseBigInt('0o0')).toBe(0o0n)
+    expect(parseBigInt('0o0n')).toBe(0o0n)
+    expect(parseBigInt('+0o0')).toBe(0o0n)
+    expect(parseBigInt('-0o0')).toBe(0o0n)
+    expect(parseBigInt('-0o0')).toBe(-0o0n)
+    expect(parseBigInt('-0o1')).toBe(-0o1n)
+    expect(parseBigInt('0o11')).toBe(0o11n)
+    expect(parseBigInt('0o1.1')).toBe(0o1n)
+
+    // base10
+    expect(parseBigInt('0x')).toBe(0n)
+    // base16
+    expect(parseBigInt('0x0')).toBe(0x0n)
+    expect(parseBigInt('0x0n')).toBe(0x0n)
+    expect(parseBigInt('+0x0')).toBe(0x0n)
+    expect(parseBigInt('-0x0')).toBe(0x0n)
+    expect(parseBigInt('-0x0')).toBe(-0x0n)
+    expect(parseBigInt('-0x1')).toBe(-0x1n)
+    expect(parseBigInt('0x11')).toBe(0x11n)
+    expect(parseBigInt('0x1.1')).toBe(0x1n)
   })
 })
