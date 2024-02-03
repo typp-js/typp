@@ -219,6 +219,13 @@ const resolverMappingByMatcher = [] as [
 ][]
 const resolverMappingByShape = new Map<unknown, Resolver>()
 
+// 如果俩个类型之间不支持转化，应该抛出「校验错误」还是「转化错误」？
+// 实际上来说，一个值不能作为某个类型使用，存在俩种情况
+// - 这个值不能被转化为目标的类型
+//   比方说 { a: 1 } 就是转化不到 number 的
+//   但是 { a: 1, b: 2 } 是可以转化到 { a: number } 的，只需要删除掉多余的部分就可以了
+// - 这个值就是不匹配目标类型，哪怕转化了也是
+//   比方说 1 就是不匹配 '2' | '3' 的
 resolverMappingByShape.set(Number, (skm, input, transform) => {
   // TODO sticky as template, refactor the next logic
   let data = input
