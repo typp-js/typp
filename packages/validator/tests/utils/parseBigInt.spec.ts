@@ -36,6 +36,8 @@ test('integer', () => {
     .toThrow(new SyntaxError('Cannot convert a to a BigInt'))
   expect(() => parseBigInt('aa'))
     .toThrow(new SyntaxError('Cannot convert aa to a BigInt'))
+  expect(() => parseBigInt('aaa'))
+    .toThrow(new SyntaxError('Cannot convert aaa to a BigInt'))
 
   expect(parseBigInt(' ')).toBe(0n)
   expect(parseBigInt('  ')).toBe(0n)
