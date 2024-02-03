@@ -7,6 +7,8 @@ import type {
   ValueOf
 } from '@typp/core'
 
+import { parseBigInt } from './utils'
+
 interface TransformExtendsEntries<T, Input> {
   [key: string]: [boolean, any, any, any]
   number: [
@@ -268,6 +270,52 @@ resolverMappingByShape.set(Number, (skm, input, transform) => {
   }
   return data
 })
+// TODO extensible ?
+export const falsely = [
+  '',
+  null, 'null', 'Null', 'NULL',
+  undefined, 'undefined', 'Undefined', 'UNDEFINED',
+  0, '0',
+  0n, '0n',
+  'false', 'no', 'off',
+  'False', 'No', 'Off',
+  'FALSE', 'NO', 'OFF'
+  // TODO [], {}, NaN
+] as unknown[]
+resolverMappingByShape.set(BigInt, (skm, input, transform) => {
+  let data = input
+  if (transform) {
+    if (falsely.includes(input)) {
+      data = 0n
+    }
+    switch (typeof input) {
+      case 'number':
+        if (input === Infinity) {
+          data = 2n ** 1024n
+        } else if (input === -Infinity) {
+          data = 2n ** 1024n * -1n
+        } else if (Number.isNaN(input)) {
+          // TODO throw transform error of parse error
+          break
+        } else if (Number.isInteger(input)) {
+          data = BigInt(input)
+        } else {
+          data = BigInt(Math.floor(input))
+        }
+        break
+      case 'string':
+        data = parseBigInt(input)
+        break
+      case 'boolean':
+        data = input ? 1n : 0n
+        break
+    }
+  }
+  if (typeof data !== 'bigint') {
+    throw new ValidateError('unexpected', skm, input)
+  }
+  return data
+})
 resolverMappingByShape.set(String, (skm, input, transform) => {
   let data = input
   if (transform) {
@@ -278,12 +326,6 @@ resolverMappingByShape.set(String, (skm, input, transform) => {
   }
   return data
 })
-export const falsely = [
-  0, '0',
-  'false', 'no', 'off',
-  'False', 'No', 'Off',
-  'FALSE', 'NO', 'OFF'
-] as unknown[]
 resolverMappingByShape.set(Boolean, (skm, input, transform) => {
   let data = input
   if (transform && typeof input !== 'boolean') {
