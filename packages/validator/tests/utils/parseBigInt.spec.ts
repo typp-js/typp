@@ -7,6 +7,20 @@ test('integer', () => {
   expect(parseBigInt('1'.repeat(10000))).toBe(BigInt('1'.repeat(10000)))
   expect(parseBigInt('-123')).toBe(-123n)
   expect(parseBigInt('-' + '1'.repeat(10000))).toBe(BigInt('-' + '1'.repeat(10000)))
+
+  expect(parseBigInt('')).toBe(0n)
+  expect(parseBigInt('1')).toBe(1n)
+  expect(parseBigInt('0')).toBe(0n)
+  expect(parseBigInt('01')).toBe(1n)
+  expect(parseBigInt('00')).toBe(0n)
+  expect(parseBigInt('001')).toBe(1n)
+
+  expect(() => parseBigInt('-'))
+    .toThrow(new SyntaxError('Cannot convert - to a BigInt'))
+  expect(() => parseBigInt('a'))
+    .toThrow(new SyntaxError('Cannot convert a to a BigInt'))
+  expect(() => parseBigInt('aa'))
+    .toThrow(new SyntaxError('Cannot convert aa to a BigInt'))
 })
 test('float', () => {
   expect(parseBigInt('123.')).toBe(123n)

@@ -1,4 +1,16 @@
 export function parseBigInt(str: string): bigint {
+  if (str.length === 0)
+    return 0n
+  if (str.length === 1) {
+    if (!/\d/.test(str))
+      throw new SyntaxError(`Cannot convert ${str} to a BigInt`)
+    return BigInt(str)
+  }
+  if (str.length === 2) {
+    if (!/[-|\d]\d/.test(str))
+      throw new SyntaxError(`Cannot convert ${str} to a BigInt`)
+    return BigInt(str)
+  }
   const sign = str[0] === '-' ? -1n : 1n
   let numStr
   const tenRadixMatchResult = str.match(/^-?(\d+)(?:\.(?:(\d+)?0*)?)?(?:e([+-]?\d+)?)?/)
