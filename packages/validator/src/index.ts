@@ -221,7 +221,8 @@ const resolverMappingByShape = new Map<unknown, Resolver>()
 
 resolverMappingByShape.set(Number, (skm, input, transform) => {
   let data = input
-  if (transform && typeof input !== 'number') {
+  const notMatched = () => typeof data !== 'number'
+  if (transform && notMatched()) {
     switch (typeof input) {
       case 'string': {
         if (input === 'NaN') data = NaN
@@ -265,7 +266,7 @@ resolverMappingByShape.set(Number, (skm, input, transform) => {
         break
     }
   }
-  if (typeof data !== 'number') {
+  if (notMatched()) {
     throw new ValidateError('unexpected', skm, input)
   }
   return data
@@ -284,7 +285,8 @@ export const falsely = [
 ] as unknown[]
 resolverMappingByShape.set(BigInt, (skm, input, transform) => {
   let data = input
-  if (transform && typeof input !== 'bigint') {
+  const notMatched = () => typeof data !== 'bigint'
+  if (transform && notMatched()) {
     if (falsely.includes(input)) {
       data = 0n
     }
@@ -311,31 +313,33 @@ resolverMappingByShape.set(BigInt, (skm, input, transform) => {
         break
     }
   }
-  if (typeof data !== 'bigint') {
+  if (notMatched()) {
     throw new ValidateError('unexpected', skm, input)
   }
   return data
 })
 resolverMappingByShape.set(String, (skm, input, transform) => {
   let data = input
-  if (transform && typeof input !== 'string') {
+  const notMatched = () => typeof data !== 'string'
+  if (transform && notMatched()) {
     data = String(input)
   }
-  if (typeof data !== 'string') {
+  if (notMatched()) {
     throw new ValidateError('unexpected', skm, input)
   }
   return data
 })
 resolverMappingByShape.set(Boolean, (skm, input, transform) => {
   let data = input
-  if (transform && typeof input !== 'boolean') {
+  const notMatched = () => typeof data !== 'boolean'
+  if (transform && notMatched()) {
     if (falsely.includes(input)) {
       data = false
     } else {
       data = Boolean(input)
     }
   }
-  if (typeof data !== 'boolean') {
+  if (notMatched()) {
     throw new ValidateError('unexpected', skm, input)
   }
   return data
