@@ -1,9 +1,10 @@
 import type {
+  AtLeastOneProperty,
   IsEqual,
   IsNotEqual,
   Narrow,
   Switch,
-  t as tn,
+  t as tn, Typp,
   ValueOf
 } from '@typp/core'
 
@@ -213,12 +214,54 @@ export class ValidateError extends Error {
   }
 }
 
+export class ParseError extends Error {
+  __TYPP_SYMBOL__ = '__ParseError__'
+  constructor(
+    public step: string,
+    public expected: tn.Schema<any, any>,
+    public actual: any,
+    public detail: Error
+  ) {
+    super(`Data \`${String(actual)}\` cannot be parsed at \`${step}\`, because ${detail.message}`)
+    this.name = 'ParseError'
+  }
+}
+
 type Resolver = (s: tn.Schema<any, any>, input: unknown, transform?: boolean) => unknown
+type Transformer<Shape = unknown> = (
+  this: Typp<[Shape]>,
+  input: unknown,
+  options?: Omit<tn.ValidateOptions, 'transform'>
+) => void
+type Validator<Shape = unknown> = (
+  this: Typp<[Shape]>,
+  input: unknown,
+  options?: Omit<tn.ValidateOptions, 'transform'>
+) => unknown
 const resolverMappingByMatcher = [] as [
   matcher: (s: tn.Schema<any, any>, input: unknown) => boolean, resolver: Resolver
 ][]
 const resolverMappingByShape = new Map<unknown, Resolver>()
+const mappingByShape = new Map<unknown, AtLeastOneProperty<{
+  validate: Validator
+  preprocess: Transformer
+  transform: Transformer
+}>>()
 
+function setResolverByShape<Shape = any>(shape: Shape, resolver: AtLeastOneProperty<{
+  validate: Validator<Shape>
+  /**
+   * always called before `validate`, error will be catched and thrown as `ParseError`
+   */
+  preprocess: Transformer<Shape>
+  /**
+   * only when `transform` is `true` and validate failed, this function will be called
+   * error will be catched and thrown as `ParseError`
+   */
+  transform: Transformer<Shape>
+}>) {
+  mappingByShape.set(shape, resolver)
+}
 // 如果俩个类型之间不支持转化，应该抛出「校验错误」还是「转化错误」？
 // 实际上来说，一个值不能作为某个类型使用，存在俩种情况
 // - 这个值不能被转化为目标的类型
@@ -227,11 +270,11 @@ const resolverMappingByShape = new Map<unknown, Resolver>()
 // - 这个值就是不匹配目标类型，哪怕转化了也是
 //   - `1` 就是不匹配 `'2' | '3'` 的
 //   - `{}` 并不在 `number` 的转化范围内，是一个无法被转化的值，这个时候应该抛出「校验错误」的异常，而不是「无法转化」的异常
-resolverMappingByShape.set(Number, (skm, input, transform) => {
-  // TODO sticky as template, refactor the next logic
-  let data = input
-  const notMatched = () => typeof data !== 'number'
-  if (transform && notMatched()) {
+setResolverByShape(Number, {
+  preprocess: input => input instanceof Number ? Number(input) : input,
+  validate: input => typeof input === 'number',
+  transform(input) {
+    let data = input
     switch (typeof input) {
       case 'string': {
         if (input === 'NaN') data = NaN
@@ -274,11 +317,8 @@ resolverMappingByShape.set(Number, (skm, input, transform) => {
         data = Number(input)
         break
     }
+    return data
   }
-  if (notMatched()) {
-    throw new ValidateError('unexpected', skm, input)
-  }
-  return data
 })
 // TODO extensible ?
 export const falsely = [
@@ -357,15 +397,53 @@ function validate(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOpt
 function validate(this: tn.Schema<any, any>, ...args: any[]) {
   if (args.length === 0)
     throw new Error('No data to validate')
-  const [data, options] = args
+  const [data, options = {}] = args as [any, tn.ValidateOptions]
   // TODO
   //  完全匹配
   //  部分匹配，部分缺失或不匹配: partially
   //  完全不匹配: unexpected
   //  完全匹配但超过了原类型: excessive
   let rt = data
-  if (resolverMappingByShape.has(this.shape)) {
-    rt = resolverMappingByShape.get(this.shape)?.(this, data, options?.transform)
+  if (mappingByShape.has(this.shape)) {
+    const {
+      transform: isTransform = false
+    } = options
+    const {
+      preprocess: preprocessNoThis,
+      validate: validateNoThis,
+      transform: transformNoThis
+    } = mappingByShape.get(this.shape) ?? {}
+    const [
+      validate, transform, preprocess
+    ] = [validateNoThis, transformNoThis, preprocessNoThis].map(fn => fn?.bind(this))
+    if (!validate)
+      throw new Error(`Unable to validate when shape is ${this.shape}, because the shape is not supported validator`)
+
+    try {
+      rt = preprocess ? preprocess(rt, options) : rt
+    } catch (e) {
+      if (e instanceof Error) {
+        throw new ParseError('preprocess', this, rt, e)
+      }
+      throw e
+    }
+
+    if (isTransform && !validate(rt, options)) {
+      if (!transform)
+        throw new Error(`Unable to transform when shape is ${this.shape}, because the shape is not supported transformer`)
+
+      try {
+        rt = transform(rt, options)
+      } catch (e) {
+        if (e instanceof Error) {
+          throw new ParseError('transform', this, rt, e)
+        }
+        throw e
+      }
+    }
+    console.log(rt)
+    if (!validate(rt, options))
+      throw new ValidateError('unexpected', this, rt)
   }
   return rt
 }
@@ -388,6 +466,9 @@ function catchAndWrap(func: Function): tn.ValidateResult<any> {
       e instanceof ValidateError
       /* istanbul ignore next */
       || e?.__TYPP_SYMBOL__ === '__ValidateError__'
+      || e instanceof ParseError
+      /* istanbul ignore next */
+      || e?.__TYPP_SYMBOL__ === '__ParseError__'
     ) {
       return { success: false, error: e }
     }

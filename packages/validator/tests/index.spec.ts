@@ -113,6 +113,11 @@ describe('validate', () => {
         expect(r0).toBe(1)
         expectTypeOf(r0).toEqualTypeOf<number>()
       })
+      test('instanceof', () => {
+        const r0 = t.number().validate(new Number(1))
+        expect(r0).toBe(1)
+        expectTypeOf(r0).toEqualTypeOf<number>()
+      })
       test('NaN', () => {
         const r = t.number().validate(NaN)
         expect(r).toBeNaN()
