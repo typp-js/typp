@@ -4,8 +4,7 @@ import type {
   IsNotEqual,
   Narrow,
   Switch,
-  t as tn, Typp,
-  ValueOf
+  t as tn, Typp
 } from '@typp/core'
 
 import { parseBigInt } from './utils'
