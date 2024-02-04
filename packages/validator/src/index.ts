@@ -352,32 +352,29 @@ setResolverByShape(BigInt, {
     : input,
   validate: input => typeof input === 'bigint',
   transform: input => {
-    let data = input
     if (FALSELY.includes(input)) {
-      data = 0n
+      return 0n
     }
     switch (typeof input) {
       case 'number':
         if (input === Infinity) {
-          data = 2n ** 1024n
+          return 2n ** 1024n
         } else if (input === -Infinity) {
-          data = 2n ** 1024n * -1n
+          return 2n ** 1024n * -1n
         } else if (Number.isNaN(input)) {
           // TODO throw transform error of parse error
           break
         } else if (Number.isInteger(input)) {
-          data = BigInt(input)
+          return BigInt(input)
         } else {
-          data = BigInt(Math.floor(input))
+          return BigInt(Math.floor(input))
         }
-        break
       case 'string':
-        data = parseBigInt(input)
-        break
+        return parseBigInt(input)
       case 'boolean':
-        data = input ? 1n : 0n
-        break
+        return input ? 1n : 0n
     }
+    return input
   }
 })
 setResolverByShape(String, {
