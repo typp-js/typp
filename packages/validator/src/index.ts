@@ -267,7 +267,6 @@ type Validator<Shape = unknown> = (
 const resolverMappingByMatcher = [] as [
   matcher: (s: tn.Schema<any, any>, input: unknown) => boolean, resolver: Resolver
 ][]
-const resolverMappingByShape = new Map<unknown, Resolver>()
 const mappingByShape = new Map<unknown, AtLeastOneProperty<{
   validate: Validator
   preprocess: Transformer
@@ -346,10 +345,13 @@ setResolverByShape(Number, {
     return data
   }
 })
-resolverMappingByShape.set(BigInt, (skm, input, transform) => {
-  let data = input
-  const notMatched = () => typeof data !== 'bigint'
-  if (transform && notMatched()) {
+setResolverByShape(BigInt, {
+  preprocess: input => input instanceof BigInt
+    ? BigInt(input)
+    : input,
+  validate: input => typeof input === 'bigint',
+  transform: input => {
+    let data = input
     if (FALSELY.includes(input)) {
       data = 0n
     }
@@ -376,36 +378,16 @@ resolverMappingByShape.set(BigInt, (skm, input, transform) => {
         break
     }
   }
-  if (notMatched()) {
-    throw new ValidateError('unexpected', skm, input)
-  }
-  return data
 })
-resolverMappingByShape.set(String, (skm, input, transform) => {
-  let data = input
-  const notMatched = () => typeof data !== 'string'
-  if (transform && notMatched()) {
-    data = String(input)
-  }
-  if (notMatched()) {
-    throw new ValidateError('unexpected', skm, input)
-  }
-  return data
+setResolverByShape(String, {
+  preprocess: input => input instanceof String ? String(input) : input,
+  validate: input => typeof input === 'string',
+  transform: input => String(input)
 })
-resolverMappingByShape.set(Boolean, (skm, input, transform) => {
-  let data = input
-  const notMatched = () => typeof data !== 'boolean'
-  if (transform && notMatched()) {
-    if (FALSELY.includes(input)) {
-      data = false
-    } else {
-      data = Boolean(input)
-    }
-  }
-  if (notMatched()) {
-    throw new ValidateError('unexpected', skm, input)
-  }
-  return data
+setResolverByShape(Boolean, {
+  preprocess: input => input instanceof Boolean ? Boolean(input) : input,
+  validate: input => typeof input === 'boolean',
+  transform: input => FALSELY.includes(input) ? false : Boolean(input)
 })
 function validate(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions): any
 function validate(this: tn.Schema<any, any>, ...args: any[]) {
