@@ -14,10 +14,14 @@ describe('validate', () => {
   })
   test('unexpected', () => {
     const NumberSchema = t.number()
-    // @ts-expect-error
-    expect(() => NumberSchema.validate('a')).toThrow(ValidateErrorResult)
-    // @ts-expect-error
-    expect(() => NumberSchema.validate.narrow('a')).toThrow(ValidateErrorResult)
+    expect(() => {
+      // @ts-expect-error
+      NumberSchema.validate('a')
+    }).toThrow(ValidateError)
+    expect(() => {
+      // @ts-expect-error
+      NumberSchema.validate.narrow('a')
+    }).toThrow(ValidateError)
   })
   test('narrow', () => {
     const NumberSchema = t.number()
