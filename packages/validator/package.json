@@ -28,5 +28,9 @@
   },
   "dependencies": {
     "@typp/core": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/unbox-primitive": "^1.0.3",
+    "unbox-primitive": "^1.0.2"
   }
 }
