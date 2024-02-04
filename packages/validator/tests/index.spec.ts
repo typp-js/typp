@@ -114,6 +114,7 @@ describe('validate', () => {
         expectTypeOf(r0).toEqualTypeOf<number>()
       })
       test('instanceof', () => {
+        // noinspection JSPrimitiveTypeWrapperUsage
         const r0 = t.number().validate(new Number(1))
         expect(r0).toBe(1)
         expectTypeOf(r0).toEqualTypeOf<number>()

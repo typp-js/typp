@@ -10,12 +10,25 @@ import type {
 
 import { parseBigInt } from './utils'
 
-interface TransformExtendsEntries<T, Input> {
-  [key: string]: [boolean, any, any, any]
+interface ValidateExtendsEntries<T> {
+  [key: string]: [boolean, any]
   number: [
     [T] extends [number] ? true : false,
-    number,
-    number | string | boolean | null | undefined | bigint,
+    number | Number,
+  ]
+  string: [
+    [T] extends [string] ? true : false,
+    string | String
+  ]
+  boolean: [
+    [T] extends [boolean] ? true : false,
+    boolean | Boolean
+  ]
+}
+interface ValidateTransformEntries<T, Input> {
+  [key: string]: [boolean, any]
+  number: [
+    [T] extends [number] ? true : false,
     Switch<{
       [k: string]: [boolean, any]
       any: [IsEqual<Input, any>, unknown]
@@ -55,26 +68,14 @@ interface TransformExtendsEntries<T, Input> {
   ]
   string: [
     [T] extends [string] ? true : false,
-    string,
-    any,
     string
   ]
   boolean: [
     [T] extends [boolean] ? true : false,
-    boolean,
-    any,
     // TODO resolve literal type
     boolean
   ]
 }
-type TransformExtendsMapping<
-  T, Input,
-  Entries extends TransformExtendsEntries<T, Input> = TransformExtendsEntries<T, Input>
-> = ValueOf<{
-  [ K in keyof Entries
-    as [Entries[K][0]] extends [true] ? K : never
-  ]: Entries[K][3]
-}>
 
 declare module '@typp/core' {
   namespace t {
@@ -111,13 +112,21 @@ declare module '@typp/core' {
       error: ValidateError
     }
     export type ValidateResult<T> = ValidateSuccessResult<T> | ValidateErrorResult
-    export type Validate<T, Input, InputRest, Opts extends ValidateOptions> = [
+    // type T0 = Switch<ValidateTransformEntries<1, InputRest>>
+    export type Validate<
+      T,
+      ExtendsT,
+      Input,
+      InputRest,
+      Opts extends ValidateOptions
+    > = [
       Opts['transform'], Omit<Opts, 'transform'>
     ] extends [
       true, infer Next extends ValidateOptions
     ] ? (
-      TransformExtendsMapping<T, InputRest> extends infer TransformInput ? Validate<
+      Switch<ValidateTransformEntries<T, InputRest>> extends infer TransformInput ? Validate<
         T,
+        ExtendsT,
         TransformInput,
         TransformInput,
         Next
@@ -139,12 +148,12 @@ declare module '@typp/core' {
           )
         )
         & IsNotEqual<Input, never>
-      ) ? ValidateResult<Validate<T, Input, InputRest, Next>>
+      ) ? ValidateResult<Validate<T, ExtendsT, Input, InputRest, Next>>
         : true extends (
-          | ([Input] extends [T] ? false : true)
+          | ([Input] extends [ExtendsT] ? false : true)
           | (IsNotEqual<T, never> & IsEqual<Input, never>)
         ) ? ValidateErrorResult
-          : ValidateSuccessResult<Validate<T, Input, InputRest, Next>>
+          : ValidateSuccessResult<Validate<T, ExtendsT, Input, InputRest, Next>>
     ) : [
       Opts['const'], Omit<Opts, 'const'>
     ] extends [
@@ -155,18 +164,22 @@ declare module '@typp/core' {
           | ([Input] extends [T] ? true : false)
           | IsEqual<InputRest, unknown>
         ) ? Input : never,
+        ExtendsT,
         Input, InputRest, Next
       >
     ) : (
       true extends (
         (
-          | ([Input] extends [T] ? true : false)
+          | ([Input] extends [ExtendsT] ? true : false)
           | IsEqual<Input, unknown>
         )
         & IsNotEqual<Input, never>
       ) ? T : never
     )
-    interface ValidateItf<Shape, T, O extends ValidateOptions = {}> {
+    interface ValidateItf<
+      Shape, T, O extends ValidateOptions = {},
+      ExtendsT = Switch<ValidateExtendsEntries<T>>
+    > {
       <
         Rest extends true extends(
           | (O['try'] extends true ? true : false)
@@ -174,11 +187,11 @@ declare module '@typp/core' {
         ) ? unknown : never,
         Opts extends ValidateOptions
       >(
-        data: T | Rest,
+        data: ExtendsT | Rest,
         options?: Opts
-      ): Validate<T, typeof data, Exclude<typeof data, T>, Opts & O>
+      ): Validate<T, ExtendsT, typeof data, Exclude<typeof data, ExtendsT>, Opts & O>
       narrow<
-        TT extends T,
+        TT extends ExtendsT,
         Rest extends true extends(
           | (O['try'] extends true ? true : false)
           | (O['transform'] extends true ? true : false)
@@ -187,7 +200,7 @@ declare module '@typp/core' {
       >(
         data: Narrow<TT | Rest>,
         options?: Opts
-      ): Validate<T, typeof data, Exclude<typeof data, T>, Opts & O & { const: true }>
+      ): Validate<T, ExtendsT, typeof data, Exclude<typeof data, ExtendsT>, Opts & O & { const: true }>
     }
     interface SchemaFieldsAll<Shape, T> {
       validate: ValidateItf<Shape, T>
