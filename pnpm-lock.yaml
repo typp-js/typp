@@ -162,13 +162,13 @@ importers:
       '@typp/core':
         specifier: workspace:^
         version: link:../core
-      unbox-primitive:
-        specifier: npm:@nolyfill/unbox-primitive@latest
-        version: /@nolyfill/unbox-primitive@1.0.24
     devDependencies:
       '@types/unbox-primitive':
         specifier: ^1.0.3
         version: 1.0.3
+      unbox-primitive:
+        specifier: npm:@nolyfill/unbox-primitive@latest
+        version: /@nolyfill/unbox-primitive@1.0.24
 
 packages:
 
@@ -744,7 +744,7 @@ packages:
   /@nolyfill/unbox-primitive@1.0.24:
     resolution: {integrity: sha512-b7IOZqSeh1Mw5EFFs7hLT57z6xoV8wfYsxR1A5TMSfw2pn7cWXseNRDLz6S9Y7Zf83/bz+TiEkBg8VI3H38NQg==}
     engines: {node: '>=12.4.0'}
-    dev: false
+    dev: true
 
   /@rollup/plugin-json@6.1.0(rollup@4.9.1):
     resolution: {integrity: sha512-EGI2te5ENk1coGeADSIwZ7G2Q8CJS2sF120T7jLw4xFw9n7wIOXHo+kIYRAoVpJAN+kmqZSoO3Fp4JtoNF4ReA==}
