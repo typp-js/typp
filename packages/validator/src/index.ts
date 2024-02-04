@@ -295,13 +295,20 @@ setResolverByShape(Number, {
   preprocess: input => input instanceof Number ? Number(input) : input,
   validate: input => typeof input === 'number',
   transform(input) {
-    let data = input
+    if (FALSELY.includes(input)) return 0
+
     switch (typeof input) {
       case 'string': {
-        if (input === 'NaN') data = NaN
-        if (input === 'Infinity') data = Infinity
-        if (input === '-Infinity') data = -Infinity
-        if (input === '') data = 0
+        if (input === 'NaN') {
+          return NaN
+        } else if (input === 'Infinity') {
+          return Infinity
+        } else if (input === '-Infinity') {
+          return -Infinity
+        } else if (input === '') {
+          return 0
+        }
+
         let radix = 10
         if (input.length > 2) {
           const radixStr = input.slice(0, 2).toLowerCase()
@@ -314,31 +321,19 @@ setResolverByShape(Number, {
         const temp = radix === 10
           ? parseFloat(inputStr)
           : parseInt(inputStr, radix)
-        if (!Number.isNaN(temp)) {
-          data = temp
-        }
+
+        if (!Number.isNaN(temp))
+          return temp
         break
       }
       case 'boolean':
-        data = input ? 1 : 0
-        break
-      case 'object':
-        if (input === null) data = 0
-        break
-      case 'undefined':
-        data = 0
-        break
+        return input ? 1 : 0
       case 'bigint':
-        if (input > Number.MAX_SAFE_INTEGER) {
-          return Infinity
-        }
-        if (input < Number.MIN_SAFE_INTEGER) {
-          return -Infinity
-        }
-        data = Number(input)
-        break
+        if (input > Number.MAX_SAFE_INTEGER) return Infinity
+        if (input < Number.MIN_SAFE_INTEGER) return -Infinity
+        return Number(input)
     }
-    return data
+    return input
   }
 })
 setResolverByShape(BigInt, {
@@ -348,9 +343,8 @@ setResolverByShape(BigInt, {
     : input,
   validate: input => typeof input === 'bigint',
   transform: input => {
-    if (FALSELY.includes(input)) {
-      return 0n
-    }
+    if (FALSELY.includes(input)) return 0n
+
     switch (typeof input) {
       case 'number':
         if (input === Infinity) {
