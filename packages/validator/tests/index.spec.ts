@@ -118,6 +118,31 @@ describe('validate', () => {
         const r0 = t.number().validate(new Number(1))
         expect(r0).toBe(1)
         expectTypeOf(r0).toEqualTypeOf<number>()
+        const r1 = t.number().validate(Number(1))
+        expect(r1).toBe(1)
+        expectTypeOf(r1).toEqualTypeOf<number>()
+        const r2 = t.number().validate(Object(1))
+        expect(r2).toBe(1)
+        expectTypeOf(r2).toEqualTypeOf<number>()
+        const r3 = t.number().validate(Object(Number(1)))
+        expect(r3).toBe(1)
+        expectTypeOf(r3).toEqualTypeOf<number>()
+
+        const r4 = t.number().validate(new class extends Number {
+          constructor() {
+            super(1)
+          }
+        }())
+        expect(r4).toBe(1)
+        expectTypeOf(r4).toEqualTypeOf<number>()
+
+        const numberLike = {
+          valueOf: () => 1,
+          __proto__: Number.prototype
+        } as unknown as Number
+        const r5 = t.number().validate(numberLike)
+        expect(r5).toBe(1)
+        expectTypeOf(r5).toEqualTypeOf<number>()
       })
       test('NaN', () => {
         const r = t.number().validate(NaN)
