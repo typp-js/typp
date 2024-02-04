@@ -373,6 +373,49 @@ setResolverByShape(Boolean, {
   validate: input => typeof input === 'boolean',
   transform: input => FALSELY.includes(input) ? false : Boolean(input)
 })
+setResolverByShape(Symbol, {
+  preprocess,
+  validate: input => typeof input === 'symbol',
+  transform: input => Symbol(String(input))
+})
+setResolverByShape(Date, {
+  preprocess,
+  validate: input => input instanceof Date,
+  transform: input => {
+    switch (typeof input) {
+      case 'string':
+        // TODO number string or bigint string
+        if (isNaN(Date.parse(input))) {
+          // TODO throw transform error of parse error
+        }
+      // eslint-disable-next-line no-fallthrough
+      case 'number':
+        if (Number.isFinite(input)) {
+          // TODO resolve to max or min time, or throw transform error of parse error
+        }
+        return new Date(input)
+      case 'bigint': {
+        const num = Number(input)
+        if (num > Number.MAX_SAFE_INTEGER) {
+        } else if (num < Number.MIN_SAFE_INTEGER) {
+        } else {
+          return new Date(num)
+        }
+        break
+      }
+    }
+  }
+})
+setResolverByShape(null, {
+  preprocess,
+  validate: input => input === null,
+  transform: input => FALSELY.includes(input) ? null : input
+})
+setResolverByShape(undefined, {
+  preprocess,
+  validate: input => input === undefined,
+  transform: input => FALSELY.includes(input) ? undefined : input
+})
 
 function validate(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions): any
 function validate(this: tn.Schema<any, any>, ...args: any[]) {
