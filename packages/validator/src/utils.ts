@@ -1,3 +1,5 @@
+import unboxPrimitive from 'unbox-primitive'
+
 export function parseBigInt(inputStr: string): bigint {
   const str = inputStr.trim()
 
@@ -70,4 +72,23 @@ export function parseBigInt(inputStr: string): bigint {
     }
   }
   return sign * BigInt(numStr)
+}
+
+export function toPrimitive(val: unknown) {
+  if (val === null || val === undefined) return val
+
+  if (typeof val === 'object') {
+    let data: any = val
+    if (Symbol.toPrimitive in val && typeof val[Symbol.toPrimitive] === 'function') {
+      data = (val[Symbol.toPrimitive] as Function)()
+    } else if ('valueOf' in val && typeof val.valueOf === 'function') {
+      data = val.valueOf()
+    } else if ('toString' in val && typeof val.toString === 'function') {
+      data = val.toString()
+    }
+    if (typeof data !== 'object' || data === null || data === undefined)
+      return data
+    return unboxPrimitive(data)
+  }
+  return toPrimitive(Object(val))
 }
