@@ -1,7 +1,7 @@
 import { t } from '@typp/core'
 import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 
-import validator, { falsely, ValidateError } from '../src'
+import validator, { FALSELY, ValidateError } from '../src'
 
 beforeAll(() => t.use(validator))
 
@@ -425,7 +425,7 @@ describe('validate', () => {
         const r1 = skm.parse('')
         expect(r1).toBe(false)
         expectTypeOf(r1).toEqualTypeOf<boolean>()
-        falsely.forEach((falsyValue) => {
+        FALSELY.forEach((falsyValue) => {
           const r = skm.parse(falsyValue)
           expect(r).toBe(false)
         })

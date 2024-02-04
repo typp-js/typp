@@ -215,6 +215,19 @@ declare module '@typp/core' {
   }
 }
 
+// TODO extensible ?
+export const FALSELY = [
+  '',
+  null, 'null', 'Null', 'NULL',
+  undefined, 'undefined', 'Undefined', 'UNDEFINED',
+  0, '0',
+  0n, '0n',
+  'false', 'no', 'off',
+  'False', 'No', 'Off',
+  'FALSE', 'NO', 'OFF'
+  // TODO [], {}, NaN
+] as unknown[]
+
 export class ValidateError extends Error {
   __TYPP_SYMBOL__ = '__ValidateError__'
   constructor(
@@ -333,23 +346,11 @@ setResolverByShape(Number, {
     return data
   }
 })
-// TODO extensible ?
-export const falsely = [
-  '',
-  null, 'null', 'Null', 'NULL',
-  undefined, 'undefined', 'Undefined', 'UNDEFINED',
-  0, '0',
-  0n, '0n',
-  'false', 'no', 'off',
-  'False', 'No', 'Off',
-  'FALSE', 'NO', 'OFF'
-  // TODO [], {}, NaN
-] as unknown[]
 resolverMappingByShape.set(BigInt, (skm, input, transform) => {
   let data = input
   const notMatched = () => typeof data !== 'bigint'
   if (transform && notMatched()) {
-    if (falsely.includes(input)) {
+    if (FALSELY.includes(input)) {
       data = 0n
     }
     switch (typeof input) {
@@ -395,7 +396,7 @@ resolverMappingByShape.set(Boolean, (skm, input, transform) => {
   let data = input
   const notMatched = () => typeof data !== 'boolean'
   if (transform && notMatched()) {
-    if (falsely.includes(input)) {
+    if (FALSELY.includes(input)) {
       data = false
     } else {
       data = Boolean(input)
