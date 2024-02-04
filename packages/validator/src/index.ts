@@ -454,7 +454,6 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
         throw e
       }
     }
-    console.log(rt)
     if (!validate(rt, options))
       throw new ValidateError('unexpected', this, rt)
   }
