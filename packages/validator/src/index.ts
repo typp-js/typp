@@ -347,7 +347,8 @@ setResolverByShape(Number, {
 })
 setResolverByShape(BigInt, {
   preprocess: input => input instanceof BigInt
-    ? BigInt(input)
+    // FIXME microsoft/TypeScript#57283
+    ? BigInt(input as bigint)
     : input,
   validate: input => typeof input === 'bigint',
   transform: input => {
