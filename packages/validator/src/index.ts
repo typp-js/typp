@@ -7,7 +7,7 @@ import type {
   t as tn, Typp
 } from '@typp/core'
 
-import { parseBigInt } from './utils'
+import { parseBigInt, toPrimitive as preprocess } from './utils'
 
 interface ValidateExtendsEntries<T> {
   [key: string]: [boolean, any]
@@ -291,7 +291,7 @@ function setResolverByShape<Shape = any>(shape: Shape, resolver: AtLeastOnePrope
 //   - `1` 就是不匹配 `'2' | '3'` 的
 //   - `{}` 并不在 `number` 的转化范围内，是一个无法被转化的值，这个时候应该抛出「校验错误」的异常，而不是「无法转化」的异常
 setResolverByShape(Number, {
-  preprocess: input => input instanceof Number ? Number(input) : input,
+  preprocess,
   validate: input => typeof input === 'number',
   transform(input) {
     if (FALSELY.includes(input)) return 0
@@ -336,10 +336,7 @@ setResolverByShape(Number, {
   }
 })
 setResolverByShape(BigInt, {
-  preprocess: input => input instanceof BigInt
-    // FIXME microsoft/TypeScript#57283
-    ? BigInt(input as bigint)
-    : input,
+  preprocess,
   validate: input => typeof input === 'bigint',
   transform: input => {
     if (FALSELY.includes(input)) return 0n
@@ -367,12 +364,12 @@ setResolverByShape(BigInt, {
   }
 })
 setResolverByShape(String, {
-  preprocess: input => input instanceof String ? String(input) : input,
+  preprocess,
   validate: input => typeof input === 'string',
   transform: input => String(input)
 })
 setResolverByShape(Boolean, {
-  preprocess: input => input instanceof Boolean ? Boolean(input) : input,
+  preprocess,
   validate: input => typeof input === 'boolean',
   transform: input => FALSELY.includes(input) ? false : Boolean(input)
 })
