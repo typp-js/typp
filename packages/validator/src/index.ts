@@ -253,39 +253,35 @@ export class ParseError extends Error {
   }
 }
 
-type Resolver = (s: tn.Schema<any, any>, input: unknown, transform?: boolean) => unknown
-type Transformer<Shape = unknown> = (
-  this: Typp<[Shape]>,
-  input: unknown,
-  options?: Omit<tn.ValidateOptions, 'transform'>
-) => void
-type Validator<Shape = unknown> = (
+type Transform<Shape = unknown> = (
   this: Typp<[Shape]>,
   input: unknown,
   options?: Omit<tn.ValidateOptions, 'transform'>
 ) => unknown
-const resolverMappingByMatcher = [] as [
-  matcher: (s: tn.Schema<any, any>, input: unknown) => boolean, resolver: Resolver
-][]
-const mappingByShape = new Map<unknown, AtLeastOneProperty<{
-  validate: Validator
-  preprocess: Transformer
-  transform: Transformer
-}>>()
-
-function setResolverByShape<Shape = any>(shape: Shape, resolver: AtLeastOneProperty<{
-  validate: Validator<Shape>
+type Validate<Shape = unknown> = (
+  this: Typp<[Shape]>,
+  input: unknown,
+  options?: Omit<tn.ValidateOptions, 'transform'>
+) => unknown
+interface Validator<Shape = unknown> {
+  validate: Validate<Shape>
   /**
    * always called before `validate`, error will be catched and thrown as `ParseError`
    */
-  preprocess: Transformer<Shape>
+  preprocess: Transform<Shape>
   /**
    * only when `transform` is `true` and validate failed, this function will be called
    * error will be catched and thrown as `ParseError`
    */
-  transform: Transformer<Shape>
-}>) {
-  mappingByShape.set(shape, resolver)
+  transform: Transform<Shape>
+}
+const resolverMappingByMatcher = [] as [
+  matcher: (s: tn.Schema<any, any>, input: unknown) => boolean, validator: Validator
+][]
+const validators = new Map<unknown, AtLeastOneProperty<Validator>>()
+
+function setResolverByShape<Shape = any>(shape: Shape, resolver: AtLeastOneProperty<Validator<Shape>>) {
+  validators.set(shape, resolver)
 }
 // 如果俩个类型之间不支持转化，应该抛出「校验错误」还是「转化错误」？
 // 实际上来说，一个值不能作为某个类型使用，存在俩种情况
@@ -387,6 +383,7 @@ setResolverByShape(Boolean, {
   validate: input => typeof input === 'boolean',
   transform: input => FALSELY.includes(input) ? false : Boolean(input)
 })
+
 function validate(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions): any
 function validate(this: tn.Schema<any, any>, ...args: any[]) {
   if (args.length === 0)
@@ -398,7 +395,7 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
   //  完全不匹配: unexpected
   //  完全匹配但超过了原类型: excessive
   let rt = data
-  if (mappingByShape.has(this.shape)) {
+  if (validators.has(this.shape)) {
     const {
       transform: isTransform = false
     } = options
@@ -406,7 +403,7 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
       preprocess: preprocessNoThis,
       validate: validateNoThis,
       transform: transformNoThis
-    } = mappingByShape.get(this.shape) ?? {}
+    } = validators.get(this.shape) ?? {}
     const [
       validate, transform, preprocess
     ] = [validateNoThis, transformNoThis, preprocessNoThis].map(fn => fn?.bind(this))
