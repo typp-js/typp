@@ -426,6 +426,30 @@ setResolverByShape(undefined, {
   transform: input => FALSELY.includes(input) ? undefined : input
 })
 
+// TODO any
+// TODO unknown
+// TODO never
+// TODO void
+
+// TODO literal
+
+// TODO object
+// TODO dictionary
+// TODO record
+// TODO class/instanceof
+// TODO function
+// TODO array
+// TODO tuple
+
+// TODO function
+
+// TODO union
+// TODO intersection
+
+// TODO Map
+// TODO Set
+// TODO Promise
+
 function validate(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions): any
 function validate(this: tn.Schema<any, any>, ...args: any[]) {
   if (args.length === 0)
