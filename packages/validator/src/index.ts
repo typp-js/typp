@@ -402,7 +402,6 @@ setResolverByShape(Date, {
         } else if (input === -Infinity) {
           return new Date(-MAX_TIME)
         }
-
         return new Date(input)
       case 'bigint': {
         const num = Number(input)
@@ -410,9 +409,8 @@ setResolverByShape(Date, {
           return new Date(MAX_TIME)
         } else if (num < Number.MIN_SAFE_INTEGER) {
           return new Date(-MAX_TIME)
-        } else {
-          return new Date(num)
         }
+        return new Date(num)
       }
     }
   }
