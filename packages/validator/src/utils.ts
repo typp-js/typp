@@ -115,7 +115,7 @@ function ordinaryToPrimitive(o: object, hint: 'number' | 'string' | (string & {}
 /**
  * @see https://tc39.es/ecma262/multipage/abstract-operations.html#sec-toprimitive
  */
-export function toPrimitive(input: unknown, preferredType: 'number' | 'string' | 'default' = 'default') {
+export function toPrimitive(input: unknown, preferredType: 'number' | 'string' | 'default' = 'default'): Primitive {
   if (typeof input === 'object' && input !== null) {
     const exoticToPrim = getMethod(input, Symbol.toPrimitive)
     let hint: 'number' | 'string' | 'default' = preferredType
@@ -132,5 +132,5 @@ export function toPrimitive(input: unknown, preferredType: 'number' | 'string' |
       preferredType = 'number'
     return ordinaryToPrimitive(input, preferredType)
   }
-  return input
+  return input as Primitive
 }
