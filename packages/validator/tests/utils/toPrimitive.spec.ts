@@ -2,65 +2,71 @@ import { describe, expect, test } from 'vitest'
 
 import { toPrimitive } from '../../src/utils'
 
-test('primitive', () => {
-  expect(toPrimitive(1)).toBe(1)
-  expect(toPrimitive(0)).toBe(0)
-  expect(toPrimitive(NaN)).toBe(NaN)
-  expect(toPrimitive(Infinity)).toBe(Infinity)
-  expect(toPrimitive(-Infinity)).toBe(-Infinity)
-  expect(toPrimitive(true)).toBe(true)
-  expect(toPrimitive(1n)).toBe(1n)
-  expect(toPrimitive('')).toBe('')
-  expect(toPrimitive('1')).toBe('1')
-  const sym = Symbol('')
-  expect(toPrimitive(sym)).toBe(sym)
-  expect(toPrimitive({})).toStrictEqual({})
-  expect(toPrimitive(null)).toBe(null)
-  expect(toPrimitive(undefined)).toBe(undefined)
-})
-test('boxed primitive', () => {
-  expect(toPrimitive(Object(1))).toBe(1)
-  expect(toPrimitive(Object(0))).toBe(0)
-  expect(toPrimitive(Object(NaN))).toBe(NaN)
-  expect(toPrimitive(Object(Infinity))).toBe(Infinity)
-  expect(toPrimitive(Object(-Infinity))).toBe(-Infinity)
-  expect(toPrimitive(Object(true))).toBe(true)
-  expect(toPrimitive(Object(1n))).toBe(1n)
-  expect(toPrimitive(Object(''))).toBe('')
-  expect(toPrimitive(Object('1'))).toBe('1')
-  const sym = Symbol('')
-  expect(toPrimitive(Object(sym))).toBe(sym)
-  expect(toPrimitive(Object({}))).toStrictEqual({})
-  expect(toPrimitive(Object(null))).toStrictEqual({})
-  expect(toPrimitive(Object(undefined))).toStrictEqual({})
-})
-test('object with valueOf', () => {
-  expect(toPrimitive({ valueOf: () => 1 })).toBe(1)
-  const undefinedValueOf = { valueOf: undefined }
-  expect(toPrimitive(undefinedValueOf)).toBe(undefinedValueOf)
-  const notFunctionValueOf = { valueOf: 1 }
-  expect(toPrimitive(notFunctionValueOf)).toStrictEqual(notFunctionValueOf)
+describe('base', () => {
+  test('primitive', () => {
+    expect(toPrimitive(1)).toBe(1)
+    expect(toPrimitive(0)).toBe(0)
+    expect(toPrimitive(NaN)).toBe(NaN)
+    expect(toPrimitive(Infinity)).toBe(Infinity)
+    expect(toPrimitive(-Infinity)).toBe(-Infinity)
+    expect(toPrimitive(true)).toBe(true)
+    expect(toPrimitive(1n)).toBe(1n)
+    expect(toPrimitive('')).toBe('')
+    expect(toPrimitive('1')).toBe('1')
+    const sym = Symbol('')
+    expect(toPrimitive(sym)).toBe(sym)
+    expect(toPrimitive({})).toBe('[object Object]')
+    expect(toPrimitive(null)).toBe(null)
+    expect(toPrimitive(undefined)).toBe(undefined)
+  })
+  test('boxed primitive', () => {
+    expect(toPrimitive(Object(1))).toBe(1)
+    expect(toPrimitive(Object(0))).toBe(0)
+    expect(toPrimitive(Object(NaN))).toBe(NaN)
+    expect(toPrimitive(Object(Infinity))).toBe(Infinity)
+    expect(toPrimitive(Object(-Infinity))).toBe(-Infinity)
+    expect(toPrimitive(Object(true))).toBe(true)
+    expect(toPrimitive(Object(1n))).toBe(1n)
+    expect(toPrimitive(Object(''))).toBe('')
+    expect(toPrimitive(Object('1'))).toBe('1')
+    const sym = Symbol('')
+    expect(toPrimitive(Object(sym))).toBe(sym)
+    expect(toPrimitive(Object({}))).toBe('[object Object]')
+    expect(toPrimitive(Object(null))).toBe('[object Object]')
+    expect(toPrimitive(Object(undefined))).toBe('[object Object]')
+  })
+  test('object with valueOf', () => {
+    expect(toPrimitive({ valueOf: () => 1 })).toBe(1)
+    expect(toPrimitive({ valueOf: undefined })).toBe('[object Object]')
+    expect(toPrimitive({ valueOf: 1 })).toBe('[object Object]')
 
-  const emptyArr: unknown[] = []
-  expect(toPrimitive(emptyArr)).toBe(emptyArr)
-})
-test('class', () => {
-  expect(toPrimitive(new class extends Number {
-    constructor() { super(1) }
-  })).toBe(1)
-  expect(toPrimitive(new class extends Number {
-    constructor() { super(1) }
-    valueOf() { return 2 }
-  })).toBe(2)
-  expect(toPrimitive(new class extends Number {
-    constructor() { super(1) }
-    [Symbol.toPrimitive]() { return 3 }
-  })).toBe(3)
-  expect(toPrimitive(new class extends Number {
-    constructor() { super(1) }
-    valueOf() { return 2 }
-    [Symbol.toPrimitive]() { return 3 }
-  })).toBe(3)
+    expect(toPrimitive([])).toBe('')
+  })
+  test('object with toString', () => {
+    expect(toPrimitive({ toString: () => '1' })).toBe('1')
+    expect(() => toPrimitive({ toString: undefined }))
+      .toThrow(TypeError)
+    expect(() => toPrimitive({ toString: 1 }))
+      .toThrow(TypeError)
+  })
+  test('class', () => {
+    expect(toPrimitive(new class extends Number {
+      constructor() { super(1) }
+    })).toBe(1)
+    expect(toPrimitive(new class extends Number {
+      constructor() { super(1) }
+      valueOf() { return 2 }
+    })).toBe(2)
+    expect(toPrimitive(new class extends Number {
+      constructor() { super(1) }
+      [Symbol.toPrimitive]() { return 3 }
+    })).toBe(3)
+    expect(toPrimitive(new class extends Number {
+      constructor() { super(1) }
+      valueOf() { return 2 }
+      [Symbol.toPrimitive]() { return 3 }
+    })).toBe(3)
+  })
 })
 describe('prototype', () => {
   test('Symbol.toPrimitive', () => {
@@ -72,7 +78,7 @@ describe('prototype', () => {
       }
     })
     expect(toPrimitive(1)).toBe(1)
-    expect(toPrimitive(2)).toBe(1)
+    expect(toPrimitive(2)).toBe(2)
     expect(toPrimitive(Object(1))).toBe(1)
     expect(toPrimitive(Object(2))).toBe(1)
     if (oldDesc) {
@@ -89,7 +95,7 @@ describe('prototype', () => {
       configurable: true,
       value() { return 2 }
     })
-    expect(toPrimitive(1)).toBe(2)
+    expect(toPrimitive(1)).toBe(1)
     expect(toPrimitive(2)).toBe(2)
     expect(toPrimitive(Object(1))).toBe(2)
     expect(toPrimitive(Object(2))).toBe(2)

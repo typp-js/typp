@@ -74,21 +74,65 @@ export function parseBigInt(inputStr: string): bigint {
   return sign * BigInt(numStr)
 }
 
-export function toPrimitive(val: unknown) {
-  if (val === null || val === undefined) return val
+/**
+ * @see https://tc39.es/ecma262/multipage/abstract-operations.html#sec-getmethod
+ */
+function getMethod(obj: unknown, key: string | symbol): unknown {
+  const func = Reflect.get(Object(obj), key)
+  if (func === undefined || func === null)
+    return undefined
+  if (typeof func !== 'function')
+    throw new TypeError(`${func} is not a function`)
+  return func
+}
 
-  if (typeof val === 'object') {
-    let data: any = val
-    if (Symbol.toPrimitive in val && typeof val[Symbol.toPrimitive] === 'function') {
-      data = (val[Symbol.toPrimitive] as Function)()
-    } else if ('valueOf' in val && typeof val.valueOf === 'function') {
-      data = val.valueOf()
-    } else if ('toString' in val && typeof val.toString === 'function') {
-      data = val.toString()
-    }
-    if (typeof data !== 'object' || data === null || data === undefined)
-      return data
-    return unboxPrimitive(data)
+type Primitive = (
+  | number | bigint | boolean
+  | string | symbol
+  | object
+  | null | undefined
+)
+
+/**
+ * @see https://tc39.es/ecma262/multipage/abstract-operations.html#sec-ordinarytoprimitive
+ */
+function ordinaryToPrimitive(o: object, hint: 'number' | 'string' | (string & {})) {
+  let methodNames: [string, string]
+  if (hint === 'string') {
+    methodNames = ['toString', 'valueOf']
+  } else {
+    methodNames = ['valueOf', 'toString']
   }
-  return toPrimitive(Object(val))
+  for (const methodName of methodNames) {
+    const method = Reflect.get(o, methodName)
+    if (typeof method === 'function') {
+      const result = Reflect.apply(method, o, [])
+      if (typeof result !== 'object')
+        return result
+    }
+  }
+  throw new TypeError('Cannot convert object to primitive value')
+}
+
+/**
+ * @see https://tc39.es/ecma262/multipage/abstract-operations.html#sec-toprimitive
+ */
+export function toPrimitive(input: unknown, preferredType: 'number' | 'string' | 'default' = 'default') {
+  if (typeof input === 'object' && input !== null) {
+    const exoticToPrim = Reflect.get(input, Symbol.toPrimitive)
+    let hint: 'number' | 'string' | 'default' = preferredType
+    if (exoticToPrim !== undefined) {
+      if (!['number', 'string', 'default'].includes(hint))
+        hint = 'default'
+
+      const result = Reflect.apply(exoticToPrim, input, [hint])
+      if (typeof result !== 'object')
+        return result
+      throw new TypeError('Cannot convert object to primitive value')
+    }
+    if (!['number', 'string', 'default'].includes(preferredType))
+      preferredType = 'number'
+    return ordinaryToPrimitive(input, preferredType)
+  }
+  return input
 }
