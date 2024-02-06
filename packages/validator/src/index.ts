@@ -241,7 +241,13 @@ export class ParseError extends Error {
     public actual: any,
     public detail: Error
   ) {
-    super(`Data \`${String(actual)}\` cannot be parsed at \`${step}\`, because ${detail.message}`)
+    let actualStr = ''
+    try {
+      actualStr = JSON.stringify(actual)
+    } catch {
+      actualStr = String(actual)
+    }
+    super(`Data \`${actualStr}\` cannot be parsed at \`${step}\`, because ${detail.message}`)
     this.name = 'ParseError'
   }
 }
