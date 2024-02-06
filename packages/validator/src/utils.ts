@@ -1,5 +1,3 @@
-import unboxPrimitive from 'unbox-primitive'
-
 export function parseBigInt(inputStr: string): bigint {
   const str = inputStr.trim()
 

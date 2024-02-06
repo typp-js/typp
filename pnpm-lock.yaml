@@ -162,13 +162,6 @@ importers:
       '@typp/core':
         specifier: workspace:^
         version: link:../core
-    devDependencies:
-      '@types/unbox-primitive':
-        specifier: ^1.0.3
-        version: 1.0.3
-      unbox-primitive:
-        specifier: npm:@nolyfill/unbox-primitive@latest
-        version: /@nolyfill/unbox-primitive@1.0.24
 
 packages:
 
@@ -741,11 +734,6 @@ packages:
     dependencies:
       '@nolyfill/shared': 1.0.28
 
-  /@nolyfill/unbox-primitive@1.0.24:
-    resolution: {integrity: sha512-b7IOZqSeh1Mw5EFFs7hLT57z6xoV8wfYsxR1A5TMSfw2pn7cWXseNRDLz6S9Y7Zf83/bz+TiEkBg8VI3H38NQg==}
-    engines: {node: '>=12.4.0'}
-    dev: true
-
   /@rollup/plugin-json@6.1.0(rollup@4.9.1):
     resolution: {integrity: sha512-EGI2te5ENk1coGeADSIwZ7G2Q8CJS2sF120T7jLw4xFw9n7wIOXHo+kIYRAoVpJAN+kmqZSoO3Fp4JtoNF4ReA==}
     engines: {node: '>=14.0.0'}
@@ -912,10 +900,6 @@ packages:
 
   /@types/semver@7.5.6:
     resolution: {integrity: sha512-dn1l8LaMea/IjDoHNd9J52uBbInB796CDffS6VdIxvqYCPSG0V0DzHp76GpaWnlhg88uYyPbXCDIowa86ybd5A==}
-
-  /@types/unbox-primitive@1.0.3:
-    resolution: {integrity: sha512-6VCwvzofB0FLQt0YJDzRVWAvdQdj37oGV/ZkE1Ft6tg8pJyFqR1MFiUX3fH3HqwzpEZk6k7e/FZoNNSXZV0lVA==}
-    dev: true
 
   /@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0)(eslint@8.56.0)(typescript@5.3.3):
     resolution: {integrity: sha512-TiZzBSJja/LbhNPvk6yc0JrX9XqhQ0hdh6M2svYfsHGejaKFIAGd9MQ+ERIMzLGlN/kZoYIgdxFV0PuljTKXag==}
