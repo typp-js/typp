@@ -77,13 +77,13 @@ export function parseBigInt(inputStr: string): bigint {
 /**
  * @see https://tc39.es/ecma262/multipage/abstract-operations.html#sec-getmethod
  */
-function getMethod(obj: unknown, key: string | symbol): unknown {
+function getMethod(obj: unknown, key: string | symbol): Function | undefined {
   const func = Reflect.get(Object(obj), key)
   if (func === undefined || func === null)
     return undefined
-  if (typeof func !== 'function')
-    throw new TypeError(`${func} is not a function`)
-  return func
+  if (typeof func === 'function')
+    return func
+  throw new TypeError(`${func} is not a function`)
 }
 
 type Primitive = (
@@ -119,7 +119,7 @@ function ordinaryToPrimitive(o: object, hint: 'number' | 'string' | (string & {}
  */
 export function toPrimitive(input: unknown, preferredType: 'number' | 'string' | 'default' = 'default') {
   if (typeof input === 'object' && input !== null) {
-    const exoticToPrim = Reflect.get(input, Symbol.toPrimitive)
+    const exoticToPrim = getMethod(input, Symbol.toPrimitive)
     let hint: 'number' | 'string' | 'default' = preferredType
     if (exoticToPrim !== undefined) {
       if (!['number', 'string', 'default'].includes(hint))
