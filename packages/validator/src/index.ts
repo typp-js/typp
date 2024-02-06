@@ -1,11 +1,5 @@
-import type {
-  AtLeastOneProperty,
-  IsEqual,
-  IsNotEqual,
-  Narrow,
-  Switch,
-  t as tn, Typp
-} from '@typp/core'
+/* eslint-disable react-hooks/rules-of-hooks */
+import type { AtLeastOneProperty, IsEqual, IsNotEqual, Narrow, Switch, t as tn, Typp } from '@typp/core'
 
 import { parseBigInt, toPrimitive as preprocess } from './utils'
 
@@ -262,6 +256,7 @@ type Validate<Shape = unknown> = (
   input: unknown,
   options?: Omit<tn.ValidateOptions, 'transform'>
 ) => unknown
+type Match<Shape = unknown> = (s: tn.Schema<any, any>, input: unknown) => s is tn.Schema<Shape, any>
 interface Validator<Shape = unknown> {
   validate: Validate<Shape>
   /**
@@ -275,9 +270,31 @@ interface Validator<Shape = unknown> {
   transform: Transform<Shape>
 }
 const resolverMappingByMatcher = [] as [
-  matcher: (s: tn.Schema<any, any>, input: unknown) => boolean, validator: Validator
+  matcher: Match, validator: AtLeastOneProperty<Validator>
 ][]
 const validators = new Map<unknown, AtLeastOneProperty<Validator>>()
+
+function useValidator<Shape>(
+  shapesOrMatcher: Shape[] | Match<Shape>,
+  validator: AtLeastOneProperty<Validator<Shape>>
+) {
+  if (Array.isArray(shapesOrMatcher)) {
+    for (const shape of shapesOrMatcher) {
+      setResolverByShape(shape, validator)
+    }
+    return () => {
+      for (const shape of shapesOrMatcher) {
+        validators.delete(shape)
+      }
+    }
+  } else {
+    resolverMappingByMatcher.push([shapesOrMatcher, validator])
+    const index = resolverMappingByMatcher.length - 1
+    return () => {
+      resolverMappingByMatcher.splice(index, 1)
+    }
+  }
+}
 
 function setResolverByShape<Shape = any>(shape: Shape, resolver: AtLeastOneProperty<Validator<Shape>>) {
   validators.set(shape, resolver)
@@ -290,7 +307,7 @@ function setResolverByShape<Shape = any>(shape: Shape, resolver: AtLeastOnePrope
 // - 这个值就是不匹配目标类型，哪怕转化了也是
 //   - `1` 就是不匹配 `'2' | '3'` 的
 //   - `{}` 并不在 `number` 的转化范围内，是一个无法被转化的值，这个时候应该抛出「校验错误」的异常，而不是「无法转化」的异常
-setResolverByShape(Number, {
+useValidator([Number], {
   preprocess,
   validate: input => typeof input === 'number',
   transform(input) {
@@ -335,7 +352,7 @@ setResolverByShape(Number, {
     return input
   }
 })
-setResolverByShape(BigInt, {
+useValidator([BigInt], {
   preprocess,
   validate: input => typeof input === 'bigint',
   transform: input => {
@@ -363,17 +380,17 @@ setResolverByShape(BigInt, {
     return input
   }
 })
-setResolverByShape(String, {
+useValidator([String], {
   preprocess,
   validate: input => typeof input === 'string',
   transform: input => String(input)
 })
-setResolverByShape(Boolean, {
+useValidator([Boolean], {
   preprocess,
   validate: input => typeof input === 'boolean',
   transform: input => FALSELY.includes(input) ? false : Boolean(input)
 })
-setResolverByShape(Symbol, {
+useValidator([Symbol], {
   preprocess,
   validate: input => typeof input === 'symbol',
   transform: input => Symbol(String(input))
@@ -385,7 +402,7 @@ setResolverByShape(Symbol, {
 // > at the beginning of 1 January 1970 UTC.
 // 100_000_000 * 24 * 60 * 60 * 1000
 const MAX_TIME = 8640000000000000
-setResolverByShape(Date, {
+useValidator([Date], {
   preprocess,
   validate: input => input instanceof Date,
   transform: input => {
@@ -415,12 +432,12 @@ setResolverByShape(Date, {
     }
   }
 })
-setResolverByShape(null, {
+useValidator([null], {
   preprocess,
   validate: input => input === null,
   transform: input => FALSELY.includes(input) ? null : input
 })
-setResolverByShape(undefined, {
+useValidator([undefined], {
   preprocess,
   validate: input => input === undefined,
   transform: input => FALSELY.includes(input) ? undefined : input
