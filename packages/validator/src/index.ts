@@ -72,6 +72,56 @@ interface ValidateTransformEntries<T, Input> {
   ]
 }
 
+type Transform<Shape = unknown> = (
+  this: Typp<[Shape]>,
+  input: unknown,
+  options?: Omit<tn.ValidateOptions, 'transform'>
+) => unknown
+type Validate<Shape = unknown> = (
+  this: Typp<[Shape]>,
+  input: unknown,
+  options?: Omit<tn.ValidateOptions, 'transform'>
+) => boolean
+type Match<Shape = unknown> = (s: tn.Schema<any, any>, input: unknown) => s is tn.Schema<Shape, any>
+interface Validator<Shape = unknown> {
+  validate: Validate<Shape>
+  /**
+   * always called before `validate`, error will be catched and thrown as `ParseError`
+   */
+  preprocess: Transform<Shape>
+  /**
+   * only when `transform` is `true` and validate failed, this function will be called
+   * error will be catched and thrown as `ParseError`
+   */
+  transform: Transform<Shape>
+}
+const resolverMappingByMatcher = [] as [
+  matcher: Match, validator: AtLeastOneProperty<Validator>
+][]
+const validators = new Map<unknown, AtLeastOneProperty<Validator>>()
+
+function useValidator<Shape>(
+  shapesOrMatcher: Shape[] | Match<Shape>,
+  validator: AtLeastOneProperty<Validator<Shape>>
+) {
+  if (Array.isArray(shapesOrMatcher)) {
+    for (const shape of shapesOrMatcher) {
+      validators.set(shape, validator)
+    }
+    return () => {
+      for (const shape of shapesOrMatcher) {
+        validators.delete(shape)
+      }
+    }
+  } else {
+    resolverMappingByMatcher.push([shapesOrMatcher, validator])
+    const index = resolverMappingByMatcher.length - 1
+    return () => {
+      resolverMappingByMatcher.splice(index, 1)
+    }
+  }
+}
+
 declare module '@typp/core' {
   namespace t {
     // TODO https://zod.dev/?id=coercion-for-primitives
@@ -209,64 +259,6 @@ declare module '@typp/core' {
     }
   }
 }
-
-type Transform<Shape = unknown> = (
-  this: Typp<[Shape]>,
-  input: unknown,
-  options?: Omit<tn.ValidateOptions, 'transform'>
-) => unknown
-type Validate<Shape = unknown> = (
-  this: Typp<[Shape]>,
-  input: unknown,
-  options?: Omit<tn.ValidateOptions, 'transform'>
-) => boolean
-type Match<Shape = unknown> = (s: tn.Schema<any, any>, input: unknown) => s is tn.Schema<Shape, any>
-interface Validator<Shape = unknown> {
-  validate: Validate<Shape>
-  /**
-   * always called before `validate`, error will be catched and thrown as `ParseError`
-   */
-  preprocess: Transform<Shape>
-  /**
-   * only when `transform` is `true` and validate failed, this function will be called
-   * error will be catched and thrown as `ParseError`
-   */
-  transform: Transform<Shape>
-}
-const resolverMappingByMatcher = [] as [
-  matcher: Match, validator: AtLeastOneProperty<Validator>
-][]
-const validators = new Map<unknown, AtLeastOneProperty<Validator>>()
-
-function useValidator<Shape>(
-  shapesOrMatcher: Shape[] | Match<Shape>,
-  validator: AtLeastOneProperty<Validator<Shape>>
-) {
-  if (Array.isArray(shapesOrMatcher)) {
-    for (const shape of shapesOrMatcher) {
-      validators.set(shape, validator)
-    }
-    return () => {
-      for (const shape of shapesOrMatcher) {
-        validators.delete(shape)
-      }
-    }
-  } else {
-    resolverMappingByMatcher.push([shapesOrMatcher, validator])
-    const index = resolverMappingByMatcher.length - 1
-    return () => {
-      resolverMappingByMatcher.splice(index, 1)
-    }
-  }
-}
-// 如果俩个类型之间不支持转化，应该抛出「校验错误」还是「转化错误」？
-// 实际上来说，一个值不能作为某个类型使用，存在俩种情况
-// - 这个值不能被转化为目标的类型
-//   - `{ a: 1 }` 就是转化不到 `number` 的
-//     `{ a: 1, b: 2 }` 是可以转化到 `{ a: number }` 的，只需要删除掉多余的部分就可以了
-// - 这个值就是不匹配目标类型，哪怕转化了也是
-//   - `1` 就是不匹配 `'2' | '3'` 的
-//   - `{}` 并不在 `number` 的转化范围内，是一个无法被转化的值，这个时候应该抛出「校验错误」的异常，而不是「无法转化」的异常
 
 const preprocess: Transform = (input, options) => toPrimitive(input)
 useValidator([Number], {
@@ -422,6 +414,14 @@ useValidator([undefined], {
 // TODO Set
 // TODO Promise
 
+// 如果俩个类型之间不支持转化，应该抛出「校验错误」还是「转化错误」？
+// 实际上来说，一个值不能作为某个类型使用，存在俩种情况
+// - 这个值不能被转化为目标的类型
+//   - `{ a: 1 }` 就是转化不到 `number` 的
+//     `{ a: 1, b: 2 }` 是可以转化到 `{ a: number }` 的，只需要删除掉多余的部分就可以了
+// - 这个值就是不匹配目标类型，哪怕转化了也是
+//   - `1` 就是不匹配 `'2' | '3'` 的
+//   - `{}` 并不在 `number` 的转化范围内，是一个无法被转化的值，这个时候应该抛出「校验错误」的异常，而不是「无法转化」的异常
 function validate(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions): any
 function validate(this: tn.Schema<any, any>, ...args: any[]) {
   if (args.length === 0)
