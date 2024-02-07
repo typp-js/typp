@@ -1,7 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { AtLeastOneProperty, IsEqual, IsNotEqual, Narrow, Switch, t as tn, Typp } from '@typp/core'
 
+import { FALSELY, ParseError, ValidateError } from './base'
 import { parseBigInt, toPrimitive } from './utils'
+import { catchAndWrapProxy } from './utils.inner'
 
 interface ValidateExtendsEntries<T> {
   [key: string]: [boolean, any]
@@ -205,50 +207,6 @@ declare module '@typp/core' {
 
       test: (data: unknown) => data is T
     }
-  }
-}
-
-// TODO extensible ?
-export const FALSELY = [
-  '',
-  null, 'null', 'Null', 'NULL',
-  undefined, 'undefined', 'Undefined', 'UNDEFINED',
-  0, '0',
-  0n, '0n',
-  'false', 'no', 'off',
-  'False', 'No', 'Off',
-  'FALSE', 'NO', 'OFF'
-  // TODO [], {}, NaN
-] as unknown[]
-
-export class ValidateError extends Error {
-  __TYPP_SYMBOL__ = '__ValidateError__'
-  constructor(
-    public type: string,
-    public expected: tn.Schema<any, any>,
-    public actual: any
-  ) {
-    super(`Data is ${type}`)
-    this.name = 'ValidateError'
-  }
-}
-
-export class ParseError extends Error {
-  __TYPP_SYMBOL__ = '__ParseError__'
-  constructor(
-    public step: string,
-    public expected: tn.Schema<any, any>,
-    public actual: any,
-    public detail: Error
-  ) {
-    let actualStr = ''
-    try {
-      actualStr = JSON.stringify(actual)
-    } catch {
-      actualStr = String(toPrimitive(actual))
-    }
-    super(`Data \`${actualStr}\` cannot be parsed at \`${step}\`, because ${detail.message}`)
-    this.name = 'ParseError'
   }
 }
 
@@ -534,33 +492,6 @@ function parse(this: tn.Schema<any, any>, ...args: any[]) {
 }
 parse.narrow = parse
 
-function catchAndWrap(func: Function): tn.ValidateResult<any> {
-  try {
-    return { success: true, data: func() }
-  } catch (error) {
-    const e = error as any
-    if (
-      e instanceof ValidateError
-      /* istanbul ignore next */
-      || e?.__TYPP_SYMBOL__ === '__ValidateError__'
-      || e instanceof ParseError
-      /* istanbul ignore next */
-      || e?.__TYPP_SYMBOL__ === '__ParseError__'
-    ) {
-      return { success: false, error: e }
-    }
-    throw error
-  }
-}
-function catchAndWrapProxy<T extends Function>(func: T, proxyHandler: Omit<ProxyHandler<any>, 'apply'> = {}): T {
-  return new Proxy(func, {
-    ...proxyHandler,
-    apply(target, thisArg, args) {
-      return catchAndWrap(() => Reflect.apply(target, thisArg, args))
-    }
-  })
-}
-
 export default function validator(t: typeof tn) {
   t.useFields({
     get validate() {
@@ -623,3 +554,6 @@ export default function validator(t: typeof tn) {
   })
 }
 export { validator }
+
+export * from './base'
+export * from './utils'
