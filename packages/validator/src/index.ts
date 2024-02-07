@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { AtLeastOneProperty, IsEqual, IsNotEqual, Narrow, Switch, t as tn, Typp } from '@typp/core'
 
-import { parseBigInt, toPrimitive as preprocess } from './utils'
+import { parseBigInt, toPrimitive as preprocess, toPrimitive } from './utils'
 
 interface ValidateExtendsEntries<T> {
   [key: string]: [boolean, any]
@@ -245,7 +245,7 @@ export class ParseError extends Error {
     try {
       actualStr = JSON.stringify(actual)
     } catch {
-      actualStr = String(actual)
+      actualStr = String(toPrimitive(actual))
     }
     super(`Data \`${actualStr}\` cannot be parsed at \`${step}\`, because ${detail.message}`)
     this.name = 'ParseError'
