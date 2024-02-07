@@ -286,7 +286,7 @@ function useValidator<Shape>(
 ) {
   if (Array.isArray(shapesOrMatcher)) {
     for (const shape of shapesOrMatcher) {
-      setResolverByShape(shape, validator)
+      validators.set(shape, validator)
     }
     return () => {
       for (const shape of shapesOrMatcher) {
@@ -300,10 +300,6 @@ function useValidator<Shape>(
       resolverMappingByMatcher.splice(index, 1)
     }
   }
-}
-
-function setResolverByShape<Shape = any>(shape: Shape, resolver: AtLeastOneProperty<Validator<Shape>>) {
-  validators.set(shape, resolver)
 }
 // 如果俩个类型之间不支持转化，应该抛出「校验错误」还是「转化错误」？
 // 实际上来说，一个值不能作为某个类型使用，存在俩种情况
