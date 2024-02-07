@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { AtLeastOneProperty, IsEqual, IsNotEqual, Narrow, Switch, t as tn, Typp } from '@typp/core'
 
-import { parseBigInt, toPrimitive as preprocess, toPrimitive } from './utils'
+import { parseBigInt, toPrimitive } from './utils'
 
 interface ValidateExtendsEntries<T> {
   [key: string]: [boolean, any]
@@ -313,6 +313,8 @@ function setResolverByShape<Shape = any>(shape: Shape, resolver: AtLeastOnePrope
 // - 这个值就是不匹配目标类型，哪怕转化了也是
 //   - `1` 就是不匹配 `'2' | '3'` 的
 //   - `{}` 并不在 `number` 的转化范围内，是一个无法被转化的值，这个时候应该抛出「校验错误」的异常，而不是「无法转化」的异常
+
+const preprocess: Transform = (input, options) => toPrimitive(input)
 useValidator([Number], {
   preprocess,
   validate: input => typeof input === 'number',
