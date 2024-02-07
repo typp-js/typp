@@ -349,6 +349,19 @@ useValidator([Symbol], {
   validate: input => typeof input === 'symbol',
   transform: input => Symbol(String(input))
 })
+
+// TODO literal
+useValidator([null], {
+  preprocess,
+  validate: input => input === null,
+  transform: input => FALSELY.includes(input) ? null : input
+})
+useValidator([undefined], {
+  preprocess,
+  validate: input => input === undefined,
+  transform: input => FALSELY.includes(input) ? undefined : input
+})
+
 useValidator([Date], {
   preprocess,
   validate: input => input instanceof Date,
@@ -379,40 +392,6 @@ useValidator([Date], {
     }
   }
 })
-useValidator([null], {
-  preprocess,
-  validate: input => input === null,
-  transform: input => FALSELY.includes(input) ? null : input
-})
-useValidator([undefined], {
-  preprocess,
-  validate: input => input === undefined,
-  transform: input => FALSELY.includes(input) ? undefined : input
-})
-
-// TODO any
-// TODO unknown
-// TODO never
-// TODO void
-
-// TODO literal
-
-// TODO object
-// TODO dictionary
-// TODO record
-// TODO class/instanceof
-// TODO function
-// TODO array
-// TODO tuple
-
-// TODO function
-
-// TODO union
-// TODO intersection
-
-// TODO Map
-// TODO Set
-// TODO Promise
 
 // 如果俩个类型之间不支持转化，应该抛出「校验错误」还是「转化错误」？
 // 实际上来说，一个值不能作为某个类型使用，存在俩种情况
