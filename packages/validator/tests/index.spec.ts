@@ -335,6 +335,12 @@ describe('validate', () => {
           t.number().tryParse(1 as unknown)
         ).toEqualTypeOf<t.ValidateErrorResult>()
       })
+      test('transform - valueOf', () => {
+        const skm = t.number()
+        const r0 = skm.parse({ valueOf: () => 1 } as Number)
+        expect(r0).toBe(1)
+        expectTypeOf(r0).toEqualTypeOf<number>()
+      })
     })
     describe('string', () => {
       test('base', () => {
@@ -455,6 +461,12 @@ describe('validate', () => {
           const r = skm.parse(falsyValue)
           expect(r).toBe(false)
         })
+      })
+      test('transform - valueOf', () => {
+        const skm = t.boolean()
+        const r0 = skm.parse({ valueOf: () => true } as Boolean)
+        expect(r0).toBe(true)
+        expectTypeOf(r0).toEqualTypeOf<boolean>()
       })
     })
   })
