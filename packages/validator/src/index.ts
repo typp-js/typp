@@ -261,7 +261,7 @@ type Validate<Shape = unknown> = (
   this: Typp<[Shape]>,
   input: unknown,
   options?: Omit<tn.ValidateOptions, 'transform'>
-) => unknown
+) => boolean
 type Match<Shape = unknown> = (s: tn.Schema<any, any>, input: unknown) => s is tn.Schema<Shape, any>
 interface Validator<Shape = unknown> {
   validate: Validate<Shape>
