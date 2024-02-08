@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import type { AtLeastOneProperty, IsEqual, IsNotEqual, Narrow, Switch, t as tn, Typp } from '@typp/core'
+import type { AtLeastOneProperty, IsEqual, IsNotEqual, Narrow, Switch, Typp } from '@typp/core'
+import { t as tn } from '@typp/core'
 
 import { FALSELY, MAX_TIME, ParseError, ValidateError } from './base'
 import { parseBigInt, toPrimitive } from './utils'
@@ -33,7 +34,7 @@ const resolverMappingByMatcher = [] as [
 ][]
 const validators = new Map<unknown, AtLeastOneProperty<Validator>>()
 
-function useValidator<Shape>(
+function _useValidator<Shape>(
   shapesOrMatcher: Shape[] | Match<Shape>,
   validator: AtLeastOneProperty<Validator<Shape>>
 ) {
@@ -255,141 +256,12 @@ declare module '@typp/core' {
 
       test: (data: unknown) => data is T
     }
+    export const useValidator: typeof _useValidator
   }
 }
+tn.useStatic('useValidator', _useValidator)
 
 const preprocess: Transform = (input, options) => toPrimitive(input)
-useValidator([Number], {
-  preprocess,
-  validate: input => typeof input === 'number',
-  transform(input) {
-    if (FALSELY.includes(input)) return 0
-
-    switch (typeof input) {
-      case 'string': {
-        if (input === 'NaN') {
-          return NaN
-        } else if (input === 'Infinity') {
-          return Infinity
-        } else if (input === '-Infinity') {
-          return -Infinity
-        } else if (input === '') {
-          return 0
-        }
-
-        let radix = 10
-        if (input.length > 2) {
-          const radixStr = input.slice(0, 2).toLowerCase()
-          radix = { '0b': 2, '0o': 8, '0x': 16 }[radixStr] ?? radix
-        }
-        let inputStr = input
-        if (radix !== 10) {
-          inputStr = input.slice(2)
-        }
-        const temp = radix === 10
-          ? parseFloat(inputStr)
-          : parseInt(inputStr, radix)
-
-        if (!Number.isNaN(temp))
-          return temp
-        break
-      }
-      case 'boolean':
-        return input ? 1 : 0
-      case 'bigint':
-        if (input > Number.MAX_SAFE_INTEGER) return Infinity
-        if (input < Number.MIN_SAFE_INTEGER) return -Infinity
-        return Number(input)
-    }
-    return input
-  }
-})
-useValidator([BigInt], {
-  preprocess,
-  validate: input => typeof input === 'bigint',
-  transform: input => {
-    if (FALSELY.includes(input)) return 0n
-
-    switch (typeof input) {
-      case 'number':
-        if (input === Infinity) {
-          return 2n ** 1024n
-        } else if (input === -Infinity) {
-          return 2n ** 1024n * -1n
-        } else if (Number.isNaN(input)) {
-          // TODO throw transform error of parse error
-          break
-        } else if (Number.isInteger(input)) {
-          return BigInt(input)
-        } else {
-          return BigInt(Math.floor(input))
-        }
-      case 'string':
-        return parseBigInt(input)
-      case 'boolean':
-        return input ? 1n : 0n
-    }
-    return input
-  }
-})
-useValidator([String], {
-  preprocess,
-  validate: input => typeof input === 'string',
-  transform: input => String(input)
-})
-useValidator([Boolean], {
-  preprocess,
-  validate: input => typeof input === 'boolean',
-  transform: input => FALSELY.includes(input) ? false : Boolean(input)
-})
-useValidator([Symbol], {
-  preprocess,
-  validate: input => typeof input === 'symbol',
-  transform: input => Symbol(String(input))
-})
-
-// TODO literal
-useValidator([null], {
-  preprocess,
-  validate: input => input === null,
-  transform: input => FALSELY.includes(input) ? null : input
-})
-useValidator([undefined], {
-  preprocess,
-  validate: input => input === undefined,
-  transform: input => FALSELY.includes(input) ? undefined : input
-})
-
-useValidator([Date], {
-  preprocess,
-  validate: input => input instanceof Date,
-  transform: input => {
-    switch (typeof input) {
-      case 'string':
-        // TODO number string or bigint string
-        if (isNaN(Date.parse(input))) {
-          // TODO throw transform error of parse error
-        }
-      // eslint-disable-next-line no-fallthrough
-      case 'number':
-        if (input === Infinity) {
-          return new Date(MAX_TIME)
-        } else if (input === -Infinity) {
-          return new Date(-MAX_TIME)
-        }
-        return new Date(input)
-      case 'bigint': {
-        const num = Number(input)
-        if (num > Number.MAX_SAFE_INTEGER) {
-          return new Date(MAX_TIME)
-        } else if (num < Number.MIN_SAFE_INTEGER) {
-          return new Date(-MAX_TIME)
-        }
-        return new Date(num)
-      }
-    }
-  }
-})
 
 // 如果俩个类型之间不支持转化，应该抛出「校验错误」还是「转化错误」？
 // 实际上来说，一个值不能作为某个类型使用，存在俩种情况
@@ -519,6 +391,138 @@ export default function validator(t: typeof tn) {
           return false
         }
         throw e
+      }
+    }
+  })
+
+  t.useValidator([Number], {
+    preprocess,
+    validate: input => typeof input === 'number',
+    transform(input) {
+      if (FALSELY.includes(input)) return 0
+
+      switch (typeof input) {
+        case 'string': {
+          if (input === 'NaN') {
+            return NaN
+          } else if (input === 'Infinity') {
+            return Infinity
+          } else if (input === '-Infinity') {
+            return -Infinity
+          } else if (input === '') {
+            return 0
+          }
+
+          let radix = 10
+          if (input.length > 2) {
+            const radixStr = input.slice(0, 2).toLowerCase()
+            radix = { '0b': 2, '0o': 8, '0x': 16 }[radixStr] ?? radix
+          }
+          let inputStr = input
+          if (radix !== 10) {
+            inputStr = input.slice(2)
+          }
+          const temp = radix === 10
+            ? parseFloat(inputStr)
+            : parseInt(inputStr, radix)
+
+          if (!Number.isNaN(temp))
+            return temp
+          break
+        }
+        case 'boolean':
+          return input ? 1 : 0
+        case 'bigint':
+          if (input > Number.MAX_SAFE_INTEGER) return Infinity
+          if (input < Number.MIN_SAFE_INTEGER) return -Infinity
+          return Number(input)
+      }
+      return input
+    }
+  })
+  t.useValidator([BigInt], {
+    preprocess,
+    validate: input => typeof input === 'bigint',
+    transform: input => {
+      if (FALSELY.includes(input)) return 0n
+
+      switch (typeof input) {
+        case 'number':
+          if (input === Infinity) {
+            return 2n ** 1024n
+          } else if (input === -Infinity) {
+            return 2n ** 1024n * -1n
+          } else if (Number.isNaN(input)) {
+            // TODO throw transform error of parse error
+            break
+          } else if (Number.isInteger(input)) {
+            return BigInt(input)
+          } else {
+            return BigInt(Math.floor(input))
+          }
+        case 'string':
+          return parseBigInt(input)
+        case 'boolean':
+          return input ? 1n : 0n
+      }
+      return input
+    }
+  })
+  t.useValidator([String], {
+    preprocess,
+    validate: input => typeof input === 'string',
+    transform: input => String(input)
+  })
+  t.useValidator([Boolean], {
+    preprocess,
+    validate: input => typeof input === 'boolean',
+    transform: input => FALSELY.includes(input) ? false : Boolean(input)
+  })
+  t.useValidator([Symbol], {
+    preprocess,
+    validate: input => typeof input === 'symbol',
+    transform: input => Symbol(String(input))
+  })
+
+  // TODO literal
+  t.useValidator([null], {
+    preprocess,
+    validate: input => input === null,
+    transform: input => FALSELY.includes(input) ? null : input
+  })
+  t.useValidator([undefined], {
+    preprocess,
+    validate: input => input === undefined,
+    transform: input => FALSELY.includes(input) ? undefined : input
+  })
+
+  t.useValidator([Date], {
+    preprocess,
+    validate: input => input instanceof Date,
+    transform: input => {
+      switch (typeof input) {
+        case 'string':
+          // TODO number string or bigint string
+          if (isNaN(Date.parse(input))) {
+            // TODO throw transform error of parse error
+          }
+        // eslint-disable-next-line no-fallthrough
+        case 'number':
+          if (input === Infinity) {
+            return new Date(MAX_TIME)
+          } else if (input === -Infinity) {
+            return new Date(-MAX_TIME)
+          }
+          return new Date(input)
+        case 'bigint': {
+          const num = Number(input)
+          if (num > Number.MAX_SAFE_INTEGER) {
+            return new Date(MAX_TIME)
+          } else if (num < Number.MIN_SAFE_INTEGER) {
+            return new Date(-MAX_TIME)
+          }
+          return new Date(num)
+        }
       }
     }
   })
