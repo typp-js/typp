@@ -5,73 +5,6 @@ import { FALSELY, MAX_TIME, ParseError, ValidateError } from './base'
 import { parseBigInt, toPrimitive } from './utils'
 import { catchAndWrapProxy } from './utils.inner'
 
-interface ValidateExtendsEntries<T> {
-  [key: string]: [boolean, any]
-  number: [
-    [T] extends [number] ? true : false,
-    number | Number,
-  ]
-  string: [
-    [T] extends [string] ? true : false,
-    string | String
-  ]
-  boolean: [
-    [T] extends [boolean] ? true : false,
-    boolean | Boolean
-  ]
-}
-interface ValidateTransformEntries<T, Input> {
-  [key: string]: [boolean, any]
-  number: [
-    [T] extends [number] ? true : false,
-    Switch<{
-      [k: string]: [boolean, any]
-      any: [IsEqual<Input, any>, unknown]
-      self: [
-        [Input] extends [number] ? true : false,
-        number
-      ]
-      string: [
-        [Input] extends [string] ? true : false,
-        Input extends (
-          | `${number}${string}`
-          | `0${'b' | 'B'}${string}`
-          | `0${'o' | 'O'}${number}`
-          | `0${'x' | 'X'}${string}`
-        ) ? number
-          : true extends IsEqual<Input, string>
-            ? unknown
-            : never,
-      ]
-      boolean: [
-        [Input] extends [boolean] ? true : false,
-        Input extends true ? 1 : Input extends false ? 0 : never
-      ]
-      null: [
-        [Input] extends [null] ? true : false,
-        0
-      ]
-      undefined: [
-        [Input] extends [undefined] ? true : false,
-        0
-      ]
-      bigint: [
-        [Input] extends [bigint] ? true : false,
-        number
-      ]
-    }>
-  ]
-  string: [
-    [T] extends [string] ? true : false,
-    string
-  ]
-  boolean: [
-    [T] extends [boolean] ? true : false,
-    // TODO resolve literal type
-    boolean
-  ]
-}
-
 type Transform<Shape = unknown> = (
   this: Typp<[Shape]>,
   input: unknown,
@@ -124,6 +57,72 @@ function useValidator<Shape>(
 
 declare module '@typp/core' {
   namespace t {
+    export interface ValidateExtendsEntries<T> {
+      [key: string]: [boolean, any]
+      number: [
+        [T] extends [number] ? true : false,
+        number | Number,
+      ]
+      string: [
+        [T] extends [string] ? true : false,
+        string | String
+      ]
+      boolean: [
+        [T] extends [boolean] ? true : false,
+        boolean | Boolean
+      ]
+    }
+    export interface ValidateTransformEntries<T, Input> {
+  [key: string]: [boolean, any]
+  number: [
+    [T] extends [number] ? true : false,
+    Switch<{
+      [k: string]: [boolean, any]
+      any: [IsEqual<Input, any>, unknown]
+      self: [
+        [Input] extends [number] ? true : false,
+        number
+      ]
+      string: [
+        [Input] extends [string] ? true : false,
+        Input extends (
+          | `${number}${string}`
+          | `0${'b' | 'B'}${string}`
+          | `0${'o' | 'O'}${number}`
+          | `0${'x' | 'X'}${string}`
+        ) ? number
+          : true extends IsEqual<Input, string>
+            ? unknown
+            : never,
+      ]
+      boolean: [
+        [Input] extends [boolean] ? true : false,
+        Input extends true ? 1 : Input extends false ? 0 : never
+      ]
+      null: [
+        [Input] extends [null] ? true : false,
+        0
+      ]
+      undefined: [
+        [Input] extends [undefined] ? true : false,
+        0
+      ]
+      bigint: [
+        [Input] extends [bigint] ? true : false,
+        number
+      ]
+    }>
+  ]
+  string: [
+    [T] extends [string] ? true : false,
+    string
+  ]
+  boolean: [
+    [T] extends [boolean] ? true : false,
+    // TODO resolve literal type
+    boolean
+  ]
+}
     // TODO https://zod.dev/?id=coercion-for-primitives
     // export const coerce: typeof tn
     export interface ValidateOptions {
@@ -157,7 +156,6 @@ declare module '@typp/core' {
       error: ValidateError
     }
     export type ValidateResult<T> = ValidateSuccessResult<T> | ValidateErrorResult
-    // type T0 = Switch<ValidateTransformEntries<1, InputRest>>
     export type Validate<
       T,
       ExtendsT,
