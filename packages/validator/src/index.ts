@@ -70,56 +70,56 @@ declare module '@typp/core' {
       ]
     }
     export interface ValidateTransformEntries<T, Input> {
-  [key: string]: [boolean, any]
-  number: [
-    [T] extends [number] ? true : false,
-    Switch<{
-      [k: string]: [boolean, any]
-      any: [IsEqual<Input, any>, unknown]
-      self: [
-        [Input] extends [number] ? true : false,
-        number
+      [key: string]: [boolean, any]
+      number: [
+        [T] extends [number] ? true : false,
+        Switch<{
+          [k: string]: [boolean, any]
+          any: [IsEqual<Input, any>, unknown]
+          self: [
+            [Input] extends [number] ? true : false,
+            number
+          ]
+          string: [
+            [Input] extends [string] ? true : false,
+            Input extends (
+              | `${number}${string}`
+              | `0${'b' | 'B'}${string}`
+              | `0${'o' | 'O'}${number}`
+              | `0${'x' | 'X'}${string}`
+            ) ? number
+              : true extends IsEqual<Input, string>
+                ? unknown
+                : never,
+          ]
+          boolean: [
+            [Input] extends [boolean] ? true : false,
+            Input extends true ? 1 : Input extends false ? 0 : never
+          ]
+          null: [
+            [Input] extends [null] ? true : false,
+            0
+          ]
+          undefined: [
+            [Input] extends [undefined] ? true : false,
+            0
+          ]
+          bigint: [
+            [Input] extends [bigint] ? true : false,
+            number
+          ]
+        }>
       ]
       string: [
-        [Input] extends [string] ? true : false,
-        Input extends (
-          | `${number}${string}`
-          | `0${'b' | 'B'}${string}`
-          | `0${'o' | 'O'}${number}`
-          | `0${'x' | 'X'}${string}`
-        ) ? number
-          : true extends IsEqual<Input, string>
-            ? unknown
-            : never,
+        [T] extends [string] ? true : false,
+        string
       ]
       boolean: [
-        [Input] extends [boolean] ? true : false,
-        Input extends true ? 1 : Input extends false ? 0 : never
+        [T] extends [boolean] ? true : false,
+        // TODO resolve literal type
+        boolean
       ]
-      null: [
-        [Input] extends [null] ? true : false,
-        0
-      ]
-      undefined: [
-        [Input] extends [undefined] ? true : false,
-        0
-      ]
-      bigint: [
-        [Input] extends [bigint] ? true : false,
-        number
-      ]
-    }>
-  ]
-  string: [
-    [T] extends [string] ? true : false,
-    string
-  ]
-  boolean: [
-    [T] extends [boolean] ? true : false,
-    // TODO resolve literal type
-    boolean
-  ]
-}
+    }
     // TODO https://zod.dev/?id=coercion-for-primitives
     // export const coerce: typeof tn
     export interface ValidateOptions {
