@@ -97,6 +97,7 @@ export function numberValidator(t: typeof tn) {
           if (input < Number.MIN_SAFE_INTEGER) return -Infinity
           return Number(input)
       }
+      // TODO Date
       return input
     }
   })
