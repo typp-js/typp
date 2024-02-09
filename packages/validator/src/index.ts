@@ -1,13 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import type { AtLeastOneProperty, IsEqual, IsNotEqual, Narrow, Switch, Typp } from '@typp/core'
-import { t as tn } from '@typp/core'
+import type { AtLeastOneProperty, IsEqual, IsNotEqual, Narrow, Switch, t as tn, Typp } from '@typp/core'
 
+import { FALSELY, MAX_TIME } from './base'
 import {
-  FALSELY,
-  MAX_TIME,
   ParseError as _ParseError,
   ValidateError as _ValidateError
-} from './base'
+} from './base.inner'
 import { typesValidator } from './types'
 import { bigintValidator } from './types/primitive.bigint'
 import { toPrimitive } from './utils'
