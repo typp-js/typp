@@ -157,7 +157,7 @@ declare module '@typp/core' {
       error: ValidateError
     }
     export type ValidateResult<T> = ValidateSuccessResult<T> | ValidateErrorResult
-    export type Validate<
+    export type ValidateReturnType<
       T,
       ExtendsT,
       Input,
@@ -168,7 +168,7 @@ declare module '@typp/core' {
     ] extends [
       true, infer Next extends ValidateOptions
     ] ? (
-      Switch<ValidateTransformEntries<T, InputRest>> extends infer TransformInput ? Validate<
+      Switch<ValidateTransformEntries<T, InputRest>> extends infer TransformInput ? ValidateReturnType<
         T,
         ExtendsT,
         TransformInput,
@@ -192,18 +192,18 @@ declare module '@typp/core' {
           )
         )
         & IsNotEqual<Input, never>
-      ) ? ValidateResult<Validate<T, ExtendsT, Input, InputRest, Next>>
+      ) ? ValidateResult<ValidateReturnType<T, ExtendsT, Input, InputRest, Next>>
         : true extends (
           | ([Input] extends [ExtendsT] ? false : true)
           | (IsNotEqual<T, never> & IsEqual<Input, never>)
         ) ? ValidateErrorResult
-          : ValidateSuccessResult<Validate<T, ExtendsT, Input, InputRest, Next>>
+          : ValidateSuccessResult<ValidateReturnType<T, ExtendsT, Input, InputRest, Next>>
     ) : [
       Opts['const'], Omit<Opts, 'const'>
     ] extends [
       true, infer Next extends ValidateOptions
     ] ? (
-      Validate<
+      ValidateReturnType<
         true extends (
           | ([Input] extends [T] ? true : false)
           | IsEqual<InputRest, unknown>
@@ -233,7 +233,7 @@ declare module '@typp/core' {
       >(
         data: ExtendsT | Rest,
         options?: Opts
-      ): Validate<T, ExtendsT, typeof data, Exclude<typeof data, ExtendsT>, Opts & O>
+      ): ValidateReturnType<T, ExtendsT, typeof data, Exclude<typeof data, ExtendsT>, Opts & O>
       narrow<
         TT extends ExtendsT,
         Rest extends true extends(
@@ -244,7 +244,7 @@ declare module '@typp/core' {
       >(
         data: Narrow<TT | Rest>,
         options?: Opts
-      ): Validate<T, ExtendsT, typeof data, Exclude<typeof data, ExtendsT>, Opts & O & { const: true }>
+      ): ValidateReturnType<T, ExtendsT, typeof data, Exclude<typeof data, ExtendsT>, Opts & O & { const: true }>
     }
     interface SchemaFieldsAll<Shape, T> {
       validate: ValidateItf<Shape, T>
