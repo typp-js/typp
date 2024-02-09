@@ -102,8 +102,12 @@ describe('bigint', () => {
       const r2 = skm.parse('0B10')
       expect(r1).toBe(2n)
     })
+    test('transform - primitive.string - special falsy', () => {})
     test('transform - primitive.symbol', () => {
     })
+    test('transform - literal', () => {})
+    test('transform - any or unknown', () => {})
+    test('transform - any or unknown & try', () => {})
     test('transform - constructor.date', () => {
     })
   })
@@ -238,6 +242,7 @@ describe('boolean', () => {
 
       // TODO: with const
     })
+    test('transform - primitive.string - special falsy', () => {})
     test('transform - primitive.symbol', () => {})
     test('transform - literal', () => {
       const skm = t.boolean()
@@ -254,6 +259,8 @@ describe('boolean', () => {
       expect(r3).toBe(false)
       expectTypeOf(r3).toEqualTypeOf<false>()
     })
+    test('transform - any or unknown', () => {})
+    test('transform - any or unknown & try', () => {})
     test('transform - constructor.date', () => {})
   })
 })
@@ -475,7 +482,7 @@ describe('number', () => {
         t.number().parse(1 as unknown)
       ).toEqualTypeOf<never>()
     })
-    test('try and transform - any or unknown', () => {
+    test('transform - any or unknown & try', () => {
       expectTypeOf(
         t.number().tryParse(1 as any)
       ).toEqualTypeOf<t.ValidateResult<number>>()
