@@ -1,6 +1,9 @@
 import type { t as tn } from '@typp/core'
 
 import { ParseError, ValidateError } from './base'
+import { toPrimitive } from './utils'
+
+export const preprocess: tn.Validator['preprocess'] = (input, options) => toPrimitive(input)
 
 export function catchAndWrap(func: Function): tn.ValidateResult<any> {
   try {
