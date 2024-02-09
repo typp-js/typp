@@ -59,21 +59,12 @@ declare module '@typp/core' {
         [T] extends [string] ? true : false,
         string | String
       ]
-      boolean: [
-        [T] extends [boolean] ? true : false,
-        boolean | Boolean
-      ]
     }
     export interface ValidateTransformEntries<T, Input> {
       [key: string]: [boolean, any]
       string: [
         [T] extends [string] ? true : false,
         string
-      ]
-      boolean: [
-        [T] extends [boolean] ? true : false,
-        // TODO resolve literal type
-        boolean
       ]
     }
     // TODO https://zod.dev/?id=coercion-for-primitives
@@ -361,11 +352,6 @@ export default function validator(t: typeof tn) {
     preprocess,
     validate: input => typeof input === 'string',
     transform: input => String(input)
-  })
-  t.useValidator([Boolean], {
-    preprocess,
-    validate: input => typeof input === 'boolean',
-    transform: input => FALSELY.includes(input) ? false : Boolean(input)
   })
   t.useValidator([Symbol], {
     preprocess,

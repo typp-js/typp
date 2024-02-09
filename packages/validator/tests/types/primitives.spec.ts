@@ -4,6 +4,7 @@ import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 import { validatorSkeleton } from '../../src'
 import { ParseError, ValidateError } from '../../src/base.inner'
 import { bigintValidator } from '../../src/types/primitive.bigint'
+import { booleanValidator } from '../../src/types/primitive.boolean'
 import { numberValidator } from '../../src/types/primitive.number'
 
 beforeAll(() => t.use(validatorSkeleton))
@@ -108,6 +109,153 @@ describe('bigint', () => {
   })
 })
 describe('boolean', () => {
+  beforeAll(() => t.use(booleanValidator))
+  test('base', () => {
+    const r0 = t.boolean().validate(true)
+    expect(r0).toBe(true)
+    expectTypeOf(r0).toEqualTypeOf<boolean>()
+    const r1 = t.boolean().validate(false)
+    expect(r1).toBe(false)
+    expectTypeOf(r1).toEqualTypeOf<boolean>()
+  })
+  test('narrow', () => {
+    const r0 = t.boolean().validate.narrow(true)
+    expect(r0).toBe(true)
+    expectTypeOf(r0).toEqualTypeOf<true>()
+    const r1 = t.boolean().validate.narrow(false)
+    expect(r1).toBe(false)
+    expectTypeOf(r1).toEqualTypeOf<false>()
+  })
+  test('instanceof', () => {
+    const r0 = t.boolean().validate(Boolean(true))
+    expect(r0).toBe(true)
+    expectTypeOf(r0).toEqualTypeOf<boolean>()
+    const r1 = t.boolean().validate(Object(true))
+    expect(r1).toBe(true)
+    expectTypeOf(r1).toEqualTypeOf<boolean>()
+
+    const r2 = t.boolean().validate(new class extends Boolean {
+      constructor() {
+        super(true)
+      }
+    }())
+    expect(r2).toBe(true)
+    expectTypeOf(r2).toEqualTypeOf<boolean>()
+    const r3 = t.boolean().validate(new class extends Boolean {
+      constructor() { super(true) }
+      valueOf() { return false }
+    })
+    expect(r3).toBe(false)
+    expectTypeOf(r3).toEqualTypeOf<boolean>()
+    const r4 = t.boolean().validate(new class extends Boolean {
+      constructor() { super(true) }
+      [Symbol.toPrimitive]() { return false }
+    })
+    expect(r4).toBe(false)
+    expectTypeOf(r4).toEqualTypeOf<boolean>()
+    const r5 = t.boolean().validate(new class extends Boolean {
+      constructor() { super(true) }
+      valueOf() { return false }
+      [Symbol.toPrimitive]() { return true }
+    })
+    expect(r5).toBe(true)
+    expectTypeOf(r5).toEqualTypeOf<boolean>()
+  })
+  test('unexpected', () => {
+    const skm = t.boolean()
+    expect(() => {
+      // @ts-expect-error
+      skm.validate('abc')
+    }).toThrow(new ValidateError('unexpected', skm, '1'))
+  })
+  describe('parse', () => {
+    test('transform - primitive.bigint', () => {
+      const skm = t.boolean()
+      const r0 = skm.parse(1n)
+      expect(r0).toBe(true)
+      expectTypeOf(r0).toEqualTypeOf<boolean>()
+      const r1 = skm.parse(0n)
+      expect(r1).toBe(false)
+      expectTypeOf(r1).toEqualTypeOf<boolean>()
+
+      // with const
+      const r2 = skm.parse.narrow(1n)
+      expect(r2).toBe(true)
+      expectTypeOf(r2).toEqualTypeOf<boolean>()
+      const r3 = skm.parse.narrow(0n)
+      expect(r3).toBe(false)
+      expectTypeOf(r3).toEqualTypeOf<boolean>()
+    })
+    test('transform - primitive.number', () => {
+      const skm = t.boolean()
+      const r0 = skm.parse(1)
+      expect(r0).toBe(true)
+      expectTypeOf(r0).toEqualTypeOf<boolean>()
+      const r1 = skm.parse(0)
+      expect(r1).toBe(false)
+      expectTypeOf(r1).toEqualTypeOf<boolean>()
+      const r2 = skm.parse(Infinity)
+      expect(r2).toBe(true)
+      expectTypeOf(r2).toEqualTypeOf<boolean>()
+      const r3 = skm.parse(-Infinity)
+      expect(r3).toBe(true)
+      expectTypeOf(r3).toEqualTypeOf<boolean>()
+      const r4 = skm.parse(NaN)
+      expect(r4).toBe(false)
+      expectTypeOf(r4).toEqualTypeOf<boolean>()
+
+      // TODO: with const
+      // const r5 = skm.parse.narrow(1)
+      // expect(r5).toBe(true)
+      // expectTypeOf(r5).toEqualTypeOf<true>()
+      // const r6 = skm.parse.narrow(0)
+      // expect(r6).toBe(false)
+      // expectTypeOf(r6).toEqualTypeOf<false>()
+      // const r7 = skm.parse.narrow(Infinity)
+      // expect(r7).toBe(true)
+      // expectTypeOf(r7).toEqualTypeOf<true>()
+      // const r8 = skm.parse.narrow(-Infinity)
+      // expect(r8).toBe(false)
+      // expectTypeOf(r8).toEqualTypeOf<false>()
+      // const r9 = skm.parse.narrow(NaN)
+      // expect(r9).toBe(false)
+      // expectTypeOf(r9).toEqualTypeOf<false>()
+    })
+    test('transform - primitive.string', () => {
+      const skm = t.boolean()
+      const r0 = skm.parse('true')
+      expect(r0).toBe(true)
+      expectTypeOf(r0).toEqualTypeOf<boolean>()
+      const r1 = skm.parse('false')
+      expect(r1).toBe(false)
+      expectTypeOf(r1).toEqualTypeOf<boolean>()
+      const r2 = skm.parse('abc')
+      expect(r2).toBe(true)
+      expectTypeOf(r2).toEqualTypeOf<boolean>()
+      const r3 = skm.parse('')
+      expect(r3).toBe(false)
+      expectTypeOf(r3).toEqualTypeOf<boolean>()
+
+      // TODO: with const
+    })
+    test('transform - primitive.symbol', () => {})
+    test('transform - literal', () => {
+      const skm = t.boolean()
+      const r0 = skm.parse(null)
+      expect(r0).toBe(false)
+      expectTypeOf(r0).toEqualTypeOf<boolean>()
+      const r1 = skm.parse.narrow(null)
+      expect(r1).toBe(false)
+      expectTypeOf(r1).toEqualTypeOf<false>()
+      const r2 = skm.parse(undefined)
+      expect(r2).toBe(false)
+      expectTypeOf(r2).toEqualTypeOf<boolean>()
+      const r3 = skm.parse.narrow(undefined)
+      expect(r3).toBe(false)
+      expectTypeOf(r3).toEqualTypeOf<false>()
+    })
+    test('transform - constructor.date', () => {})
+  })
 })
 describe('number', () => {
   beforeAll(() => t.use(numberValidator))
