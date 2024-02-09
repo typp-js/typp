@@ -28,7 +28,7 @@ declare module '@typp/core' {
                 | `0${'b' | 'B'}${string}`
                 | `0${'o' | 'O'}${number}`
                 | `0${'x' | 'X'}${string}`
-                ) ? number
+            ) ? number
               : true extends IsEqual<Input, string>
                 ? unknown
                 : never,
