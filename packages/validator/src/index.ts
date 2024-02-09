@@ -57,10 +57,6 @@ declare module '@typp/core' {
     export const ParseError: typeof _ParseError
     export interface ValidateExtendsEntries<T> {
       [key: string]: [boolean, any]
-      number: [
-        [T] extends [number] ? true : false,
-        number | Number,
-      ]
       string: [
         [T] extends [string] ? true : false,
         string | String
