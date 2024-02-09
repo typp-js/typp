@@ -504,6 +504,7 @@ export namespace t {
   }
   // TODO static.pipe
   export function use(plugin: (ctx: typeof t) => (() => void) | void) {
+    // TODO support (() => Awaitable<void>)[]
     const disposes = [] as (() => void)[]
     const tWatcher = new Proxy(t, {
       get(target, key: keyof typeof t, receiver) {
