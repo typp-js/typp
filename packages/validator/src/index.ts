@@ -2,7 +2,12 @@
 import type { AtLeastOneProperty, IsEqual, IsNotEqual, Narrow, Switch, Typp } from '@typp/core'
 import { t as tn } from '@typp/core'
 
-import { FALSELY, MAX_TIME, ParseError, ValidateError } from './base'
+import {
+  FALSELY,
+  MAX_TIME,
+  ParseError as _ParseError,
+  ValidateError as _ValidateError
+} from './base'
 import { parseBigInt, toPrimitive } from './utils'
 import { catchAndWrapProxy } from './utils.inner'
 
@@ -46,6 +51,9 @@ function _useValidator<Shape>(
 
 declare module '@typp/core' {
   namespace t {
+    export const useValidator: typeof _useValidator
+    export const ValidateError: typeof _ValidateError
+    export const ParseError: typeof _ParseError
     export interface ValidateExtendsEntries<T> {
       [key: string]: [boolean, any]
       number: [
@@ -142,7 +150,7 @@ declare module '@typp/core' {
     }
     export type ValidateErrorResult = {
       success: false
-      error: ValidateError
+      error: _ValidateError
     }
     export type ValidateResult<T> = ValidateSuccessResult<T> | ValidateErrorResult
     export type ValidateReturnType<
@@ -256,10 +264,11 @@ declare module '@typp/core' {
 
       test: (data: unknown) => data is T
     }
-    export const useValidator: typeof _useValidator
   }
 }
 tn.useStatic('useValidator', _useValidator)
+tn.useStatic('ParseError', _ParseError)
+tn.useStatic('ValidateError', _ValidateError)
 
 const preprocess: Transform = (input, options) => toPrimitive(input)
 
@@ -301,7 +310,7 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
       rt = preprocess ? preprocess(rt, options) : rt
     } catch (e) {
       if (e instanceof Error) {
-        throw new ParseError('preprocess', this, rt, e)
+        throw new _ParseError('preprocess', this, rt, e)
       }
       throw e
     }
@@ -314,13 +323,13 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
         rt = transform(rt, options)
       } catch (e) {
         if (e instanceof Error) {
-          throw new ParseError('transform', this, rt, e)
+          throw new _ParseError('transform', this, rt, e)
         }
         throw e
       }
     }
     if (!validate(rt, options))
-      throw new ValidateError('unexpected', this, rt)
+      throw new _ValidateError('unexpected', this, rt)
   }
   return rt
 }
@@ -387,7 +396,8 @@ export default function validator(t: typeof tn) {
         validate.call(this, data)
         return true
       } catch (e) {
-        if (e instanceof ValidateError) {
+        // TODO TYPE_SYMBOL
+        if (e instanceof _ValidateError) {
           return false
         }
         throw e
