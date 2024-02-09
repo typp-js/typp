@@ -297,7 +297,7 @@ function parse(this: tn.Schema<any, any>, ...args: any[]) {
 }
 parse.narrow = parse
 
-export default function validator(t: typeof tn) {
+export function validatorSkeleton(t: typeof tn) {
   t.useStatic('useValidator', _useValidator)
   t.useStatic('ParseError', _ParseError)
   t.useStatic('ValidateError', _ValidateError)
@@ -352,6 +352,10 @@ export default function validator(t: typeof tn) {
       return validate.call(this, data, { try: true }).success
     }
   })
+}
+
+export default function validator(t: typeof tn) {
+  t.use(validatorSkeleton)
 
   t.use(typesValidator)
   t.use(bigintValidator)
