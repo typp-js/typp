@@ -15,7 +15,6 @@ declare module '@typp/core' {
       number: [
         [T] extends [number] ? true : false,
         Switch<{
-          [k: string]: [boolean, any]
           any: [IsEqual<Input, any>, unknown]
           self: [
             [Input] extends [number] ? true : false,
