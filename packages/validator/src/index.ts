@@ -223,9 +223,6 @@ declare module '@typp/core' {
     }
   }
 }
-tn.useStatic('useValidator', _useValidator)
-tn.useStatic('ParseError', _ParseError)
-tn.useStatic('ValidateError', _ValidateError)
 
 const preprocess: Transform = (input, options) => toPrimitive(input)
 
@@ -301,6 +298,9 @@ function parse(this: tn.Schema<any, any>, ...args: any[]) {
 parse.narrow = parse
 
 export default function validator(t: typeof tn) {
+  t.useStatic('useValidator', _useValidator)
+  t.useStatic('ParseError', _ParseError)
+  t.useStatic('ValidateError', _ValidateError)
   t.useFields({
     get validate() {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
