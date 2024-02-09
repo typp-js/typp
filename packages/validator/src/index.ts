@@ -17,26 +17,14 @@ type Validate<Shape = unknown> = (
   options?: Omit<tn.ValidateOptions, 'transform'>
 ) => boolean
 type Match<Shape = unknown> = (s: tn.Schema<any, any>, input: unknown) => s is tn.Schema<Shape, any>
-interface Validator<Shape = unknown> {
-  validate: Validate<Shape>
-  /**
-   * always called before `validate`, error will be catched and thrown as `ParseError`
-   */
-  preprocess: Transform<Shape>
-  /**
-   * only when `transform` is `true` and validate failed, this function will be called
-   * error will be catched and thrown as `ParseError`
-   */
-  transform: Transform<Shape>
-}
 const resolverMappingByMatcher = [] as [
-  matcher: Match, validator: AtLeastOneProperty<Validator>
+  matcher: Match, validator: AtLeastOneProperty<tn.Validator>
 ][]
-const validators = new Map<unknown, AtLeastOneProperty<Validator>>()
+const validators = new Map<unknown, AtLeastOneProperty<tn.Validator>>()
 
 function _useValidator<Shape>(
   shapesOrMatcher: Shape[] | Match<Shape>,
-  validator: AtLeastOneProperty<Validator<Shape>>
+  validator: AtLeastOneProperty<tn.Validator<Shape>>
 ) {
   if (Array.isArray(shapesOrMatcher)) {
     for (const shape of shapesOrMatcher) {
@@ -220,6 +208,18 @@ declare module '@typp/core' {
         & IsNotEqual<Input, never>
       ) ? T : never
     )
+    interface Validator<Shape = unknown> {
+      validate: Validate<Shape>
+      /**
+       * always called before `validate`, error will be catched and thrown as `ParseError`
+       */
+      preprocess: Transform<Shape>
+      /**
+       * only when `transform` is `true` and validate failed, this function will be called
+       * error will be catched and thrown as `ParseError`
+       */
+      transform: Transform<Shape>
+    }
     interface ValidateItf<
       Shape, T, O extends ValidateOptions = {},
       ExtendsT = Switch<ValidateExtendsEntries<T>>
