@@ -23,6 +23,7 @@ declare module '@typp/core' {
           ]
           number: [
             [Input] extends [number] ? true : false,
+            // TODO `${Input}n` extends `${O extends bigint}` ? O : never
             bigint
           ]
           string: [
@@ -56,10 +57,11 @@ declare module '@typp/core' {
 }
 
 export function bigintValidator(t: typeof tn) {
+  const { ParseError } = t
   t.useValidator([BigInt], {
     preprocess,
     validate: input => typeof input === 'bigint',
-    transform: input => {
+    transform(input) {
       if (FALSELY.includes(input)) return 0n
 
       switch (typeof input) {
@@ -69,12 +71,16 @@ export function bigintValidator(t: typeof tn) {
           } else if (input === -Infinity) {
             return 2n ** 1024n * -1n
           } else if (Number.isNaN(input)) {
-            // TODO throw transform error of parse error
-            break
-          } else if (Number.isInteger(input)) {
-            return BigInt(input)
+            throw new Error('NaN cannot be converted to BigInt')
           } else {
-            return BigInt(Math.floor(input))
+            if (input > Number.MAX_SAFE_INTEGER || input < Number.MIN_SAFE_INTEGER) {
+              throw new Error('number must greater than or equal to -2^53 and less than or equal to 2^53')
+            }
+            if (Number.isInteger(input)) {
+              return BigInt(input)
+            } else {
+              return BigInt(Math.floor(input))
+            }
           }
         case 'string':
           return parseBigInt(input)

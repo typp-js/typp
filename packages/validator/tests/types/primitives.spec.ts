@@ -2,12 +2,110 @@ import { t } from '@typp/core'
 import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 
 import { validatorSkeleton } from '../../src'
-import { ValidateError } from '../../src/base.inner'
+import { ParseError, ValidateError } from '../../src/base.inner'
+import { bigintValidator } from '../../src/types/primitive.bigint'
 import { numberValidator } from '../../src/types/primitive.number'
 
 beforeAll(() => t.use(validatorSkeleton))
 
 describe('bigint', () => {
+  beforeAll(() => t.use(bigintValidator))
+  test('base', () => {
+    const r0 = t.bigint().validate(1n)
+    expect(r0).toBe(1n)
+    expectTypeOf(r0).toEqualTypeOf<bigint>()
+  })
+  test('narrow', () => {
+    const r0 = t.bigint().validate.narrow(1n)
+    expect(r0).toBe(1n)
+    expectTypeOf(r0).toEqualTypeOf<1n>()
+  })
+  test('instanceof', () => {
+    const r0 = t.bigint().validate(BigInt(1))
+    expect(r0).toBe(1n)
+    expectTypeOf(r0).toEqualTypeOf<bigint>()
+    const r1 = t.bigint().validate(Object(1n))
+    expect(r1).toBe(1n)
+    expectTypeOf(r1).toEqualTypeOf<bigint>()
+    const r2 = t.bigint().validate(Object(BigInt(1)))
+    expect(r2).toBe(1n)
+    expectTypeOf(r2).toEqualTypeOf<bigint>()
+  })
+  test('unexpected', () => {
+    const skm = t.bigint()
+    expect(() => {
+      // @ts-expect-error
+      skm.validate('abc')
+    }).toThrow(new ValidateError('unexpected', skm, '1'))
+  })
+  describe('parse', () => {
+    test('transform - primitive.boolean', () => {
+      const skm = t.bigint()
+      const r0 = skm.parse(true)
+      expect(r0).toBe(1n)
+      expectTypeOf(r0).toEqualTypeOf<bigint>()
+      const r1 = skm.parse(false)
+      expect(r1).toBe(0n)
+      expectTypeOf(r1).toEqualTypeOf<bigint>()
+
+      // with const
+      const r2 = skm.parse.narrow(true)
+      expect(r2).toBe(1n)
+      expectTypeOf(r2).toEqualTypeOf<1n>()
+    })
+    test('transform - primitive.number', () => {
+      const skm = t.bigint()
+      const r0 = skm.parse(1)
+      expect(r0).toBe(1n)
+      expectTypeOf(r0).toEqualTypeOf<bigint>()
+
+      const r1 = skm.parse(Infinity)
+      expect(r1).toBe(2n ** 1024n)
+      expectTypeOf(r1).toEqualTypeOf<bigint>()
+      const r2 = skm.parse(-Infinity)
+      expect(r2).toBe(2n ** 1024n * -1n)
+      expectTypeOf(r2).toEqualTypeOf<bigint>()
+
+      const r3 = skm.parse(1.2)
+      expect(r3).toBe(1n)
+      const r4 = skm.parse(1.2e3)
+      expect(r4).toBe(1200n)
+      const r5 = skm.parse(1.2e-3)
+      expect(r5).toBe(0n)
+
+      // with const
+      const r6 = skm.parse.narrow(1)
+      expect(r6).toBe(1n)
+      expectTypeOf(r6).toEqualTypeOf<bigint>()
+
+      expect(() => {
+        skm.parse(Number.MAX_SAFE_INTEGER + 1)
+      }).toThrow(new ParseError(
+        'transform', skm, Number.MAX_SAFE_INTEGER + 1,
+        new Error('number must greater than or equal to -2^53 and less than or equal to 2^53'))
+      )
+
+      expect(() => {
+        skm.parse(NaN)
+      }).toThrow(new ParseError(
+        'transform', skm, NaN,
+        new Error('NaN cannot be converted to BigInt')
+      ))
+    })
+    test('transform - primitive.string', () => {
+      const skm = t.bigint()
+      const r0 = skm.parse('1')
+      expect(r0).toBe(1n)
+      expectTypeOf(r0).toEqualTypeOf<bigint>()
+      const r1 = skm.parse('0b10')
+      const r2 = skm.parse('0B10')
+      expect(r1).toBe(2n)
+    })
+    test('transform - primitive.symbol', () => {
+    })
+    test('transform - constructor.date', () => {
+    })
+  })
 })
 describe('boolean', () => {
 })
