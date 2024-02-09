@@ -7,7 +7,6 @@ import {
   ValidateError as _ValidateError
 } from './base.inner'
 import { typesValidator } from './types'
-import { bigintValidator } from './types/primitive.bigint'
 import { toPrimitive } from './utils'
 import { catchAndWrapProxy } from './utils.inner'
 
@@ -358,7 +357,6 @@ export default function validator(t: typeof tn) {
   t.use(validatorSkeleton)
 
   t.use(typesValidator)
-  t.use(bigintValidator)
   t.useValidator([String], {
     preprocess,
     validate: input => typeof input === 'string',
