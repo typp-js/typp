@@ -8,7 +8,7 @@ declare module '@typp/core' {
     export interface ValidateExtendsEntries<T> {
       number: [
         [T] extends [number] ? true : false,
-          number | Number,
+        number | Number,
       ]
     }
     export interface ValidateTransformEntries<T, Input> {
