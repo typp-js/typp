@@ -9,7 +9,8 @@ import {
   ValidateError as _ValidateError
 } from './base'
 import { typesValidator } from './types'
-import { parseBigInt, toPrimitive } from './utils'
+import { bigintValidator } from './types/primitive.bigint'
+import { toPrimitive } from './utils'
 import { catchAndWrapProxy } from './utils.inner'
 
 type Transform<Shape = unknown> = (
@@ -364,34 +365,7 @@ export default function validator(t: typeof tn) {
   })
 
   t.use(typesValidator)
-  t.useValidator([BigInt], {
-    preprocess,
-    validate: input => typeof input === 'bigint',
-    transform: input => {
-      if (FALSELY.includes(input)) return 0n
-
-      switch (typeof input) {
-        case 'number':
-          if (input === Infinity) {
-            return 2n ** 1024n
-          } else if (input === -Infinity) {
-            return 2n ** 1024n * -1n
-          } else if (Number.isNaN(input)) {
-            // TODO throw transform error of parse error
-            break
-          } else if (Number.isInteger(input)) {
-            return BigInt(input)
-          } else {
-            return BigInt(Math.floor(input))
-          }
-        case 'string':
-          return parseBigInt(input)
-        case 'boolean':
-          return input ? 1n : 0n
-      }
-      return input
-    }
-  })
+  t.use(bigintValidator)
   t.useValidator([String], {
     preprocess,
     validate: input => typeof input === 'string',
