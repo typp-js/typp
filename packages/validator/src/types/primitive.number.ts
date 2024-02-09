@@ -20,6 +20,10 @@ declare module '@typp/core' {
             [Input] extends [number] ? true : false,
             number
           ]
+          bigint: [
+            [Input] extends [bigint] ? true : false,
+            number
+          ]
           string: [
             [Input] extends [string] ? true : false,
             Input extends (
@@ -43,10 +47,6 @@ declare module '@typp/core' {
           undefined: [
             [Input] extends [undefined] ? true : false,
             0
-          ]
-          bigint: [
-            [Input] extends [bigint] ? true : false,
-            number
           ]
         }>
       ]
