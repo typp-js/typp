@@ -349,16 +349,7 @@ export default function validator(t: typeof tn) {
   })
   t.useFields({
     test(data: unknown): data is any {
-      try {
-        validate.call(this, data)
-        return true
-      } catch (e) {
-        // TODO TYPE_SYMBOL
-        if (e instanceof _ValidateError) {
-          return false
-        }
-        throw e
-      }
+      return validate.call(this, data, { try: true }).success
     }
   })
 
