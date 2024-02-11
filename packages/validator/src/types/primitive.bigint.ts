@@ -1,6 +1,6 @@
 import type { IsEqual, Switch, t as tn } from '@typp/core'
 
-import { FALSELY } from '../base'
+import { FALSY } from '../base'
 import { parseBigInt } from '../utils'
 import { preprocess } from '../utils.inner'
 
@@ -62,7 +62,7 @@ export function bigintValidator(t: typeof tn) {
     preprocess,
     validate: input => typeof input === 'bigint',
     transform(input) {
-      if (FALSELY.includes(input)) return 0n
+      if (FALSY.includes(input)) return 0n
 
       switch (typeof input) {
         case 'number':

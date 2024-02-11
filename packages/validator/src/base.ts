@@ -1,5 +1,5 @@
 // TODO extensible ?
-export const FALSELY = [
+export const FALSY = [
   '',
   null, 'null', 'Null', 'NULL',
   undefined, 'undefined', 'Undefined', 'UNDEFINED',
