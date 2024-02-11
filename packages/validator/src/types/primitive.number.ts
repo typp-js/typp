@@ -1,6 +1,6 @@
 import type { IsEqual, Switch, t as tn } from '@typp/core'
 
-import { FALSELY } from '../base'
+import { FALSY } from '../base'
 import { preprocess } from '../utils.inner'
 
 declare module '@typp/core' {
@@ -58,7 +58,7 @@ export function numberValidator(t: typeof tn) {
     preprocess,
     validate: input => typeof input === 'number',
     transform(input) {
-      if (FALSELY.includes(input)) return 0
+      if (FALSY.includes(input)) return 0
 
       switch (typeof input) {
         case 'string': {

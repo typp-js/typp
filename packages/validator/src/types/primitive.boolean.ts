@@ -1,6 +1,6 @@
 import type { IsEqual, Switch, t as tn } from '@typp/core'
 
-import { FALSELY } from '../base'
+import { FALSY } from '../base'
 import { preprocess } from '../utils.inner'
 
 declare module '@typp/core' {
@@ -46,6 +46,6 @@ export function booleanValidator(t: typeof tn) {
   t.useValidator([Boolean], {
     preprocess,
     validate: input => typeof input === 'boolean',
-    transform: input => FALSELY.includes(input) ? false : Boolean(input)
+    transform: input => FALSY.includes(input) ? false : Boolean(input)
   })
 }

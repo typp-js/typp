@@ -2,7 +2,7 @@ import { t } from '@typp/core'
 import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 
 import validator from '../src'
-import { FALSELY } from '../src/base'
+import { FALSY } from '../src/base'
 import { ValidateError } from '../src/base.inner'
 
 beforeAll(() => t.use(validator))

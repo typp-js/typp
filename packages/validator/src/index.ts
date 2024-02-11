@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { AtLeastOneProperty, IsEqual, IsNotEqual, Narrow, Switch, t as tn, Typp } from '@typp/core'
 
-import { FALSELY, MAX_TIME } from './base'
+import { FALSY, MAX_TIME } from './base'
 import {
   ParseError as _ParseError,
   ValidateError as _ValidateError
@@ -363,12 +363,12 @@ export default function validator(t: typeof tn) {
   t.useValidator([null], {
     preprocess,
     validate: input => input === null,
-    transform: input => FALSELY.includes(input) ? null : input
+    transform: input => FALSY.includes(input) ? null : input
   })
   t.useValidator([undefined], {
     preprocess,
     validate: input => input === undefined,
-    transform: input => FALSELY.includes(input) ? undefined : input
+    transform: input => FALSY.includes(input) ? undefined : input
   })
 
   t.useValidator([Date], {
