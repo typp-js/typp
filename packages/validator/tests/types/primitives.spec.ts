@@ -6,6 +6,7 @@ import { ParseError, ValidateError } from '../../src/base.inner'
 import { bigintValidator } from '../../src/types/primitive.bigint'
 import { booleanValidator } from '../../src/types/primitive.boolean'
 import { numberValidator } from '../../src/types/primitive.number'
+import { stringValidator } from '../../src/types/primitive.string'
 
 beforeAll(() => t.use(validatorSkeleton))
 
@@ -499,6 +500,62 @@ describe('number', () => {
   })
 })
 describe('string', () => {
+  beforeAll(() => t.use(stringValidator))
+  test('base', () => {
+    const r0 = t.string().validate('1')
+    expect(r0).toBe('1')
+    expectTypeOf(r0).toEqualTypeOf<string>()
+  })
+  test('unexpected', () => {
+    const skm = t.string()
+    expect(() => {
+      // @ts-expect-error
+      skm.validate(1)
+    }).toThrow(new ValidateError('unexpected', skm, 1))
+  })
+  test('transform - number, boolean, null, undefined, bigint', () => {
+    const skm = t.string()
+    const r0 = skm.parse(1)
+    expect(r0).toBe('1')
+    expectTypeOf(r0).toEqualTypeOf<string>()
+    const r1 = skm.parse(true)
+    expect(r1).toBe('true')
+    expectTypeOf(r1).toEqualTypeOf<string>()
+    const r2 = skm.parse(false)
+    expect(r2).toBe('false')
+    expectTypeOf(r2).toEqualTypeOf<string>()
+    const r3 = skm.parse(null)
+    expect(r3).toBe('null')
+    expectTypeOf(r3).toEqualTypeOf<string>()
+    const r4 = skm.parse(undefined)
+    expect(r4).toBe('undefined')
+    expectTypeOf(r4).toEqualTypeOf<string>()
+    const r5 = skm.parse(1n)
+    expect(r5).toBe('1')
+    expectTypeOf(r5).toEqualTypeOf<string>()
+  })
+  test('transform - any or unknown', () => {
+    expectTypeOf(
+      t.string().parse(1 as any)
+    ).toEqualTypeOf<string>()
+    expectTypeOf(
+      t.string().parse(1 as unknown)
+    ).toEqualTypeOf<string>()
+  })
+  test('try and transform - any or unknown', () => {
+    expectTypeOf(
+      t.string().tryParse(1 as any)
+    ).toEqualTypeOf<t.ValidateSuccessResult<string>>()
+    expectTypeOf(
+      t.string().tryParse(1 as unknown)
+    ).toEqualTypeOf<t.ValidateSuccessResult<string>>()
+  })
+  test('transform - toString', () => {
+    const skm = t.string()
+    const r0 = skm.parse({ toString: () => '1' })
+    expect(r0).toBe('1')
+    expectTypeOf(r0).toEqualTypeOf<string>()
+  })
 })
 describe('symbol', () => {
 })

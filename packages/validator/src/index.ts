@@ -55,17 +55,9 @@ declare module '@typp/core' {
     export const ParseError: typeof _ParseError
     export interface ValidateExtendsEntries<T> {
       [key: string]: [boolean, any]
-      string: [
-        [T] extends [string] ? true : false,
-        string | String
-      ]
     }
     export interface ValidateTransformEntries<T, Input> {
       [key: string]: [boolean, any]
-      string: [
-        [T] extends [string] ? true : false,
-        string
-      ]
     }
     // TODO https://zod.dev/?id=coercion-for-primitives
     // export const coerce: typeof tn
@@ -348,11 +340,6 @@ export default function validator(t: typeof tn) {
   t.use(validatorSkeleton)
 
   t.use(typesValidator)
-  t.useValidator([String], {
-    preprocess,
-    validate: input => typeof input === 'string',
-    transform: input => String(input)
-  })
   t.useValidator([Symbol], {
     preprocess,
     validate: input => typeof input === 'symbol',
