@@ -7,6 +7,7 @@ import {
   ValidateError as _ValidateError
 } from './base.inner'
 import { typesValidator } from './types'
+import { literalValidator } from './types/literal'
 import { toPrimitive } from './utils'
 import { catchAndWrapProxy } from './utils.inner'
 
@@ -345,18 +346,7 @@ export default function validator(t: typeof tn) {
     validate: input => typeof input === 'symbol',
     transform: input => Symbol(String(input))
   })
-
-  // TODO literal
-  t.useValidator([null], {
-    preprocess,
-    validate: input => input === null,
-    transform: input => FALSY.includes(input) ? null : input
-  })
-  t.useValidator([undefined], {
-    preprocess,
-    validate: input => input === undefined,
-    transform: input => FALSY.includes(input) ? undefined : input
-  })
+  t.use(literalValidator)
 
   t.useValidator([Date], {
     preprocess,
