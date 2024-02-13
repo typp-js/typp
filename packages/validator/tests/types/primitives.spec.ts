@@ -516,27 +516,48 @@ describe('string', () => {
     }).toThrow(new ValidateError('unexpected', skm, 1))
   })
   describe('parse', () => {
-    test('transform - number, boolean, null, undefined, bigint', () => {
+    test('transform - primitive.bigint', () => {
+      const skm = t.string()
+      const r0 = skm.parse(1n)
+      expect(r0).toBe('1')
+      expectTypeOf(r0).toEqualTypeOf<string>()
+    })
+    test('transform - primitive.boolean', () => {
+      const skm = t.string()
+      const r0 = skm.parse(true)
+      expect(r0).toBe('true')
+      expectTypeOf(r0).toEqualTypeOf<string>()
+      const r1 = skm.parse(false)
+      expect(r1).toBe('false')
+      expectTypeOf(r1).toEqualTypeOf<string>()
+    })
+    test('transform - primitive.number', () => {
       const skm = t.string()
       const r0 = skm.parse(1)
       expect(r0).toBe('1')
       expectTypeOf(r0).toEqualTypeOf<string>()
-      const r1 = skm.parse(true)
-      expect(r1).toBe('true')
+
+      const r1 = skm.parse(Infinity)
+      expect(r1).toBe('Infinity')
       expectTypeOf(r1).toEqualTypeOf<string>()
-      const r2 = skm.parse(false)
-      expect(r2).toBe('false')
+      const r2 = skm.parse(-Infinity)
+      expect(r2).toBe('-Infinity')
       expectTypeOf(r2).toEqualTypeOf<string>()
-      const r3 = skm.parse(null)
-      expect(r3).toBe('null')
+      const r3 = skm.parse(NaN)
+      expect(r3).toBe('NaN')
       expectTypeOf(r3).toEqualTypeOf<string>()
-      const r4 = skm.parse(undefined)
-      expect(r4).toBe('undefined')
-      expectTypeOf(r4).toEqualTypeOf<string>()
-      const r5 = skm.parse(1n)
-      expect(r5).toBe('1')
-      expectTypeOf(r5).toEqualTypeOf<string>()
     })
+    test('transform - primitive.symbol', () => {})
+    test('transform - literal', () => {
+      const skm = t.string()
+      const r0 = skm.parse(null)
+      expect(r0).toBe('null')
+      expectTypeOf(r0).toEqualTypeOf<string>()
+      const r1 = skm.parse(undefined)
+      expect(r1).toBe('undefined')
+      expectTypeOf(r1).toEqualTypeOf<string>()
+    })
+
     test('transform - any or unknown', () => {
       expectTypeOf(
         t.string().parse(1 as any)
@@ -545,7 +566,7 @@ describe('string', () => {
         t.string().parse(1 as unknown)
       ).toEqualTypeOf<string>()
     })
-    test('try and transform - any or unknown', () => {
+    test('transform - any or unknown & try', () => {
       expectTypeOf(
         t.string().tryParse(1 as any)
       ).toEqualTypeOf<t.ValidateSuccessResult<string>>()
