@@ -57,7 +57,6 @@ declare module '@typp/core' {
 }
 
 export function bigintValidator(t: typeof tn) {
-  const { ParseError } = t
   t.useValidator([BigInt], {
     preprocess,
     validate: input => typeof input === 'bigint',
