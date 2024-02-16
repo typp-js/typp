@@ -1,7 +1,7 @@
 import { t } from '@typp/core'
 import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 
-import { validatorSkeleton } from '../../src'
+import { FALSY, validatorSkeleton } from '../../src'
 import { literalValidator } from '../../src/types/literal'
 
 beforeAll(() => t.use(validatorSkeleton))
@@ -49,5 +49,17 @@ describe('null and undefined', () => {
     }).toThrow()
   })
   test('transform', () => {
+    const nullSkm = t.null()
+    const undefinedSkm = t.undefined()
+
+    for (const falsyConstant of FALSY) {
+      const r00 = nullSkm.parse(falsyConstant)
+      expect(r00).toBe(null)
+      expectTypeOf(r00).toEqualTypeOf(null)
+
+      const r10 = undefinedSkm.parse(falsyConstant)
+      expect(r10).toBe(undefined)
+      expectTypeOf(r10).toEqualTypeOf(undefined)
+    }
   })
 })
