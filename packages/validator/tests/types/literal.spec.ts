@@ -19,6 +19,35 @@ describe('null and undefined', () => {
     expect(r10).toBe(undefined)
     expectTypeOf(r10).toEqualTypeOf(undefined)
   })
+  test('unexpected', () => {
+    const nullSkm = t.null()
+    expect(() => {
+      // @ts-expect-error
+      nullSkm.validate(undefined)
+    }).toThrow()
+    expect(() => {
+      // @ts-expect-error
+      nullSkm.validate('null')
+    }).toThrow()
+    expect(() => {
+      // @ts-expect-error
+      nullSkm.validate(0)
+    }).toThrow()
+
+    const undefinedSkm = t.undefined()
+    expect(() => {
+      // @ts-expect-error
+      undefinedSkm.validate(null)
+    }).toThrow()
+    expect(() => {
+      // @ts-expect-error
+      undefinedSkm.validate('undefined')
+    }).toThrow()
+    expect(() => {
+      // @ts-expect-error
+      undefinedSkm.validate(0)
+    }).toThrow()
+  })
   test('transform', () => {
   })
 })
