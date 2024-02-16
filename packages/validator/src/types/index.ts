@@ -1,5 +1,6 @@
 import type { t as tn } from '@typp/core'
 
+import { literalValidator } from './literal'
 import { bigintValidator } from './primitive.bigint'
 import { booleanValidator } from './primitive.boolean'
 import { numberValidator } from './primitive.number'
@@ -10,4 +11,6 @@ export function typesValidator(t: typeof tn) {
   t.use(booleanValidator)
   t.use(numberValidator)
   t.use(stringValidator)
+
+  t.use(literalValidator)
 }
