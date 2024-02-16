@@ -15,9 +15,9 @@ describe('null and undefined', () => {
     expectTypeOf(r00).toEqualTypeOf(null)
 
     const undefinedSkm = t.undefined()
-    const r01 = undefinedSkm.validate(undefined)
-    expect(r01).toBe(undefined)
-    expectTypeOf(r01).toEqualTypeOf(undefined)
+    const r10 = undefinedSkm.validate(undefined)
+    expect(r10).toBe(undefined)
+    expectTypeOf(r10).toEqualTypeOf(undefined)
   })
   test('transform', () => {
   })
