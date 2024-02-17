@@ -341,11 +341,6 @@ export default function validator(t: typeof tn) {
   t.use(validatorSkeleton)
 
   t.use(typesValidator)
-  t.useValidator([Symbol], {
-    preprocess,
-    validate: input => typeof input === 'symbol',
-    transform: input => Symbol(String(input))
-  })
 
   t.useValidator([Date], {
     preprocess,
