@@ -18,11 +18,11 @@ declare module '@typp/core' {
     export interface ValidateTransformEntries<T, Input> {
       null: [
         [T] extends [null] ? true : false,
-        Input extends null ? null : unknown
+        [Input] extends [null] ? null : unknown
       ]
       undefined: [
         [T] extends [undefined] ? true : false,
-        Input extends undefined ? undefined : unknown
+        [Input] extends [undefined] ? undefined : unknown
       ]
     }
   }
