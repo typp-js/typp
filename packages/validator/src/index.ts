@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import type { AtLeastOneProperty, IsEqual, IsNotEqual, Narrow, Switch, t as tn, Typp } from '@typp/core'
 
-import { FALSY, MAX_TIME } from './base'
+import { MAX_TIME } from './base'
 import {
   ParseError as _ParseError,
   ValidateError as _ValidateError
 } from './base.inner'
 import { typesValidator } from './types'
-import { literalValidator } from './types/literal'
 import { toPrimitive } from './utils'
 import { catchAndWrapProxy } from './utils.inner'
 
