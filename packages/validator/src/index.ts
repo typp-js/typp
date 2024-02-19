@@ -103,7 +103,7 @@ declare module '@typp/core' {
     ] extends [
       true, infer Next extends ValidateOptions
     ] ? (
-      Switch<ValidateTransformEntries<T, InputRest>> extends infer TransformInput ? ValidateReturnType<
+      Switch<ValidateTransformEntries<T, Input>> extends infer TransformInput ? ValidateReturnType<
         T,
         ExtendsT,
         TransformInput,
@@ -172,15 +172,16 @@ declare module '@typp/core' {
       ExtendsT = Switch<ValidateExtendsEntries<T>>
     > {
       <
+        TT extends ExtendsT,
         Rest extends true extends(
           | (O['try'] extends true ? true : false)
           | (O['transform'] extends true ? true : false)
         ) ? unknown : never,
         Opts extends ValidateOptions
       >(
-        data: ExtendsT | Rest,
+        data: TT | Rest,
         options?: Opts
-      ): ValidateReturnType<T, ExtendsT, typeof data, Exclude<typeof data, ExtendsT>, Opts & O>
+      ): ValidateReturnType<T, ExtendsT, TT, Exclude<typeof data, ExtendsT>, Opts & O>
       narrow<
         TT extends ExtendsT,
         Rest extends true extends(
