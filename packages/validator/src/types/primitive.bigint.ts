@@ -12,42 +12,42 @@ declare module '@typp/core' {
         bigint | BigInt,
       ]
     }
-    export interface ValidateTransformEntries<T, Input> {
+    export interface ValidateTransformEntries<T, InputRest> {
       bigint: [
         [T] extends [bigint] ? true : false,
         Switch<{
-          any: [IsEqual<Input, any>, unknown]
+          any: [IsEqual<InputRest, any>, unknown]
           self: [
-            [Input] extends [bigint] ? true : false,
+            [InputRest] extends [bigint] ? true : false,
             bigint
           ]
           number: [
-            [Input] extends [number] ? true : false,
+            [InputRest] extends [number] ? true : false,
             // TODO `${Input}n` extends `${O extends bigint}` ? O : never
             bigint
           ]
           string: [
-            [Input] extends [string] ? true : false,
-            Input extends (
+            [InputRest] extends [string] ? true : false,
+            InputRest extends (
                 | `${number}${string}`
                 | `0${'b' | 'B'}${string}`
                 | `0${'o' | 'O'}${number}`
                 | `0${'x' | 'X'}${string}`
                 ) ? bigint
-              : true extends IsEqual<Input, string>
+              : true extends IsEqual<InputRest, string>
                 ? unknown
                 : never,
           ]
           boolean: [
-            [Input] extends [boolean] ? true : false,
-            Input extends true ? 1n : Input extends false ? 0n : never
+            [InputRest] extends [boolean] ? true : false,
+            InputRest extends true ? 1n : InputRest extends false ? 0n : never
           ]
           null: [
-            [Input] extends [null] ? true : false,
+            [InputRest] extends [null] ? true : false,
             0n
           ]
           undefined: [
-            [Input] extends [undefined] ? true : false,
+            [InputRest] extends [undefined] ? true : false,
             0n
           ]
         }>

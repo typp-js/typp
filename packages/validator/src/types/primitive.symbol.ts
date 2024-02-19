@@ -10,10 +10,10 @@ declare module '@typp/core' {
         symbol
       ]
     }
-    export interface ValidateTransformEntries<T, Input> {
+    export interface ValidateTransformEntries<T, InputRest> {
       symbol: [
         [T] extends [symbol] ? true : false,
-        Input extends symbol ? symbol : unknown
+        InputRest extends symbol ? symbol : unknown
       ]
     }
   }

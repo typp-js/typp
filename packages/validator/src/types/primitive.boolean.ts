@@ -11,29 +11,29 @@ declare module '@typp/core' {
         boolean | Boolean,
       ]
     }
-    export interface ValidateTransformEntries<T, Input> {
+    export interface ValidateTransformEntries<T, InputRest> {
       boolean: [
         [T] extends [boolean] ? true : false,
         Switch<{
-          any: [IsEqual<Input, any>, unknown]
+          any: [IsEqual<InputRest, any>, unknown]
           bigint: [
-            [Input] extends [bigint] ? true : false,
+            [InputRest] extends [bigint] ? true : false,
             boolean
           ]
           self: [
-            [Input] extends [boolean] ? true : false,
+            [InputRest] extends [boolean] ? true : false,
             boolean
           ]
           number: [
-            [Input] extends [number] ? true : false,
+            [InputRest] extends [number] ? true : false,
             boolean
           ]
           string: [
-            [Input] extends [string] ? true : false,
+            [InputRest] extends [string] ? true : false,
             boolean,
           ]
           nullOrUndefined: [
-            [Input] extends [null | undefined] ? true : false,
+            [InputRest] extends [null | undefined] ? true : false,
             false
           ]
         }>

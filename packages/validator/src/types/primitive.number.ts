@@ -11,41 +11,41 @@ declare module '@typp/core' {
         number | Number,
       ]
     }
-    export interface ValidateTransformEntries<T, Input> {
+    export interface ValidateTransformEntries<T, InputRest> {
       number: [
         [T] extends [number] ? true : false,
         Switch<{
-          any: [IsEqual<Input, any>, unknown]
+          any: [IsEqual<InputRest, any>, unknown]
           self: [
-            [Input] extends [number] ? true : false,
+            [InputRest] extends [number] ? true : false,
             number
           ]
           bigint: [
-            [Input] extends [bigint] ? true : false,
+            [InputRest] extends [bigint] ? true : false,
             number
           ]
           string: [
-            [Input] extends [string] ? true : false,
-            Input extends (
-                | `${number}${string}`
-                | `0${'b' | 'B'}${string}`
-                | `0${'o' | 'O'}${number}`
-                | `0${'x' | 'X'}${string}`
+            [InputRest] extends [string] ? true : false,
+            InputRest extends (
+              | `${number}${string}`
+              | `0${'b' | 'B'}${string}`
+              | `0${'o' | 'O'}${number}`
+              | `0${'x' | 'X'}${string}`
             ) ? number
-              : true extends IsEqual<Input, string>
+              : true extends IsEqual<InputRest, string>
                 ? unknown
                 : never,
           ]
           boolean: [
-            [Input] extends [boolean] ? true : false,
-            Input extends true ? 1 : Input extends false ? 0 : never
+            [InputRest] extends [boolean] ? true : false,
+            InputRest extends true ? 1 : InputRest extends false ? 0 : never
           ]
           null: [
-            [Input] extends [null] ? true : false,
+            [InputRest] extends [null] ? true : false,
             0
           ]
           undefined: [
-            [Input] extends [undefined] ? true : false,
+            [InputRest] extends [undefined] ? true : false,
             0
           ]
         }>

@@ -56,7 +56,7 @@ declare module '@typp/core' {
     export interface ValidateExtendsEntries<T> {
       [key: string]: [boolean, any]
     }
-    export interface ValidateTransformEntries<T, Input> {
+    export interface ValidateTransformEntries<T, InputRest> {
       [key: string]: [boolean, any]
     }
     // TODO https://zod.dev/?id=coercion-for-primitives
@@ -103,7 +103,7 @@ declare module '@typp/core' {
     ] extends [
       true, infer Next extends ValidateOptions
     ] ? (
-      Switch<ValidateTransformEntries<T, Input>> extends infer TransformInput ? ValidateReturnType<
+      Switch<ValidateTransformEntries<T, InputRest>> extends infer TransformInput ? ValidateReturnType<
         T,
         ExtendsT,
         TransformInput,
