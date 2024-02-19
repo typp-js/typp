@@ -68,7 +68,7 @@ describe('null and undefined', () => {
     const r02 = nullSkm.parse(0)
     expectTypeOf(r02).toEqualTypeOf<null>()
     const r03 = nullSkm.parse(undefined as never)
-    expectTypeOf(r03).toEqualTypeOf<never>()
+    expectTypeOf(r03).toEqualTypeOf<null>()
 
     const r10 = undefinedSkm.parse(undefined)
     expectTypeOf(r10).toEqualTypeOf<undefined>()
