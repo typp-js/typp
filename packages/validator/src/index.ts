@@ -103,7 +103,7 @@ declare module '@typp/core' {
     ] extends [
       true, infer Next extends ValidateOptions
     ] ? (
-      Switch<ValidateTransformEntries<T, InputRest>> extends infer TransformInput ? ValidateReturnType<
+      Switch<ValidateTransformEntries<T, Input>> extends infer TransformInput ? ValidateReturnType<
         T,
         ExtendsT,
         TransformInput,
