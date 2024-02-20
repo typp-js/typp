@@ -54,7 +54,7 @@ declare module '@typp/core' {
                 null
               ]
             }>
-          ]
+      ]
       undefined: [
         [T] extends [undefined] ? true : false,
         undefined
