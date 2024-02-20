@@ -2,6 +2,7 @@ import { t } from '@typp/core'
 import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 
 import { FALSY, validatorSkeleton } from '../../src'
+import { ValidateError } from '../../src/base.inner'
 import { literalValidator } from '../../src/types/literal'
 
 beforeAll(() => t.use(validatorSkeleton))
@@ -61,17 +62,23 @@ describe('null and undefined', () => {
       expect(r10).toBe(undefined)
       expectTypeOf(r10).toEqualTypeOf(undefined)
     }
-    const r00 = nullSkm.parse(null)
-    expectTypeOf(r00).toEqualTypeOf<null>()
-    const r01 = nullSkm.parse(undefined)
-    expectTypeOf(r01).toEqualTypeOf<null>()
-    const r02 = nullSkm.parse(0)
-    expectTypeOf(r02).toEqualTypeOf<null>()
+    expectTypeOf(nullSkm.parse(null))
+      .toEqualTypeOf<null>()
+    expectTypeOf(nullSkm.parse(undefined))
+      .toEqualTypeOf<null>()
+    expectTypeOf(nullSkm.parse(0))
+      .toEqualTypeOf<null>()
 
     expectTypeOf(nullSkm.parse(undefined as never))
       .toEqualTypeOf<never>()
-    expectTypeOf(nullSkm.parse(1 as never))
-      .toEqualTypeOf<never>()
+    try {
+      expectTypeOf(nullSkm.parse(1 as never))
+        .toEqualTypeOf<never>()
+    } catch (e) {
+      expect(e).toBeInstanceOf(ValidateError)
+      expect(e).property('actual').equal(1)
+      expect(e).property('expected').equal(nullSkm)
+    }
 
     const r10 = undefinedSkm.parse(undefined)
     expectTypeOf(r10).toEqualTypeOf<undefined>()
