@@ -11,7 +11,7 @@ declare module '@typp/core' {
         string | String
       ]
     }
-    export interface ValidateTransformEntries<T, InputRest> {
+    export interface ValidateTransformEntries<T, Input> {
       string: [
         [T] extends [string] ? true : false,
         string

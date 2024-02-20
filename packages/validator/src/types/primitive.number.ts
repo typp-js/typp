@@ -11,41 +11,41 @@ declare module '@typp/core' {
         number | Number,
       ]
     }
-    export interface ValidateTransformEntries<T, InputRest> {
+    export interface ValidateTransformEntries<T, Input> {
       number: [
         [T] extends [number] ? true : false,
         Switch<{
-          any: [IsEqual<InputRest, any>, unknown]
+          any: [IsEqual<Input, any>, unknown]
           self: [
-            [InputRest] extends [number] ? true : false,
+            [Input] extends [number] ? true : false,
             number
           ]
           bigint: [
-            [InputRest] extends [bigint] ? true : false,
+            [Input] extends [bigint] ? true : false,
             number
           ]
           string: [
-            [InputRest] extends [string] ? true : false,
-            InputRest extends (
+            [Input] extends [string] ? true : false,
+            Input extends (
               | `${number}${string}`
               | `0${'b' | 'B'}${string}`
               | `0${'o' | 'O'}${number}`
               | `0${'x' | 'X'}${string}`
             ) ? number
-              : true extends IsEqual<InputRest, string>
+              : true extends IsEqual<Input, string>
                 ? unknown
                 : never,
           ]
           boolean: [
-            [InputRest] extends [boolean] ? true : false,
-            InputRest extends true ? 1 : InputRest extends false ? 0 : never
+            [Input] extends [boolean] ? true : false,
+            Input extends true ? 1 : Input extends false ? 0 : never
           ]
           null: [
-            [InputRest] extends [null] ? true : false,
+            [Input] extends [null] ? true : false,
             0
           ]
           undefined: [
-            [InputRest] extends [undefined] ? true : false,
+            [Input] extends [undefined] ? true : false,
             0
           ]
         }>

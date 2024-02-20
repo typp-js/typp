@@ -56,7 +56,7 @@ declare module '@typp/core' {
     export interface ValidateExtendsEntries<T> {
       [key: string]: [boolean, any]
     }
-    export interface ValidateTransformEntries<T, InputRest> {
+    export interface ValidateTransformEntries<T, Input> {
       [key: string]: [boolean, any]
     }
     // TODO https://zod.dev/?id=coercion-for-primitives
