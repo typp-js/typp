@@ -181,7 +181,7 @@ declare module '@typp/core' {
       >(
         data: TT | Rest,
         options?: Opts
-      ): ValidateReturnType<T, ExtendsT, TT, Exclude<typeof data, ExtendsT>, Opts & O>
+      ): ValidateReturnType<T, ExtendsT, TT | Rest, Exclude<typeof data, ExtendsT>, Opts & O>
       narrow<
         TT extends ExtendsT,
         Rest extends true extends(

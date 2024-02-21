@@ -22,6 +22,13 @@ describe('validate', () => {
     type Opts = { try: true }
     expectTypeOf<t.ValidateReturnType<number, number, 1, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<number>>()
     expectTypeOf<t.ValidateReturnType<number, number, number, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<number>>()
+    expectTypeOf<t.ValidateReturnType<
+      number,
+      number | Number,
+      number | Number | string,
+      string,
+      Opts
+    >>().toEqualTypeOf<t.ValidateErrorResult>()
     expectTypeOf<t.ValidateReturnType<string, string, string, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<string>>()
     expectTypeOf<t.ValidateReturnType<string, string, 1, 1, Opts>>().toEqualTypeOf<t.ValidateErrorResult>()
 
