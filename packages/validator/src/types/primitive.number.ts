@@ -1,9 +1,7 @@
-import type { IsEqual, Switch, t as tn } from '@typp/core'
+import type { IsEqual, IsIntersect, Switch, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import { preprocess } from '../utils.inner'
-
-type IsIntersect<T, U> = T extends infer TI ? TI extends U ? true : never : never
 
 declare module '@typp/core' {
   namespace t {

@@ -39,6 +39,8 @@ export type IsNotEqual<A, B> =
   (<T>() => T extends A ? 1 : 2) extends
   (<T>() => T extends B ? 1 : 2) ? false : true
 
+export type IsIntersect<T, U> = T extends infer TI ? TI extends U ? true : never : never
+
 export type Includes<
   T extends readonly any[],
   U extends readonly any[]
