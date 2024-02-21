@@ -16,7 +16,11 @@ export type ValueOf<T extends {}> = { [K in keyof T]: T[K] } extends infer X ? X
 
 export type Switch<Entries extends { [k: string]: [boolean, any] }> = ValueOf<{
   [ K in keyof Entries
-    as [Entries[K][0]] extends [true] ? K : never
+    as (
+      [Entries[K][0]] extends [never]
+        ? never
+        : [Entries[K][0]] extends [true] ? K : never
+    )
   ]: Entries[K][1]
 }>
 
