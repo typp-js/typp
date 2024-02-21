@@ -30,7 +30,10 @@ declare module '@typp/core' {
             ) : never
           ]
           bigint: [
-            IsIntersect<InputRest, bigint>,
+            true extends (
+              | IsIntersect<InputRest, bigint>
+              | IsIntersect<InputRest, BigInt>
+            ) ? true : false,
             number,
             // TODO infer narrow number
             // `${InputRest & bigint}` extends `${infer T extends number}` ? T : never,

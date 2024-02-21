@@ -1,4 +1,4 @@
-import type { IsEqual, Switch, t as tn } from '@typp/core'
+import type { IsEqual, IsIntersect, Switch, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import { parseBigInt } from '../utils'
@@ -17,39 +17,48 @@ declare module '@typp/core' {
         [T] extends [bigint] ? true : false,
         Switch<{
           any: [IsEqual<Input, any>, unknown]
-          self: [
-            [Input] extends [bigint] ? true : false,
-            bigint
-          ]
           number: [
-            [Input] extends [number] ? true : false,
+            true extends (
+              | IsIntersect<InputRest, number>
+              | IsIntersect<InputRest, Number>
+            ) ? true : false,
             // TODO `${Input}n` extends `${O extends bigint}` ? O : never
             bigint
           ]
+          bigint: [
+            true extends (
+              | IsIntersect<Input, bigint>
+              | IsIntersect<Input, BigInt>
+            ) ? true : false,
+            [InputRest] extends [never] ? (
+              Input extends infer UnionInputItem ? (
+                IsEqual<UnionInputItem, BigInt> extends true
+                  ? bigint
+                  : Extract<UnionInputItem, bigint>
+              ) : never
+            ) : never
+          ]
           string: [
-            [Input] extends [string] ? true : false,
-            Input extends (
-                | `${number}${string}`
-                | `0${'b' | 'B'}${string}`
-                | `0${'o' | 'O'}${number}`
-                | `0${'x' | 'X'}${string}`
-                ) ? bigint
-              : true extends IsEqual<Input, string>
+            IsIntersect<InputRest, string>,
+            InputRest extends (
+              | `${number}${string}`
+              | `0${'b' | 'B'}${string}`
+              | `0${'o' | 'O'}${number}`
+              | `0${'x' | 'X'}${string}`
+            ) ? bigint
+              : true extends IsEqual<InputRest, string>
                 ? unknown
                 : never,
           ]
           boolean: [
-            [Input] extends [boolean] ? true : false,
-            Input extends true ? 1n : Input extends false ? 0n : never
+            true extends (
+              | IsIntersect<InputRest, true>
+              | IsIntersect<InputRest, false>
+            ) ? true : false,
+            InputRest extends true ? 1n : InputRest extends false ? 0n : never
           ]
-          null: [
-            [Input] extends [null] ? true : false,
-            0n
-          ]
-          undefined: [
-            [Input] extends [undefined] ? true : false,
-            0n
-          ]
+          null: [IsIntersect<InputRest, null>, 0n]
+          undefined: [IsIntersect<InputRest, undefined>, 0n]
         }>
       ]
     }
