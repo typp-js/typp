@@ -56,7 +56,7 @@ declare module '@typp/core' {
     export interface ValidateExtendsEntries<T> {
       [key: string]: [boolean, any]
     }
-    export interface ValidateTransformEntries<T, Input> {
+    export interface ValidateTransformEntries<T, Input, InputRest> {
       [key: string]: [boolean, any]
     }
     // TODO https://zod.dev/?id=coercion-for-primitives
@@ -103,7 +103,7 @@ declare module '@typp/core' {
     ] extends [
       true, infer Next extends ValidateOptions
     ] ? (
-      Switch<ValidateTransformEntries<T, Input>> extends infer TransformInput ? ValidateReturnType<
+      Switch<ValidateTransformEntries<T, Input, InputRest>> extends infer TransformInput ? ValidateReturnType<
         T,
         ExtendsT,
         TransformInput,
@@ -192,7 +192,7 @@ declare module '@typp/core' {
       >(
         data: Narrow<TT | Rest>,
         options?: Opts
-      ): ValidateReturnType<T, ExtendsT, typeof data, Exclude<typeof data, ExtendsT>, Opts & O & { const: true }>
+      ): ValidateReturnType<T, ExtendsT, TT | Rest, Exclude<typeof data, ExtendsT>, Opts & O & { const: true }>
     }
     interface SchemaFieldsAll<Shape, T> {
       validate: ValidateItf<Shape, T>

@@ -12,7 +12,7 @@ declare module '@typp/core' {
         bigint | BigInt,
       ]
     }
-    export interface ValidateTransformEntries<T, Input> {
+    export interface ValidateTransformEntries<T, Input, InputRest> {
       bigint: [
         [T] extends [bigint] ? true : false,
         Switch<{

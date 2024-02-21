@@ -59,6 +59,7 @@ describe('validate', () => {
   test('transform', () => {
     type Opts = { transform: true }
     expectTypeOf<t.ValidateReturnType<number, number, 1, never, Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.ValidateReturnType<number, number, Number, never, Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.ValidateReturnType<number, number, '1', '1', Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.ValidateReturnType<number, number, '1.2', '1.2', Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.ValidateReturnType<number, number, '1px', '1px', Opts>>().toEqualTypeOf<number>()
@@ -94,9 +95,10 @@ describe('validate', () => {
   })
   test('transform and const', () => {
     type Opts = { transform: true, const: true }
-    expectTypeOf<t.ValidateReturnType<number, number, 1, never, Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.ValidateReturnType<number, number, 1, never, Opts>>().toEqualTypeOf<1>()
     expectTypeOf<t.ValidateReturnType<number, number, '1', '1', Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.ValidateReturnType<number, number, true, true, Opts>>().toEqualTypeOf<1>()
+    expectTypeOf<t.ValidateReturnType<number, number, number | Number | true, true, Opts>>().toEqualTypeOf<1>()
     expectTypeOf<t.ValidateReturnType<number, number, false, false, Opts>>().toEqualTypeOf<0>()
     expectTypeOf<t.ValidateReturnType<number, number, boolean, boolean, Opts>>().toEqualTypeOf<1 | 0>()
     expectTypeOf<t.ValidateReturnType<number, number, null, null, Opts>>().toEqualTypeOf<0>()

@@ -11,7 +11,7 @@ declare module '@typp/core' {
         boolean | Boolean,
       ]
     }
-    export interface ValidateTransformEntries<T, Input> {
+    export interface ValidateTransformEntries<T, Input, InputRest> {
       boolean: [
         [T] extends [boolean] ? true : false,
         Switch<{

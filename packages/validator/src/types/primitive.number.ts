@@ -3,6 +3,8 @@ import type { IsEqual, Switch, t as tn } from '@typp/core'
 import { FALSY } from '../base'
 import { preprocess } from '../utils.inner'
 
+type IsIntersect<T, U> = T extends infer TI ? TI extends U ? true : never : never
+
 declare module '@typp/core' {
   namespace t {
     export interface ValidateExtendsEntries<T> {
@@ -11,43 +13,53 @@ declare module '@typp/core' {
         number | Number,
       ]
     }
-    export interface ValidateTransformEntries<T, Input> {
+    export interface ValidateTransformEntries<T, Input, InputRest> {
       number: [
         [T] extends [number] ? true : false,
         Switch<{
           any: [IsEqual<Input, any>, unknown]
-          self: [
-            [Input] extends [number] ? true : false,
-            number
+          number: [
+            true extends (
+              | IsIntersect<Input, number>
+              | IsIntersect<Input, Number>
+            ) ? true : false,
+            [InputRest] extends [never] ? (
+              Input extends infer UnionInputItem ? (
+                IsEqual<UnionInputItem, Number> extends true
+                  ? number
+                  : Extract<UnionInputItem, number>
+              ) : never
+            ) : never
           ]
           bigint: [
-            [Input] extends [bigint] ? true : false,
-            number
+            IsIntersect<InputRest, bigint>,
+            number,
+            // TODO infer narrow number
+            // `${InputRest & bigint}` extends `${infer T extends number}` ? T : never,
           ]
           string: [
-            [Input] extends [string] ? true : false,
-            Input extends (
+            IsIntersect<InputRest, string>,
+            InputRest extends (
+              // TODO infer narrow number
+              // | `${infer T extends number}${string}`
               | `${number}${string}`
               | `0${'b' | 'B'}${string}`
               | `0${'o' | 'O'}${number}`
               | `0${'x' | 'X'}${string}`
             ) ? number
-              : true extends IsEqual<Input, string>
+              : true extends IsEqual<InputRest, string>
                 ? unknown
                 : never,
           ]
           boolean: [
-            [Input] extends [boolean] ? true : false,
-            Input extends true ? 1 : Input extends false ? 0 : never
+            true extends (
+              | IsIntersect<InputRest, true>
+              | IsIntersect<InputRest, false>
+            ) ? true : false,
+            InputRest extends true ? 1 : InputRest extends false ? 0 : never
           ]
-          null: [
-            [Input] extends [null] ? true : false,
-            0
-          ]
-          undefined: [
-            [Input] extends [undefined] ? true : false,
-            0
-          ]
+          null: [IsIntersect<InputRest, null>, 0]
+          undefined: [IsIntersect<InputRest, undefined>, 0]
         }>
       ]
     }
