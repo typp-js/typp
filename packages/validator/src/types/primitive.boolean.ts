@@ -1,4 +1,4 @@
-import type { IsEqual, Switch, t as tn } from '@typp/core'
+import type { IsEqual, IsIntersect, Switch, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import { preprocess } from '../utils.inner'
@@ -16,24 +16,46 @@ declare module '@typp/core' {
         [T] extends [boolean] ? true : false,
         Switch<{
           any: [IsEqual<Input, any>, unknown]
-          bigint: [
-            [Input] extends [bigint] ? true : false,
-            boolean
+          boolean: [
+            true extends (
+              | IsIntersect<Input, true>
+              | IsIntersect<Input, false>
+              | IsIntersect<Input, Boolean>
+            ) ? true : false,
+            [InputRest] extends [never] ? (
+              Input extends infer UnionInputItem ? (
+                IsEqual<UnionInputItem, Boolean> extends true
+                  ? boolean
+                  : Extract<UnionInputItem, boolean>
+              ) : never
+            ) : never
           ]
-          self: [
-            [Input] extends [boolean] ? true : false,
+          bigint: [
+            true extends (
+              | IsIntersect<InputRest, bigint>
+              | IsIntersect<InputRest, BigInt>
+            ) ? true : false,
             boolean
           ]
           number: [
-            [Input] extends [number] ? true : false,
+            true extends (
+              | IsIntersect<InputRest, number>
+              | IsIntersect<InputRest, Number>
+            ) ? true : false,
             boolean
           ]
           string: [
-            [Input] extends [string] ? true : false,
-            boolean,
+            true extends (
+              | IsIntersect<InputRest, string>
+              | IsIntersect<InputRest, String>
+            ) ? true : false,
+            boolean
           ]
           nullOrUndefined: [
-            [Input] extends [null | undefined] ? true : false,
+            true extends (
+              | IsIntersect<InputRest, null>
+              | IsIntersect<InputRest, undefined>
+            ) ? true : false,
             false
           ]
         }>
