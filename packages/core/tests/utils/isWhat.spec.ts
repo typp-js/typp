@@ -58,3 +58,16 @@ test('typeof primitive and union type when call `array.filter`', () => {
   expect(r1).toEqual(['a', 'b'])
   expectTypeOf(r1).toEqualTypeOf<string[]>()
 })
+test('slice branch by `throw error`', () => {
+  const t0 = 'a' as string | number
+  const isTrueCall = vi.fn()
+  if (isWhat(x => {
+    if (typeof x !== 'string') throw void 0
+    return x
+  })(t0)) {
+    isTrueCall()
+    expectTypeOf(t0).toEqualTypeOf<string>()
+  } else {
+    expectTypeOf(t0).toEqualTypeOf<number>()
+  }
+})
