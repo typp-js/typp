@@ -26,7 +26,7 @@ export function isWhat<Input = unknown, T = never>(
     try {
       return match(x, notMatched) !== notMatched
     } catch (e) {
-      if (e === notMatched || e === void 0 || e === null || e === TypeError) {
+      if ([notMatched, void 0, null, TypeError].includes(e as any)) {
         return false
       }
       throw e
