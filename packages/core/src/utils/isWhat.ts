@@ -18,9 +18,7 @@ const notMatched: unique symbol = Symbol('notMatched')
 export function isWhat<Input = unknown, T = never>(
   match: (input: Input, _: typeof notMatched) => T | typeof notMatched
 ): (
-  <O extends (
-    [T] extends [Input] ? Input & T : never
-  )>(x: Input) => x is O
+  (x: Input) => x is [T] extends [Input] ? Input & T : never
 ) {
   return ((x: any): boolean => {
     try {
