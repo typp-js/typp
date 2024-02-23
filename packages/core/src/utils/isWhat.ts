@@ -1,5 +1,4 @@
-export const notMatched: unique symbol = Symbol('notMatched')
-
+const notMatched: unique symbol = Symbol('notMatched')
 /**
  * By using the built-in type guarding strategy, you can indirectly generate an `is` function without explicitly declaring
  * the return type of the `is` function. This allows you to focus less on type declarations.
@@ -10,12 +9,27 @@ export const notMatched: unique symbol = Symbol('notMatched')
  *   .filter((x): x is string => typeof x === 'string')
  * // Code like the one above can be handled using `isWhat` without explicitly declaring the return type
  * const onlyStrings = ['a', 'b', 1, 2]
- *   .filter(isWhat(x => typeof x === 'number' ? x : notMatched))
+ *   .filter(isWhat((x, _) => typeof x === 'number' ? x : _))
  * // The general pattern can be written as
  * const onlyWhatType = ['a', 'b', 1, 2]
- *   .filter(isWhat(x => (${write type guard conditional expression}) ? x : notMatched))
+ *   .filter(isWhat((x, _) => (${write type guard conditional expression}) ? x : _))
  * ```
  */
-export function isWhat<T>(match: (x: unknown) => T | typeof notMatched): (x: unknown) => x is T {
-  return (x): x is T => match(x) !== notMatched
+export function isWhat<Input = unknown, T = never>(
+  match: (input: Input, _: typeof notMatched) => T | typeof notMatched
+): (
+  <O extends (
+    [T] extends [Input] ? Input & T : never
+  )>(x: Input) => x is O
+) {
+  return ((x: any): boolean => {
+    try {
+      return match(x, notMatched) !== notMatched
+    } catch (e) {
+      if (e === notMatched || e === void 0 || e === null || e === TypeError) {
+        return false
+      }
+      throw e
+    }
+  }) as any
 }
