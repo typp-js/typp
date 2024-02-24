@@ -1,4 +1,4 @@
-import type { IsEqual, IsIntersect, Switch, t as tn } from '@typp/core'
+import type { IsEqual, IsIntersect, IsTrue, Switch, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import { preprocess } from '../utils.inner'
@@ -17,10 +17,10 @@ declare module '@typp/core' {
         Switch<{
           any: [IsEqual<Input, any>, unknown]
           number: [
-            true extends (
+            IsTrue<
               | IsIntersect<Input, number>
               | IsIntersect<Input, Number>
-            ) ? true : false,
+            >,
             [InputRest] extends [never] ? (
               Input extends infer UnionInputItem ? (
                 IsEqual<UnionInputItem, Number> extends true
