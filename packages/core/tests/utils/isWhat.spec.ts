@@ -58,6 +58,30 @@ test('typeof primitive and union type when call `array.filter`', () => {
   expect(r1).toEqual(['a', 'b'])
   expectTypeOf(r1).toEqualTypeOf<string[]>()
 })
+test('limit input type to `string | number`', () => {
+  const t0 = 'a' as string | number
+  const t1 = 1 as string | number
+  const isTrueCall = vi.fn()
+  const isFalseCall = vi.fn()
+  const isString = isWhat((x: string | number, _) => typeof x === 'string' ? x : _)
+  if (isString(t0)) {
+    isTrueCall()
+    expectTypeOf(t0).toEqualTypeOf<string>()
+  } else {
+    expectTypeOf(t0).toEqualTypeOf<number>()
+  }
+  expect(isTrueCall).toHaveBeenCalled()
+  if (isString(t1)) {
+    expectTypeOf(t1).toEqualTypeOf<string>()
+  } else {
+    isFalseCall()
+    expectTypeOf(t1).toEqualTypeOf<number>()
+  }
+  expect(isFalseCall).toHaveBeenCalled()
+
+  // @ts-expect-error
+  isString(null)
+})
 test('slice branch by `throw error`', () => {
   const t0 = 'a' as string | number
   const isTrueCall = vi.fn()

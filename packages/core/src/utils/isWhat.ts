@@ -15,7 +15,7 @@ const notMatched: unique symbol = Symbol('notMatched')
  *   .filter(isWhat((x, _) => (${write type guard conditional expression}) ? x : _))
  * ```
  */
-export function isWhat<Input = unknown, T = never>(
+export function isWhat<Input = unknown, T = unknown>(
   match: (input: Input, _: typeof notMatched) => T | typeof notMatched
 ): (
   (x: Input) => x is [T] extends [Input] ? Input & T : never
