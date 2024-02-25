@@ -1,4 +1,5 @@
 const notMatched: unique symbol = Symbol('notMatched')
+export type notMatched = typeof notMatched
 /**
  * By using the built-in type guarding strategy, you can indirectly generate an `is` function without explicitly declaring
  * the return type of the `is` function. This allows you to focus less on type declarations.
@@ -16,9 +17,9 @@ const notMatched: unique symbol = Symbol('notMatched')
  * ```
  */
 export function isWhat<Input = unknown, T = unknown>(
-  match: (input: Input, _: typeof notMatched) => T | typeof notMatched
+  match: (input: Input, _: notMatched) => T | notMatched
 ): (
-  (x: Input) => x is [T] extends [Input] ? Input & T : never
+  (input: Input) => input is [T] extends [Input] ? Input & T : never
 ) {
   return ((x: any): boolean => {
     try {

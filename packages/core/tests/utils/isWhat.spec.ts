@@ -1,6 +1,6 @@
 import { expect, expectTypeOf, test, vi } from 'vitest'
 
-import { isWhat } from '../../src/utils/isWhat'
+import { isWhat, type notMatched } from '../../src/utils/isWhat'
 
 test('type guard with `isWhat`', () => {
   const t0 = 'a' as string | number
@@ -64,6 +64,30 @@ test('limit input type to `string | number`', () => {
   const isTrueCall = vi.fn()
   const isFalseCall = vi.fn()
   const isString = isWhat((x: string | number, _) => typeof x === 'string' ? x : _)
+  if (isString(t0)) {
+    isTrueCall()
+    expectTypeOf(t0).toEqualTypeOf<string>()
+  } else {
+    expectTypeOf(t0).toEqualTypeOf<number>()
+  }
+  expect(isTrueCall).toHaveBeenCalled()
+  if (isString(t1)) {
+    expectTypeOf(t1).toEqualTypeOf<string>()
+  } else {
+    isFalseCall()
+    expectTypeOf(t1).toEqualTypeOf<number>()
+  }
+  expect(isFalseCall).toHaveBeenCalled()
+
+  // @ts-expect-error
+  isString(null)
+})
+test('limit input type to `string | number` with generic', () => {
+  const t0 = 'a' as string | number
+  const t1 = 1 as string | number
+  const isTrueCall = vi.fn()
+  const isFalseCall = vi.fn()
+  const isString = isWhat(<T extends string | number>(x: T, _: notMatched) => typeof x === 'string' ? x : _)
   if (isString(t0)) {
     isTrueCall()
     expectTypeOf(t0).toEqualTypeOf<string>()
