@@ -47,7 +47,7 @@ declare module '@typp/core' {
                 : never,
           ]
           boolean: [
-            IsAnySubType<InputRest, true | false>,
+            IsAnySubType<InputRest, boolean | Boolean>,
             InputRest extends true ? 1 : InputRest extends false ? 0 : never
           ]
           null: [IsSubType<InputRest, null>, 0]
