@@ -27,16 +27,13 @@ declare module '@typp/core' {
             ) : never
           ]
           bigint: [
-            true extends (
-              | IsSubType<InputRest, bigint>
-              | IsSubType<InputRest, BigInt>
-            ) ? true : false,
+            IsAnySubType<InputRest, bigint | BigInt>,
             number,
             // TODO infer narrow number
             // `${InputRest & bigint}` extends `${infer T extends number}` ? T : never,
           ]
           string: [
-            IsSubType<InputRest, string>,
+            IsAnySubType<InputRest, string | String>,
             InputRest extends (
               // TODO infer narrow number
               // | `${infer T extends number}${string}`
@@ -50,10 +47,7 @@ declare module '@typp/core' {
                 : never,
           ]
           boolean: [
-            true extends (
-              | IsSubType<InputRest, true>
-              | IsSubType<InputRest, false>
-            ) ? true : false,
+            IsAnySubType<InputRest, true | false>,
             InputRest extends true ? 1 : InputRest extends false ? 0 : never
           ]
           null: [IsSubType<InputRest, null>, 0]
