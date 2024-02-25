@@ -1,4 +1,4 @@
-import type { IsEqual, IsIntersect, Switch, t as tn } from '@typp/core'
+import type { IsEqual, IsSubType, Switch, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import { parseBigInt } from '../utils'
@@ -19,16 +19,16 @@ declare module '@typp/core' {
           any: [IsEqual<Input, any>, unknown]
           number: [
             true extends (
-              | IsIntersect<InputRest, number>
-              | IsIntersect<InputRest, Number>
+              | IsSubType<InputRest, number>
+              | IsSubType<InputRest, Number>
             ) ? true : false,
             // TODO `${Input}n` extends `${O extends bigint}` ? O : never
             bigint
           ]
           bigint: [
             true extends (
-              | IsIntersect<Input, bigint>
-              | IsIntersect<Input, BigInt>
+              | IsSubType<Input, bigint>
+              | IsSubType<Input, BigInt>
             ) ? true : false,
             [InputRest] extends [never] ? (
               Input extends infer UnionInputItem ? (
@@ -39,7 +39,7 @@ declare module '@typp/core' {
             ) : never
           ]
           string: [
-            IsIntersect<InputRest, string>,
+            IsSubType<InputRest, string>,
             InputRest extends (
               | `${number}${string}`
               | `0${'b' | 'B'}${string}`
@@ -52,13 +52,13 @@ declare module '@typp/core' {
           ]
           boolean: [
             true extends (
-              | IsIntersect<InputRest, true>
-              | IsIntersect<InputRest, false>
+              | IsSubType<InputRest, true>
+              | IsSubType<InputRest, false>
             ) ? true : false,
             InputRest extends true ? 1n : InputRest extends false ? 0n : never
           ]
-          null: [IsIntersect<InputRest, null>, 0n]
-          undefined: [IsIntersect<InputRest, undefined>, 0n]
+          null: [IsSubType<InputRest, null>, 0n]
+          undefined: [IsSubType<InputRest, undefined>, 0n]
         }>
       ]
     }

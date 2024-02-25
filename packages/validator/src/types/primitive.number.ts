@@ -1,4 +1,4 @@
-import type { IsEqual, IsIntersect, IsTrue, Switch, t as tn } from '@typp/core'
+import type { IsAnySubType, IsEqual, IsSubType, Switch, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import { preprocess } from '../utils.inner'
@@ -17,10 +17,7 @@ declare module '@typp/core' {
         Switch<{
           any: [IsEqual<Input, any>, unknown]
           number: [
-            IsTrue<
-              | IsIntersect<Input, number>
-              | IsIntersect<Input, Number>
-            >,
+            IsAnySubType<Input, number | Number>,
             [InputRest] extends [never] ? (
               Input extends infer UnionInputItem ? (
                 IsEqual<UnionInputItem, Number> extends true
@@ -31,15 +28,15 @@ declare module '@typp/core' {
           ]
           bigint: [
             true extends (
-              | IsIntersect<InputRest, bigint>
-              | IsIntersect<InputRest, BigInt>
+              | IsSubType<InputRest, bigint>
+              | IsSubType<InputRest, BigInt>
             ) ? true : false,
             number,
             // TODO infer narrow number
             // `${InputRest & bigint}` extends `${infer T extends number}` ? T : never,
           ]
           string: [
-            IsIntersect<InputRest, string>,
+            IsSubType<InputRest, string>,
             InputRest extends (
               // TODO infer narrow number
               // | `${infer T extends number}${string}`
@@ -54,13 +51,13 @@ declare module '@typp/core' {
           ]
           boolean: [
             true extends (
-              | IsIntersect<InputRest, true>
-              | IsIntersect<InputRest, false>
+              | IsSubType<InputRest, true>
+              | IsSubType<InputRest, false>
             ) ? true : false,
             InputRest extends true ? 1 : InputRest extends false ? 0 : never
           ]
-          null: [IsIntersect<InputRest, null>, 0]
-          undefined: [IsIntersect<InputRest, undefined>, 0]
+          null: [IsSubType<InputRest, null>, 0]
+          undefined: [IsSubType<InputRest, undefined>, 0]
         }>
       ]
     }

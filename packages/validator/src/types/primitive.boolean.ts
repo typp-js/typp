@@ -1,4 +1,4 @@
-import type { IsEqual, IsIntersect, Switch, t as tn } from '@typp/core'
+import type { IsEqual, IsSubType, Switch, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import { preprocess } from '../utils.inner'
@@ -18,9 +18,9 @@ declare module '@typp/core' {
           any: [IsEqual<Input, any>, unknown]
           boolean: [
             true extends (
-              | IsIntersect<Input, true>
-              | IsIntersect<Input, false>
-              | IsIntersect<Input, Boolean>
+              | IsSubType<Input, true>
+              | IsSubType<Input, false>
+              | IsSubType<Input, Boolean>
             ) ? true : false,
             [InputRest] extends [never] ? (
               Input extends infer UnionInputItem ? (
@@ -32,29 +32,29 @@ declare module '@typp/core' {
           ]
           bigint: [
             true extends (
-              | IsIntersect<InputRest, bigint>
-              | IsIntersect<InputRest, BigInt>
+              | IsSubType<InputRest, bigint>
+              | IsSubType<InputRest, BigInt>
             ) ? true : false,
             boolean
           ]
           number: [
             true extends (
-              | IsIntersect<InputRest, number>
-              | IsIntersect<InputRest, Number>
+              | IsSubType<InputRest, number>
+              | IsSubType<InputRest, Number>
             ) ? true : false,
             boolean
           ]
           string: [
             true extends (
-              | IsIntersect<InputRest, string>
-              | IsIntersect<InputRest, String>
+              | IsSubType<InputRest, string>
+              | IsSubType<InputRest, String>
             ) ? true : false,
             boolean
           ]
           nullOrUndefined: [
             true extends (
-              | IsIntersect<InputRest, null>
-              | IsIntersect<InputRest, undefined>
+              | IsSubType<InputRest, null>
+              | IsSubType<InputRest, undefined>
             ) ? true : false,
             false
           ]
