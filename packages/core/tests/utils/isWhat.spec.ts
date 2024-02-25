@@ -105,6 +105,14 @@ test('limit input type to `string | number` with generic', () => {
 
   // @ts-expect-error
   isString(null)
+
+  const t2 = 'a' as const
+  const isTrueCall2 = vi.fn()
+  if (isString(t2)) {
+    isTrueCall2()
+    expectTypeOf(t2).toEqualTypeOf<'a'>()
+  }
+  expect(isTrueCall2).toHaveBeenCalled()
 })
 test('slice branch by `throw error`', () => {
   const t0 = 'a' as string | number

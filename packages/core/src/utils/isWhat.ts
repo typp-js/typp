@@ -15,6 +15,21 @@ export type notMatched = typeof notMatched
  * const onlyWhatType = ['a', 'b', 1, 2]
  *   .filter(isWhat((x, _) => (${write type guard conditional expression}) ? x : _))
  * ```
+ * @example
+ * ```ts
+ * // Limit the input type to `string | number`
+ * const isString = isWhat((x: string | number, _) => typeof x === 'string' ? x : _)
+ * isString('a') // true
+ * isString(1) // false
+ * isString(null) // throw ts error
+ *
+ * // Limit the input type to `string | number` with generic
+ * const isString = isWhat(<T extends string | number>(x: T, _: notMatched) => typeof x === 'string' ? x : _)
+ * const t0 = 'a' as const
+ * if (isString(t0)) {
+ *   // t0 is 'a'
+ * }
+ * ```
  */
 export function isWhat<Input = unknown, T = unknown>(
   match: (input: Input, _: notMatched) => T | notMatched
