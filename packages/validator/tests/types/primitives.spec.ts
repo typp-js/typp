@@ -271,6 +271,10 @@ describe('number', () => {
     const r0 = t.number().validate(1)
     expect(r0).toBe(1)
     expectTypeOf(r0).toEqualTypeOf<number>()
+
+    const r1 = t.number().validate.narrow(1)
+    expect(r1).toBe(1)
+    expectTypeOf(r1).toEqualTypeOf<1>()
   })
   test('instanceof', () => {
     // noinspection JSPrimitiveTypeWrapperUsage
