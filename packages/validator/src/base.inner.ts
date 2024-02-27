@@ -45,7 +45,6 @@ interface IsTargetBaseTypeName<SelfName extends BaseTypeNames, Input, InputRest>
 type BaseTypesTransformers = {
   [K in BaseTypeNames]: unknown
 }
-export declare const anyReturn: unique symbol
 export declare const neverReturn: unique symbol
 export type SwitchBaseType<
   Input,
@@ -59,18 +58,16 @@ export type SwitchBaseType<
     ]
   }
 > = Switch<{
-  any: [IsEqual<Input, any>, typeof anyReturn]
+  any: [IsEqual<Input, any>, any]
 
   never: [IsEqual<Input, never>, typeof neverReturn]
   unknown: [IsEqual<Input, unknown>, unknown]
 }> extends infer R
-  ? IsWhat<R, never> extends true
+  ? IsEqual<R, never> extends true
     ? Switch<Entries>
-    : IsWhat<R, typeof neverReturn> extends true
+    : IsEqual<R, typeof neverReturn> extends true
       ? never
-      : IsWhat<R, typeof anyReturn> extends true
-        ? any
-        : R
+      : R
   : never
 
 export class ValidateError extends Error {
