@@ -218,52 +218,64 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
   if (args.length === 0)
     throw new Error('No data to validate')
   const [data, options = {}] = args as [any, tn.ValidateOptions]
+  const {
+    transform: isTransform = false
+  } = options
   // TODO
   //  完全匹配
   //  部分匹配，部分缺失或不匹配: partially
   //  完全不匹配: unexpected
   //  完全匹配但超过了原类型: excessive
   let rt = data
+  let validator: AtLeastOneProperty<tn.Validator> | undefined
   if (validators.has(this.shape)) {
-    const {
-      transform: isTransform = false
-    } = options
-    const {
-      preprocess: preprocessNoThis,
-      validate: validateNoThis,
-      transform: transformNoThis
-    } = validators.get(this.shape) ?? {}
-    const [
-      validate, transform, preprocess
-    ] = [validateNoThis, transformNoThis, preprocessNoThis].map(fn => fn?.bind(this))
-    if (!validate)
-      throw new Error(`Unable to validate when shape is ${this.shape}, because the shape is not supported validator`)
+    validator = validators.get(this.shape)
+  } else {
+    for (const [matcher, v] of resolverMappingByMatcher) {
+      if (matcher(this, rt)) {
+        validator = v
+        break
+      }
+    }
+  }
+  if (!validator)
+    throw new Error(`Unable to validate when shape is \`${this.shape}\`, because the shape is not supported validator`)
+
+  const {
+    preprocess: preprocessNoThis,
+    validate: validateNoThis,
+    transform: transformNoThis
+  } = validator
+  const [
+    validate, transform, preprocess
+  ] = [validateNoThis, transformNoThis, preprocessNoThis].map(fn => fn?.bind(this))
+  if (!validate)
+    throw new Error(`Unable to validate when shape is ${this.shape}, because the shape is not supported validator`)
+
+  try {
+    rt = preprocess ? preprocess(rt, options) : rt
+  } catch (e) {
+    if (e instanceof Error) {
+      throw new _ParseError('preprocess', this, rt, e)
+    }
+    throw e
+  }
+
+  if (isTransform && !validate(rt, options)) {
+    if (!transform)
+      throw new Error(`Unable to transform when shape is ${this.shape}, because the shape is not supported transformer`)
 
     try {
-      rt = preprocess ? preprocess(rt, options) : rt
+      rt = transform(rt, options)
     } catch (e) {
       if (e instanceof Error) {
-        throw new _ParseError('preprocess', this, rt, e)
+        throw new _ParseError('transform', this, rt, e)
       }
       throw e
     }
-
-    if (isTransform && !validate(rt, options)) {
-      if (!transform)
-        throw new Error(`Unable to transform when shape is ${this.shape}, because the shape is not supported transformer`)
-
-      try {
-        rt = transform(rt, options)
-      } catch (e) {
-        if (e instanceof Error) {
-          throw new _ParseError('transform', this, rt, e)
-        }
-        throw e
-      }
-    }
-    if (!validate(rt, options))
-      throw new _ValidateError('unexpected', this, rt)
   }
+  if (!validate(rt, options))
+    throw new _ValidateError('unexpected', this, rt)
   return rt
 }
 validate.narrow = validate
