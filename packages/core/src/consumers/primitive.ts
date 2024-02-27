@@ -177,6 +177,7 @@ declare module '../base' {
 
     interface Literal {
       <
+        // TODO remove type extends limit
         T extends string | number | bigint | symbol | boolean | null | undefined
       >(value: T): Typp<[T]>
       String: `__DO_NOT_USE_SAME_LITERAL_${
