@@ -1,4 +1,4 @@
-import type { IsEqual, IsWhat, Not, t as tn } from '@typp/core'
+import type { IsEqual, IsWhat, OnlySubType, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import type { SwitchBaseType } from '../base.inner'
@@ -11,10 +11,7 @@ declare module '@typp/core' {
         IsWhat<T, number>, number | Number
       ]
       'literal:number': [
-        Not<IsWhat<T, number>> extends true
-          ? T extends number ? true : false
-          : false,
-        T & number
+        OnlySubType<T, number>, T & number
       ]
     }
     export interface ValidateTransformEntries<T, Input, InputRest> {
