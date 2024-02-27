@@ -56,11 +56,11 @@ describe('null and undefined', () => {
     for (const falsyConstant of FALSY) {
       const r00 = nullSkm.parse(falsyConstant)
       expect(r00).toBe(null)
-      expectTypeOf(r00).toEqualTypeOf(null)
+      expectTypeOf(r00).toEqualTypeOf<null>()
 
       const r10 = undefinedSkm.parse(falsyConstant)
       expect(r10).toBe(undefined)
-      expectTypeOf(r10).toEqualTypeOf(undefined)
+      expectTypeOf(r10).toEqualTypeOf<undefined>()
     }
     expectTypeOf(nullSkm.parse(null))
       .toEqualTypeOf<null>()
