@@ -21,7 +21,7 @@ type Validate<Shape = unknown> = (
   options?: Omit<tn.ValidateOptions, 'transform'>
 ) => boolean
 type Match<Shape = unknown> = (s: tn.Schema<any, any>, input: unknown) => s is tn.Schema<Shape, any>
-const resolverMappingByMatcher = [] as [
+const validatorMappingByMatcher = [] as [
   matcher: Match, validator: AtLeastOneProperty<tn.Validator>
 ][]
 const validators = new Map<unknown, AtLeastOneProperty<tn.Validator>>()
@@ -40,10 +40,10 @@ function _useValidator<Shape>(
       }
     }
   } else {
-    resolverMappingByMatcher.push([shapesOrMatcher, validator])
-    const index = resolverMappingByMatcher.length - 1
+    validatorMappingByMatcher.push([shapesOrMatcher, validator])
+    const index = validatorMappingByMatcher.length - 1
     return () => {
-      resolverMappingByMatcher.splice(index, 1)
+      validatorMappingByMatcher.splice(index, 1)
     }
   }
 }
@@ -231,7 +231,7 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
   if (validators.has(this.shape)) {
     validator = validators.get(this.shape)
   } else {
-    for (const [matcher, v] of resolverMappingByMatcher) {
+    for (const [matcher, v] of validatorMappingByMatcher) {
       if (matcher(this, rt)) {
         validator = v
         break
