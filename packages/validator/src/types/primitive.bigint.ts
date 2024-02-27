@@ -16,7 +16,7 @@ declare module '@typp/core' {
     export interface ValidateTransformEntries<T, Input, InputRest> {
       bigint: [
         [T] extends [bigint] ? true : false,
-        SwitchBaseType<Input, InputRest, 'number', {
+        SwitchBaseType<Input, InputRest, 'bigint', {
           bigint:
             [InputRest] extends [never] ? (
               Input extends infer UnionInputItem ? (
