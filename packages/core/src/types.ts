@@ -36,6 +36,8 @@ export type Values<T> = T[keyof T]
 export type IsWhat<A, B> =
   [A] extends [B] ? [B] extends [A] ? true : false : false
 
+export type Not<A extends boolean> = [A] extends [false] ? true : false
+
 export type IsTrue<A extends boolean> = IsWhat<A, true>
 
 export type IsEqual<A, B> =
