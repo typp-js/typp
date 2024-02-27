@@ -70,7 +70,7 @@ export type SwitchBaseType<
       ? never
       : IsWhat<R, typeof anyReturn> extends true
         ? any
-        : never
+        : R
   : never
 
 export class ValidateError extends Error {
