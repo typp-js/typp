@@ -1,6 +1,7 @@
 import type { IsEqual, IsSubType, Switch, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
+import type { SwitchBaseType } from '../base.inner'
 import { preprocess } from '../utils.inner'
 
 declare module '@typp/core' {
@@ -14,14 +15,9 @@ declare module '@typp/core' {
     export interface ValidateTransformEntries<T, Input, InputRest> {
       boolean: [
         [T] extends [boolean] ? true : false,
-        Switch<{
-          any: [IsEqual<Input, any>, unknown]
-          boolean: [
-            true extends (
-              | IsSubType<Input, true>
-              | IsSubType<Input, false>
-              | IsSubType<Input, Boolean>
-            ) ? true : false,
+        SwitchBaseType<Input, InputRest, 'boolean', {
+          bigint: boolean
+          boolean:
             [InputRest] extends [never] ? (
               Input extends infer UnionInputItem ? (
                 IsEqual<UnionInputItem, Boolean> extends true
@@ -29,35 +25,11 @@ declare module '@typp/core' {
                   : Extract<UnionInputItem, boolean>
               ) : never
             ) : never
-          ]
-          bigint: [
-            true extends (
-              | IsSubType<InputRest, bigint>
-              | IsSubType<InputRest, BigInt>
-            ) ? true : false,
-            boolean
-          ]
-          number: [
-            true extends (
-              | IsSubType<InputRest, number>
-              | IsSubType<InputRest, Number>
-            ) ? true : false,
-            boolean
-          ]
-          string: [
-            true extends (
-              | IsSubType<InputRest, string>
-              | IsSubType<InputRest, String>
-            ) ? true : false,
-            boolean
-          ]
-          nullOrUndefined: [
-            true extends (
-              | IsSubType<InputRest, null>
-              | IsSubType<InputRest, undefined>
-            ) ? true : false,
-            false
-          ]
+          number: boolean
+          string: boolean
+          symbol: never
+          null: false
+          undefined: false
         }>
       ]
     }
