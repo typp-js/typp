@@ -12,7 +12,9 @@ type BaseTypeNames =
   | 'undefined'
 type IsAnySubTypeWithSelfName<Key, SelfName extends BaseTypeNames, Input, InputRest, SubType> = IsWhat<Key, SelfName> extends true
   ? IsAnySubType<Input, SubType>
-  : IsAnySubType<InputRest, SubType>
+  : [InputRest] extends [never]
+    ? never
+    : IsAnySubType<InputRest, SubType>
 interface IsTargetBaseTypeName<SelfName extends BaseTypeNames, Input, InputRest> {
   bigint: IsAnySubTypeWithSelfName<
     'bigint',
@@ -39,8 +41,16 @@ interface IsTargetBaseTypeName<SelfName extends BaseTypeNames, Input, InputRest>
     SelfName, Input, InputRest,
     symbol | Symbol
   >
-  null: IsSubType<InputRest, null>
-  undefined: IsSubType<InputRest, undefined>
+  null: IsAnySubTypeWithSelfName<
+    'null',
+    SelfName, Input, InputRest,
+    null
+  >
+  undefined: IsAnySubTypeWithSelfName<
+    'undefined',
+    SelfName, Input, InputRest,
+    undefined
+  >
 }
 type BaseTypesTransformers = {
   [K in BaseTypeNames]: unknown
