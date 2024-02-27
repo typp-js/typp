@@ -17,8 +17,6 @@ declare module '@typp/core' {
       bigint: [
         [T] extends [bigint] ? true : false,
         SwitchBaseType<Input, InputRest, 'number', {
-          // TODO `${Input}n` extends `${O extends bigint}` ? O : never
-          number: bigint
           bigint:
             [InputRest] extends [never] ? (
               Input extends infer UnionInputItem ? (
@@ -27,6 +25,10 @@ declare module '@typp/core' {
                   : Extract<UnionInputItem, bigint>
               ) : never
             ) : never
+          boolean:
+            InputRest extends true ? 1n : InputRest extends false ? 0n : never
+          // TODO `${Input}n` extends `${O extends bigint}` ? O : never
+          number: bigint
           string:
             InputRest extends (
               | `${number}${string}`
@@ -37,8 +39,6 @@ declare module '@typp/core' {
               : true extends IsEqual<InputRest, string>
                 ? unknown
                 : never
-          boolean:
-            InputRest extends true ? 1n : InputRest extends false ? 0n : never
           symbol: never
           null: 0n
           undefined: 0n
