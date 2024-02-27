@@ -14,15 +14,22 @@ export type NoIndexSignature<T> = {
 
 export type ValueOf<T extends {}> = { [K in keyof T]: T[K] } extends infer X ? X[keyof X] : never
 
-export type Switch<Entries extends { [k: string]: [boolean, any] }> = ValueOf<{
-  [ K in keyof Entries
-    as (
-      [Entries[K][0]] extends [never]
-        ? never
-        : [Entries[K][0]] extends [true] ? K : never
-    )
-  ]: Entries[K][1]
-}>
+declare const switchOtherEntry: unique symbol
+export type SwitchOtherEntry = typeof switchOtherEntry
+export type SwitchEntries =
+  & { [K in SwitchOtherEntry]?: any }
+  & { [k: string]: [boolean, any] }
+export type Switch<Entries extends SwitchEntries> = true extends Entries[string][0]
+  ? ValueOf<{
+    [ K in keyof Entries
+      as (
+        [Entries[K][0]] extends [never]
+          ? never
+          : [Entries[K][0]] extends [true] ? K : never
+      )
+    ]: Entries[K][1]
+  }>
+  : Entries[SwitchOtherEntry]
 
 export type Values<T> = T[keyof T]
 
