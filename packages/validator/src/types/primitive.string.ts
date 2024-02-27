@@ -1,6 +1,6 @@
-import type { IsEqual, Switch, t as tn } from '@typp/core'
+import type { t as tn } from '@typp/core'
 
-import { FALSY } from '../base'
+import type { SwitchBaseType } from '../base.inner'
 import { preprocess } from '../utils.inner'
 
 declare module '@typp/core' {
@@ -14,7 +14,15 @@ declare module '@typp/core' {
     export interface ValidateTransformEntries<T, Input, InputRest> {
       string: [
         [T] extends [string] ? true : false,
-        string
+        SwitchBaseType<Input, InputRest, 'string', {
+          bigint: `${bigint}`
+          boolean: 'true' | 'false'
+          number: `${number}`
+          string: string
+          symbol: string
+          null: 'null'
+          undefined: 'undefined'
+        }>
       ]
     }
   }
