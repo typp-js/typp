@@ -99,5 +99,42 @@ describe('literal primitive', () => {
       // @ts-expect-error - TS2345: Argument of type 2 is not assignable to parameter of type 1
       oneNumberSkm.validate(2)
     }).toThrow()
+    expect(() => {
+      // @ts-expect-error - TS2345: Argument of type null is not assignable to parameter of type 1
+      oneNumberSkm.validate(null)
+    }).toThrow()
+    expect(() => {
+      // @ts-expect-error - TS2345: Argument of type undefined is not assignable to parameter of type 1
+      oneNumberSkm.validate(undefined)
+    }).toThrow()
+    expect(() => {
+      oneNumberSkm.validate({} as 1)
+    }).toThrow()
+    expect(() => {
+      oneNumberSkm.validate({} as any)
+    }).toThrow()
+    expect(() => {
+      // unknown ⊃ number ⊃ 1
+      // @ts-expect-error - TS2345: Argument of type unknown is not assignable to parameter of type 1
+      oneNumberSkm.validate({} as unknown)
+    }).toThrow()
+    expect(() => {
+      // number ⊃ 1 ⊃ never
+      oneNumberSkm.validate({} as never)
+    }).toThrow()
+
+    const zeroNumberSkm = t.const(0)
+    expect(() => {
+      // @ts-expect-error - TS2345: Argument of type 1 is not assignable to parameter of type 0
+      zeroNumberSkm.validate(1)
+    }).toThrow()
+    expect(() => {
+      // @ts-expect-error - TS2345: Argument of type null is not assignable to parameter of type 0
+      zeroNumberSkm.validate(null)
+    }).toThrow()
+    expect(() => {
+      // @ts-expect-error - TS2345: Argument of type undefined is not assignable to parameter of type 0
+      zeroNumberSkm.validate(undefined)
+    }).toThrow()
   })
 })
