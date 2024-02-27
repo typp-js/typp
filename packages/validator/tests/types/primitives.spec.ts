@@ -481,7 +481,7 @@ describe('number', () => {
       ).toEqualTypeOf<number>()
       expectTypeOf(
         t.number().parse(1 as unknown)
-      ).toEqualTypeOf<never>()
+      ).toEqualTypeOf<number>()
     })
     test('transform - any or unknown & try', () => {
       expectTypeOf(
@@ -489,7 +489,7 @@ describe('number', () => {
       ).toEqualTypeOf<t.ValidateResult<number>>()
       expectTypeOf(
         t.number().tryParse(1 as unknown)
-      ).toEqualTypeOf<t.ValidateErrorResult>()
+      ).toEqualTypeOf<t.ValidateResult<number>>()
     })
     test('transform - valueOf', () => {
       const skm = t.number()

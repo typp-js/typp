@@ -81,6 +81,11 @@ describe('validate', () => {
     expectTypeOf<t.ValidateReturnType<number, number, number | string, string, Opts>>().toEqualTypeOf<number>()
 
     expectTypeOf<t.ValidateReturnType<number, number, 'a', 'a', Opts>>().toEqualTypeOf<never>()
+
+    expectTypeOf<t.ValidateReturnType<number, number, any, never, Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.ValidateReturnType<number, number, unknown, never, Opts>>().toEqualTypeOf<number>()
+
+    expectTypeOf<t.ValidateReturnType<number, number, never, never, Opts>>().toEqualTypeOf<never>()
   })
   test('transform with special `ExtendsT`', () => {
     type Opts = { transform: true }
