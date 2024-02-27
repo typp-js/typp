@@ -58,6 +58,10 @@ export type IsAnySubType<T, U> = IsTrue<
   U extends infer UI ? IsSubType<T, UI> : never
 >
 
+export type OnlySubType<T, U> = Not<IsWhat<T, U>> extends true
+  ? T extends U ? true : false
+  : false
+
 export type Includes<
   T extends readonly any[],
   U extends readonly any[]
