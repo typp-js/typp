@@ -1,6 +1,7 @@
 import type { IsEqual, IsSubType, Switch, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
+import type { SwitchBaseType } from '../base.inner'
 import { parseBigInt } from '../utils'
 import { preprocess } from '../utils.inner'
 
@@ -15,21 +16,10 @@ declare module '@typp/core' {
     export interface ValidateTransformEntries<T, Input, InputRest> {
       bigint: [
         [T] extends [bigint] ? true : false,
-        Switch<{
-          any: [IsEqual<Input, any>, unknown]
-          number: [
-            true extends (
-              | IsSubType<InputRest, number>
-              | IsSubType<InputRest, Number>
-            ) ? true : false,
-            // TODO `${Input}n` extends `${O extends bigint}` ? O : never
-            bigint
-          ]
-          bigint: [
-            true extends (
-              | IsSubType<Input, bigint>
-              | IsSubType<Input, BigInt>
-            ) ? true : false,
+        SwitchBaseType<Input, InputRest, 'number', {
+          // TODO `${Input}n` extends `${O extends bigint}` ? O : never
+          number: bigint
+          bigint:
             [InputRest] extends [never] ? (
               Input extends infer UnionInputItem ? (
                 IsEqual<UnionInputItem, BigInt> extends true
@@ -37,9 +27,7 @@ declare module '@typp/core' {
                   : Extract<UnionInputItem, bigint>
               ) : never
             ) : never
-          ]
-          string: [
-            IsSubType<InputRest, string>,
+          string:
             InputRest extends (
               | `${number}${string}`
               | `0${'b' | 'B'}${string}`
@@ -48,17 +36,12 @@ declare module '@typp/core' {
             ) ? bigint
               : true extends IsEqual<InputRest, string>
                 ? unknown
-                : never,
-          ]
-          boolean: [
-            true extends (
-              | IsSubType<InputRest, true>
-              | IsSubType<InputRest, false>
-            ) ? true : false,
+                : never
+          boolean:
             InputRest extends true ? 1n : InputRest extends false ? 0n : never
-          ]
-          null: [IsSubType<InputRest, null>, 0n]
-          undefined: [IsSubType<InputRest, undefined>, 0n]
+          symbol: never
+          null: 0n
+          undefined: 0n
         }>
       ]
     }
