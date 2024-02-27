@@ -1,4 +1,4 @@
-import type { IsEqual, t as tn } from '@typp/core'
+import type { IsEqual, IsWhat, Not, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import type { SwitchBaseType } from '../base.inner'
@@ -8,8 +8,13 @@ declare module '@typp/core' {
   namespace t {
     export interface ValidateExtendsEntries<T> {
       number: [
-        [T] extends [number] ? true : false,
-        number | Number,
+        IsWhat<T, number>, number | Number
+      ]
+      'literal:number': [
+        Not<IsWhat<T, number>> extends true
+          ? T extends number ? true : false
+          : false,
+        T & number
       ]
     }
     export interface ValidateTransformEntries<T, Input, InputRest> {
@@ -21,7 +26,7 @@ declare module '@typp/core' {
           bigint: number
           boolean: InputRest extends true ? 1 : InputRest extends false ? 0 : never
           number: [InputRest] extends [never] ? (
-            Input extends infer UnionInputItem ? (
+            Input extends infer UnionInputItem extends T ? (
               IsEqual<UnionInputItem, Number> extends true
                 ? number
                 : Extract<UnionInputItem, number>
