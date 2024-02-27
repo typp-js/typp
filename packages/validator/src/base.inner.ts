@@ -1,4 +1,4 @@
-import type { IsAnySubType, IsEqual, IsSubType, IsWhat, Switch, t as tn } from '@typp/core'
+import type { IsAnySubType, IsEqual, IsWhat, Switch, SwitchEntries, SwitchOtherEntry, t as tn } from '@typp/core'
 
 import { toPrimitive } from './utils'
 
@@ -61,12 +61,15 @@ export type SwitchBaseType<
   InputRest,
   SelfName extends BaseTypeNames,
   Transformers extends BaseTypesTransformers,
-  Entries extends { [k: string]: [boolean, any] } = {
-    [K in BaseTypeNames]: [
-      IsTargetBaseTypeName<SelfName, Input, InputRest>[K],
-      Transformers[K]
-    ]
-  }
+  Other = never,
+  Entries extends SwitchEntries =
+    & {
+      [K in BaseTypeNames]: [
+        IsTargetBaseTypeName<SelfName, Input, InputRest>[K],
+        Transformers[K]
+      ]
+    }
+    & { [K in SwitchOtherEntry]: Other }
 > = Switch<{
   any: [IsEqual<Input, any>, any]
 
