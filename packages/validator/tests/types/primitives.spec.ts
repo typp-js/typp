@@ -573,10 +573,10 @@ describe('string', () => {
     test('transform - any or unknown & try', () => {
       expectTypeOf(
         t.string().tryParse(1 as any)
-      ).toEqualTypeOf<t.ValidateSuccessResult<string>>()
+      ).toEqualTypeOf<t.ValidateResult<string>>()
       expectTypeOf(
         t.string().tryParse(1 as unknown)
-      ).toEqualTypeOf<t.ValidateSuccessResult<string>>()
+      ).toEqualTypeOf<t.ValidateResult<string>>()
     })
     test('toString', () => {
       const skm = t.string()
