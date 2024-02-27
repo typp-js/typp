@@ -56,4 +56,12 @@ export function literalValidator(t: typeof tn) {
     validate: input => input === undefined,
     transform: input => FALSY.includes(input) ? undefined : input
   })
+  t.useValidator((s): s is tn.Schema<
+    string | number | bigint | symbol | boolean,
+    string | number | bigint | symbol | boolean
+  > => typeof s.shape !== 'object', {
+    validate(input) {
+      return input === this.shape
+    }
+  })
 }

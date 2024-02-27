@@ -84,3 +84,20 @@ describe('null and undefined', () => {
     expectTypeOf(r10).toEqualTypeOf<undefined>()
   })
 })
+describe('literal primitive', () => {
+  beforeAll(() => t.use(literalValidator))
+  test('base', () => {
+    const oneNumberSkm = t.const(1)
+
+    const r0 = oneNumberSkm.validate(1)
+    expect(r0).toBe(1)
+    expectTypeOf(r0).toEqualTypeOf<1>()
+  })
+  test('unexpected', () => {
+    const oneNumberSkm = t.const(1)
+    expect(() => {
+      // @ts-expect-error - TS2345: Argument of type 2 is not assignable to parameter of type 1
+      oneNumberSkm.validate(2)
+    }).toThrow()
+  })
+})
