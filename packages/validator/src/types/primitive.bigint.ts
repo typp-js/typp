@@ -1,4 +1,4 @@
-import type { IsEqual, IsSubType, Switch, t as tn } from '@typp/core'
+import type { IsEqual, IsWhat, OnlySubType, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import type { SwitchBaseType } from '../base.inner'
@@ -8,9 +8,9 @@ import { preprocess } from '../utils.inner'
 declare module '@typp/core' {
   namespace t {
     export interface ValidateExtendsEntries<T> {
-      bigint: [
-        [T] extends [bigint] ? true : false,
-        bigint | BigInt,
+      bigint: [IsWhat<T, bigint>, bigint | BigInt]
+      'literal:bigint': [
+        OnlySubType<T, bigint>, T & bigint
       ]
     }
     export interface ValidateTransformEntries<T, Input, InputRest> {

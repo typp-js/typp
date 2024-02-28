@@ -1,4 +1,4 @@
-import type { t as tn } from '@typp/core'
+import type { IsWhat, OnlySubType, t as tn } from '@typp/core'
 
 import type { SwitchBaseType } from '../base.inner'
 import { preprocess } from '../utils.inner'
@@ -7,8 +7,10 @@ declare module '@typp/core' {
   namespace t {
     export interface ValidateExtendsEntries<T> {
       string: [
-        [T] extends [string] ? true : false,
-        string | String
+        IsWhat<T, string>, string | String,
+      ]
+      'literal:string': [
+        OnlySubType<T, string>, T & string
       ]
     }
     export interface ValidateTransformEntries<T, Input, InputRest> {

@@ -1,4 +1,4 @@
-import type { IsEqual, IsSubType, Switch, t as tn } from '@typp/core'
+import type { IsEqual, IsWhat, OnlySubType, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import type { SwitchBaseType } from '../base.inner'
@@ -8,8 +8,10 @@ declare module '@typp/core' {
   namespace t {
     export interface ValidateExtendsEntries<T> {
       boolean: [
-        [T] extends [boolean] ? true : false,
-        boolean | Boolean,
+        IsWhat<T, boolean>, boolean | Boolean,
+      ]
+      'literal:boolean': [
+        OnlySubType<T, boolean>, T & boolean
       ]
     }
     export interface ValidateTransformEntries<T, Input, InputRest> {

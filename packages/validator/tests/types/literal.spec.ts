@@ -137,4 +137,61 @@ describe('literal primitive', () => {
       zeroNumberSkm.validate(undefined)
     }).toThrow()
   })
+  describe('types', () => {
+    test('bigint', () => {
+      const zeroBigIntSkm = t.const(0n)
+      const r0 = zeroBigIntSkm.validate(0n)
+      expect(r0).toBe(0n)
+      expectTypeOf(r0).toEqualTypeOf<0n>()
+
+      expect(() => {
+        // @ts-expect-error - TS2345: Argument of type 1n is not assignable to parameter of type 0n
+        zeroBigIntSkm.validate(1n)
+      }).toThrow()
+    })
+    test('boolean', () => {
+      const trueBooleanSkm = t.const(true)
+      const r0 = trueBooleanSkm.validate(true)
+      expect(r0).toBe(true)
+      expectTypeOf(r0).toEqualTypeOf<true>()
+
+      const falseBooleanSkm = t.const(false)
+      const r1 = falseBooleanSkm.validate(false)
+      expect(r1).toBe(false)
+      expectTypeOf(r1).toEqualTypeOf<false>()
+
+      expect(() => {
+        // @ts-expect-error - TS2345: Argument of type false is not assignable to parameter of type true
+        trueBooleanSkm.validate(false)
+      }).toThrow()
+    })
+    test('string', () => {
+      const emptyStringSkm = t.const('')
+      const r0 = emptyStringSkm.validate('')
+      expect(r0).toBe('')
+      expectTypeOf(r0).toEqualTypeOf<''>()
+
+      const helloStringSkm = t.const('hello')
+      const r1 = helloStringSkm.validate('hello')
+      expect(r1).toBe('hello')
+      expectTypeOf(r1).toEqualTypeOf<'hello'>()
+
+      expect(() => {
+        // @ts-expect-error - TS2345: Argument of type 'world' is not assignable to parameter of type 'hello'
+        helloStringSkm.validate('world')
+      }).toThrow()
+    })
+    test('symbol', () => {
+      const sym = Symbol()
+      const symbolSkm = t.const(sym)
+      const r0 = symbolSkm.validate(sym)
+      expect(r0).toBe(sym)
+      expectTypeOf(r0).toEqualTypeOf<symbol>()
+
+      expect(() => {
+        // @ts-expect-error - TS2345: Argument of type symbol is not assignable to parameter of type unique symbol
+        symbolSkm.validate(Symbol())
+      }).toThrow()
+    })
+  })
 })
