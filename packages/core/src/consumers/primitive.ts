@@ -13,10 +13,14 @@ const symbols = Object.freeze({
   readonly never: unique symbol
 }
 
+type LiteralPlaceholder<T extends string = string> = `__DO_NOT_USE_SAME_LITERAL_${T}__IF_YOU_WANT_TO_USE_IT__`
+function literalPlaceholder<T extends string>(type: T): LiteralPlaceholder<T> {
+  return `__DO_NOT_USE_SAME_LITERAL_${type}__IF_YOU_WANT_TO_USE_IT__`
+}
+
 declare module '../base' {
   // Consumer
   namespace t {
-    type LiteralPlaceholder<T extends string = string> = `__DO_NOT_USE_SAME_LITERAL_${T}__IF_YOU_WANT_TO_USE_IT__`
     interface LiteralStringMapping {
       STRING: string
       NUMBER: number
@@ -180,24 +184,12 @@ declare module '../base' {
         // TODO remove type extends limit
         T extends string | number | bigint | symbol | boolean | null | undefined
       >(value: T): Typp<[T]>
-      String: `__DO_NOT_USE_SAME_LITERAL_${
-        'STRING'
-      }__IF_YOU_WANT_TO_USE_IT__`
-      Number: `__DO_NOT_USE_SAME_LITERAL_${
-        'NUMBER'
-      }__IF_YOU_WANT_TO_USE_IT__`
-      BigInt: `__DO_NOT_USE_SAME_LITERAL_${
-        'BIGINT'
-      }__IF_YOU_WANT_TO_USE_IT__`
-      Null: `__DO_NOT_USE_SAME_LITERAL_${
-        'NULL'
-      }__IF_YOU_WANT_TO_USE_IT__`
-      Boolean: `__DO_NOT_USE_SAME_LITERAL_${
-        'BOOLEAN'
-      }__IF_YOU_WANT_TO_USE_IT__`
-      Undefined: `__DO_NOT_USE_SAME_LITERAL_${
-        'UNDEFINED'
-      }__IF_YOU_WANT_TO_USE_IT__`
+      BigInt: LiteralPlaceholder<'BIGINT'>
+      Boolean: LiteralPlaceholder<'BOOLEAN'>
+      Number: LiteralPlaceholder<'NUMBER'>
+      String: LiteralPlaceholder<'STRING'>
+      Null: LiteralPlaceholder<'NULL'>
+      Undefined: LiteralPlaceholder<'UNDEFINED'>
     }
     const _literal: Literal
     export {
@@ -215,24 +207,12 @@ export default function (ctx: typeof tn) {
   >(value: T): Typp<[T]> {
     return t(value)
   }
-  literal.String = `__DO_NOT_USE_SAME_LITERAL_${
-    'STRING'
-  }__IF_YOU_WANT_TO_USE_IT__` as const
-  literal.Number = `__DO_NOT_USE_SAME_LITERAL_${
-    'NUMBER'
-  }__IF_YOU_WANT_TO_USE_IT__` as const
-  literal.BigInt = `__DO_NOT_USE_SAME_LITERAL_${
-    'BIGINT'
-  }__IF_YOU_WANT_TO_USE_IT__` as const
-  literal.Null = `__DO_NOT_USE_SAME_LITERAL_${
-    'NULL'
-  }__IF_YOU_WANT_TO_USE_IT__` as const
-  literal.Boolean = `__DO_NOT_USE_SAME_LITERAL_${
-    'BOOLEAN'
-  }__IF_YOU_WANT_TO_USE_IT__` as const
-  literal.Undefined = `__DO_NOT_USE_SAME_LITERAL_${
-    'UNDEFINED'
-  }__IF_YOU_WANT_TO_USE_IT__` as const
+  literal.BigInt = literalPlaceholder('BIGINT')
+  literal.Boolean = literalPlaceholder('BOOLEAN')
+  literal.Number = literalPlaceholder('NUMBER')
+  literal.String = literalPlaceholder('STRING')
+  literal.Null = literalPlaceholder('NULL')
+  literal.Undefined = literalPlaceholder('UNDEFINED')
   t.useConsumer(first => {
     if ([
       'string',
