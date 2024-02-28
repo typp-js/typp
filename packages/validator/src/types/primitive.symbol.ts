@@ -21,10 +21,14 @@ declare module '@typp/core' {
   }
 }
 
+export const symbolTransform: tn.Validator<symbol>['transform'] = function (input, options) {
+  return Symbol(String(input))
+}
+
 export function symbolValidator(t: typeof tn) {
   t.useValidator([Symbol], {
     preprocess,
     validate: input => typeof input === 'symbol',
-    transform: input => Symbol(String(input))
+    transform: symbolTransform
   })
 }

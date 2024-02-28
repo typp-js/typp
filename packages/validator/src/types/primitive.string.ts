@@ -30,10 +30,14 @@ declare module '@typp/core' {
   }
 }
 
+export const stringTransform: tn.Validator<string>['transform'] = function (input, options) {
+  return String(input)
+}
+
 export function stringValidator(t: typeof tn) {
   t.useValidator([String], {
     preprocess,
     validate: input => typeof input === 'string',
-    transform: input => String(input)
+    transform: stringTransform
   })
 }

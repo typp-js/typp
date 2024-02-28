@@ -38,10 +38,14 @@ declare module '@typp/core' {
   }
 }
 
+export const booleanTransform: tn.Validator<boolean>['transform'] = function (input, options) {
+  return FALSY.includes(input) ? false : Boolean(input)
+}
+
 export function booleanValidator(t: typeof tn) {
   t.useValidator([Boolean], {
     preprocess,
     validate: input => typeof input === 'boolean',
-    transform: input => FALSY.includes(input) ? false : Boolean(input)
+    transform: booleanTransform
   })
 }

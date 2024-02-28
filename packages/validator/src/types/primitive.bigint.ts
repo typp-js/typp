@@ -48,38 +48,40 @@ declare module '@typp/core' {
   }
 }
 
+export const bigintTransform: tn.Validator<bigint>['transform'] = function (input, options) {
+  if (FALSY.includes(input)) return 0n
+
+  switch (typeof input) {
+    case 'number':
+      if (input === Infinity) {
+        return 2n ** 1024n
+      } else if (input === -Infinity) {
+        return 2n ** 1024n * -1n
+      } else if (Number.isNaN(input)) {
+        throw new Error('NaN cannot be converted to BigInt')
+      } else {
+        if (input > Number.MAX_SAFE_INTEGER || input < Number.MIN_SAFE_INTEGER) {
+          throw new Error('number must greater than or equal to -2^53 and less than or equal to 2^53')
+        }
+        if (Number.isInteger(input)) {
+          return BigInt(input)
+        } else {
+          return BigInt(Math.floor(input))
+        }
+      }
+    case 'string':
+      return parseBigInt(input)
+    case 'boolean':
+      return input ? 1n : 0n
+  }
+  // TODO Date
+  return input
+}
+
 export function bigintValidator(t: typeof tn) {
   t.useValidator([BigInt], {
     preprocess,
     validate: input => typeof input === 'bigint',
-    transform(input) {
-      if (FALSY.includes(input)) return 0n
-
-      switch (typeof input) {
-        case 'number':
-          if (input === Infinity) {
-            return 2n ** 1024n
-          } else if (input === -Infinity) {
-            return 2n ** 1024n * -1n
-          } else if (Number.isNaN(input)) {
-            throw new Error('NaN cannot be converted to BigInt')
-          } else {
-            if (input > Number.MAX_SAFE_INTEGER || input < Number.MIN_SAFE_INTEGER) {
-              throw new Error('number must greater than or equal to -2^53 and less than or equal to 2^53')
-            }
-            if (Number.isInteger(input)) {
-              return BigInt(input)
-            } else {
-              return BigInt(Math.floor(input))
-            }
-          }
-        case 'string':
-          return parseBigInt(input)
-        case 'boolean':
-          return input ? 1n : 0n
-      }
-      // TODO Date
-      return input
-    }
+    transform: bigintTransform
   })
 }
