@@ -1,4 +1,4 @@
-import type { IsEqual, IsWhat, OnlySubType, t as tn } from '@typp/core'
+import type { IsEqual, IsSubType, IsTrue, IsWhat, Not, OnlySubType, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import type { SwitchBaseType } from '../base.inner'
@@ -27,22 +27,28 @@ declare module '@typp/core' {
             ) : never
           boolean:
             InputRest extends true ? 1n : InputRest extends false ? 0n : never
-          // TODO `${Input}n` extends `${O extends bigint}` ? O : never
-          number: bigint
+          number: `${InputRest & number}` extends `${infer O extends bigint}` ? O : never
           string:
             InputRest extends (
-              | `${bigint}${string}`
+              | `${infer O extends bigint}${string}`
               | `0${'b' | 'B'}${string}`
               | `0${'o' | 'O'}${number}`
               | `0${'x' | 'X'}${string}`
-            ) ? bigint
-              : true extends IsEqual<InputRest, string>
+            ) ? (
+              Not<IsWhat<O, never>> extends true
+                ? O
+                : bigint
+            ) : true extends IsEqual<InputRest, string>
                 ? unknown
                 : never
           symbol: never
           null: 0n
           undefined: 0n
-        }>
+        }> extends infer Result ? (
+          IsWhat<T, bigint> extends true ? Result : (
+            IsTrue<IsSubType<Result, T>> extends true ? Result : never
+          )
+        ) : never
       ]
     }
   }

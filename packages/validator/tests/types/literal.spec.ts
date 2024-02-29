@@ -194,4 +194,28 @@ describe('literal primitive', () => {
       }).toThrow()
     })
   })
+  describe('transform', () => {
+    test('bigint', () => {
+      const zeroBigIntSkm = t.const(0n)
+      const r0 = zeroBigIntSkm.parse(0n)
+      expect(r0).toBe(0n)
+      expectTypeOf(r0).toEqualTypeOf<0n>()
+
+      const r1 = zeroBigIntSkm.parse.narrow(0)
+      expect(r1).toBe(0n)
+      expectTypeOf(r1).toEqualTypeOf<0n>()
+
+      const r2 = zeroBigIntSkm.parse.narrow('0')
+      expect(r2).toBe(0n)
+      expectTypeOf(r2).toEqualTypeOf<0n>()
+      expect(() => {
+        const r0 = zeroBigIntSkm.parse(1)
+        expectTypeOf(r0).toEqualTypeOf<never>()
+      }).toThrow()
+      expect(() => {
+        const r0 = zeroBigIntSkm.parse('1')
+        expectTypeOf(r0).toEqualTypeOf<never>()
+      }).toThrow()
+    })
+  })
 })
