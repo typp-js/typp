@@ -3,6 +3,11 @@ import type { t as tn } from '@typp/core'
 import { FALSY } from '../base'
 import type { SwitchBaseType } from '../base.inner'
 import { preprocess } from '../utils.inner'
+import { bigintTransform } from './primitive.bigint'
+import { booleanTransform } from './primitive.boolean'
+import { numberTransform } from './primitive.number'
+import { stringTransform } from './primitive.string'
+import { symbolTransform } from './primitive.symbol'
 
 declare module '@typp/core' {
   namespace t {
@@ -57,11 +62,26 @@ export function literalValidator(t: typeof tn) {
     transform: input => FALSY.includes(input) ? undefined : input
   })
   t.useValidator((s): s is tn.Schema<
-    string | number | bigint | symbol | boolean,
-    string | number | bigint | symbol | boolean
-  > => typeof s.shape !== 'object', {
+    bigint | boolean | number | string | symbol,
+    bigint | boolean | number | string | symbol
+  > => [
+    'bigint',
+    'boolean',
+    'number',
+    'string',
+    'symbol'
+  ].includes(typeof s.shape), {
     validate(input) {
       return input === this.shape
+    },
+    transform(input, options) {
+      return (<Record<string, Function>>{
+        bigint: bigintTransform,
+        boolean: booleanTransform,
+        number: numberTransform,
+        string: stringTransform,
+        symbol: symbolTransform
+      })[typeof this.shape as string]?.call(this as any, input, options)
     }
   })
 }
