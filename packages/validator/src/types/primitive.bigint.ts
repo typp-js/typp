@@ -27,7 +27,11 @@ declare module '@typp/core' {
             ) : never
           boolean:
             InputRest extends true ? 1n : InputRest extends false ? 0n : never
-          number: `${InputRest & number}` extends `${infer O extends bigint}` ? O : never
+          number: IsWhat<InputRest & number, number> extends false
+            ? `${InputRest & number}` extends `${infer O extends bigint}`
+              ? O
+              : never
+            : bigint
           string:
             InputRest extends (
               | `${infer O extends bigint}${string}`
