@@ -41,7 +41,7 @@ export type IsWhat<A, B> =
 
 export type Not<A extends boolean> = [A] extends [false] ? true : false
 
-export type IsTrue<A> = IsWhat<A, true>
+export type IsTrue<A> = IsEqual<A, any> extends true ? false : IsWhat<A, true>
 
 export type IsEqual<A, B> =
   (<T>() => T extends A ? 1 : 2) extends
