@@ -34,7 +34,7 @@ declare module '@typp/core' {
             : bigint
           string:
             InputRest extends (
-              | `${infer O extends bigint}${string}`
+              | `${'-' | '+' | ''}${infer O extends bigint}${string}`
               | `0${'b' | 'B'}${string}`
               | `0${'o' | 'O'}${number}`
               | `0${'x' | 'X'}${string}`
