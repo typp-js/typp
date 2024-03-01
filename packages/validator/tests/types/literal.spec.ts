@@ -239,5 +239,28 @@ describe('literal primitive', () => {
         expectTypeOf(r0).toEqualTypeOf<never>()
       }).toThrow()
     })
+    test('string', () => {
+      const emptyStringSkm = t.const('0')
+      const r0 = emptyStringSkm.parse('0')
+      expect(r0).toBe('0')
+      expectTypeOf(r0).toEqualTypeOf<'0'>()
+
+      const r1 = emptyStringSkm.parse(0)
+      expect(r1).toBe('0')
+      expectTypeOf(r1).toEqualTypeOf<'0'>()
+
+      const r2 = t.const('false').parse(false)
+      expect(r2).toBe('false')
+      expectTypeOf(r2).toEqualTypeOf<'false'>()
+
+      const r3 = t.const('true').parse(true)
+      expect(r3).toBe('true')
+      expectTypeOf(r3).toEqualTypeOf<'true'>()
+
+      expect(() => {
+        const r0 = emptyStringSkm.parse('1')
+        expectTypeOf(r0).toEqualTypeOf<never>()
+      }).toThrow()
+    })
   })
 })

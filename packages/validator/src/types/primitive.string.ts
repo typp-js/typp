@@ -17,10 +17,10 @@ declare module '@typp/core' {
       string: [
         [T] extends [string] ? true : false,
         LiteralTypeGuard<string, T, SwitchBaseType<Input, InputRest, 'string', {
-          bigint: `${bigint}`
-          boolean: 'true' | 'false'
-          number: `${number}`
-          string: string
+          bigint: `${InputRest & bigint}`
+          boolean: `${InputRest & boolean}`
+          number: `${InputRest & number}`
+          string: Input & string
           symbol: string
           null: 'null'
           undefined: 'undefined'
