@@ -1,5 +1,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import type { AtLeastOneProperty, IsEqual, IsNotEqual, Narrow, Switch, t as tn, Typp } from '@typp/core'
+import type {
+  AtLeastOneProperty,
+  IsConfigure,
+  IsEqual,
+  IsNotEqual,
+  Narrow,
+  Switch,
+  t as tn,
+  Typp
+} from '@typp/core'
 
 import { MAX_TIME } from './base'
 import {
@@ -169,15 +178,17 @@ declare module '@typp/core' {
     > {
       <
         TT extends ExtendsT,
-        Rest extends true extends(
-          | (O['try'] extends true ? true : false)
-          | (O['transform'] extends true ? true : false)
+        Rest extends true extends (
+          | IsConfigure<O, 'try'>
+          | IsConfigure<O, 'transform'>
+          | IsConfigure<Opts, 'try'>
+          | IsConfigure<Opts, 'transform'>
         ) ? unknown : never,
-        D extends TT | Rest,
-        Opts extends ValidateOptions
+        const Input extends TT | Rest,
+        Opts extends ValidateOptions = {}
       >(
-        data: D, options?: Opts
-      ): ValidateReturnType<T, ExtendsT, D, Exclude<D, ExtendsT>, Opts & O>
+        data: Input, options?: Opts
+      ): ValidateReturnType<T, ExtendsT, typeof data, Exclude<typeof data, ExtendsT>, Opts & O>
       narrow<
         TT extends ExtendsT,
         Rest extends true extends(
