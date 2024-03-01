@@ -78,7 +78,7 @@ describe('bigint', () => {
       // with const
       const r6 = skm.parse.narrow(1)
       expect(r6).toBe(1n)
-      expectTypeOf(r6).toEqualTypeOf<bigint>()
+      expectTypeOf(r6).toEqualTypeOf<1n>()
 
       expect(() => {
         skm.parse(Number.MAX_SAFE_INTEGER + 1)
