@@ -423,7 +423,10 @@ describe('number', () => {
       expectTypeOf(r18).toEqualTypeOf<number>()
 
       expect(() => {
-        expectTypeOf(skm.parse('abc')).toEqualTypeOf<number>()
+        expectTypeOf(skm.parse('abc')).toEqualTypeOf<never>()
+      }).toThrow(new ValidateError('unexpected', skm, 'abc'))
+      expect(() => {
+        expectTypeOf(skm.parse('abc' as string)).toEqualTypeOf<number>()
       }).toThrow(new ValidateError('unexpected', skm, 'abc'))
     })
     test('transform - boolean', () => {

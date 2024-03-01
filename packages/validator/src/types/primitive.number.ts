@@ -1,4 +1,4 @@
-import type { IsEqual, IsWhat, OnlySubType, t as tn } from '@typp/core'
+import type { IsEqual, IsWhat, Not, OnlySubType, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 import type { LiteralTypeGuard, SwitchBaseType } from '../base.inner'
@@ -30,16 +30,18 @@ declare module '@typp/core' {
             ) : never
           ) : never
           string: InputRest extends (
-            // TODO infer narrow number
-            // | `${infer T extends number}${string}`
-            | `${number}${string}`
+            | `${'-' | '+' | ''}${infer O extends number}${string}`
+            | '' | 'NaN' | `${'-' | '+' | ''}Infinity`
             | `0${'b' | 'B'}${string}`
             | `0${'o' | 'O'}${number}`
             | `0${'x' | 'X'}${string}`
-          ) ? number
-            : true extends IsEqual<InputRest, string>
-              ? unknown
-              : never
+          ) ? (
+            Not<IsWhat<O, never>> extends true
+              ? O
+              : number
+          ) : true extends IsEqual<InputRest, string>
+            ? unknown
+            : never
           symbol: never
           null: 0
           undefined: 0
