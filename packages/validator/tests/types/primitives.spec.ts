@@ -584,6 +584,11 @@ describe('string', () => {
       expect(r0).toBe('1')
       expectTypeOf(r0).toEqualTypeOf<string>()
     })
+    test('not primitive', () => {
+      const objStr = t.string().parse({ a: 1 })
+      expect(objStr).toBe('[object Object]')
+      expectTypeOf(objStr).toEqualTypeOf<string>()
+    })
   })
 })
 describe('symbol', () => {

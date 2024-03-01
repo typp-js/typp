@@ -24,7 +24,7 @@ declare module '@typp/core' {
           symbol: string
           null: 'null'
           undefined: 'undefined'
-        }>
+        }, string>
       ]
     }
   }
