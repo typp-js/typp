@@ -201,11 +201,11 @@ describe('literal primitive', () => {
       expect(r0).toBe(0n)
       expectTypeOf(r0).toEqualTypeOf<0n>()
 
-      const r1 = zeroBigIntSkm.parse.narrow(0)
+      const r1 = zeroBigIntSkm.parse(0)
       expect(r1).toBe(0n)
       expectTypeOf(r1).toEqualTypeOf<0n>()
 
-      const r2 = zeroBigIntSkm.parse.narrow('0')
+      const r2 = zeroBigIntSkm.parse('0')
       expect(r2).toBe(0n)
       expectTypeOf(r2).toEqualTypeOf<0n>()
       expect(() => {
@@ -223,11 +223,11 @@ describe('literal primitive', () => {
       expect(r0).toBe(true)
       expectTypeOf(r0).toEqualTypeOf<true>()
 
-      const r1 = trueBooleanSkm.parse.narrow(1)
+      const r1 = trueBooleanSkm.parse(1)
       expect(r1).toBe(true)
       expectTypeOf(r1).toEqualTypeOf<true>()
 
-      const r2 = trueBooleanSkm.parse.narrow('1')
+      const r2 = trueBooleanSkm.parse('1')
       expect(r2).toBe(true)
       expectTypeOf(r2).toEqualTypeOf<true>()
       expect(() => {
