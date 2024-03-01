@@ -17,9 +17,10 @@ export type ValueOf<T extends {}> = { [K in keyof T]: T[K] } extends infer X ? X
 declare const switchOtherEntry: unique symbol
 export type SwitchOtherEntry = typeof switchOtherEntry
 export type SwitchEntries =
-  & { [K in SwitchOtherEntry]?: any }
+  & { [K in SwitchOtherEntry]?: unknown }
   & { [k: string]: [boolean, any] }
-export type Switch<Entries extends SwitchEntries> = true extends Entries[string][0]
+// TODO unit test `Switch` type level function 😭
+export type Switch<Entries extends SwitchEntries> = true extends Entries[keyof Entries & string][0]
   ? ValueOf<{
     [ K in keyof Entries
       as (
@@ -29,7 +30,9 @@ export type Switch<Entries extends SwitchEntries> = true extends Entries[string]
       )
     ]: Entries[K][1]
   }>
-  : Entries[SwitchOtherEntry]
+  : SwitchOtherEntry extends keyof Entries
+    ? Entries[SwitchOtherEntry]
+    : never
 
 export type Values<T> = T[keyof T]
 
