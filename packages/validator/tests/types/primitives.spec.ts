@@ -474,7 +474,7 @@ describe('number', () => {
       // with const
       const r1 = skm.parse.narrow(1n)
       expect(r1).toBe(1)
-      expectTypeOf(r1).toEqualTypeOf<number>()
+      expectTypeOf(r1).toEqualTypeOf<1>()
       // overflow number
       const r2 = skm.parse.narrow(BigInt(Number.MAX_SAFE_INTEGER) + 1n)
       expect(r2).toBe(Infinity)

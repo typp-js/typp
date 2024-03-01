@@ -19,8 +19,11 @@ declare module '@typp/core' {
         [T] extends [number] ? true : false,
         LiteralTypeGuard<number, T, SwitchBaseType<Input, InputRest, 'number', {
           // TODO infer narrow number
-          // `${InputRest & bigint}` extends `${infer T extends number}` ? T : never,
-          bigint: number
+          bigint: `${InputRest & bigint}` extends `${infer T extends number}`
+            ? T
+            : true extends IsEqual<InputRest, bigint>
+              ? number
+              : never,
           boolean: InputRest extends true ? 1 : InputRest extends false ? 0 : never
           number: [InputRest] extends [never] ? (
             Input extends infer UnionInputItem ? (
