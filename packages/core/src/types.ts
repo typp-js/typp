@@ -43,6 +43,8 @@ export type Not<A extends boolean> = [A] extends [false] ? true : false
 
 export type IsTrue<A> = IsEqual<A, any> extends true ? false : IsWhat<A, true>
 
+export type IsConfigure<T, K, Expected = true> = K extends keyof T ? IsWhat<T[K], Expected> : false
+
 export type IsEqual<A, B> =
   (<T>() => T extends A ? 1 : 2) extends
   (<T>() => T extends B ? 1 : 2) ? true : false
