@@ -23,7 +23,7 @@ declare module '@typp/core' {
           bigint: number
           boolean: InputRest extends true ? 1 : InputRest extends false ? 0 : never
           number: [InputRest] extends [never] ? (
-            Input extends infer UnionInputItem extends T ? (
+            Input extends infer UnionInputItem ? (
               IsEqual<UnionInputItem, Number> extends true
                 ? number
                 : Extract<UnionInputItem, number>
