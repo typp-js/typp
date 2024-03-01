@@ -1,7 +1,7 @@
 import type { IsEqual, IsSubType, IsTrue, IsWhat, Not, OnlySubType, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
-import type { SwitchBaseType } from '../base.inner'
+import type { LiteralTypeGuard, SwitchBaseType } from '../base.inner'
 import { parseBigInt } from '../utils'
 import { preprocess } from '../utils.inner'
 
@@ -16,7 +16,7 @@ declare module '@typp/core' {
     export interface ValidateTransformEntries<T, Input, InputRest> {
       bigint: [
         [T] extends [bigint] ? true : false,
-        SwitchBaseType<Input, InputRest, 'bigint', {
+        LiteralTypeGuard<bigint, T, SwitchBaseType<Input, InputRest, 'bigint', {
           bigint:
             [InputRest] extends [never] ? (
               Input extends infer UnionInputItem ? (
@@ -48,11 +48,7 @@ declare module '@typp/core' {
           symbol: never
           null: 0n
           undefined: 0n
-        }> extends infer Result ? (
-          IsWhat<T, bigint> extends true ? Result : (
-            IsTrue<IsSubType<Result, T>> extends true ? Result : never
-          )
-        ) : never
+        }>>
       ]
     }
   }

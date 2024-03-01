@@ -1,7 +1,7 @@
 import type { IsEqual, IsWhat, OnlySubType, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
-import type { SwitchBaseType } from '../base.inner'
+import type { LiteralTypeGuard, SwitchBaseType } from '../base.inner'
 import { preprocess } from '../utils.inner'
 
 declare module '@typp/core' {
@@ -17,7 +17,7 @@ declare module '@typp/core' {
     export interface ValidateTransformEntries<T, Input, InputRest> {
       boolean: [
         [T] extends [boolean] ? true : false,
-        SwitchBaseType<Input, InputRest, 'boolean', {
+        LiteralTypeGuard<boolean, T, SwitchBaseType<Input, InputRest, 'boolean', {
           bigint: boolean
           boolean:
             [InputRest] extends [never] ? (
@@ -32,7 +32,7 @@ declare module '@typp/core' {
           symbol: never
           null: false
           undefined: false
-        }>
+        }>>
       ]
     }
   }

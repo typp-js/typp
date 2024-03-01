@@ -1,7 +1,7 @@
 import type { IsEqual, IsWhat, OnlySubType, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
-import type { SwitchBaseType } from '../base.inner'
+import type { LiteralTypeGuard, SwitchBaseType } from '../base.inner'
 import { preprocess } from '../utils.inner'
 
 declare module '@typp/core' {
@@ -17,7 +17,7 @@ declare module '@typp/core' {
     export interface ValidateTransformEntries<T, Input, InputRest> {
       number: [
         [T] extends [number] ? true : false,
-        SwitchBaseType<Input, InputRest, 'number', {
+        LiteralTypeGuard<number, T, SwitchBaseType<Input, InputRest, 'number', {
           // TODO infer narrow number
           // `${InputRest & bigint}` extends `${infer T extends number}` ? T : never,
           bigint: number
@@ -43,7 +43,7 @@ declare module '@typp/core' {
           symbol: never
           null: 0
           undefined: 0
-        }>
+        }>>
       ]
     }
   }

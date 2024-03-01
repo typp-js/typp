@@ -1,5 +1,6 @@
 import type { IsWhat, OnlySubType, t as tn } from '@typp/core'
 
+import type { LiteralTypeGuard } from '../base.inner'
 import { preprocess } from '../utils.inner'
 
 declare module '@typp/core' {
@@ -15,7 +16,7 @@ declare module '@typp/core' {
     export interface ValidateTransformEntries<T, Input, InputRest> {
       symbol: [
         [T] extends [symbol] ? true : false,
-        Input extends symbol ? symbol : unknown
+        LiteralTypeGuard<symbol, T, Input extends symbol ? symbol : unknown>
       ]
     }
   }

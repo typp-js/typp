@@ -1,4 +1,13 @@
-import type { IsAnySubType, IsEqual, IsWhat, Switch, SwitchEntries, SwitchOtherEntry, t as tn } from '@typp/core'
+import type {
+  IsAnySubType,
+  IsEqual, IsSubType,
+  IsTrue,
+  IsWhat,
+  Switch,
+  SwitchEntries,
+  SwitchOtherEntry,
+  t as tn
+} from '@typp/core'
 
 import { toPrimitive } from './utils'
 
@@ -82,6 +91,13 @@ export type SwitchBaseType<
       ? never
       : R
   : never
+
+export type LiteralTypeGuard<BaseType, T, Result> = IsWhat<T, BaseType> extends true
+  ? Result : (
+    IsTrue<IsSubType<Result, T>> extends true
+      ? Result
+      : never
+  )
 
 export class ValidateError extends Error {
   __TYPP_SYMBOL__ = '__ValidateError__'
