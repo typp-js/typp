@@ -173,22 +173,22 @@ declare module '@typp/core' {
           | (O['try'] extends true ? true : false)
           | (O['transform'] extends true ? true : false)
         ) ? unknown : never,
+        D extends TT | Rest,
         Opts extends ValidateOptions
       >(
-        data: TT | Rest,
-        options?: Opts
-      ): ValidateReturnType<T, ExtendsT, TT | Rest, Exclude<typeof data, ExtendsT>, Opts & O>
+        data: D, options?: Opts
+      ): ValidateReturnType<T, ExtendsT, D, Exclude<D, ExtendsT>, Opts & O>
       narrow<
         TT extends ExtendsT,
         Rest extends true extends(
           | (O['try'] extends true ? true : false)
           | (O['transform'] extends true ? true : false)
         ) ? unknown : never,
+        D extends TT | Rest,
         Opts extends ValidateOptions
       >(
-        data: Narrow<TT | Rest>,
-        options?: Opts
-      ): ValidateReturnType<T, ExtendsT, TT | Rest, Exclude<typeof data, ExtendsT>, Opts & O & { const: true }>
+        data: Narrow<D>, options?: Opts
+      ): ValidateReturnType<T, ExtendsT, D, Exclude<D, ExtendsT>, Opts & O & { const: true }>
     }
     interface SchemaFieldsAll<Shape, T> {
       validate: ValidateItf<Shape, T>

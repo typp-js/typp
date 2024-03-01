@@ -580,7 +580,7 @@ describe('string', () => {
     })
     test('toString', () => {
       const skm = t.string()
-      const r0 = skm.parse({ toString: () => '1' })
+      const r0 = skm.parse({ toString: () => '1' } as String)
       expect(r0).toBe('1')
       expectTypeOf(r0).toEqualTypeOf<string>()
     })
