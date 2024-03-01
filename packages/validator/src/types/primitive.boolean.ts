@@ -27,8 +27,9 @@ declare module '@typp/core' {
                   : Extract<UnionInputItem, boolean>
               ) : never
             ) : never
-          number: boolean
-          string: boolean
+          number: InputRest extends 0 ? false : true
+          // TODO replace by `Falsy`
+          string: InputRest extends 'false' ? false : true
           symbol: never
           null: false
           undefined: false

@@ -217,5 +217,27 @@ describe('literal primitive', () => {
         expectTypeOf(r0).toEqualTypeOf<never>()
       }).toThrow()
     })
+    test('boolean', () => {
+      const trueBooleanSkm = t.const(true)
+      const r0 = trueBooleanSkm.parse(true)
+      expect(r0).toBe(true)
+      expectTypeOf(r0).toEqualTypeOf<true>()
+
+      const r1 = trueBooleanSkm.parse.narrow(1)
+      expect(r1).toBe(true)
+      expectTypeOf(r1).toEqualTypeOf<true>()
+
+      const r2 = trueBooleanSkm.parse.narrow('1')
+      expect(r2).toBe(true)
+      expectTypeOf(r2).toEqualTypeOf<true>()
+      expect(() => {
+        const r0 = trueBooleanSkm.parse(false)
+        expectTypeOf(r0).toEqualTypeOf<never>()
+      }).toThrow()
+      expect(() => {
+        const r0 = trueBooleanSkm.parse('false')
+        expectTypeOf(r0).toEqualTypeOf<never>()
+      }).toThrow()
+    })
   })
 })
