@@ -28,13 +28,15 @@ const CANT_OVERRIDE = Object.freeze([
 ] as const)
 export function t<const T extends any[]>(...types: T): Typp<T> {
   let shape: unknown = undefined
+  let consumerAttachedFields: Record<string, unknown> = {}
   for (const consumer of consumers) {
     const result = consumer(...types)
     if (result) {
       if (t.isSchema(result)) return result as Typp<T>
 
-      const [s] = result
+      const [s, fields] = result
       shape = s
+      consumerAttachedFields = fields ?? {}
       break
     }
   }
@@ -43,6 +45,7 @@ export function t<const T extends any[]>(...types: T): Typp<T> {
   const skm = Object.assign(
     { [__typp__]: true },
     { shape },
+    consumerAttachedFields as unknown,
     { meta }
   ) as t.Schema<any, any>
   let skmIsFullyDefined = false
@@ -82,7 +85,10 @@ interface SchemaBase<Shape, T> {
 const consumers = new Set<t.Consumer>()
 /* istanbul ignore next -- @preserve */
 export namespace t {
-  export type Consumer = (...args: any[]) => Nonexistentable<[shape: any] | Schema<any, any>>
+  export type Consumer = (...args: any[]) => Nonexistentable<
+    | [shape: any, fileds?: Record<string, unknown>]
+    | Schema<any, any>
+  >
   export function useConsumer(consumer: Consumer) {
     consumers.add(consumer)
     return () => consumers.delete(consumer)
