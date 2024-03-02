@@ -50,7 +50,10 @@ export default function (ctx: typeof tn) {
       if (first.length === 0 && rest.length > 0) {
         return [[t(...rest)]]
       }
-      return [first.map(item => t(item))]
+      return [first.map(item => t(item)), {
+        // to distribute tuple and array in runtime
+        length: first.length
+      }]
     }
   })
   t.useStatic('array', <const T extends readonly any[]>(...types: T) => t(Array, ...types))
