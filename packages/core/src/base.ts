@@ -4,7 +4,7 @@ import type {
   IsTrue,
   Nonexistentable, Pipes,
   Pretty,
-  Stack,
+  Stack, Switch, SwitchEntries,
   U2I,
   ValueOf
 } from './types'
@@ -208,24 +208,12 @@ export namespace t {
   export interface SchemaMeta<Shape, T> {
     [k: string | number | symbol]: any
   }
-  export interface SchemaFieldsEntries<Shape = any, T = any> {
-    [key: number & {}]: [boolean, any]
+  export interface SchemaFieldsEntries<Shape = any, T = any> extends SwitchEntries {
   }
   export type SchemaFieldsMapping<
     Shape = any, T = any,
-    Entries extends SchemaFieldsEntries<Shape, T> = SchemaFieldsEntries<Shape, T>
-  > = [keyof Entries] extends [infer Keys extends number] ? Pretty<U2I<
-    ValueOf<{
-      [ K in Keys
-        as true extends (
-          & Entries[K][0]
-          & IsNotEqual<K, number & {}>
-        ) ? K : never
-      ]: Entries[K][1]
-    }> extends infer R
-      ? [R] extends [never] ? {} : R
-      : never
-  >> : {}
+    Entries extends SwitchEntries = SchemaFieldsEntries<Shape, T>
+  > = Pretty<U2I<Switch<Entries>>>
   export interface SchemaFieldsAll<Shape, T> {
     // TODO readonly
     // TODO mutable
