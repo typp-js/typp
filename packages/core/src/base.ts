@@ -44,9 +44,9 @@ export function t<const T extends any[]>(...types: T): Typp<T> {
   const skm = Object.assign(
     { [__typp__]: true },
     { shape },
-    consumerAttachedFields as unknown,
     { meta }
   ) as t.Schema<any, any>
+  completeAssign(skm, consumerAttachedFields)
   let skmIsFullyDefined = false
   for (const [is, inject] of registers) {
     if (!is(shape)) continue
