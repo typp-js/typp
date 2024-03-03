@@ -21,5 +21,11 @@ describe('tuple', () => {
     const output = t0.validate(input0)
     expect(output).toEqual(input0)
     expectTypeOf(output).toEqualTypeOf<[string]>()
+
+    const input1 = [1]
+    expect(() => {
+      // @ts-expect-error
+      t0.validate(input1)
+    }).toThrow('Data is unexpected')
   })
 })
