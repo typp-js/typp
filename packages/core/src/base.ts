@@ -1,7 +1,6 @@
 import type {
   AtLeastOneProperty,
   IsEqual,
-  IsNotEqual,
   IsTrue,
   Nonexistentable, Pipes,
   Pretty,
