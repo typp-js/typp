@@ -141,6 +141,18 @@ describe('array and tuple', () => {
     expectTypeOf<t.Infer<typeof case0_0>>()
       .toEqualTypeOf<[number]>()
     expectTypeOf(case0_0).toEqualTypeOf<typeof case0_1>()
+
+    // the tuple type schema should have a length property
+    // and the length should be the same as the length of the tuple
+    expect(case0_0.length).toEqual(1)
+    expect(case0_1.length).toEqual(1)
+    expectTypeOf(case0_0.length).toEqualTypeOf<1>()
+    expectTypeOf(case0_1.length).toEqualTypeOf<1>()
+    expect(() => {
+      // @ts-expect-error
+      case0_0.length = 2
+    }).toThrow(new TypeError('Cannot set property length of #<Object> which has only a getter'))
+
     const shape0_0 = case0_0.shape
     const shape0_1 = case0_1.shape
     expect(shape0_0).toEqual([t(Number)])

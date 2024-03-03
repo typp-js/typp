@@ -37,6 +37,26 @@ declare module '../base' {
     }
     export function array<const T extends readonly any[]>(...types: T): Typp<[ArrayConstructor, ...T]>
     export function tuple<const T extends readonly any[]>(...types: T): Typp<[T]>
+
+    export interface ArraySchemaFields<Shape, T> {
+    }
+    export interface TupleSchemaFields<Shape, T> {
+      readonly length: 'length' extends keyof Shape
+        ? Shape['length']
+        : never
+    }
+    export interface SchemaFieldsEntries<Shape = any, T = any> {
+      array: [
+        & ([Shape] extends [any[]] ? true : false)
+        & IsNotEqual<Shape, any>,
+        ArraySchemaFields<Shape, T>
+      ]
+      tuple: [
+        & ([Shape] extends [[unknown?, ...unknown[]]] ? true : false)
+        & IsNotEqual<Shape, any>,
+        TupleSchemaFields<Shape, T>
+      ]
+    }
   }
 }
 
@@ -52,7 +72,7 @@ export default function (ctx: typeof tn) {
       }
       return [first.map(item => t(item)), {
         // to distribute tuple and array in runtime
-        length: first.length
+        get length() { return first.length }
       }]
     }
   })
