@@ -351,7 +351,10 @@ export function validatorSkeleton(t: typeof tn) {
   })
   t.useFields({
     test(data: unknown): data is any {
-      return validate.call(this, data, { try: true }).success
+      return this.tryValidate(data, { try: true }).success
+      // TODO replace by the next line, don't use the this
+      //      the validate function is not support `option` parameter
+      // return validate.call(this, data, { try: true }).success
     }
   })
 }
