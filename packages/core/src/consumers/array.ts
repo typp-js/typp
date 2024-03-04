@@ -16,12 +16,17 @@ declare module '../base' {
         | IsEqual<T, readonly []>
       )
     ) ? (
+      // empty tuple
       t.Schema<[], []>
     ) : true extends (
       ([T] extends [readonly [any, ...any[]]] ? true : false)
     ) ? (
+      // tuple
       [t.TyppI<T>] extends [infer R] ? t.Schema<R, t.InferI<R>> : never
-    ) : t.Schema<Typp<Rest>[], t.Infer<Typp<Rest>>[]>
+    ) : (
+      // array
+      t.Schema<Typp<Rest>[], t.Infer<Typp<Rest>>[]>
+    )
     export interface ShapeEntries<T, Rest extends any[]> {
       100000: [true extends (
         | IsEqual<T, ArrayConstructor>
