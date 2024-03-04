@@ -37,7 +37,7 @@ export function arrayValidator(t: typeof tn) {
         return false
       }
       // distribute array and tuple
-      if ('length' in this) {
+      if (Object.hasOwnProperty.call(this, 'length')) {
         // tuple
         if (input.length !== this.shape.length) {
           return false
@@ -51,6 +51,13 @@ export function arrayValidator(t: typeof tn) {
         }
       } else {
         // array
+        const shapeItem = this.shape[0]
+        for (let i = 0; i < input.length; i++) {
+          const inputItem = input[i]
+          if (!shapeItem.test(inputItem)) {
+            return false
+          }
+        }
       }
       return true
     },
