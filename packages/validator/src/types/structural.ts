@@ -8,6 +8,22 @@ import type { t as tn } from '@typp/core'
 // TODO array
 // TODO tuple
 
+declare module '@typp/core' {
+  namespace t {
+    export interface ValidateExtendsEntries<T> {
+      array: [
+        [T] extends [unknown[]] ? true : false, T
+      ]
+    }
+    export interface ValidateTransformEntries<T, Input, InputRest> {
+      array: [
+        [T] extends [unknown[]] ? true : false,
+        Input
+      ]
+    }
+  }
+}
+
 export function structuralValidator(t: typeof tn) {
   t.use(arrayValidator)
 }

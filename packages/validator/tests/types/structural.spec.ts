@@ -17,15 +17,13 @@ describe('tuple', () => {
   }))
   test('base', () => {
     const t0 = t([String])
-    const input0 = ['']
-    const output = t0.validate(input0)
-    expect(output).toEqual(input0)
+    const output = t0.validate([''])
+    expect(output).toEqual([''])
     expectTypeOf(output).toEqualTypeOf<[string]>()
 
-    const input1 = [1]
     expect(() => {
-      // @ts-expect-error
-      t0.validate(input1)
+      // @ts-expect-error - TS2322: Type number is not assignable to type string
+      t0.validate([1])
     }).toThrow('Data is unexpected')
   })
 })
