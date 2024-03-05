@@ -16,8 +16,7 @@ import {
   ValidateError as _ValidateError
 } from './base.inner'
 import { typesValidator } from './types'
-import { toPrimitive } from './utils'
-import { catchAndWrapProxy } from './utils.inner'
+import { catchAndWrapProxy, preprocess } from './utils.inner'
 
 type Transform<Shape = unknown> = (
   this: Typp<[Shape]>,
@@ -213,8 +212,6 @@ declare module '@typp/core' {
     }
   }
 }
-
-const preprocess: Transform = (input, options) => toPrimitive(input)
 
 // 如果俩个类型之间不支持转化，应该抛出「校验错误」还是「转化错误」？
 // 实际上来说，一个值不能作为某个类型使用，存在俩种情况
