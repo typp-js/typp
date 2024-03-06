@@ -208,7 +208,7 @@ declare module '@typp/core' {
       // for zod
       safeParse: this['tryParse']
 
-      test: (data: unknown) => data is T
+      test: (data: unknown, options?: Omit<tn.ValidateOptions, 'try'>) => data is T
     }
   }
 }
@@ -227,74 +227,85 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
     throw new Error('No data to validate')
   const [data, options = {}] = args as [any, tn.ValidateOptions]
   const {
+    try: isTry = false,
+    const: isConst = false,
+    exact: isExact = false,
     transform: isTransform = false
   } = options
-  // TODO
-  //  完全匹配
-  //  部分匹配，部分缺失或不匹配: partially
-  //  完全不匹配: unexpected
-  //  完全匹配但超过了原类型: excessive
-  let rt = data
-  let validator: AtLeastOneProperty<tn.Validator> | undefined
-  if (validators.has(this.shape)) {
-    validator = validators.get(this.shape)
-  } else {
-    for (const [matcher, v] of validatorMappingByMatcher) {
-      if (matcher(this, rt)) {
-        validator = v
-        break
+  const wrap = () => {
+    // TODO
+    //  完全匹配
+    //  部分匹配，部分缺失或不匹配: partially
+    //  完全不匹配: unexpected
+    //  完全匹配但超过了原类型: excessive
+    let rt = data
+    let validator: AtLeastOneProperty<tn.Validator> | undefined
+    if (validators.has(this.shape)) {
+      validator = validators.get(this.shape)
+    } else {
+      for (const [matcher, v] of validatorMappingByMatcher) {
+        if (matcher(this, rt)) {
+          validator = v
+          break
+        }
       }
     }
-  }
-  if (!validator)
-    throw new Error(`Unable to validate when shape is \`${this.shape}\`, because the shape is not supported validator`)
+    if (!validator)
+      throw new Error(`Unable to validate when shape is \`${this.shape}\`, because the shape is not supported validator`)
 
-  const {
-    preprocess: preprocessNoThis,
-    validate: validateNoThis,
-    transform: transformNoThis
-  } = validator
-  const [
-    validate, transform, preprocess
-  ] = [validateNoThis, transformNoThis, preprocessNoThis].map(fn => fn?.bind(this))
-  if (!validate)
-    throw new Error(`Unable to validate when shape is ${this.shape}, because the shape is not supported validator`)
-
-  try {
-    rt = preprocess ? preprocess(rt, options) : rt
-  } catch (e) {
-    if (e instanceof Error) {
-      throw new _ParseError('preprocess', this, rt, e)
-    }
-    throw e
-  }
-
-  if (isTransform && !validate(rt, options)) {
-    if (!transform)
-      throw new Error(`Unable to transform when shape is ${this.shape}, because the shape is not supported transformer`)
+    const {
+      preprocess: preprocessNoThis,
+      validate: validateNoThis,
+      transform: transformNoThis
+    } = validator
+    const [
+      validate, transform, preprocess
+    ] = [validateNoThis, transformNoThis, preprocessNoThis].map(fn => fn?.bind(this))
+    if (!validate)
+      throw new Error(`Unable to validate when shape is ${this.shape}, because the shape is not supported validator`)
 
     try {
-      rt = transform(rt, options)
+      rt = preprocess ? preprocess(rt, options) : rt
     } catch (e) {
       if (e instanceof Error) {
-        throw new _ParseError('transform', this, rt, e)
+        throw new _ParseError('preprocess', this, rt, e)
       }
       throw e
     }
+
+    if (isTransform && !validate(rt, options)) {
+      if (!transform)
+        throw new Error(`Unable to transform when shape is ${this.shape}, because the shape is not supported transformer`)
+
+      try {
+        rt = transform(rt, options)
+      } catch (e) {
+        if (e instanceof Error) {
+          throw new _ParseError('transform', this, rt, e)
+        }
+        throw e
+      }
+    }
+    if (!validate(rt, options))
+      throw new _ValidateError('unexpected', this, rt)
+    return rt
   }
-  if (!validate(rt, options))
-    throw new _ValidateError('unexpected', this, rt)
-  return rt
+  return isTry ? catchAndWrapProxy(wrap)() : wrap()
 }
 validate.narrow = validate
-function parse(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions): any
-function parse(this: tn.Schema<any, any>, ...args: any[]) {
-  if (args.length === 0)
-    throw new Error('No data to validate')
-  const [data, options] = args
-  return validate.call(this, data, { transform: true, ...options })
+function validateGen(skm: tn.Schema<any, any>, defaultOptions?: tn.ValidateOptions) {
+  function inner(...args: any[]) {
+    if (args.length === 0)
+      throw new Error('No data to validate')
+    const [data, options] = args
+    return validate.call(skm, data, {
+      ...defaultOptions,
+      ...options
+    })
+  }
+  inner.narrow = (...args: unknown[]) => inner(...args)
+  return inner
 }
-parse.narrow = parse
 
 export function validatorSkeleton(t: typeof tn) {
   t.useStatic('useValidator', _useValidator)
@@ -302,56 +313,21 @@ export function validatorSkeleton(t: typeof tn) {
   t.useStatic('ValidateError', _ValidateError)
   t.useFields({
     get validate() {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const skm = this
-      return new Proxy(validate, {
-        get(target, key) {
-          return (
-            Reflect.get(target, key) as Function
-          ).bind(skm)
-        }
-      })
+      return validateGen(this)
     },
     get tryValidate() {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const skm = this
-      return catchAndWrapProxy(validate, {
-        get(target, key) {
-          return catchAndWrapProxy((
-            Reflect.get(target, key) as Function
-          ).bind(skm))
-        }
-      })
+      return validateGen(this, { try: true })
     },
     get parse() {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const skm = this
-      return new Proxy(parse, {
-        get(target, key) {
-          return (
-            Reflect.get(target, key) as Function
-          ).bind(skm)
-        }
-      })
+      return validateGen(this, { transform: true })
     },
     get tryParse() {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const skm = this
-      return catchAndWrapProxy(parse, {
-        get(target, key) {
-          return catchAndWrapProxy((
-            Reflect.get(target, key) as Function
-          ).bind(skm))
-        }
-      })
+      return validateGen(this, { try: true, transform: true })
     }
   })
   t.useFields({
-    test(data: unknown): data is any {
-      return this.tryValidate(data, { try: true }).success
-      // TODO replace by the next line, don't use the this
-      //      the validate function is not support `option` parameter
-      // return validate.call(this, data, { try: true }).success
+    test(data: unknown, options = {}): data is any {
+      return validateGen(this, { ...options, try: true })(data, options).success
     }
   })
 }
