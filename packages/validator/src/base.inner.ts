@@ -99,12 +99,14 @@ export type LiteralTypeGuard<BaseType, T, Result> = IsWhat<T, BaseType> extends 
       : never
   )
 
-export class ValidateError extends Error {
+export class ValidateError<K extends tn.ErrorArgsMapKeys = string> extends Error {
   __TYPP_SYMBOL__ = '__ValidateError__'
   constructor(
     public type: string,
     public expected: tn.Schema<any, any>,
-    public actual: any
+    public actual: any,
+    public keyword?: K,
+    public args?: tn.GetErrorArgs<K>
   ) {
     super(`Data is ${type}`)
     this.name = 'ValidateError'

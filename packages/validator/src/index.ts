@@ -58,6 +58,11 @@ function _useValidator<Shape>(
 
 declare module '@typp/core' {
   namespace t {
+    export interface ErrorArgsMap {
+      [k: string]: unknown[]
+    }
+    export type ErrorArgsMapKeys = keyof ErrorArgsMap
+    export type GetErrorArgs<K extends ErrorArgsMapKeys> = ErrorArgsMap[K]
     export const useValidator: typeof _useValidator
     export const ValidateError: typeof _ValidateError
     export const ParseError: typeof _ParseError
