@@ -36,6 +36,7 @@ export function arrayValidator(t: typeof tn) {
       if (!Array.isArray(input)) {
         return false
       }
+      // TODO partially errors
       // distribute array and tuple
       if (Object.hasOwnProperty.call(this, 'length')) {
         // tuple
