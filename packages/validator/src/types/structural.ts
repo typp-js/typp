@@ -10,6 +10,9 @@ import type { t as tn } from '@typp/core'
 
 declare module '@typp/core' {
   namespace t {
+    export interface ErrorArgsMap {
+      'ValidateError:tuple length not match': [expected: number, actual: number]
+    }
     export interface ValidateExtendsEntries<T> {
       array: [
         [T] extends [unknown[]] ? true : false, T
@@ -50,7 +53,10 @@ export function arrayValidator(t: typeof tn) {
           }
         }
         if (input.length !== this.shape.length) {
-          throw new ValidateError('partially match', this, input)
+          throw new ValidateError(
+            'partially match', this, input,
+            'ValidateError:tuple length not match', [this.shape.length, input.length]
+          )
         }
       } else {
         // array
