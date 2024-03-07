@@ -29,6 +29,8 @@ export function structuralValidator(t: typeof tn) {
 }
 
 export function arrayValidator(t: typeof tn) {
+  const { ValidateError } = t
+
   t.useValidator((s): s is tn.Schema<any[], any[]> => {
     return Array.isArray(s.shape)
   }, {
@@ -40,15 +42,15 @@ export function arrayValidator(t: typeof tn) {
       // distribute array and tuple
       if (Object.hasOwnProperty.call(this, 'length')) {
         // tuple
-        if (input.length !== this.shape.length) {
-          return false
-        }
-        for (let i = 0; i < input.length; i++) {
+        for (let i = 0; i < this.shape.length; i++) {
           const shapeItem = this.shape[i]
           const inputItem = input[i]
           if (!shapeItem.test(inputItem)) {
             return false
           }
+        }
+        if (input.length !== this.shape.length) {
+          throw new ValidateError('partially match', this, input)
         }
       } else {
         // array

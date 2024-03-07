@@ -45,4 +45,12 @@ describe('tuple', () => {
       t0.validate([1])
     }).toThrow('Data is unexpected')
   })
+  test('length is not match', () => {
+    const t0 = t([String])
+    expect(() => {
+      // @ts-expect-error - TS2345: Argument of type [string, number] is not assignable to parameter of type [string]
+      // Source has 2 element(s) but target allows only 1
+      t0.validate(['', 1])
+    }).toThrow('Data is partially match')
+  })
 })
