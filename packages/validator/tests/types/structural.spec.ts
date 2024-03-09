@@ -1,10 +1,10 @@
 import { t } from '@typp/core'
 import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 
-import { validatorSkeleton } from '../../src'
+import { isWhatError, validatorSkeleton } from '../../src'
+import { ValidateError } from '../../src/base.inner'
 import { stringValidator } from '../../src/types/primitive.string'
 import { arrayValidator } from '../../src/types/structural'
-import { ValidateError } from '../../src/base.inner'
 
 beforeAll(() => t.use(validatorSkeleton))
 
@@ -55,8 +55,12 @@ describe('tuple', () => {
     } catch (e) {
       expect(e).toBeInstanceOf(ValidateError)
       expect(e).toHaveProperty('message', 'Data is partially match')
-      expect(e).toHaveProperty('keyword', 'ValidateError:tuple length not match')
-      expect(e).toHaveProperty('args', [1, 2])
+      if (isWhatError(e, 'ValidateError:tuple length not match')) {
+        expect(e.args).toEqual([1, 2])
+        expectTypeOf(e.args).toEqualTypeOf<[number, number]>()
+      } else {
+        throw new Error('The error should be ValidateError:tuple length not match')
+      }
     }
   })
 })

@@ -375,5 +375,13 @@ export default function validator(t: typeof tn) {
 }
 export { validator }
 
+export function isWhatError<K extends tn.ErrorArgsMapKeys>(
+  error: unknown, key: K
+): error is { key: K, args: tn.GetErrorArgs<K> } {
+  if (typeof error !== 'object' || error === null)
+    return false
+  return 'key' in error && error.key === key
+}
+
 export * from './base'
 export * from './utils'
