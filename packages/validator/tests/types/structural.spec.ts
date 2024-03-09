@@ -4,6 +4,7 @@ import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 import { validatorSkeleton } from '../../src'
 import { stringValidator } from '../../src/types/primitive.string'
 import { arrayValidator } from '../../src/types/structural'
+import { ValidateError } from '../../src/base.inner'
 
 beforeAll(() => t.use(validatorSkeleton))
 
@@ -47,10 +48,15 @@ describe('tuple', () => {
   })
   test('length is not match', () => {
     const t0 = t([String])
-    expect(() => {
+    try {
       // @ts-expect-error - TS2345: Argument of type [string, number] is not assignable to parameter of type [string]
       // Source has 2 element(s) but target allows only 1
       t0.validate(['', 1])
-    }).toThrow('Data is partially match')
+    } catch (e) {
+      expect(e).toBeInstanceOf(ValidateError)
+      expect(e).toHaveProperty('message', 'Data is partially match')
+      expect(e).toHaveProperty('keyword', 'ValidateError:tuple length not match')
+      expect(e).toHaveProperty('args', [1, 2])
+    }
   })
 })
