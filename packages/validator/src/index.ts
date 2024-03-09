@@ -65,7 +65,9 @@ declare module '@typp/core' {
     export type GetErrorArgs<K extends ErrorArgsMapKeys> = ErrorArgsMap[K]
     export const useValidator: typeof _useValidator
     export const ValidateError: typeof _ValidateError
+    export type ValidateError = _ValidateError
     export const ParseError: typeof _ParseError
+    export type ParseError = _ParseError
     export interface ValidateExtendsEntries<T> {
       [key: string]: [boolean, any]
     }
