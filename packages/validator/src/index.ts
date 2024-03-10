@@ -379,10 +379,10 @@ export { validator }
 
 export function isWhatError<K extends tn.ErrorArgsMapKeys>(
   error: unknown, key: K
-): error is { key: K, args: tn.GetErrorArgs<K> } {
+): error is { keyword: K, args: tn.GetErrorArgs<K> } {
   if (typeof error !== 'object' || error === null)
     return false
-  return 'key' in error && error.key === key
+  return 'keyword' in error && error.keyword === key
 }
 
 export * from './base'
