@@ -42,40 +42,26 @@ export function arrayValidator(t: typeof tn) {
       if (!Array.isArray(input)) {
         return false
       }
-      // TODO partially errors
-      // distribute array and tuple
-      if (Object.hasOwnProperty.call(this, 'length')) {
-        // tuple
-        for (let i = 0; i < this.shape.length; i++) {
-          const shapeItem = this.shape[i] as tn.Schema<unknown, unknown>
-          const inputItem = input[i] as unknown
-          const result = shapeItem.tryValidate(inputItem)
-          if (!result.success) {
-            throw new ValidateError(
-              'partially match', this, input,
-              'ValidateError:item of array not match', [i, result.error]
-            )
-          }
-        }
-        if (input.length !== this.shape.length) {
+      const isTuple = Object.hasOwnProperty.call(this, 'length')
+      // tuple
+      for (let i = 0; i < this.shape.length; i++) {
+        const shapeItem: tn.Schema<unknown, unknown> = isTuple
+          ? this.shape[i]
+          : this.shape[0]
+        const inputItem = input[i] as unknown
+        const result = shapeItem.tryValidate(inputItem)
+        if (!result.success) {
           throw new ValidateError(
             'partially match', this, input,
-            'ValidateError:tuple length not match', [this.shape.length, input.length]
+            'ValidateError:item of array not match', [i, result.error]
           )
         }
-      } else {
-        // array
-        const shapeItem = this.shape[0] as tn.Schema<unknown, unknown>
-        for (let i = 0; i < input.length; i++) {
-          const inputItem = input[i] as unknown
-          const result = shapeItem.tryValidate(inputItem)
-          if (!result.success) {
-            throw new ValidateError(
-              'partially match', this, input,
-              'ValidateError:item of array not match', [i, result.error]
-            )
-          }
-        }
+      }
+      if (isTuple && input.length !== this.length) {
+        throw new ValidateError(
+          'partially match', this, input,
+          'ValidateError:tuple length not match', [this.shape.length, input.length]
+        )
       }
       return true
     },
