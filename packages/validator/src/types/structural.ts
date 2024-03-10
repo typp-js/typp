@@ -12,6 +12,7 @@ declare module '@typp/core' {
   namespace t {
     export interface ErrorArgsMap {
       'ValidateError:tuple length not match': [expected: number, actual: number]
+      'ValidateError:item of array not match': [index: number, error: tn.ValidateError]
     }
     export interface ValidateExtendsEntries<T> {
       array: [
@@ -46,10 +47,14 @@ export function arrayValidator(t: typeof tn) {
       if (Object.hasOwnProperty.call(this, 'length')) {
         // tuple
         for (let i = 0; i < this.shape.length; i++) {
-          const shapeItem = this.shape[i]
-          const inputItem = input[i]
-          if (!shapeItem.test(inputItem)) {
-            return false
+          const shapeItem = this.shape[i] as tn.Schema<unknown, unknown>
+          const inputItem = input[i] as unknown
+          const result = shapeItem.tryValidate(inputItem)
+          if (!result.success) {
+            throw new ValidateError(
+              'partially match', this, input,
+              'ValidateError:item of array not match', [i, result.error]
+            )
           }
         }
         if (input.length !== this.shape.length) {
@@ -60,11 +65,15 @@ export function arrayValidator(t: typeof tn) {
         }
       } else {
         // array
-        const shapeItem = this.shape[0]
+        const shapeItem = this.shape[0] as tn.Schema<unknown, unknown>
         for (let i = 0; i < input.length; i++) {
-          const inputItem = input[i]
-          if (!shapeItem.test(inputItem)) {
-            return false
+          const inputItem = input[i] as unknown
+          const result = shapeItem.tryValidate(inputItem)
+          if (!result.success) {
+            throw new ValidateError(
+              'partially match', this, input,
+              'ValidateError:item of array not match', [i, result.error]
+            )
           }
         }
       }

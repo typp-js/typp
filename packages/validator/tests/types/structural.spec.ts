@@ -1,5 +1,5 @@
 import { t } from '@typp/core'
-import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
+import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 
 import { isWhatError, validatorSkeleton } from '../../src'
 import { ValidateError } from '../../src/base.inner'
@@ -24,10 +24,25 @@ describe('array', () => {
     expect(output1).toEqual(['', ''])
     expectTypeOf(output1).toEqualTypeOf<string[]>()
 
-    expect(() => {
+    const isCatched = vi.fn()
+    try {
       // @ts-expect-error - TS2322: Type number is not assignable to type string
       t0.validate([1])
-    }).toThrow('Data is unexpected')
+    } catch (e) {
+      isCatched()
+      expect(e).toBeInstanceOf(ValidateError)
+      expect(e).toHaveProperty('message', 'Data is partially match')
+      if (isWhatError(e, 'ValidateError:item of array not match')) {
+        expectTypeOf(e.args).toEqualTypeOf<[number, ValidateError]>()
+        const [index, detailError] = e.args
+        expect(index).toBe(0)
+        expect(detailError).toBeInstanceOf(ValidateError)
+        expect(detailError.type).toEqual('unexpected')
+        expect(detailError.actual).toEqual(1)
+      } else {
+        throw new Error('The error should be ValidateError:tuple length not match')
+      }
+    }
   })
 })
 describe('tuple', () => {
@@ -41,10 +56,26 @@ describe('tuple', () => {
     expect(output).toEqual([''])
     expectTypeOf(output).toEqualTypeOf<[string]>()
 
-    expect(() => {
+    const isCatched = vi.fn()
+    try {
       // @ts-expect-error - TS2322: Type number is not assignable to type string
       t0.validate([1])
-    }).toThrow('Data is unexpected')
+    } catch (e) {
+      isCatched()
+      expect(e).toBeInstanceOf(ValidateError)
+      expect(e).toHaveProperty('message', 'Data is partially match')
+      if (isWhatError(e, 'ValidateError:item of array not match')) {
+        expectTypeOf(e.args).toEqualTypeOf<[number, ValidateError]>()
+        const [index, detailError] = e.args
+        expect(index).toBe(0)
+        expect(detailError).toBeInstanceOf(ValidateError)
+        expect(detailError.type).toEqual('unexpected')
+        expect(detailError.actual).toEqual(1)
+      } else {
+        throw new Error('The error should be ValidateError:tuple length not match')
+      }
+    }
+    expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
   })
   test('length is not match', () => {
     const t0 = t([String])
