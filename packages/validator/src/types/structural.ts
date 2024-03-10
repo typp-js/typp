@@ -66,6 +66,46 @@ export function arrayValidator(t: typeof tn) {
       return true
     },
     transform(input, options) {
+      if (([
+        undefined, 0, 0n, false,
+        '[]', '{}', '',
+        'null', 'undefined', 'false', '0',
+        'Null', 'Undefined', 'False'
+      ] as unknown[]).includes(input)) return []
+      if (typeof input === 'object' && !Array.isArray(input)) {
+        if (input === null) return []
+
+        const isTuple = Object.hasOwnProperty.call(this, 'length')
+
+        if (input instanceof Set) {
+          // TODO implement `Set` transform to Array or Tuple
+        }
+        const lengthOrUndefined = 'length' in input ? input.length : undefined
+        if (lengthOrUndefined === undefined) {
+          return input
+        }
+        const length = parseInt(String(lengthOrUndefined), 10)
+        if (isNaN(length)) {
+          return input
+        }
+        if (isTuple && length !== this.length) {
+          return input
+        }
+        const result = new Array(length)
+        for (let i = 0; i < length; i++) {
+          if (i in input) {
+            const index = i as keyof typeof input
+            const shapeItem: tn.Schema<unknown, unknown> = isTuple
+              ? this.shape[i]
+              : this.shape[0]
+            result[i] = shapeItem.parse(input[index], options)
+          } else {
+            // the key is not iterable
+            return input
+          }
+        }
+        return result
+      }
       return input
     }
   })
