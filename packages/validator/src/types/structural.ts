@@ -1,5 +1,7 @@
 import type { t as tn } from '@typp/core'
 
+import { FALSY } from '../base'
+
 // TODO object
 // TODO dictionary
 // TODO record
@@ -66,12 +68,7 @@ export function arrayValidator(t: typeof tn) {
       return true
     },
     transform(input, options) {
-      if (([
-        undefined, 0, 0n, false,
-        '[]', '{}', '',
-        'null', 'undefined', 'false', '0',
-        'Null', 'Undefined', 'False'
-      ] as unknown[]).includes(input)) return []
+      if (FALSY.includes(input)) return []
       if (typeof input === 'object' && !Array.isArray(input)) {
         if (input === null) return []
 
