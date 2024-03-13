@@ -44,6 +44,13 @@ describe('array', () => {
       }
     }
   })
+  test('empty', () => {
+    const t0 = t(Array, String)
+
+    const output = t0.validate([])
+    expect(output).toEqual([])
+    expectTypeOf(output).toEqualTypeOf<string[]>()
+  })
 })
 describe('tuple', () => {
   beforeAll(() => t.use(ctx => {

@@ -45,8 +45,8 @@ export function arrayValidator(t: typeof tn) {
         return false
       }
       const isTuple = Object.hasOwnProperty.call(this, 'length')
-      // tuple
-      for (let i = 0; i < this.shape.length; i++) {
+      const length = isTuple ? this.length : input.length
+      for (let i = 0; i < length; i++) {
         const shapeItem: tn.Schema<unknown, unknown> = isTuple
           ? this.shape[i]
           : this.shape[0]
