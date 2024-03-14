@@ -1,4 +1,4 @@
-import type { t as tn } from '@typp/core'
+import type { Switch, SwitchOtherEntry, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 
@@ -24,7 +24,13 @@ declare module '@typp/core' {
     export interface ValidateTransformEntries<T, Input, InputRest> {
       array: [
         [T] extends [unknown[]] ? true : false,
-        Input
+        Switch<{
+          null: [
+            [Input] extends [null] ? true : false, []
+          ]
+        } & {
+          [K in SwitchOtherEntry]: Input
+        }>
       ]
     }
   }
