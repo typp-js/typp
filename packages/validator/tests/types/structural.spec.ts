@@ -45,11 +45,11 @@ describe('array', () => {
     }
   })
   test('empty', () => {
-    const t0 = t(Array, String)
+    const t0 = t(Array)
 
     const output = t0.validate([])
     expect(output).toEqual([])
-    expectTypeOf(output).toEqualTypeOf<string[]>()
+    expectTypeOf(output).toEqualTypeOf<any[]>()
   })
   describe('transform', () => {
     test('falsy', () => {
