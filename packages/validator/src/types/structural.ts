@@ -1,4 +1,4 @@
-import type { Switch, SwitchOtherEntry, t as tn } from '@typp/core'
+import type { IsEqual, Switch, SwitchOtherEntry, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 
@@ -23,9 +23,17 @@ declare module '@typp/core' {
         [T] extends [unknown[]] ? true : false,
         Switch<{
           null: [
-            [Input] extends [null] ? true : false, []
+            IsEqual<Input, null>, []
           ]
           // TODO Set, WeakSet
+          ArrayLike: [
+            [Input] extends [ArrayLike<unknown>] ? true : false,
+            [Input] extends [{ length: 0 }]
+              ? T
+              : [Input] extends [ArrayLike<infer I>]
+                ? I[]
+                : never
+          ]
         } & {
           [K in SwitchOtherEntry]: Input
         }>
