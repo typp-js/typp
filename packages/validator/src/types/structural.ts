@@ -28,7 +28,7 @@ declare module '@typp/core' {
           // TODO Set, WeakSet
           ArrayLike: [
             [Input] extends [ArrayLike<unknown>] ? true : false,
-            [Input] extends [{ length: 0 }]
+            [Input] extends [{ length: number }]
               ? T
               : [Input] extends [ArrayLike<infer I>]
                 ? I[]
@@ -102,16 +102,11 @@ export function arrayValidator(t: typeof tn) {
         }
         const result = new Array(length)
         for (let i = 0; i < length; i++) {
-          if (i in input) {
-            const index = i as keyof typeof input
-            const shapeItem: tn.Schema<unknown, unknown> = isTuple
-              ? this.shape[i]
-              : this.shape[0]
-            result[i] = shapeItem.parse(input[index], options)
-          } else {
-            // the key is not iterable
-            return input
-          }
+          const item = input[i as keyof typeof input] ?? undefined
+          const shapeItem: tn.Schema<unknown, unknown> = isTuple
+            ? this.shape[i]
+            : this.shape[0]
+          result[i] = shapeItem.parse(item, options)
         }
         return result
       }

@@ -60,12 +60,18 @@ describe('array', () => {
     })
     test('array-like', () => {
       const t0 = t(Array, String)
+
       const output0 = t0.parse({ length: 0 })
       expect(output0).toEqual([])
       expectTypeOf(output0).toEqualTypeOf<string[]>()
+
       const output1 = t0.parse({ length: 1, 0: 'foo' })
       expect(output1).toEqual(['foo'])
       expectTypeOf(output1).toEqualTypeOf<string[]>()
+
+      const output2 = t0.parse({ length: 1 })
+      expect(output2).toEqual(['undefined'])
+      expectTypeOf(output2).toEqualTypeOf<string[]>()
     })
   })
 })
