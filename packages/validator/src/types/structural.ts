@@ -51,6 +51,10 @@ export function arrayValidator(t: typeof tn) {
 
   t.useValidator((s): s is tn.Schema<any[], any[]> => {
     return Array.isArray(s.shape)
+    // TODO Array.isArray(Array.prototype) === true
+    //      I think `Array.prototype` is an object but not an array, but the logic is not good.
+    //      Maybe I should get more information to determine if it's an array.
+    // && s.shape !== Array.prototype
   }, {
     validate(input) {
       if (!Array.isArray(input)) {
