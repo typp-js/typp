@@ -155,5 +155,28 @@ describe('tuple', () => {
       }
       expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
     })
+    test('array-like', () => {
+      const t0 = t([String])
+
+      const output0 = t0.parse({ length: 1, 0: 'foo' })
+      expect(output0).toEqual(['foo'])
+      expectTypeOf(output0).toEqualTypeOf<[string]>()
+
+      const isCatched = vi.fn()
+      try {
+        t0.parse({ length: 0 })
+      } catch (e) {
+        isCatched()
+        expect(e).toBeInstanceOf(ValidateError)
+        expect(e).toHaveProperty('message', 'Data is partially match')
+        if (isWhatError(e, 'ValidateError:tuple length not match')) {
+          expect(e.args).toEqual([1, 0])
+          expectTypeOf(e.args).toEqualTypeOf<[number, number]>()
+        } else {
+          throw new Error('The error should be ValidateError:tuple length not match')
+        }
+      }
+      expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
+    })
   })
 })
