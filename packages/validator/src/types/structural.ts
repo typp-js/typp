@@ -97,9 +97,6 @@ export function arrayValidator(t: typeof tn) {
         if (isNaN(length)) {
           return input
         }
-        if (isTuple && length !== this.length) {
-          return input
-        }
         const result = new Array(length)
         for (let i = 0; i < length; i++) {
           const item = input[i as keyof typeof input] ?? undefined
