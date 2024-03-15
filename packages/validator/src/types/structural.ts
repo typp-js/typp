@@ -28,6 +28,7 @@ declare module '@typp/core' {
           null: [
             [Input] extends [null] ? true : false, []
           ]
+          // TODO Set, WeakSet
         } & {
           [K in SwitchOtherEntry]: Input
         }>
