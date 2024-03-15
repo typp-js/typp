@@ -6,9 +6,6 @@ import { FALSY } from '../base'
 // TODO dictionary
 // TODO record
 // TODO class/instanceof
-// TODO function
-// TODO array
-// TODO tuple
 
 declare module '@typp/core' {
   namespace t {
