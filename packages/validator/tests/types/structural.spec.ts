@@ -131,4 +131,29 @@ describe('tuple', () => {
       }
     }
   })
+  describe('transform', () => {
+    test('falsy', () => {
+      const t0 = t([])
+
+      const output0 = t0.parse(null)
+      expect(output0).toEqual([])
+      expectTypeOf(output0).toEqualTypeOf<[]>()
+
+      const isCatched = vi.fn()
+      try {
+        t([String]).parse(null)
+      } catch (e) {
+        isCatched()
+        expect(e).toBeInstanceOf(ValidateError)
+        expect(e).toHaveProperty('message', 'Data is partially match')
+        if (isWhatError(e, 'ValidateError:tuple length not match')) {
+          expect(e.args).toEqual([1, 0])
+          expectTypeOf(e.args).toEqualTypeOf<[number, number]>()
+        } else {
+          throw new Error('The error should be ValidateError:tuple length not match')
+        }
+      }
+      expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
+    })
+  })
 })

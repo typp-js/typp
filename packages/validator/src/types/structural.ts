@@ -58,6 +58,12 @@ export function arrayValidator(t: typeof tn) {
       }
       const isTuple = Object.hasOwnProperty.call(this, 'length')
       const length = isTuple ? this.length : input.length
+      if (isTuple && input.length !== this.length) {
+        throw new ValidateError(
+          'partially match', this, input,
+          'ValidateError:tuple length not match', [this.shape.length, input.length]
+        )
+      }
       for (let i = 0; i < length; i++) {
         const shapeItem: tn.Schema<unknown, unknown> = isTuple
           ? this.shape[i]
@@ -70,12 +76,6 @@ export function arrayValidator(t: typeof tn) {
             'ValidateError:item of array not match', [i, result.error]
           )
         }
-      }
-      if (isTuple && input.length !== this.length) {
-        throw new ValidateError(
-          'partially match', this, input,
-          'ValidateError:tuple length not match', [this.shape.length, input.length]
-        )
       }
       return true
     },
