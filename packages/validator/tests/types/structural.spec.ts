@@ -92,6 +92,13 @@ describe('tuple', () => {
     }
     expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
   })
+  test('empty', () => {
+    const t0 = t([])
+
+    const output = t0.validate([])
+    expect(output).toEqual([])
+    expectTypeOf(output).toEqualTypeOf<[]>()
+  })
   test('length is not match', () => {
     const t0 = t([String])
     try {
