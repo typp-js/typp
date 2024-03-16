@@ -44,6 +44,7 @@ declare module '@typp/core' {
 
 export function structuralValidator(t: typeof tn) {
   t.use(arrayValidator)
+  t.use(objectValidator)
 }
 
 export function arrayValidator(t: typeof tn) {
@@ -111,6 +112,26 @@ export function arrayValidator(t: typeof tn) {
         }
         return result
       }
+      return input
+    }
+  })
+}
+
+export function objectValidator(t: typeof tn) {
+  const { ValidateError } = t
+
+  // interface
+  t.useValidator((s): s is tn.Schema<
+    Record<string | number | symbol, tn.Schema<unknown, unknown>>,
+    Record<string | number | symbol, unknown>
+  > => {
+    return typeof s.shape === 'object' && !Array.isArray(s.shape)
+  }, {
+    validate(input) {
+      console.log('object validate', input)
+      return true
+    },
+    transform(input, options) {
       return input
     }
   })
