@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 import { isWhatError, validatorSkeleton } from '../../src'
 import { ValidateError } from '../../src/base.inner'
 import { stringValidator } from '../../src/types/primitive.string'
-import { arrayValidator } from '../../src/types/structural'
+import { arrayValidator, objectValidator } from '../../src/types/structural'
 
 beforeAll(() => t.use(validatorSkeleton))
 
@@ -178,5 +178,17 @@ describe('tuple', () => {
       }
       expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
     })
+  })
+})
+describe('interface', () => {
+  beforeAll(() => t.use(ctx => {
+    ctx.use(objectValidator)
+    ctx.use(stringValidator)
+  }))
+  test('base', () => {
+    const t0 = t({ foo: String })
+    const output = t0.validate({ foo: '' })
+    expect(output).toEqual({ foo: '' })
+    expectTypeOf(output).toEqualTypeOf<{ foo: string }>()
   })
 })
