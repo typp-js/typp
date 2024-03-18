@@ -13,14 +13,13 @@ declare module '@typp/core' {
       'ValidateError:tuple length not match': [expected: number, actual: number]
       'ValidateError:item of array not match': [index: number, error: tn.ValidateError]
     }
+    type IsArray<T> = [T] extends [unknown[]] ? true : false
     export interface ValidateExtendsEntries<T> {
-      array: [
-        [T] extends [unknown[]] ? true : false, T
-      ]
+      array: [IsArray<T>, T]
     }
     export interface ValidateTransformEntries<T, Input, InputRest> {
       array: [
-        [T] extends [unknown[]] ? true : false,
+        IsArray<T>,
         Switch<{
           null: [
             IsEqual<Input, null>, []
