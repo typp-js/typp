@@ -1,4 +1,4 @@
-import type { IsEqual, Switch, SwitchOtherEntry, t as tn } from '@typp/core'
+import type { IsEqual, Not, Switch, SwitchOtherEntry, t as tn } from '@typp/core'
 
 import { FALSY } from '../base'
 
@@ -14,8 +14,13 @@ declare module '@typp/core' {
       'ValidateError:item of array not match': [index: number, error: tn.ValidateError]
     }
     type IsArray<T> = [T] extends [unknown[]] ? true : false
+    type IsInterface<T> = (
+      & Not<IsArray<T>>
+      & [T] extends [Record<PropertyKey, any>] ? true : false
+    )
     export interface ValidateExtendsEntries<T> {
       array: [IsArray<T>, T]
+      interface: [IsInterface<T>, T]
     }
     export interface ValidateTransformEntries<T, Input, InputRest> {
       array: [
