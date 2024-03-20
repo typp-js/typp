@@ -193,7 +193,7 @@ describe('interface', () => {
 
     const isCatched = vi.fn()
     try {
-      // @ts-expect-error - TS2322: Type number is not assignable to type string
+      // @ts-expect-error - TS2322: Argument of type {} is not assignable to parameter of type { foo: string; }
       t0.validate({})
     } catch (e) {
       isCatched()
