@@ -10,8 +10,29 @@ import { FALSY } from '../base'
 declare module '@typp/core' {
   namespace t {
     export interface ErrorArgsMap {
+      /**
+       * e.g.
+       * - const t0: [number] = [1, 2]
+       * - const t1: [number] = []
+       */
       'ValidateError:tuple length not match': [expected: number, actual: number]
+      /**
+       * e.g.
+       * - const t0: [number] = ['1']
+       * - const t1: number[] = ['1']
+       */
       'ValidateError:item of array not match': [index: number, error: tn.ValidateError]
+      /**
+       * e.g.
+       * - const t0: { a: number } = {}
+       * - const t1: { a: number, b: undefined } = { a: 1 }
+       */
+      'ValidateError:property is missing': [key: PropertyKey]
+      /**
+       * e.g.
+       * - const t0: { a: number } = { a: '1' }
+       */
+      'ValidateError:property of object not match': [key: PropertyKey, error: tn.ValidateError]
     }
     type IsArray<T> = [T] extends [unknown[]] ? true : false
     type IsInterface<T> = IsTrue<
