@@ -190,5 +190,41 @@ describe('interface', () => {
     const output = t0.validate({ foo: '' })
     expect(output).toEqual({ foo: '' })
     expectTypeOf(output).toEqualTypeOf<{ foo: string }>()
+
+    const isCatched = vi.fn()
+    try {
+      // @ts-expect-error - TS2322: Type number is not assignable to type string
+      t0.validate({})
+    } catch (e) {
+      isCatched()
+      expect(e).toBeInstanceOf(ValidateError)
+      expect(e).toHaveProperty('message', 'Data is partially match')
+      if (isWhatError(e, 'ValidateError:is missing property')) {
+        const [key, property] = e.args
+        expect(key).toBe('foo')
+        expect(property.shape).toBe(String)
+        expectTypeOf(e.args).toEqualTypeOf<[PropertyKey, t.Schema<unknown, unknown>]>()
+      } else {
+        throw new Error('The error should be ValidateError:property not match')
+      }
+    }
+    expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
+    isCatched.mockReset()
+    try {
+      // @ts-expect-error - TS2322: Type number is not assignable to type string
+      t0.validate({ foo: 1 })
+    } catch (e) {
+      isCatched()
+      expect(e).toBeInstanceOf(ValidateError)
+      expect(e).toHaveProperty('message', 'Data is partially match')
+      if (isWhatError(e, 'ValidateError:not match the property')) {
+        const [key, error] = e.args
+        expect(key).toBe('foo')
+        expect(error).toBeInstanceOf(ValidateError)
+        expectTypeOf(e.args).toEqualTypeOf<[PropertyKey, ValidateError]>()
+      } else {
+        throw new Error('The error should be ValidateError:property not match')
+      }
+    }
   })
 })

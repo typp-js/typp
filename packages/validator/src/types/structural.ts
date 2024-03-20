@@ -27,12 +27,12 @@ declare module '@typp/core' {
        * - const t0: { a: number } = {}
        * - const t1: { a: number, b: undefined } = { a: 1 }
        */
-      'ValidateError:property is missing': [key: PropertyKey]
+      'ValidateError:is missing property': [key: PropertyKey, property: tn.Schema<unknown, unknown>]
       /**
        * e.g.
        * - const t0: { a: number } = { a: '1' }
        */
-      'ValidateError:property of object not match': [key: PropertyKey, error: tn.ValidateError]
+      'ValidateError:not match the property': [key: PropertyKey, error: tn.ValidateError]
     }
     type IsArray<T> = [T] extends [unknown[]] ? true : false
     type IsInterface<T> = IsTrue<
@@ -163,7 +163,36 @@ export function objectValidator(t: typeof tn) {
     return typeof s.shape === 'object' && !Array.isArray(s.shape)
   }, {
     validate(input) {
-      console.log('object validate', input)
+      if (typeof input !== 'object' || Array.isArray(input) || input === null) {
+        return false
+      }
+      const actualKeys: (string | symbol)[] = [
+        ...Object.keys(input),
+        ...Object.getOwnPropertySymbols(input)
+      ]
+      const expectedKeys: (string | symbol)[] = [
+        ...Object.keys(this.shape),
+        ...Object.getOwnPropertySymbols(this.shape)
+      ]
+      for (const _key of expectedKeys) {
+        const shapeItem = this.shape[_key]
+        if (!actualKeys.includes(_key)) {
+          throw new ValidateError(
+            'partially match', this, input,
+            'ValidateError:is missing property', [_key, shapeItem]
+          )
+        }
+        const key = _key as keyof typeof input
+
+        const inputItem = input[key]
+        const result = shapeItem.tryValidate(inputItem)
+        if (!result.success) {
+          throw new ValidateError(
+            'partially match', this, input,
+            'ValidateError:not match the property', [key, result.error]
+          )
+        }
+      }
       return true
     },
     transform(input, options) {
