@@ -199,11 +199,14 @@ describe('interface', () => {
       isCatched()
       expect(e).toBeInstanceOf(ValidateError)
       expect(e).toHaveProperty('message', 'Data is partially match')
-      if (isWhatError(e, 'ValidateError:is missing property')) {
-        const [key, property] = e.args
+      if (isWhatError(e, 'ValidateError:is missing properties')) {
+        const [count, properties] = e.args
+        expect(count).toBe(1)
+        expect(properties).toHaveLength(1)
+        const [key, property] = properties[0]
         expect(key).toBe('foo')
         expect(property.shape).toBe(String)
-        expectTypeOf(e.args).toEqualTypeOf<[PropertyKey, t.Schema<unknown, unknown>]>()
+        expectTypeOf(e.args).toEqualTypeOf<[number, (readonly [PropertyKey, t.Schema<unknown, unknown>])[]]>()
       } else {
         throw new Error('The error should be ValidateError:property not match')
       }

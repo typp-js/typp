@@ -25,9 +25,15 @@ declare module '@typp/core' {
       /**
        * e.g.
        * - const t0: { a: number } = {}
-       * - const t1: { a: number, b: undefined } = { a: 1 }
+       * - const t1: { a: number, b: number } = {}
+       * - const t2: { a: number, b: undefined } = { a: 1 }
        */
-      'ValidateError:is missing property': [key: PropertyKey, property: tn.Schema<unknown, unknown>]
+      'ValidateError:is missing properties': [
+        count: number,
+        properties: (readonly [
+          key: PropertyKey, property: tn.Schema<unknown, unknown>
+        ])[]
+      ]
       /**
        * e.g.
        * - const t0: { a: number } = { a: '1' }
@@ -174,16 +180,19 @@ export function objectValidator(t: typeof tn) {
         ...Object.keys(this.shape),
         ...Object.getOwnPropertySymbols(this.shape)
       ]
+      const missingKeys = expectedKeys.filter(key => !actualKeys.includes(key))
+      if (missingKeys.length > 0) {
+        throw new ValidateError(
+          'partially match', this, input,
+          'ValidateError:is missing properties', [
+            missingKeys.length,
+            missingKeys.map(key => [key as PropertyKey, this.shape[key]] as const)
+          ]
+        )
+      }
       for (const _key of expectedKeys) {
         const shapeItem = this.shape[_key]
-        if (!actualKeys.includes(_key)) {
-          throw new ValidateError(
-            'partially match', this, input,
-            'ValidateError:is missing property', [_key, shapeItem]
-          )
-        }
         const key = _key as keyof typeof input
-
         const inputItem = input[key]
         const result = shapeItem.tryValidate(inputItem)
         if (!result.success) {
