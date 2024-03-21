@@ -206,7 +206,7 @@ describe('interface', () => {
         const [key, property] = properties[0]
         expect(key).toBe('foo')
         expect(property.shape).toBe(String)
-        expectTypeOf(e.args).toEqualTypeOf<[number, (readonly [PropertyKey, t.Schema<unknown, unknown>])[]]>()
+        expectTypeOf(e.args).toEqualTypeOf<[number, (readonly [string | symbol, t.Schema<unknown, unknown>])[]]>()
       } else {
         throw new Error('The error should be ValidateError:property not match')
       }
@@ -229,7 +229,7 @@ describe('interface', () => {
         expect(error).toBeInstanceOf(ValidateError)
         expect(error.type).toBe('unexpected')
         expect(error.actual).toBe(1)
-        expectTypeOf(e.args).toEqualTypeOf<[number, (readonly [PropertyKey, ValidateError])[]]>()
+        expectTypeOf(e.args).toEqualTypeOf<[number, (readonly [string | symbol, ValidateError])[]]>()
       } else {
         throw new Error('The error should be ValidateError:property not match')
       }

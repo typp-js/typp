@@ -31,7 +31,7 @@ declare module '@typp/core' {
       'ValidateError:is missing properties': [
         count: number,
         properties: (readonly [
-          key: PropertyKey, property: tn.Schema<unknown, unknown>
+          key: string | symbol, property: tn.Schema<unknown, unknown>
         ])[]
       ]
       /**
@@ -42,7 +42,7 @@ declare module '@typp/core' {
       'ValidateError:not match the properties': [
         count: number,
         properties: (readonly [
-          key: PropertyKey, error: tn.ValidateError
+          key: string | symbol, error: tn.ValidateError
         ])[]
       ]
     }
@@ -192,11 +192,11 @@ export function objectValidator(t: typeof tn) {
           'partially match', this, input,
           'ValidateError:is missing properties', [
             missingKeys.length,
-            missingKeys.map(key => [key as PropertyKey, this.shape[key]] as const)
+            missingKeys.map(key => [key, this.shape[key]] as const)
           ]
         )
       }
-      const unexpectedPropertyErrors: [PropertyKey, tn.ValidateError][] = []
+      const unexpectedPropertyErrors: [string | symbol, tn.ValidateError][] = []
       for (const _key of expectedKeys) {
         const shapeItem = this.shape[_key]
         const key = _key as keyof typeof input
