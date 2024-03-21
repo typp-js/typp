@@ -3,6 +3,7 @@ import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 
 import { isWhatError, validatorSkeleton } from '../../src'
 import { ValidateError } from '../../src/base.inner'
+import { numberValidator } from '../../src/types/primitive.number'
 import { stringValidator } from '../../src/types/primitive.string'
 import { arrayValidator, objectValidator } from '../../src/types/structural'
 
@@ -184,6 +185,7 @@ describe('interface', () => {
   beforeAll(() => t.use(ctx => {
     ctx.use(objectValidator)
     ctx.use(stringValidator)
+    ctx.use(numberValidator)
   }))
   test('base', () => {
     const t0 = t({ foo: String })
@@ -256,6 +258,34 @@ describe('interface', () => {
         expect(error).toBeInstanceOf(ValidateError)
         expect(error.type).toBe('unexpected')
         expect(error.actual).toBe(1)
+        expectTypeOf(e.args).toEqualTypeOf<[number, (readonly [string | symbol, ValidateError])[]]>()
+      } else {
+        throw new Error('The error should be ValidateError:not match the properties')
+      }
+    }
+    expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
+    isCatched.mockReset()
+    try {
+      // @ts-expect-error - TS2322: Type number is not assignable to type string
+      t({ foo: String, bar: Number }).validate({ foo: 1, bar: '2' })
+    } catch (e) {
+      isCatched()
+      expect(e).toBeInstanceOf(ValidateError)
+      expect(e).toHaveProperty('message', 'Data is partially match')
+      if (isWhatError(e, 'ValidateError:not match the properties')) {
+        const [count, properties] = e.args
+        expect(count).toBe(2)
+        expect(properties).toHaveLength(2)
+        const [key0, error0] = properties[0]
+        expect(key0).toBe('foo')
+        expect(error0).toBeInstanceOf(ValidateError)
+        expect(error0.type).toBe('unexpected')
+        expect(error0.actual).toBe(1)
+        const [key1, error1] = properties[1]
+        expect(key1).toBe('bar')
+        expect(error1).toBeInstanceOf(ValidateError)
+        expect(error1.type).toBe('unexpected')
+        expect(error1.actual).toBe('2')
         expectTypeOf(e.args).toEqualTypeOf<[number, (readonly [string | symbol, ValidateError])[]]>()
       } else {
         throw new Error('The error should be ValidateError:not match the properties')
