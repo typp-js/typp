@@ -220,11 +220,16 @@ describe('interface', () => {
       isCatched()
       expect(e).toBeInstanceOf(ValidateError)
       expect(e).toHaveProperty('message', 'Data is partially match')
-      if (isWhatError(e, 'ValidateError:not match the property')) {
-        const [key, error] = e.args
+      if (isWhatError(e, 'ValidateError:not match the properties')) {
+        const [count, properties] = e.args
+        expect(count).toBe(1)
+        expect(properties).toHaveLength(1)
+        const [key, error] = properties[0]
         expect(key).toBe('foo')
         expect(error).toBeInstanceOf(ValidateError)
-        expectTypeOf(e.args).toEqualTypeOf<[PropertyKey, ValidateError]>()
+        expect(error.type).toBe('unexpected')
+        expect(error.actual).toBe(1)
+        expectTypeOf(e.args).toEqualTypeOf<[number, (readonly [PropertyKey, ValidateError])[]]>()
       } else {
         throw new Error('The error should be ValidateError:property not match')
       }

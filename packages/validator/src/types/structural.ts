@@ -37,8 +37,14 @@ declare module '@typp/core' {
       /**
        * e.g.
        * - const t0: { a: number } = { a: '1' }
+       * - const t1: { a: number, b: number } = { a: '1', b: '2' }
        */
-      'ValidateError:not match the property': [key: PropertyKey, error: tn.ValidateError]
+      'ValidateError:not match the properties': [
+        count: number,
+        properties: (readonly [
+          key: PropertyKey, error: tn.ValidateError
+        ])[]
+      ]
     }
     type IsArray<T> = [T] extends [unknown[]] ? true : false
     type IsInterface<T> = IsTrue<
@@ -190,17 +196,24 @@ export function objectValidator(t: typeof tn) {
           ]
         )
       }
+      const unexpectedPropertyErrors: [PropertyKey, tn.ValidateError][] = []
       for (const _key of expectedKeys) {
         const shapeItem = this.shape[_key]
         const key = _key as keyof typeof input
         const inputItem = input[key]
         const result = shapeItem.tryValidate(inputItem)
         if (!result.success) {
-          throw new ValidateError(
-            'partially match', this, input,
-            'ValidateError:not match the property', [key, result.error]
-          )
+          unexpectedPropertyErrors.push([key, result.error])
         }
+      }
+      if (unexpectedPropertyErrors.length > 0) {
+        throw new ValidateError(
+          'partially match', this, input,
+          'ValidateError:not match the properties', [
+            unexpectedPropertyErrors.length,
+            unexpectedPropertyErrors
+          ]
+        )
       }
       return true
     },
