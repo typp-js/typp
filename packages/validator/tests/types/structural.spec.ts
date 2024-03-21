@@ -260,5 +260,6 @@ describe('interface', () => {
         throw new Error('The error should be ValidateError:not match the properties')
       }
     }
+    expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
   })
 })
