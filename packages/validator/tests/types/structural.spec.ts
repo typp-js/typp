@@ -211,28 +211,29 @@ describe('interface', () => {
       } else {
         throw new Error('The error should be ValidateError:is missing properties')
       }
-      isCatched.mockReset()
-      try {
-        // @ts-expect-error - TS2322: Argument of type {} is not assignable to parameter of type { foo: string, bar: number }
-        t({ foo: String, bar: Number }).validate({})
-      } catch (e) {
-        isCatched()
-        expect(e).toBeInstanceOf(ValidateError)
-        expect(e).toHaveProperty('message', 'Data is partially match')
-        if (isWhatError(e, 'ValidateError:is missing properties')) {
-          const [count, properties] = e.args
-          expect(count).toBe(2)
-          expect(properties).toHaveLength(2)
-          const [key0, property0] = properties[0]
-          expect(key0).toBe('foo')
-          expect(property0.shape).toBe(String)
-          const [key1, property1] = properties[1]
-          expect(key1).toBe('bar')
-          expect(property1.shape).toBe(Number)
-          expectTypeOf(e.args).toEqualTypeOf<[number, (readonly [string | symbol, t.Schema<unknown, unknown>])[]]>()
-        } else {
-          throw new Error('The error should be ValidateError:is missing properties')
-        }
+    }
+    expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
+    isCatched.mockReset()
+    try {
+      // @ts-expect-error - TS2322: Argument of type {} is not assignable to parameter of type { foo: string, bar: number }
+      t({ foo: String, bar: Number }).validate({})
+    } catch (e) {
+      isCatched()
+      expect(e).toBeInstanceOf(ValidateError)
+      expect(e).toHaveProperty('message', 'Data is partially match')
+      if (isWhatError(e, 'ValidateError:is missing properties')) {
+        const [count, properties] = e.args
+        expect(count).toBe(2)
+        expect(properties).toHaveLength(2)
+        const [key0, property0] = properties[0]
+        expect(key0).toBe('foo')
+        expect(property0.shape).toBe(String)
+        const [key1, property1] = properties[1]
+        expect(key1).toBe('bar')
+        expect(property1.shape).toBe(Number)
+        expectTypeOf(e.args).toEqualTypeOf<[number, (readonly [string | symbol, t.Schema<unknown, unknown>])[]]>()
+      } else {
+        throw new Error('The error should be ValidateError:is missing properties')
       }
     }
     expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
