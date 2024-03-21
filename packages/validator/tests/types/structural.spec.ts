@@ -190,7 +190,9 @@ describe('interface', () => {
     const output = t0.validate({ foo: '' })
     expect(output).toEqual({ foo: '' })
     expectTypeOf(output).toEqualTypeOf<{ foo: string }>()
-
+  })
+  test('missing properties', () => {
+    const t0 = t({ foo: String })
     const isCatched = vi.fn()
     try {
       // @ts-expect-error - TS2322: Argument of type {} is not assignable to parameter of type { foo: string; }
@@ -212,7 +214,10 @@ describe('interface', () => {
       }
     }
     expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
-    isCatched.mockReset()
+  })
+  test('not match the properties', () => {
+    const t0 = t({ foo: String })
+    const isCatched = vi.fn()
     try {
       // @ts-expect-error - TS2322: Type number is not assignable to type string
       t0.validate({ foo: 1 })
