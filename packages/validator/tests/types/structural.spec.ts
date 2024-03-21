@@ -208,7 +208,7 @@ describe('interface', () => {
         expect(property.shape).toBe(String)
         expectTypeOf(e.args).toEqualTypeOf<[number, (readonly [string | symbol, t.Schema<unknown, unknown>])[]]>()
       } else {
-        throw new Error('The error should be ValidateError:property not match')
+        throw new Error('The error should be ValidateError:is missing properties')
       }
     }
     expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
@@ -231,7 +231,7 @@ describe('interface', () => {
         expect(error.actual).toBe(1)
         expectTypeOf(e.args).toEqualTypeOf<[number, (readonly [string | symbol, ValidateError])[]]>()
       } else {
-        throw new Error('The error should be ValidateError:property not match')
+        throw new Error('The error should be ValidateError:not match the properties')
       }
     }
   })
