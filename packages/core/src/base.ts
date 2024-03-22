@@ -201,6 +201,11 @@ export namespace t {
     if (!s.shape.type) return false
     return s.shape.type === t.specialShapeTypeMapping[type]
   }
+  export type IsSpecialShape<
+    Shape,
+    K extends keyof t.SpecialShapeTypeMapping,
+    T extends t.SpecialShapeTypeMapping[K] = t.SpecialShapeTypeMapping[K]
+  > = Shape extends SpecialShape<T, SpecialShapeSchemaMapping[T]> ? true : false
 }
 // Base
 /* istanbul ignore next -- @preserve */
