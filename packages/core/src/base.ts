@@ -206,6 +206,10 @@ export namespace t {
     K extends keyof t.SpecialShapeTypeMapping,
     T extends t.SpecialShapeTypeMapping[K] = t.SpecialShapeTypeMapping[K]
   > = Shape extends SpecialShape<T, SpecialShapeSchemaMapping[T]> ? true : false
+  export type InferSpecialShapeSchemas<
+    T,
+    K extends keyof t.SpecialShapeTypeMapping
+  > = T extends SpecialShape<any, infer S> ? S : never
 }
 // Base
 /* istanbul ignore next -- @preserve */
