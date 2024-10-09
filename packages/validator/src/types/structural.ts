@@ -54,6 +54,12 @@ declare module '@typp/core' {
     export interface ValidateExtendsEntries<T> {
       array: [IsArray<T>, T]
       interface: [IsInterface<T>, T]
+      record: [
+        tn.IsSpecialShape<T, 'record'>,
+        tn.InferSpecialShapeSchemas<T, 'record'> extends [infer K extends PropertyKey, infer V]
+          ? { [k in K]: V }
+          : never
+      ]
     }
     export interface ValidateTransformEntries<T, Input, InputRest> {
       array: [

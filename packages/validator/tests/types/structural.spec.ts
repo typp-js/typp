@@ -5,6 +5,7 @@ import { isWhatError, validatorSkeleton } from '../../src'
 import { ValidateError } from '../../src/base.inner'
 import { numberValidator } from '../../src/types/primitive.number'
 import { stringValidator } from '../../src/types/primitive.string'
+import { symbolValidator } from '../../src/types/primitive.symbol'
 import { arrayValidator, objectValidator } from '../../src/types/structural'
 
 beforeAll(() => t.use(validatorSkeleton))
@@ -294,3 +295,19 @@ describe('interface', () => {
     expect(isCatched, 'Not catched ValidateError as expected').toHaveBeenCalled()
   })
 })
+describe('record', () => {
+  beforeAll(() => t.use(ctx => {
+    ctx.use(objectValidator)
+    ctx.use(stringValidator)
+    ctx.use(numberValidator)
+    ctx.use(symbolValidator)
+  }))
+  test('base', () => {
+    const t0 = t(Object, Number)
+    //    _?
+    const output = t0.validate({
+      foo: 1
+    })
+  })
+})
+describe('dictionary', () => {})
