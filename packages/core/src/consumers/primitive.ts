@@ -1,24 +1,26 @@
-import type { t as tn, Typp } from '../base'
+import type { t as tn, Typp } from '@typp/core'
 import type { IsEqual, IsNotEqual, IsWhat, NoIndexSignature, ValueOf, Values } from '../types'
 
-const symbols = Object.freeze({
-  any: Symbol('any'),
-  void: Symbol('void'),
-  unknown: Symbol('unknown'),
-  never: Symbol('never')
-}) as {
+interface Symbols {
   readonly any: unique symbol
   readonly void: unique symbol
   readonly unknown: unique symbol
   readonly never: unique symbol
 }
 
+const symbols = Object.freeze({
+  any: Symbol('any'),
+  void: Symbol('void'),
+  unknown: Symbol('unknown'),
+  never: Symbol('never')
+}) as Symbols
+
 type LiteralPlaceholder<T extends string = string> = `__DO_NOT_USE_SAME_LITERAL_${T}__IF_YOU_WANT_TO_USE_IT__`
 function literalPlaceholder<T extends string>(type: T): LiteralPlaceholder<T> {
   return `__DO_NOT_USE_SAME_LITERAL_${type}__IF_YOU_WANT_TO_USE_IT__`
 }
 
-declare module '../base' {
+declare module '@typp/core' {
   // Consumer
   namespace t {
     interface LiteralStringMapping {

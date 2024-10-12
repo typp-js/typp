@@ -1,10 +1,10 @@
-import type { t as tn, Typp } from '../base'
+import type { t as tn, Typp } from '@typp/core'
 import type { IsEqual, Stack, T2I } from '../types'
 
 const unionSymbol = Symbol('union')
 const intersectionSymbol = Symbol('intersection')
 
-declare module '../base' {
+declare module '@typp/core' {
   export namespace t {
     // TODO exclude
     // TODO extract

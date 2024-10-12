@@ -1,9 +1,9 @@
-import type { t as tn, Typp } from '../base'
+import type { t as tn, Typp } from '@typp/core'
 import type { IsEqual, IsNotEqual, Stack, Values } from '../types'
 
 const recordSymbol = Symbol('record')
 
-declare module '../base' {
+declare module '@typp/core' {
   namespace t {
     export type ObjectConsume<
       T,

@@ -1,4 +1,4 @@
-import type { t as tn, Typp } from '../base'
+import type { t as tn, Typp } from '@typp/core'
 import type { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../types'
 
 const functionSymbol = Symbol('function')
@@ -50,7 +50,7 @@ export default function (ctx: typeof tn) {
   }, () => ({ implement: func => func }))
 }
 
-declare module '../base' {
+declare module '@typp/core' {
   namespace t {
     type FunctionConsume<
       T,

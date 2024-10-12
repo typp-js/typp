@@ -1,0 +1,22 @@
+{
+  "extends": ["./tsconfig.base.json"],
+  "compilerOptions": {
+    "composite": true,
+    "target": "ESNext",
+    "customConditions": ["node"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "types": ["node"]
+  },
+  "include": [
+    "../scripts/**/*.ts",
+    "../vitest.config.ts",
+    "../vitest.workspace.ts",
+    "../website/vite.config.ts",
+    "../website/src/**/*.share.d.ts",
+    "../apis/src/**/*",
+    "../apis/tests/**/*",
+    "../packages/*/src/**/*.node.ts"
+  ]
+}

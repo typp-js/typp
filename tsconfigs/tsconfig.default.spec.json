@@ -1,0 +1,16 @@
+{
+  "extends": ["./tsconfig.default.json"],
+  "compilerOptions": {
+    "composite": true
+  },
+  "include": [
+    "../packages/*/tests/**/*.ts",
+    "../packages/*/tests/**/*.spec.ts"
+  ],
+  "exclude": [
+    "../packages/*/tests/**/*.browser.ts",
+    "../packages/*/tests/**/*.browser.spec.ts",
+    "../packages/*/tests/**/*.node.ts",
+    "../packages/*/tests/**/*.node.spec.ts"
+  ]
+}

@@ -1,5 +1,6 @@
 {
   "name": "typp-workspace",
+  "type": "module",
   "description": "A workspace for typp project.",
   "scripts": {
     "lint": "eslint --cache --cache-location=node_modules/.cache/.eslintcache/ ./ --max-warnings=0",
@@ -7,17 +8,21 @@
     "coverage": "pnpm --recursive run coverage",
     "coverage:badge": "pnpm --recursive run coverage:badge"
   },
+  "packageManager": "pnpm@9.10.0",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "devDependencies": {
-    "@types/node": "^18.19.3",
+    "@antfu/eslint-config": "^3.3.2",
+    "@types/node": "^18.19.45",
     "@vitest/coverage-istanbul": "^1.1.0",
-    "crrc": "workspace:*",
-    "esbuild-register": "^3.5.0",
-    "pnpm-helper": "workspace:*",
-    "rollup-helper": "workspace:*",
-    "standard": "workspace:*",
-    "typescript": "^5.3.3",
+    "dprint": "^0.47.2",
+    "esbuild-register": "^3.6.0",
+    "eslint": "^9.9.1",
+    "jiek": "^1.0.5",
+    "typescript": "^5.5.4",
     "vite-tsconfig-paths": "^4.3.1",
-    "vitest": "^1.1.0"
+    "vitest": "^2.0.5"
   },
   "pnpm": {
     "overrides": {

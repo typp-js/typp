@@ -1,7 +1,7 @@
-import type { t as tn, Typp } from '../base'
+import type { t as tn, Typp } from '@typp/core'
 import type { IsEqual, IsNotEqual } from '../types'
 
-declare module '../base' {
+declare module '@typp/core' {
   namespace t {
     export type ArrayConsume<
       T,

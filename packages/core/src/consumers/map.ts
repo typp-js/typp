@@ -1,9 +1,9 @@
-import type { t as tn, Typp } from '../base'
+import type { t as tn, Typp } from '@typp/core'
 import type { IsEqual, Stack } from '../types'
 
 const mapSymbol = Symbol('map')
 
-declare module '../base' {
+declare module '@typp/core' {
   namespace t {
     export type MapConsume<
       T,
