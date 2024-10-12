@@ -570,7 +570,6 @@ t.useFields({
       const fn = utils[first]
       return fn.call(
         this,
-        // @ts-ignore
         ...rest
       )(t.clone(this))
     }
