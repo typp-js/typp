@@ -1,6 +1,6 @@
-import { expectTypeOf, test } from 'vitest'
+import type { Includes } from '#~/types.ts'
 
-import type { Includes } from '../../src/types'
+import { expectTypeOf, test } from 'vitest'
 
 test('base', () => {
   type T0 = Includes<[1, 2, 3], [1, 2, 3]>

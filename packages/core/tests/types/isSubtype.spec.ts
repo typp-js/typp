@@ -1,6 +1,6 @@
-import { expectTypeOf, test } from 'vitest'
+import type { IsSubType } from '#~'
 
-import type { IsSubType } from '../../src'
+import { expectTypeOf, test } from 'vitest'
 
 test('base', () => {
   expectTypeOf<IsSubType<1, number>>().toEqualTypeOf<true>()

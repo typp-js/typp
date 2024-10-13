@@ -1,6 +1,6 @@
-import { expectTypeOf, test } from 'vitest'
+import type { Replace } from '#~/types.ts'
 
-import type { Replace } from '../../src/types'
+import { expectTypeOf, test } from 'vitest'
 
 test('base', () => {
   //   _?

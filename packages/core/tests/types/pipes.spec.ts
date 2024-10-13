@@ -1,6 +1,6 @@
-import { expectTypeOf, test } from 'vitest'
+import type { Pipes } from '#~/types.ts'
 
-import type { Pipes } from '../../src/types'
+import { expectTypeOf, test } from 'vitest'
 
 test('base', () => {
   const fn: Pipes = (() => {}) as any
