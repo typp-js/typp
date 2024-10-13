@@ -3,10 +3,10 @@ import type { IsNotEqual } from '#~/types.ts'
 import { beforeAll, expect, expectTypeOf, test } from 'vitest'
 
 // no default consumers, so we should import from the `base` path module
-import { t } from '../src/base'
+import { t } from '#~/base.ts'
 
 const onlySymbol = Symbol('only')
-declare module '../src/base' {
+declare module '@typp/core' {
   namespace t {
     interface SchemaFieldsAll<Shape, T> {
       __test: number
