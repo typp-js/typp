@@ -11,6 +11,10 @@
     "<5.0": { "*": [ "*", "dist/*", "dist/*/index.d.ts" ] }
   },
   "exports": "./src/index.ts",
+  "imports": {
+    "#~": "./src/index.ts",
+    "#~/*": "./src/*"
+  },
   "devDependencies": {
     "@typp/core": "workspace:^*"
   }
