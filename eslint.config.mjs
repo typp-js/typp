@@ -7,12 +7,18 @@ export default config({
       'ts/no-namespace': 'off',
       'ts/no-empty-object-type': 'off',
       'ts/method-signature-style': 'off',
-      'ts/no-use-before-define': 'off'
+      'ts/no-use-before-define': 'off',
+      'ts/ban-ts-comment': 'off'
     }
   },
   javascript: {
     overrides: {
       'unused-imports/no-unused-vars': 'off'
+    }
+  },
+  test: {
+    overrides: {
+      'test/consistent-test-it': 'off'
     }
   }
 })
