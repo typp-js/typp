@@ -4,6 +4,7 @@ export {
 export {
   default as calc
 } from './calc'
+// noinspection ReservedWordAsName
 export {
   default as function
 } from './function'
