@@ -8,7 +8,8 @@ export default config({
       'ts/no-empty-object-type': 'off',
       'ts/method-signature-style': 'off',
       'ts/no-use-before-define': 'off',
-      'ts/ban-ts-comment': 'off'
+      'ts/ban-ts-comment': 'off',
+      'ts/no-wrapper-object-types': 'off'
     }
   },
   javascript: {
