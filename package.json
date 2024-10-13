@@ -19,7 +19,7 @@
     "dprint": "^0.47.2",
     "esbuild-register": "^3.6.0",
     "eslint": "^9.9.1",
-    "jiek": "^1.0.5",
+    "jiek": "^1.0.6",
     "typescript": "^5.5.4",
     "vite-tsconfig-paths": "^4.3.1",
     "vitest": "^2.0.5"
