@@ -1,6 +1,6 @@
-import { expect, expectTypeOf, test, vi } from 'vitest'
+import { isWhat, type notMatched } from '#~/utils/isWhat.ts'
 
-import { isWhat, type notMatched } from '../../src/utils/isWhat'
+import { expect, expectTypeOf, test, vi } from 'vitest'
 
 test('type guard with `isWhat`', () => {
   const t0 = 'a' as string | number
@@ -118,6 +118,7 @@ test('slice branch by `throw error`', () => {
   const t0 = 'a' as string | number
   const isTrueCall = vi.fn()
   if (isWhat(x => {
+    // eslint-disable-next-line no-throw-literal
     if (typeof x !== 'string') throw void 0
     return x
   })(t0)) {

@@ -1,6 +1,6 @@
-import { expect, test } from 'vitest'
+import { completeAssign } from '#~/utils/completeAssign.ts'
 
-import { completeAssign } from '../../src/utils/completeAssign'
+import { expect, test } from 'vitest'
 
 test('base', () => {
   const target = { a: 1 }
