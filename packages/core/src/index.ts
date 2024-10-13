@@ -5,5 +5,6 @@ for (const consumer of Object.values(consumers)) {
   consumer(t)
 }
 
+export { consumers }
 export * from './base'
 export { t as typp } from './base'

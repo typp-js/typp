@@ -1,22 +1,9 @@
-export {
-  default as array
-} from './array'
-export {
-  default as calc
-} from './calc'
-// noinspection ReservedWordAsName
-export {
-  default as function
-} from './function'
-export {
-  default as map
-} from './map'
-export {
-  default as object
-} from './object'
-export {
-  default as primitive
-} from './primitive'
-export {
-  default as set
-} from './set'
+import array from './array'
+import calc from './calc'
+import func from './function'
+import map from './map'
+import object from './object'
+import primitive from './primitive'
+import set from './set'
+
+export { array, calc, func, map, object, primitive, set }
