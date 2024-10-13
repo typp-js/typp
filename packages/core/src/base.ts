@@ -26,6 +26,7 @@ const CANT_OVERRIDE = Object.freeze([
   'shape'
 ] as const)
 export function t<const T extends any[]>(...types: T): Typp<T> {
+  // eslint-disable-next-line no-undef-init
   let shape: unknown = undefined
   let consumerAttachedFields: Record<string, unknown> = {}
   for (const consumer of consumers) {
@@ -356,7 +357,7 @@ export namespace t {
     key: K, resolver: ResolverUtils[K], options: UseResolverOptions = {}
   ) {
     if (typeof resolver !== 'function') {
-      throw new Error(`You can't use resolver for typp, because the resolver "${key}" is not a function`)
+      throw new TypeError(`You can't use resolver for typp, because the resolver "${key}" is not a function`)
     }
     const isExisted = Object.hasOwnProperty.call(utils, key)
     if (isExisted && !options.override) {
