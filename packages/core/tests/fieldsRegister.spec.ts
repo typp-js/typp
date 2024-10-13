@@ -1,8 +1,9 @@
+import type { IsNotEqual } from '#~/types.ts'
+
 import { beforeAll, expect, expectTypeOf, test } from 'vitest'
 
 // no default consumers, so we should import from the `base` path module
 import { t } from '../src/base'
-import type { IsNotEqual } from '../src/types'
 
 const onlySymbol = Symbol('only')
 declare module '../src/base' {
@@ -79,6 +80,7 @@ test('get schema', () => {
 })
 test('throw error when access schema fields in fields register function', () => {
   const dispose = t.useFields(skm => {
+    // eslint-disable-next-line ts/no-unused-expressions
     skm.__test
   })
   expect(() => t())
@@ -111,6 +113,7 @@ test('getter', () => {
 test('setter', () => {
   let testStr = '1'
   const dispose = t.useFields(() => ({
+    // eslint-disable-next-line accessor-pairs
     set __test_setter(v: string) {
       testStr = v
     }
@@ -125,6 +128,7 @@ test('setter', () => {
   // @ts-expect-error
   skm.__test_setter = 1
   // @ts-expect-error
+  // eslint-disable-next-line accessor-pairs
   const badDispose = t.useFields(() => ({ set __test_setter(v: number) {} }))
   badDispose()
 })
