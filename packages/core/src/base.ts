@@ -429,7 +429,7 @@ export namespace t {
     'isWhatSpecialShape',
     'CANT_REFINE'
   ] as const)
-  type CantRefine = typeof CANT_REFINE[number]
+  export type CantRefine = typeof CANT_REFINE[number]
   export interface UseStaticOptions {
     /**
      * if `true`, will override the existed static function.
@@ -439,7 +439,7 @@ export namespace t {
      */
     override?: boolean
   }
-  type Refineble = Exclude<keyof typeof t, CantRefine>
+  export type Refineble = Exclude<keyof typeof t, CantRefine>
   export function useStatic<K extends Refineble>(
     key: K, value: typeof t[K],
     options: UseStaticOptions = {}
