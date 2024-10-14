@@ -1,4 +1,4 @@
-import { t } from './base'
+import { t } from '@typp/core/base'
 import * as consumers from './consumers'
 
 for (const consumer of Object.values(consumers)) {
@@ -6,5 +6,5 @@ for (const consumer of Object.values(consumers)) {
 }
 
 export { consumers }
-export * from './base'
-export { t as typp } from './base'
+export * from '@typp/core/base'
+export { t as typp } from '@typp/core/base'
