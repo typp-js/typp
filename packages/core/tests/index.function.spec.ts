@@ -230,6 +230,7 @@ describe('function', () => {
     expectTypeOf(case0Impl).toEqualTypeOf<() => string>()
     // `Schema<any, any>` is not contains `implements` method which is only defined in `Schema<Function, any>`
     // @ts-expect-error
+    // eslint-disable-next-line ts/no-unused-expressions
     t([]).implement
   })
 })
