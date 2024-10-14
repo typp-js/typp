@@ -61,6 +61,7 @@ declare module '@typp/core/base' {
       1004: [SymbolConstructor, symbol]
       1005: [DateConstructor, Date]
       1006: [RegExpConstructor, RegExp]
+      // eslint-disable-next-line ts/no-unsafe-function-type
       [key: number]: [Function, any]
     }
 
