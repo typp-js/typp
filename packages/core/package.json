@@ -10,7 +10,11 @@
   "typesVersions": {
     "<5.0": { "*": [ "*", "dist/*", "dist/*/index.d.ts" ] }
   },
-  "exports": "./src/index.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./src/index.ts",
+    "./base": "./src/base.ts"
+  },
   "imports": {
     "#~": "./src/index.ts",
     "#~/*": "./src/*"
