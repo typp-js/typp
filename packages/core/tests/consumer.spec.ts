@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 
 // no default consumers, so we should import from the `base` path module
-import { t } from '../src/base'
+import { t } from '#~/base.ts'
 
 test('base', () => {
   const dispose = t.useConsumer(() => [1])

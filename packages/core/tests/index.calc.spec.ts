@@ -1,6 +1,5 @@
+import { t } from '@typp/core'
 import { describe, expect, expectTypeOf, test } from 'vitest'
-
-import { t } from '../src'
 
 describe('union', () => {
   test('base', () => {

@@ -1,12 +1,12 @@
+import { t } from '@typp/core/base'
+
 import { describe, expect, test } from 'vitest'
 
-import { t } from '../src'
-
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   namespace t {
-    export function ____foo(): string
-    export const ____bar: number
-    export const ____baz: number
+    function ____foo(): string
+    const ____bar: number
+    const ____baz: number
   }
 }
 

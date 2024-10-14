@@ -1,7 +1,6 @@
-import { describe, expect, expectTypeOf, test, vi } from 'vitest'
+import { t, type Typp } from '@typp/core/base'
 
-import type { Typp } from '../src'
-import { t } from '../src'
+import { describe, expect, expectTypeOf, test, vi } from 'vitest'
 
 describe('infer', () => {
   test('static', () => {
@@ -115,7 +114,7 @@ test('isWhatSpecialShape', () => {
   )).toBe(false)
 })
 
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   namespace t {
     export const ____test_useStaticField0: string
     export let ____test_useStaticField1: string

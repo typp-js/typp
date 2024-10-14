@@ -2,7 +2,7 @@ import type { t as tn, Typp } from '@typp/core'
 import type { IsEqual } from '../types'
 
 const setSymbol = Symbol('set')
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   // consumer
   namespace t {
     export type SetConsume<

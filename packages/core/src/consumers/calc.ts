@@ -4,7 +4,7 @@ import type { IsEqual, Stack, T2I } from '../types'
 const unionSymbol = Symbol('union')
 const intersectionSymbol = Symbol('intersection')
 
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   export namespace t {
     // TODO exclude
     // TODO extract

@@ -6,7 +6,7 @@ import { beforeAll, expect, expectTypeOf, test } from 'vitest'
 import { t } from '#~/base.ts'
 
 const onlySymbol = Symbol('only')
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   namespace t {
     interface SchemaFieldsAll<Shape, T> {
       __test: number

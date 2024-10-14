@@ -20,7 +20,7 @@ function literalPlaceholder<T extends string>(type: T): LiteralPlaceholder<T> {
   return `__DO_NOT_USE_SAME_LITERAL_${type}__IF_YOU_WANT_TO_USE_IT__`
 }
 
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   // Consumer
   namespace t {
     interface LiteralStringMapping {

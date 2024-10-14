@@ -3,7 +3,7 @@ import type { IsEqual, Stack } from '../types'
 
 const mapSymbol = Symbol('map')
 
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   namespace t {
     export type MapConsume<
       T,

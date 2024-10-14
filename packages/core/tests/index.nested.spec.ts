@@ -1,10 +1,10 @@
-import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
+import array from '#~/consumers/array.ts'
+import map from '#~/consumers/map.ts'
+import object from '#~/consumers/object.ts'
+import set from '#~/consumers/set.ts'
 
-import { t } from '../src/base'
-import array from '../src/consumers/array'
-import map from '../src/consumers/map'
-import object from '../src/consumers/object'
-import set from '../src/consumers/set'
+import { t } from '@typp/core/base'
+import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 
 describe('array and tuple', () => {
   beforeAll(() => t.use(ctx => {
@@ -235,7 +235,7 @@ describe('array and tuple', () => {
       ]
     >()
   })
-  test('Set', () => {
+  test('set', () => {
     const case0_0 = t(Set)
     const case0_1 = t.set()
     const [shape0_0, shape0_1] = [case0_0.shape, case0_1.shape]
@@ -648,7 +648,7 @@ describe('object', () => {
     >>()
     expect(shape3).toStrictEqual(case3_0.shape)
   })
-  test('Map', () => {
+  test('map', () => {
     const case0_0 = t(Map)
     const case0_1 = t.map()
     const [shape0_0, shape0_1] = [case0_0.shape, case0_1.shape]

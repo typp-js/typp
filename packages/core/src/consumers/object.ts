@@ -3,7 +3,7 @@ import type { IsEqual, IsNotEqual, Stack, Values } from '../types'
 
 const recordSymbol = Symbol('record')
 
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   namespace t {
     export type ObjectConsume<
       T,

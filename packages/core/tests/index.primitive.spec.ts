@@ -1,12 +1,13 @@
-import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
+import primitive from '#~/consumers/primitive.ts'
 
-import { t } from '../src/base'
-import primitive from '../src/consumers/primitive'
+import { t } from '@typp/core/base'
+
+import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 import ConstructorMapping = t.ConstructorMapping
 
 beforeAll(() => t.use(primitive))
 
-test('ConstructorMapping', () => {
+test('constructorMapping', () => {
   expectTypeOf<ConstructorMapping<StringConstructor>>()
     .toMatchTypeOf<string>()
 
@@ -222,6 +223,7 @@ describe('literal', () => {
     expectTypeOf(case6).toEqualTypeOf<t.Schema<1, 1>>()
     expectTypeOf<t.Infer<typeof case6>>()
       .toEqualTypeOf<1>()
+    // eslint-disable-next-line symbol-description
     const sym = Symbol()
     const case7 = t(sym)
     expect(case7.shape).toBe(sym)

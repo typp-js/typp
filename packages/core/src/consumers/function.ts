@@ -50,7 +50,7 @@ export default function (ctx: typeof tn) {
   }, () => ({ implement: func => func }))
 }
 
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   namespace t {
     type FunctionConsume<
       T,
