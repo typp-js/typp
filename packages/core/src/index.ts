@@ -1,5 +1,5 @@
 import { t } from '@typp/core/base'
-import * as consumers from './consumers'
+import * as consumers from '@typp/core/consumers'
 
 for (const consumer of Object.values(consumers)) {
   consumer(t)

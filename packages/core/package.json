@@ -13,7 +13,8 @@
   "exports": {
     "./package.json": "./package.json",
     ".": "./src/index.ts",
-    "./base": "./src/base.ts"
+    "./base": "./src/base.ts",
+    "./consumers": "./src/consumers/index.ts"
   },
   "imports": {
     "#~": "./src/index.ts",
