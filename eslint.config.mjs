@@ -9,7 +9,8 @@ export default config({
       'ts/method-signature-style': 'off',
       'ts/no-use-before-define': 'off',
       'ts/ban-ts-comment': 'off',
-      'ts/no-wrapper-object-types': 'off'
+      'ts/no-wrapper-object-types': 'off',
+      'import/no-mutable-exports': 'off'
     }
   },
   javascript: {
