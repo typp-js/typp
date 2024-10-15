@@ -10,6 +10,7 @@ export default config({
       'ts/no-use-before-define': 'off',
       'ts/ban-ts-comment': 'off',
       'ts/no-wrapper-object-types': 'off',
+      'ts/no-unsafe-function-type': 'off',
       'import/no-mutable-exports': 'off'
     }
   },
