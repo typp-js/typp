@@ -56,7 +56,7 @@ function _useValidator<Shape>(
   }
 }
 
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   namespace t {
     export interface ErrorArgsMap {
       [k: string]: unknown[]

@@ -1,11 +1,11 @@
-import type { IsEqual, IsSubType, IsTrue, IsWhat, Not, OnlySubType, t as tn } from '@typp/core'
+import type { IsEqual, IsWhat, Not, OnlySubType, t as tn } from '@typp/core'
 
-import { FALSY } from '../base'
 import type { LiteralTypeGuard, SwitchBaseType } from '../base.inner'
+import { FALSY } from '../base'
 import { parseBigInt } from '../utils'
 import { preprocess } from '../utils.inner'
 
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   namespace t {
     export interface ValidateExtendsEntries<T> {
       bigint: [IsWhat<T, bigint>, bigint | BigInt]
@@ -64,7 +64,7 @@ export const bigintTransform: tn.Validator<bigint>['transform'] = function (inpu
       } else if (input === -Infinity) {
         return 2n ** 1024n * -1n
       } else if (Number.isNaN(input)) {
-        throw new Error('NaN cannot be converted to BigInt')
+        throw new TypeError('NaN cannot be converted to BigInt')
       } else {
         if (input > Number.MAX_SAFE_INTEGER || input < Number.MIN_SAFE_INTEGER) {
           throw new Error('number must greater than or equal to -2^53 and less than or equal to 2^53')

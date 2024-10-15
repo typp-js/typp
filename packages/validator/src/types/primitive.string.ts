@@ -3,7 +3,7 @@ import type { IsWhat, OnlySubType, t as tn } from '@typp/core'
 import type { LiteralTypeGuard, SwitchBaseType } from '../base.inner'
 import { preprocess } from '../utils.inner'
 
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   namespace t {
     export interface ValidateExtendsEntries<T> {
       string: [

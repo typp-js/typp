@@ -7,7 +7,7 @@ import { FALSY } from '../base'
 // TODO record
 // TODO class/instanceof
 
-declare module '@typp/core' {
+declare module '@typp/core/base' {
   namespace t {
     export interface ErrorArgsMap {
       /**
