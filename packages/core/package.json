@@ -14,7 +14,8 @@
     "./package.json": "./package.json",
     ".": "./src/index.ts",
     "./base": "./src/base.ts",
-    "./consumers": "./src/consumers/index.ts"
+    "./consumers": "./src/consumers/index.ts",
+    "./consumers/*": "./src/consumers/*.ts"
   },
   "imports": {
     "#~": "./src/index.ts",
