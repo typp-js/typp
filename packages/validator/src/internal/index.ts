@@ -8,8 +8,7 @@ import type {
   SwitchOtherEntry,
   t as tn
 } from '@typp/core'
-
-import { toPrimitive } from './utils'
+import { toPrimitive } from '@typp/validator/utils'
 
 type BaseTypeNames =
   | 'bigint'

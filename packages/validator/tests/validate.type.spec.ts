@@ -19,6 +19,7 @@ describe('validate', () => {
     expectTypeOf<t.ValidateReturnType<number, number, 1 | unknown, 1 | unknown, { }>>().toEqualTypeOf<number>()
   })
   test('try', () => {
+    // eslint-disable-next-line ts/consistent-type-definitions
     type Opts = { try: true }
     expectTypeOf<t.ValidateReturnType<number, number, 1, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<number>>()
     expectTypeOf<t.ValidateReturnType<number, number, number, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<number>>()
@@ -48,6 +49,7 @@ describe('validate', () => {
     expectTypeOf<t.ValidateReturnType<unknown, unknown, never, never, Opts>>().toEqualTypeOf<t.ValidateErrorResult>()
   })
   test('const', () => {
+    // eslint-disable-next-line ts/consistent-type-definitions
     type Opts = { const: true }
     expectTypeOf<t.ValidateReturnType<number, number, 1, never, Opts>>().toEqualTypeOf<1>()
     expectTypeOf<t.ValidateReturnType<string, string, string, never, Opts>>().toEqualTypeOf<string>()
@@ -58,12 +60,14 @@ describe('validate', () => {
       .toEqualTypeOf<unknown>()
   })
   test('try and const', () => {
+    // eslint-disable-next-line ts/consistent-type-definitions
     type Opts = { try: true, const: true }
     expectTypeOf<t.ValidateReturnType<number, number, 1, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<1>>()
     expectTypeOf<t.ValidateReturnType<string, string, string, never, Opts>>().toEqualTypeOf<t.ValidateSuccessResult<string>>()
     expectTypeOf<t.ValidateReturnType<string, string, 1, never, Opts>>().toEqualTypeOf<t.ValidateErrorResult>()
   })
   test('transform', () => {
+    // eslint-disable-next-line ts/consistent-type-definitions
     type Opts = { transform: true }
     expectTypeOf<t.ValidateReturnType<number, number, 1, never, Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.ValidateReturnType<number, number, Number, never, Opts>>().toEqualTypeOf<number>()
@@ -88,6 +92,7 @@ describe('validate', () => {
     expectTypeOf<t.ValidateReturnType<number, number, never, never, Opts>>().toEqualTypeOf<never>()
   })
   test('transform with special `ExtendsT`', () => {
+    // eslint-disable-next-line ts/consistent-type-definitions
     type Opts = { transform: true }
     expectTypeOf<t.ValidateReturnType<number, number | Number, 1, never, Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.ValidateReturnType<number, number | Number, '1', '1', Opts>>().toEqualTypeOf<number>()
@@ -106,6 +111,7 @@ describe('validate', () => {
     expectTypeOf<t.ValidateReturnType<number, number | Number, 'a', 'a', Opts>>().toEqualTypeOf<never>()
   })
   test('transform and const', () => {
+    // eslint-disable-next-line ts/consistent-type-definitions
     type Opts = { transform: true, const: true }
     expectTypeOf<t.ValidateReturnType<number, number, 1, never, Opts>>().toEqualTypeOf<1>()
     expectTypeOf<t.ValidateReturnType<number, number, '1', '1', Opts>>().toEqualTypeOf<number>()
@@ -119,6 +125,7 @@ describe('validate', () => {
     expectTypeOf<t.ValidateReturnType<number, number, 1n, 1n, Opts>>().toEqualTypeOf<number>()
   })
   test('special radix', () => {
+    // eslint-disable-next-line ts/consistent-type-definitions
     type Opts = { transform: true }
     expectTypeOf<t.ValidateReturnType<number, number, '0b1', '0b1', Opts>>().toEqualTypeOf<number>()
     expectTypeOf<t.ValidateReturnType<number, number, '0B1', '0B1', Opts>>().toEqualTypeOf<number>()
@@ -128,6 +135,7 @@ describe('validate', () => {
     expectTypeOf<t.ValidateReturnType<number, number, '0X1', '0X1', Opts>>().toEqualTypeOf<number>()
   })
   test('transform and try', () => {
+    // eslint-disable-next-line ts/consistent-type-definitions
     type Opts = { transform: true, try: true }
     expectTypeOf<t.ValidateReturnType<number, number, '1', '1', Opts>>().toEqualTypeOf<t.ValidateSuccessResult<number>>()
     expectTypeOf<t.ValidateReturnType<number, number, 'a1', 'a1', Opts>>().toEqualTypeOf<t.ValidateErrorResult>()

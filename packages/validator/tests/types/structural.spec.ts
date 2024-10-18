@@ -1,12 +1,12 @@
-import { t } from '@typp/core'
-import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
+import { ValidateError } from '#internal'
 
-import { isWhatError, validatorSkeleton } from '../../src'
-import { ValidateError } from '../../src/base.inner'
-import { numberValidator } from '../../src/types/primitive.number'
-import { stringValidator } from '../../src/types/primitive.string'
-import { symbolValidator } from '../../src/types/primitive.symbol'
-import { arrayValidator, objectValidator } from '../../src/types/structural'
+import { t } from '@typp/core'
+import { isWhatError, validatorSkeleton } from '@typp/validator'
+import { numberValidator } from '@typp/validator/types/primitive.number'
+import { stringValidator } from '@typp/validator/types/primitive.string'
+import { symbolValidator } from '@typp/validator/types/primitive.symbol'
+import { arrayValidator, objectValidator } from '@typp/validator/types/structural'
+import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 
 beforeAll(() => t.use(validatorSkeleton))
 

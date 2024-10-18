@@ -1,12 +1,13 @@
-import { t } from '@typp/core'
-import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
+import { ParseError, ValidateError } from '#internal'
 
-import { validatorSkeleton } from '../../src'
-import { ParseError, ValidateError } from '../../src/base.inner'
-import { bigintValidator } from '../../src/types/primitive.bigint'
-import { booleanValidator } from '../../src/types/primitive.boolean'
-import { numberValidator } from '../../src/types/primitive.number'
-import { stringValidator } from '../../src/types/primitive.string'
+import { t } from '@typp/core'
+import { validatorSkeleton } from '@typp/validator'
+import { bigintValidator } from '@typp/validator/types/primitive.bigint'
+import { booleanValidator } from '@typp/validator/types/primitive.boolean'
+import { numberValidator } from '@typp/validator/types/primitive.number'
+import { stringValidator } from '@typp/validator/types/primitive.string'
+
+import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 
 beforeAll(() => t.use(validatorSkeleton))
 
@@ -26,10 +27,12 @@ describe('bigint', () => {
     const r0 = t.bigint().validate(BigInt(1))
     expect(r0).toBe(1n)
     expectTypeOf(r0).toEqualTypeOf<bigint>()
-    const r1 = t.bigint().validate(Object(1n))
+    // @ts-expect-error
+    const r1 = t.bigint().validate(new Object(1n))
     expect(r1).toBe(1n)
     expectTypeOf(r1).toEqualTypeOf<bigint>()
-    const r2 = t.bigint().validate(Object(BigInt(1)))
+    // @ts-expect-error
+    const r2 = t.bigint().validate(new Object(BigInt(1)))
     expect(r2).toBe(1n)
     expectTypeOf(r2).toEqualTypeOf<bigint>()
   })
@@ -88,9 +91,9 @@ describe('bigint', () => {
       )
 
       expect(() => {
-        skm.parse(NaN)
+        skm.parse(Number.NaN)
       }).toThrow(new ParseError(
-        'transform', skm, NaN,
+        'transform', skm, Number.NaN,
         new Error('NaN cannot be converted to BigInt')
       ))
     })
@@ -135,7 +138,8 @@ describe('boolean', () => {
     const r0 = t.boolean().validate(Boolean(true))
     expect(r0).toBe(true)
     expectTypeOf(r0).toEqualTypeOf<boolean>()
-    const r1 = t.boolean().validate(Object(true))
+    // @ts-expect-error
+    const r1 = t.boolean().validate(new Object(true))
     expect(r1).toBe(true)
     expectTypeOf(r1).toEqualTypeOf<boolean>()
 
@@ -205,7 +209,7 @@ describe('boolean', () => {
       const r3 = skm.parse(-Infinity)
       expect(r3).toBe(true)
       expectTypeOf(r3).toEqualTypeOf<boolean>()
-      const r4 = skm.parse(NaN)
+      const r4 = skm.parse(Number.NaN)
       expect(r4).toBe(false)
       expectTypeOf(r4).toEqualTypeOf<boolean>()
 
@@ -277,17 +281,19 @@ describe('number', () => {
     expectTypeOf(r1).toEqualTypeOf<1>()
   })
   test('instanceof', () => {
-    // noinspection JSPrimitiveTypeWrapperUsage
+    // eslint-disable-next-line no-new-wrappers,unicorn/new-for-builtins
     const r0 = t.number().validate(new Number(1))
     expect(r0).toBe(1)
     expectTypeOf(r0).toEqualTypeOf<number>()
     const r1 = t.number().validate(Number(1))
     expect(r1).toBe(1)
     expectTypeOf(r1).toEqualTypeOf<number>()
-    const r2 = t.number().validate(Object(1))
+    // @ts-expect-error
+    const r2 = t.number().validate(new Object(1))
     expect(r2).toBe(1)
     expectTypeOf(r2).toEqualTypeOf<number>()
-    const r3 = t.number().validate(Object(Number(1)))
+    // @ts-expect-error
+    const r3 = t.number().validate(new Object(Number(1)))
     expect(r3).toBe(1)
     expectTypeOf(r3).toEqualTypeOf<number>()
 
@@ -329,12 +335,12 @@ describe('number', () => {
     expect(r8).toBe(1)
     expectTypeOf(r8).toEqualTypeOf<number>()
   })
-  test('NaN', () => {
-    const r = t.number().validate(NaN)
+  test('naN', () => {
+    const r = t.number().validate(Number.NaN)
     expect(r).toBeNaN()
     expectTypeOf(r).toEqualTypeOf<number>()
   })
-  test('Infinity', () => {
+  test('infinity', () => {
     const r0 = t.number().validate(Infinity)
     expect(r0).toBe(Infinity)
     expectTypeOf(r0).toEqualTypeOf<number>()
@@ -550,7 +556,7 @@ describe('string', () => {
       const r2 = skm.parse(-Infinity)
       expect(r2).toBe('-Infinity')
       expectTypeOf(r2).toEqualTypeOf<string>()
-      const r3 = skm.parse(NaN)
+      const r3 = skm.parse(Number.NaN)
       expect(r3).toBe('NaN')
       expectTypeOf(r3).toEqualTypeOf<string>()
     })

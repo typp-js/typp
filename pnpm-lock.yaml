@@ -65,6 +65,10 @@ importers:
       '@typp/core':
         specifier: workspace:^
         version: link:../core
+    devDependencies:
+      '@typp/validator':
+        specifier: workspace:^
+        version: 'link:'
 
 packages:
 

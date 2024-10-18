@@ -1,9 +1,9 @@
-import { t } from '@typp/core'
-import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
+import { ValidateError } from '#internal'
 
-import { FALSY, validatorSkeleton } from '../../src'
-import { ValidateError } from '../../src/base.inner'
-import { literalValidator } from '../../src/types/literal'
+import { t } from '@typp/core'
+import { FALSY, validatorSkeleton } from '@typp/validator'
+import { literalValidator } from '@typp/validator/types/literal'
+import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 
 beforeAll(() => t.use(validatorSkeleton))
 
@@ -182,6 +182,7 @@ describe('literal primitive', () => {
       }).toThrow()
     })
     test('symbol', () => {
+      // eslint-disable-next-line symbol-description
       const sym = Symbol()
       const symbolSkm = t.const(sym)
       const r0 = symbolSkm.validate(sym)
@@ -190,6 +191,7 @@ describe('literal primitive', () => {
 
       expect(() => {
         // @ts-expect-error - TS2345: Argument of type symbol is not assignable to parameter of type unique symbol
+        // eslint-disable-next-line symbol-description
         symbolSkm.validate(Symbol())
       }).toThrow()
     })

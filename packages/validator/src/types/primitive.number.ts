@@ -1,8 +1,8 @@
 import type { IsEqual, IsWhat, Not, OnlySubType, t as tn } from '@typp/core'
 
+import type { LiteralTypeGuard, SwitchBaseType } from '../internal'
 import { FALSY } from '../base'
-import type { LiteralTypeGuard, SwitchBaseType } from '../base.inner'
-import { preprocess } from '../utils.inner'
+import { preprocess } from '../internal/utils'
 
 declare module '@typp/core/base' {
   namespace t {
@@ -60,7 +60,7 @@ export const numberTransform: tn.Validator<number>['transform'] = function (inpu
   switch (typeof input) {
     case 'string': {
       if (input === 'NaN') {
-        return NaN
+        return Number.NaN
       } else if (input === 'Infinity') {
         return Infinity
       } else if (input === '-Infinity') {
@@ -79,8 +79,8 @@ export const numberTransform: tn.Validator<number>['transform'] = function (inpu
         inputStr = input.slice(2)
       }
       const temp = radix === 10
-        ? parseFloat(inputStr)
-        : parseInt(inputStr, radix)
+        ? Number.parseFloat(inputStr)
+        : Number.parseInt(inputStr, radix)
 
       if (!Number.isNaN(temp))
         return temp

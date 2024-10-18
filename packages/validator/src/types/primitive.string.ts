@@ -1,7 +1,7 @@
 import type { IsWhat, OnlySubType, t as tn } from '@typp/core'
 
-import type { LiteralTypeGuard, SwitchBaseType } from '../base.inner'
-import { preprocess } from '../utils.inner'
+import type { LiteralTypeGuard, SwitchBaseType } from '../internal'
+import { preprocess } from '../internal/utils'
 
 declare module '@typp/core/base' {
   namespace t {

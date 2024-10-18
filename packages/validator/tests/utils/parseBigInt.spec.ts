@@ -1,12 +1,11 @@
+import { parseBigInt } from '@typp/validator/utils'
 import { describe, expect, test } from 'vitest'
-
-import { parseBigInt } from '../../src/utils'
 
 test('integer', () => {
   expect(parseBigInt('123')).toBe(123n)
   expect(parseBigInt('1'.repeat(10000))).toBe(BigInt('1'.repeat(10000)))
   expect(parseBigInt('-123')).toBe(-123n)
-  expect(parseBigInt('-' + '1'.repeat(10000))).toBe(BigInt('-' + '1'.repeat(10000)))
+  expect(parseBigInt(`-${'1'.repeat(10000)}`)).toBe(BigInt(`-${'1'.repeat(10000)}`))
 
   expect(parseBigInt('')).toBe(0n)
   expect(parseBigInt('1')).toBe(1n)

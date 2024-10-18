@@ -1,9 +1,8 @@
-import { t } from '@typp/core'
-import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
+import { ValidateError } from '#internal'
 
-import validator from '../src'
-import { FALSY } from '../src/base'
-import { ValidateError } from '../src/base.inner'
+import { t } from '@typp/core'
+import validator from '@typp/validator'
+import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 
 beforeAll(() => t.use(validator))
 

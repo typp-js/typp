@@ -1,7 +1,7 @@
 import type { t as tn } from '@typp/core'
+import { toPrimitive } from '@typp/validator/utils'
 
-import { ParseError, ValidateError } from './base.inner'
-import { toPrimitive } from './utils'
+import { ParseError, ValidateError } from '.'
 
 export const preprocess: tn.Validator['preprocess'] = (input, options) => toPrimitive(input)
 

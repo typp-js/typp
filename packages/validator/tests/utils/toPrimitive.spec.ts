@@ -1,12 +1,11 @@
+import { toPrimitive } from '@typp/validator/utils'
 import { describe, expect, test } from 'vitest'
-
-import { toPrimitive } from '../../src/utils'
 
 describe('base', () => {
   test('primitive', () => {
     expect(toPrimitive(1)).toBe(1)
     expect(toPrimitive(0)).toBe(0)
-    expect(toPrimitive(NaN)).toBe(NaN)
+    expect(toPrimitive(Number.NaN)).toBe(Number.NaN)
     expect(toPrimitive(Infinity)).toBe(Infinity)
     expect(toPrimitive(-Infinity)).toBe(-Infinity)
     expect(toPrimitive(true)).toBe(true)
@@ -20,20 +19,20 @@ describe('base', () => {
     expect(toPrimitive(undefined)).toBe(undefined)
   })
   test('boxed primitive', () => {
-    expect(toPrimitive(Object(1))).toBe(1)
-    expect(toPrimitive(Object(0))).toBe(0)
-    expect(toPrimitive(Object(NaN))).toBe(NaN)
-    expect(toPrimitive(Object(Infinity))).toBe(Infinity)
-    expect(toPrimitive(Object(-Infinity))).toBe(-Infinity)
-    expect(toPrimitive(Object(true))).toBe(true)
-    expect(toPrimitive(Object(1n))).toBe(1n)
-    expect(toPrimitive(Object(''))).toBe('')
-    expect(toPrimitive(Object('1'))).toBe('1')
+    expect(toPrimitive(new Object(1))).toBe(1)
+    expect(toPrimitive(new Object(0))).toBe(0)
+    expect(toPrimitive(new Object(Number.NaN))).toBe(Number.NaN)
+    expect(toPrimitive(new Object(Infinity))).toBe(Infinity)
+    expect(toPrimitive(new Object(-Infinity))).toBe(-Infinity)
+    expect(toPrimitive(new Object(true))).toBe(true)
+    expect(toPrimitive(new Object(1n))).toBe(1n)
+    expect(toPrimitive(new Object(''))).toBe('')
+    expect(toPrimitive(new Object('1'))).toBe('1')
     const sym = Symbol('')
-    expect(toPrimitive(Object(sym))).toBe(sym)
-    expect(toPrimitive(Object({}))).toBe('[object Object]')
-    expect(toPrimitive(Object(null))).toBe('[object Object]')
-    expect(toPrimitive(Object(undefined))).toBe('[object Object]')
+    expect(toPrimitive(new Object(sym))).toBe(sym)
+    expect(toPrimitive(new Object({}))).toBe('[object Object]')
+    expect(toPrimitive(new Object(null))).toBe('[object Object]')
+    expect(toPrimitive(new Object(undefined))).toBe('[object Object]')
   })
   test('object with valueOf', () => {
     expect(toPrimitive({ valueOf: () => 1 })).toBe(1)
@@ -69,8 +68,9 @@ describe('base', () => {
   })
 })
 describe('prototype', () => {
-  test('Symbol.toPrimitive', () => {
+  test('symbol.toPrimitive', () => {
     const oldDesc = Object.getOwnPropertyDescriptor(Number.prototype, Symbol.toPrimitive)
+    // eslint-disable-next-line no-extend-native
     Object.defineProperty(Number.prototype, Symbol.toPrimitive, {
       configurable: true,
       value() {
@@ -79,9 +79,10 @@ describe('prototype', () => {
     })
     expect(toPrimitive(1)).toBe(1)
     expect(toPrimitive(2)).toBe(2)
-    expect(toPrimitive(Object(1))).toBe(1)
-    expect(toPrimitive(Object(2))).toBe(1)
+    expect(toPrimitive(new Object(1))).toBe(1)
+    expect(toPrimitive(new Object(2))).toBe(1)
     if (oldDesc) {
+      // eslint-disable-next-line no-extend-native
       Object.defineProperty(Number.prototype, Symbol.toPrimitive, oldDesc)
     } else {
       // @ts-ignore
@@ -91,15 +92,17 @@ describe('prototype', () => {
   test('valueOf', () => {
     const oldDesc = Object.getOwnPropertyDescriptor(Number.prototype, 'valueOf')
     // - https://github.com/inspect-js/is-bigint/blob/f46c35be813c05549865477bd771300c2595496e/index.js#L6-L14
+    // eslint-disable-next-line no-extend-native
     Object.defineProperty(Number.prototype, 'valueOf', {
       configurable: true,
       value() { return 2 }
     })
     expect(toPrimitive(1)).toBe(1)
     expect(toPrimitive(2)).toBe(2)
-    expect(toPrimitive(Object(1))).toBe(2)
-    expect(toPrimitive(Object(2))).toBe(2)
+    expect(toPrimitive(new Object(1))).toBe(2)
+    expect(toPrimitive(new Object(2))).toBe(2)
     if (oldDesc) {
+      // eslint-disable-next-line no-extend-native
       Object.defineProperty(Number.prototype, 'valueOf', oldDesc)
     } else {
       // @ts-ignore

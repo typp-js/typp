@@ -1,13 +1,13 @@
+import type { SwitchBaseType } from '#internal'
 import type { t as tn } from '@typp/core'
+import { preprocess } from '#internal/utils.ts'
+import { bigintTransform } from '@typp/validator/types/primitive.bigint'
+import { booleanTransform } from '@typp/validator/types/primitive.boolean'
+import { numberTransform } from '@typp/validator/types/primitive.number'
+import { stringTransform } from '@typp/validator/types/primitive.string'
+import { symbolTransform } from '@typp/validator/types/primitive.symbol'
 
-import type { SwitchBaseType } from '../base.inner'
 import { FALSY } from '../base'
-import { preprocess } from '../utils.inner'
-import { bigintTransform } from './primitive.bigint'
-import { booleanTransform } from './primitive.boolean'
-import { numberTransform } from './primitive.number'
-import { stringTransform } from './primitive.string'
-import { symbolTransform } from './primitive.symbol'
 
 declare module '@typp/core/base' {
   namespace t {

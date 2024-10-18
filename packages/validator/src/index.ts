@@ -9,13 +9,15 @@ import type {
   Typp
 } from '@typp/core'
 
-import { MAX_TIME } from './base'
 import {
   ParseError as _ParseError,
   ValidateError as _ValidateError
-} from './base.inner'
-import { typesValidator } from './types'
-import { catchAndWrapProxy, preprocess } from './utils.inner'
+} from '#internal'
+import { catchAndWrapProxy, preprocess } from '#internal/utils.ts'
+
+import { typesValidator } from '@typp/validator/types'
+
+import { MAX_TIME } from './base'
 
 type Transform<Shape = unknown> = (
   this: Typp<[Shape]>,
@@ -385,4 +387,3 @@ export function isWhatError<K extends tn.ErrorArgsMapKeys>(
 }
 
 export * from './base'
-export * from './utils'
