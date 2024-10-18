@@ -350,7 +350,7 @@ export default function validator(t: typeof tn) {
       switch (typeof input) {
         case 'string':
           // TODO number string or bigint string
-          if (isNaN(Date.parse(input))) {
+          if (Number.isNaN(Date.parse(input))) {
             // TODO throw transform error of parse error
           }
         // eslint-disable-next-line no-fallthrough
