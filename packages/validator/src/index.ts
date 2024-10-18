@@ -98,11 +98,11 @@ declare module '@typp/core/base' {
        */
       transform?: boolean
     }
-    export type ValidateSuccessResult<T> = {
+    export interface ValidateSuccessResult<T> {
       success: true
       data: T
     }
-    export type ValidateErrorResult = {
+    export interface ValidateErrorResult {
       success: false
       error: _ValidateError
     }
