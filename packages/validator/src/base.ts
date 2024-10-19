@@ -318,12 +318,12 @@ declare module '@typp/core/base' {
     interface Validator<Shape = unknown> {
       validate: Validate<Shape>
       /**
-       * always called before `validate`, error will be catched and thrown as `ParseError`
+       * always called before `validate`, error will be caught and thrown as `ParseError`
        */
       preprocess: Transform<Shape>
       /**
        * only when `transform` is `true` and validate failed, this function will be called
-       * error will be catched and thrown as `ParseError`
+       * error will be caught and thrown as `ParseError`
        */
       transform: Transform<Shape>
     }
