@@ -8,10 +8,11 @@
     "coverage:badge": "istanbul-badges-readme"
   },
   "typesVersions": {
-    "<5.0": { "*": [ "*", "dist/*", "dist/*/index.d.ts" ] }
+    "<5.0": { "*": ["*", "dist/*", "dist/*/index.d.ts"] }
   },
   "exports": {
     ".": "./src/index.ts",
+    "./base": "./src/base.ts",
     "./utils": "./src/utils.ts",
     "./types": "./src/types/index.ts",
     "./types/*": "./src/types/*.ts"
