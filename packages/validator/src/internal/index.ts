@@ -1,3 +1,4 @@
+// dprint-ignore-file
 import type {
   IsAnySubType,
   IsEqual, IsSubType,

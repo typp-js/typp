@@ -1,21 +1,25 @@
-import type { t } from '@typp/core/base'
+import type { Transform } from './types'
 
 export function parseBigInt(inputStr: string): bigint {
   const str = inputStr.trim()
 
-  if (str.length === 0)
+  if (str.length === 0) {
     return 0n
+  }
   if (str.length === 1) {
-    if (!/\d/.test(str))
+    if (!/\d/.test(str)) {
       throw new SyntaxError(`Cannot convert ${inputStr} to a BigInt`)
+    }
     return BigInt(str)
   }
   if (str.length === 2) {
     const [first] = str
-    if (/^\d\D/.test(str))
+    if (/^\d\D/.test(str)) {
       return BigInt(first)
-    if (!/[-+\d]\d/.test(str))
+    }
+    if (!/[-+\d]\d/.test(str)) {
       throw new SyntaxError(`Cannot convert ${inputStr} to a BigInt`)
+    }
     return BigInt(str)
   }
   const sign = str[0] === '-' ? -1n : 1n
@@ -49,13 +53,15 @@ export function parseBigInt(inputStr: string): bigint {
     numStr = inputStr
   } else {
     const tenRadixMatchResult = str.match(/^[+-]?(\d+)(?:\.(?:(\d+)?0*)?)?(?:e([+-]?\d+)?)?/)
-    if (!tenRadixMatchResult)
+    if (!tenRadixMatchResult) {
       throw new SyntaxError(`Cannot convert ${inputStr} to a BigInt`)
+    }
 
     const [, integer, fraction, offsetStr] = tenRadixMatchResult
     const offset = offsetStr ? parseInt(offsetStr) : 0
-    if (offset > Number.MAX_SAFE_INTEGER)
+    if (offset > Number.MAX_SAFE_INTEGER) {
       throw new RangeError('Exponential part is too large')
+    }
     const floatStr = integer + (fraction ?? '')
     const dotIndex = integer.length
     const newDotIndex = dotIndex + offset
@@ -79,19 +85,16 @@ export function parseBigInt(inputStr: string): bigint {
  */
 function getMethod(obj: unknown, key: string | symbol): Function | undefined {
   const func = Reflect.get(Object(obj), key)
-  if (func === undefined || func === null)
+  if (func === undefined || func === null) {
     return undefined
-  if (typeof func === 'function')
+  }
+  if (typeof func === 'function') {
     return func
+  }
   throw new TypeError(`${func} is not a function`)
 }
 
-type Primitive = (
-  | number | bigint | boolean
-  | string | symbol
-  | object
-  | null | undefined
-)
+type Primitive = number | bigint | boolean | string | symbol | object | null | undefined
 
 /**
  * @see https://tc39.es/ecma262/multipage/abstract-operations.html#sec-ordinarytoprimitive
@@ -107,8 +110,9 @@ function ordinaryToPrimitive(o: object, hint: 'number' | 'string' | (string & {}
     const method = Reflect.get(o, methodName)
     if (typeof method === 'function') {
       const result = Reflect.apply(method, o, [])
-      if (typeof result !== 'object')
+      if (typeof result !== 'object') {
         return result
+      }
     }
   }
   throw new TypeError('Cannot convert object to primitive value')
@@ -122,19 +126,22 @@ export function toPrimitive(input: unknown, preferredType: 'number' | 'string' |
     const exoticToPrim = getMethod(input, Symbol.toPrimitive)
     let hint: 'number' | 'string' | 'default' = preferredType
     if (exoticToPrim !== undefined) {
-      if (!['number', 'string', 'default'].includes(hint))
+      if (!['number', 'string', 'default'].includes(hint)) {
         hint = 'default'
+      }
 
       const result = Reflect.apply(exoticToPrim, input, [hint])
-      if (typeof result !== 'object')
+      if (typeof result !== 'object') {
         return result
+      }
       throw new TypeError('Cannot convert object to primitive value')
     }
-    if (!['number', 'string', 'default'].includes(preferredType))
+    if (!['number', 'string', 'default'].includes(preferredType)) {
       preferredType = 'number'
+    }
     return ordinaryToPrimitive(input, preferredType)
   }
   return input as Primitive
 }
 
-export const preprocess: t.Validator['preprocess'] = (input, options) => toPrimitive(input)
+export const preprocess: Transform = (input, options) => toPrimitive(input)

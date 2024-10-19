@@ -1,15 +1,8 @@
 import { catchAndWrapProxy } from '#internal/utils.ts'
-import type {
-  AtLeastOneProperty,
-  IsConfigure,
-  IsEqual,
-  IsNotEqual,
-  Narrow,
-  Switch,
-  t as tn,
-  Typp
-} from '@typp/core/base'
+import type { AtLeastOneProperty, IsConfigure, IsEqual, IsNotEqual, Narrow, Switch, t as tn } from '@typp/core/base'
 import { ParseError as _ParseError, ValidateError as _ValidateError } from '@typp/validator/error'
+
+import type { Transform, Validate } from './types'
 
 // dprint-ignore
 // TODO extensible ?
@@ -32,17 +25,6 @@ export const FALSY = [
 // > at the beginning of 1 January 1970 UTC.
 // 100_000_000 * 24 * 60 * 60 * 1000
 export const MAX_TIME = 8640000000000000
-
-type Transform<Shape = unknown> = (
-  this: Typp<[Shape]>,
-  input: unknown,
-  options?: Omit<tn.ValidateOptions, 'transform'>
-) => unknown
-type Validate<Shape = unknown> = (
-  this: Typp<[Shape]>,
-  input: unknown,
-  options?: Omit<tn.ValidateOptions, 'transform'>
-) => boolean
 
 // TODO
 // @ts-ignore error TS2589: Type instantiation is excessively deep and possibly infinite.
@@ -222,30 +204,6 @@ declare module '@typp/core/base' {
     }
     export interface ValidateTransformEntries<T, Input, InputRest> {
       [key: string]: [boolean, any]
-    }
-    // TODO https://zod.dev/?id=coercion-for-primitives
-    // export const coerce: typeof tn
-    export interface ValidateOptions {
-      /**
-       * Try to validate, wrap the result with `ValidateResult`
-       */
-      try?: boolean
-      /**
-       * Narrow input type and return the input value literally
-       */
-      const?: boolean
-      /**
-       * Input must exactly match the type
-       */
-      exact?: boolean
-      /**
-       * no transform and exact match
-       */
-      strict?: boolean
-      /**
-       * As much as possible transform input value to the type
-       */
-      transform?: boolean
     }
     export interface ValidateSuccessResult<T> {
       success: true
