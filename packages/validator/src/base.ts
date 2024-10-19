@@ -44,7 +44,8 @@ type Validate<Shape = unknown> = (
   options?: Omit<tn.ValidateOptions, 'transform'>
 ) => boolean
 
-// @ts-ignore
+// TODO
+// @ts-ignore error TS2589: Type instantiation is excessively deep and possibly infinite.
 type Match<Shape = unknown> = (s: tn.Schema<any, any>, input: unknown) => s is tn.Schema<Shape, any>
 const validatorMappingByMatcher = [] as [
   matcher: Match,
