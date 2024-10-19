@@ -98,14 +98,25 @@ export type LiteralTypeGuard<BaseType, T, Result> = IsWhat<T, BaseType> extends 
       : never
   )
 
-export class ValidateError<K extends tn.ErrorArgsMapKeys = string> extends Error {
+declare module '@typp/core/base' {
+  namespace t {
+    export interface ErrorArgsMap {
+      [k: string]: unknown[]
+    }
+  }
+}
+
+export type ErrorArgsMapKeys = keyof tn.ErrorArgsMap
+export type GetErrorArgs<K extends ErrorArgsMapKeys> = tn.ErrorArgsMap[K]
+
+export class ValidateError<K extends ErrorArgsMapKeys = string> extends Error {
   __TYPP_SYMBOL__ = '__ValidateError__'
   constructor(
     public type: string,
     public expected: tn.Schema<any, any>,
     public actual: any,
     public keyword?: K,
-    public args?: tn.GetErrorArgs<K>
+    public args?: GetErrorArgs<K>
   ) {
     super(`Data is ${type}`)
     this.name = 'ValidateError'
@@ -129,4 +140,12 @@ export class ParseError extends Error {
     super(`Data \`${actualStr}\` cannot be parsed at \`${step}\`, because ${detail.message}`)
     this.name = 'ParseError'
   }
+}
+
+export function isWhatError<K extends ErrorArgsMapKeys>(
+  error: unknown, key: K
+): error is { keyword: K, args: GetErrorArgs<K> } {
+  if (typeof error !== 'object' || error === null)
+    return false
+  return 'keyword' in error && error.keyword === key
 }
