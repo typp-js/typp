@@ -42,8 +42,8 @@ importers:
         specifier: ^9.9.1
         version: 9.12.0
       jiek:
-        specifier: ^1.0.12
-        version: 1.0.12(@pnpm/logger@5.2.0)(esbuild@0.19.9)
+        specifier: ^1.0.13
+        version: 1.0.13(@pnpm/logger@5.2.0)(esbuild@0.19.9)
       typescript:
         specifier: ^5.5.4
         version: 5.6.3
@@ -512,8 +512,8 @@ packages:
   '@jiek/pkger@0.2.0':
     resolution: {integrity: sha512-FqFNUoeRTtUEoSK1bQ8Av564OBHzli1hFI15UGj/G+i+XmcoyvUYKDwWKgrjktRoYzlBz4v3i5hWaInp2IbsRA==}
 
-  '@jiek/rollup-plugin-dts@6.1.1':
-    resolution: {integrity: sha512-TILGtvW9iAI5RdnLYt3YCobWss8Z24Lh/u0JD9v/uYpjnKE90XBWMEW0PlXPAGDOQGTtJeRXC7RdRNw2y7O64w==}
+  '@jiek/rollup-plugin-dts@6.1.2':
+    resolution: {integrity: sha512-Jb3H9F6Il4lurcIk0WOyVLRC+m1Zyi0bkN9p1HgaZhhehsW+QKj0VWIxOgx4mi8ESbHWgTy0j7DEcsBbVL0mww==}
     engines: {node: '>=16'}
     peerDependencies:
       rollup: ^3.29.4 || ^4
@@ -2114,8 +2114,8 @@ packages:
     resolution: {integrity: sha512-TLgnMkKg3iTDsQ9PbPTdpfAK2DzjF9mqUG7RMgcQl8oFjad8ob4laGxv5XV5U9MAfx8D6tSJiUyuAwzLicaxlg==}
     engines: {node: '>=8'}
 
-  jiek@1.0.12:
-    resolution: {integrity: sha512-mi8la2sE7qJuQIyqYbIwhldNxLBRPjYv18xub2FBJ6u7TcuC7pZrlOHZQpnDVdNXeIZ05pBDj2kukHx6QQEx6g==}
+  jiek@1.0.13:
+    resolution: {integrity: sha512-j8Dl4/eYMSGxNKOOD97HTvUGpEvx+6v34B+nzsXGEqjdXCNue13oAu7vcmwE+DON7X5gZO1G0icElRIgKIdUaw==}
     hasBin: true
 
   js-tokens@4.0.0:
@@ -3975,7 +3975,7 @@ snapshots:
     dependencies:
       fast-glob: 3.3.2
 
-  '@jiek/rollup-plugin-dts@6.1.1(rollup@4.9.1)(typescript@5.6.3)':
+  '@jiek/rollup-plugin-dts@6.1.2(rollup@4.9.1)(typescript@5.6.3)':
     dependencies:
       magic-string: 0.30.12
       rollup: 4.9.1
@@ -5938,10 +5938,10 @@ snapshots:
       html-escaper: 2.0.2
       istanbul-lib-report: 3.0.1
 
-  jiek@1.0.12(@pnpm/logger@5.2.0)(esbuild@0.19.9):
+  jiek@1.0.13(@pnpm/logger@5.2.0)(esbuild@0.19.9):
     dependencies:
       '@jiek/pkger': 0.2.0
-      '@jiek/rollup-plugin-dts': 6.1.1(rollup@4.9.1)(typescript@5.6.3)
+      '@jiek/rollup-plugin-dts': 6.1.2(rollup@4.9.1)(typescript@5.6.3)
       '@jiek/utils': 0.2.1
       '@rollup/plugin-commonjs': 28.0.0(rollup@4.9.1)
       '@rollup/plugin-json': 6.1.0(rollup@4.9.1)
