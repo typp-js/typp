@@ -114,7 +114,7 @@ describe('validate', () => {
     // eslint-disable-next-line ts/consistent-type-definitions
     type Opts = { transform: true, const: true }
     expectTypeOf<t.ValidateReturnType<number, number, 1, never, Opts>>().toEqualTypeOf<1>()
-    expectTypeOf<t.ValidateReturnType<number, number, '1', '1', Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.ValidateReturnType<number, number, '1', '1', Opts>>().toEqualTypeOf<1>()
     expectTypeOf<t.ValidateReturnType<number, number, true, true, Opts>>().toEqualTypeOf<1>()
     expectTypeOf<t.ValidateReturnType<number, number, number | Number | true, true, Opts>>().toEqualTypeOf<1>()
     expectTypeOf<t.ValidateReturnType<number, number, false, false, Opts>>().toEqualTypeOf<0>()
@@ -122,7 +122,7 @@ describe('validate', () => {
     expectTypeOf<t.ValidateReturnType<number, number, null, null, Opts>>().toEqualTypeOf<0>()
     expectTypeOf<t.ValidateReturnType<number, number, undefined, undefined, Opts>>().toEqualTypeOf<0>()
     expectTypeOf<t.ValidateReturnType<number, number, bigint, bigint, Opts>>().toEqualTypeOf<number>()
-    expectTypeOf<t.ValidateReturnType<number, number, 1n, 1n, Opts>>().toEqualTypeOf<number>()
+    expectTypeOf<t.ValidateReturnType<number, number, 1n, 1n, Opts>>().toEqualTypeOf<1>()
   })
   test('special radix', () => {
     // eslint-disable-next-line ts/consistent-type-definitions
