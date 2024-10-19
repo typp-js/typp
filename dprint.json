@@ -4,9 +4,8 @@
     "semiColons": "asi",
     "trailingCommas": "never",
     "conditionalType.operatorPosition": "nextLine",
-    "exportDeclaration": {
-      "sortNamedExports": "maintain"
-    }
+    "jsx.multiLineParens": "never",
+    "typeParameters.trailingCommas": "onlyMultiLine"
   },
   "malva": {
     "ignoreCommentDirective": "dprint-ignore",
