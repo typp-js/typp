@@ -11,7 +11,8 @@ export default config({
       'ts/ban-ts-comment': 'off',
       'ts/no-wrapper-object-types': 'off',
       'ts/no-unsafe-function-type': 'off',
-      'import/no-mutable-exports': 'off'
+      'import/no-mutable-exports': 'off',
+      'perfectionist/sort-imports': 'off'
     }
   },
   javascript: {
