@@ -1,6 +1,7 @@
 import type { t as tn } from '@typp/core'
 
-import { MAX_TIME, validatorSkeleton } from '@typp/validator/base'
+import { validatorSkeleton } from '@typp/validator/base'
+import { MAX_TIME } from '@typp/validator/constants'
 import { typesValidator } from '@typp/validator/types'
 import { preprocess } from '@typp/validator/utils'
 

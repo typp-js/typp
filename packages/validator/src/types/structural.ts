@@ -1,11 +1,12 @@
-import type { IsEqual, IsTrue, Not, Switch, SwitchOtherEntry, t as tn } from '@typp/core'
-import { FALSY } from '@typp/validator/base'
+import type { IsEqual, IsTrue, Not, Switch, SwitchOtherEntry, t as tn } from '@typp/core/base'
+import { FALSY } from '@typp/validator/constants'
 
 // TODO object
 // TODO dictionary
 // TODO record
 // TODO class/instanceof
 
+// dprint-ignore
 declare module '@typp/core/base' {
   namespace t {
     export interface ErrorArgsMap {
@@ -117,8 +118,11 @@ export function arrayValidator(t: typeof tn) {
       const length = isTuple ? this.length : input.length
       if (isTuple && input.length !== this.length) {
         throw new ValidateError(
-          'partially match', this, input,
-          'ValidateError:tuple length not match', [this.shape.length, input.length]
+          'partially match',
+          this,
+          input,
+          'ValidateError:tuple length not match',
+          [this.shape.length, input.length]
         )
       }
       for (let i = 0; i < length; i++) {
@@ -129,8 +133,11 @@ export function arrayValidator(t: typeof tn) {
         const result = shapeItem.tryValidate(inputItem)
         if (!result.success) {
           throw new ValidateError(
-            'partially match', this, input,
-            'ValidateError:item of array not match', [i, result.error]
+            'partially match',
+            this,
+            input,
+            'ValidateError:item of array not match',
+            [i, result.error]
           )
         }
       }
@@ -194,8 +201,11 @@ export function objectValidator(t: typeof tn) {
       const missingKeys = expectedKeys.filter(key => !actualKeys.includes(key))
       if (missingKeys.length > 0) {
         throw new ValidateError(
-          'partially match', this, input,
-          'ValidateError:is missing properties', [
+          'partially match',
+          this,
+          input,
+          'ValidateError:is missing properties',
+          [
             missingKeys.length,
             missingKeys.map(key => [key, this.shape[key]] as const)
           ]
@@ -213,8 +223,11 @@ export function objectValidator(t: typeof tn) {
       }
       if (unexpectedPropertyErrors.length > 0) {
         throw new ValidateError(
-          'partially match', this, input,
-          'ValidateError:not match the properties', [
+          'partially match',
+          this,
+          input,
+          'ValidateError:not match the properties',
+          [
             unexpectedPropertyErrors.length,
             unexpectedPropertyErrors
           ]

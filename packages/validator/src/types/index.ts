@@ -1,4 +1,4 @@
-import type { t as tn } from '@typp/core'
+import type { t as tn } from '@typp/core/base'
 import { literalValidator } from '@typp/validator/types/literal'
 import { bigintValidator } from '@typp/validator/types/primitive.bigint'
 import { booleanValidator } from '@typp/validator/types/primitive.boolean'

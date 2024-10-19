@@ -1,7 +1,8 @@
-import { ValidateError } from '#internal'
+import { ValidateError } from '@typp/validator/error'
 
 import { t } from '@typp/core'
-import { FALSY, validatorSkeleton } from '@typp/validator'
+import { validatorSkeleton } from '@typp/validator'
+import { FALSY } from '@typp/validator/constants'
 import { literalValidator } from '@typp/validator/types/literal'
 import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 

@@ -16,7 +16,8 @@
     "./error": "./src/error.ts",
     "./utils": "./src/utils.ts",
     "./types": "./src/types/index.ts",
-    "./types/*": "./src/types/*.ts"
+    "./types/*": "./src/types/*.ts",
+    "./constants": "./src/constants.ts"
   },
   "imports": {
     "#internal": "./src/internal/index.ts",
