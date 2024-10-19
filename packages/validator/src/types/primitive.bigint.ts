@@ -1,10 +1,10 @@
+import type { LiteralTypeGuard, SwitchBaseType } from '#internal'
+
 import type { IsEqual, IsWhat, Not, OnlySubType, t as tn } from '@typp/core'
+import { FALSY } from '@typp/validator/base'
+import { parseBigInt, preprocess } from '@typp/validator/utils'
 
-import type { LiteralTypeGuard, SwitchBaseType } from '../internal'
-import { FALSY } from '../base'
-import { preprocess } from '../internal/utils'
-import { parseBigInt } from '../utils'
-
+// dprint-ignore
 declare module '@typp/core/base' {
   namespace t {
     export interface ValidateExtendsEntries<T> {
@@ -54,7 +54,7 @@ declare module '@typp/core/base' {
   }
 }
 
-export const bigintTransform: tn.Validator<bigint>['transform'] = function (input, options) {
+export const bigintTransform: tn.Validator<bigint>['transform'] = function(input, options) {
   if (FALSY.includes(input)) return 0n
 
   switch (typeof input) {

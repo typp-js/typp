@@ -1,9 +1,10 @@
 import type { IsEqual, IsWhat, Not, OnlySubType, t as tn } from '@typp/core'
 
-import type { LiteralTypeGuard, SwitchBaseType } from '../internal'
-import { FALSY } from '../base'
-import { preprocess } from '../internal/utils'
+import type { LiteralTypeGuard, SwitchBaseType } from '#internal'
+import { FALSY } from '@typp/validator/base'
+import { preprocess } from '@typp/validator/utils'
 
+// dprint-ignore
 declare module '@typp/core/base' {
   namespace t {
     export interface ValidateExtendsEntries<T> {
@@ -54,7 +55,7 @@ declare module '@typp/core/base' {
   }
 }
 
-export const numberTransform: tn.Validator<number>['transform'] = function (input, options) {
+export const numberTransform: tn.Validator<number>['transform'] = function(input, options) {
   if (FALSY.includes(input)) return 0
 
   switch (typeof input) {
@@ -82,8 +83,9 @@ export const numberTransform: tn.Validator<number>['transform'] = function (inpu
         ? Number.parseFloat(inputStr)
         : Number.parseInt(inputStr, radix)
 
-      if (!Number.isNaN(temp))
+      if (!Number.isNaN(temp)) {
         return temp
+      }
       break
     }
     case 'boolean':

@@ -1,9 +1,8 @@
 import type { t as tn } from '@typp/core'
 
-import { preprocess } from '#internal/utils.ts'
-
 import { MAX_TIME, validatorSkeleton } from '@typp/validator/base'
 import { typesValidator } from '@typp/validator/types'
+import { preprocess } from '@typp/validator/utils'
 
 export default function validator(t: typeof tn) {
   t.use(validatorSkeleton)
@@ -43,5 +42,5 @@ export default function validator(t: typeof tn) {
 }
 export { validator }
 
-export { isWhatError } from '#internal'
 export * from '@typp/validator/base'
+export * from '@typp/validator/error'

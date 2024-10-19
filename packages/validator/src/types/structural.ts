@@ -1,6 +1,5 @@
 import type { IsEqual, IsTrue, Not, Switch, SwitchOtherEntry, t as tn } from '@typp/core'
-
-import { FALSY } from '../base'
+import { FALSY } from '@typp/validator/base'
 
 // TODO object
 // TODO dictionary
@@ -151,11 +150,11 @@ export function arrayValidator(t: typeof tn) {
         if (lengthOrUndefined === undefined) {
           return input
         }
-        const length = parseInt(String(lengthOrUndefined), 10)
-        if (isNaN(length)) {
+        const length = Number.parseInt(String(lengthOrUndefined), 10)
+        if (Number.isNaN(length)) {
           return input
         }
-        const result = new Array(length)
+        const result = Array.from({ length })
         for (let i = 0; i < length; i++) {
           const item = input[i as keyof typeof input] ?? undefined
           const shapeItem: tn.Schema<unknown, unknown> = isTuple

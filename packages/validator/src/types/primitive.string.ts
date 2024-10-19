@@ -1,8 +1,9 @@
+import type { LiteralTypeGuard, SwitchBaseType } from '#internal'
+
 import type { IsWhat, OnlySubType, t as tn } from '@typp/core'
+import { preprocess } from '@typp/validator/utils'
 
-import type { LiteralTypeGuard, SwitchBaseType } from '../internal'
-import { preprocess } from '../internal/utils'
-
+// dprint-ignore
 declare module '@typp/core/base' {
   namespace t {
     export interface ValidateExtendsEntries<T> {
@@ -30,7 +31,7 @@ declare module '@typp/core/base' {
   }
 }
 
-export const stringTransform: tn.Validator<string>['transform'] = function (input, options) {
+export const stringTransform: tn.Validator<string>['transform'] = function(input, options) {
   return String(input)
 }
 

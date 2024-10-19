@@ -13,6 +13,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./base": "./src/base.ts",
+    "./error": "./src/error.ts",
     "./utils": "./src/utils.ts",
     "./types": "./src/types/index.ts",
     "./types/*": "./src/types/*.ts"

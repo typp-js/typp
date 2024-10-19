@@ -1,7 +1,6 @@
-import { ParseError, ValidateError } from '#internal'
-
 import { t } from '@typp/core'
 import { validatorSkeleton } from '@typp/validator'
+import { ParseError, ValidateError } from '@typp/validator/error'
 import { bigintValidator } from '@typp/validator/types/primitive.bigint'
 import { booleanValidator } from '@typp/validator/types/primitive.boolean'
 import { numberValidator } from '@typp/validator/types/primitive.number'

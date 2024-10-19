@@ -1,3 +1,5 @@
+import type { t } from '@typp/core/base'
+
 export function parseBigInt(inputStr: string): bigint {
   const str = inputStr.trim()
 
@@ -134,3 +136,5 @@ export function toPrimitive(input: unknown, preferredType: 'number' | 'string' |
   }
   return input as Primitive
 }
+
+export const preprocess: t.Validator['preprocess'] = (input, options) => toPrimitive(input)

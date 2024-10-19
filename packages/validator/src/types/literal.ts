@@ -1,13 +1,13 @@
 import type { SwitchBaseType } from '#internal'
+
 import type { t as tn } from '@typp/core'
-import { preprocess } from '#internal/utils.ts'
+import { FALSY } from '@typp/validator/base'
 import { bigintTransform } from '@typp/validator/types/primitive.bigint'
 import { booleanTransform } from '@typp/validator/types/primitive.boolean'
 import { numberTransform } from '@typp/validator/types/primitive.number'
 import { stringTransform } from '@typp/validator/types/primitive.string'
 import { symbolTransform } from '@typp/validator/types/primitive.symbol'
-
-import { FALSY } from '../base'
+import { preprocess } from '@typp/validator/utils'
 
 declare module '@typp/core/base' {
   namespace t {
@@ -64,18 +64,19 @@ export function literalValidator(t: typeof tn) {
   t.useValidator((s): s is tn.Schema<
     bigint | boolean | number | string | symbol,
     bigint | boolean | number | string | symbol
-  > => [
-    'bigint',
-    'boolean',
-    'number',
-    'string',
-    'symbol'
-  ].includes(typeof s.shape), {
+  > =>
+    [
+      'bigint',
+      'boolean',
+      'number',
+      'string',
+      'symbol'
+    ].includes(typeof s.shape), {
     validate(input) {
       return input === this.shape
     },
     transform(input, options) {
-      return (<Record<string, Function>>{
+      return (<Record<string, Function>> {
         bigint: bigintTransform,
         boolean: booleanTransform,
         number: numberTransform,

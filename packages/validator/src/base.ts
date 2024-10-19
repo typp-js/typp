@@ -1,11 +1,17 @@
-import type { AtLeastOneProperty, IsConfigure, IsEqual, IsNotEqual, Narrow, Switch, t as tn, Typp } from '@typp/core'
-
-import {
-  ParseError as _ParseError,
-  ValidateError as _ValidateError
-} from '#internal'
 import { catchAndWrapProxy } from '#internal/utils.ts'
+import type {
+  AtLeastOneProperty,
+  IsConfigure,
+  IsEqual,
+  IsNotEqual,
+  Narrow,
+  Switch,
+  t as tn,
+  Typp
+} from '@typp/core/base'
+import { ParseError as _ParseError, ValidateError as _ValidateError } from '@typp/validator/error'
 
+// dprint-ignore
 // TODO extensible ?
 export const FALSY = [
   '',
@@ -41,7 +47,8 @@ type Validate<Shape = unknown> = (
 // @ts-ignore
 type Match<Shape = unknown> = (s: tn.Schema<any, any>, input: unknown) => s is tn.Schema<Shape, any>
 const validatorMappingByMatcher = [] as [
-  matcher: Match, validator: AtLeastOneProperty<tn.Validator>
+  matcher: Match,
+  validator: AtLeastOneProperty<tn.Validator>
 ][]
 const validators = new Map<unknown, AtLeastOneProperty<tn.Validator>>()
 
@@ -77,8 +84,9 @@ function _useValidator<Shape>(
 //   - `{}` 并不在 `number` 的转化范围内，是一个无法被转化的值，这个时候应该抛出「校验错误」的异常，而不是「无法转化」的异常
 function validate(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions): any
 function validate(this: tn.Schema<any, any>, ...args: any[]) {
-  if (args.length === 0)
+  if (args.length === 0) {
     throw new Error('No data to validate')
+  }
   const [data, options = {}] = args as [any, tn.ValidateOptions]
   const {
     try: isTry = false,
@@ -104,8 +112,11 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
         }
       }
     }
-    if (!validator)
-      throw new Error(`Unable to validate when shape is \`${this.shape}\`, because the shape is not supported validator`)
+    if (!validator) {
+      throw new Error(
+        `Unable to validate when shape is \`${this.shape}\`, because the shape is not supported validator`
+      )
+    }
 
     const {
       preprocess: preprocessNoThis,
@@ -113,10 +124,13 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
       transform: transformNoThis
     } = validator
     const [
-      validate, transform, preprocess
+      validate,
+      transform,
+      preprocess
     ] = [validateNoThis, transformNoThis, preprocessNoThis].map(fn => fn?.bind(this))
-    if (!validate)
+    if (!validate) {
       throw new Error(`Unable to validate when shape is ${this.shape}, because the shape is not supported validator`)
+    }
 
     try {
       rt = preprocess ? preprocess(rt, options) : rt
@@ -128,8 +142,11 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
     }
 
     if (isTransform && !validate(rt, options)) {
-      if (!transform)
-        throw new Error(`Unable to transform when shape is ${this.shape}, because the shape is not supported transformer`)
+      if (!transform) {
+        throw new Error(
+          `Unable to transform when shape is ${this.shape}, because the shape is not supported transformer`
+        )
+      }
 
       try {
         rt = transform(rt, options)
@@ -140,8 +157,9 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
         throw e
       }
     }
-    if (!validate(rt, options))
+    if (!validate(rt, options)) {
       throw new _ValidateError('unexpected', this, rt)
+    }
     return rt
   }
   return isTry ? catchAndWrapProxy(wrap)() : wrap()
@@ -149,8 +167,9 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
 validate.narrow = validate
 function validateGen(skm: tn.Schema<any, any>, defaultOptions?: tn.ValidateOptions) {
   function inner(...args: any[]) {
-    if (args.length === 0)
+    if (args.length === 0) {
       throw new Error('No data to validate')
+    }
     const [data, options] = args
     return validate.call(skm, data, {
       ...defaultOptions,
@@ -186,6 +205,7 @@ export function validatorSkeleton(t: typeof tn) {
   })
 }
 
+// dprint-ignore
 declare module '@typp/core/base' {
   namespace t {
     export const useValidator: typeof _useValidator

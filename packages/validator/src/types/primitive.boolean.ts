@@ -1,9 +1,10 @@
+import type { LiteralTypeGuard, SwitchBaseType } from '#internal'
+
 import type { IsEqual, IsWhat, OnlySubType, t as tn } from '@typp/core'
+import { FALSY } from '@typp/validator/base'
+import { preprocess } from '@typp/validator/utils'
 
-import type { LiteralTypeGuard, SwitchBaseType } from '../internal'
-import { FALSY } from '../base'
-import { preprocess } from '../internal/utils'
-
+// dprint-ignore
 declare module '@typp/core/base' {
   namespace t {
     export interface ValidateExtendsEntries<T> {
@@ -39,7 +40,7 @@ declare module '@typp/core/base' {
   }
 }
 
-export const booleanTransform: tn.Validator<boolean>['transform'] = function (input, options) {
+export const booleanTransform: tn.Validator<boolean>['transform'] = function(input, options) {
   return FALSY.includes(input) ? false : Boolean(input)
 }
 
