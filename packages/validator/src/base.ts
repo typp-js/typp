@@ -67,10 +67,13 @@ function _useValidator<Shape>(
       }
     }
   } else {
-    validatorMappingByMatcher.push([shapesOrMatcher, validator])
-    const index = validatorMappingByMatcher.length - 1
+    const item = [shapesOrMatcher, validator] as (typeof validatorMappingByMatcher)[number]
+    validatorMappingByMatcher.push(item)
     return () => {
-      validatorMappingByMatcher.splice(index, 1)
+      const index = validatorMappingByMatcher.indexOf(item)
+      if (index !== -1) {
+        validatorMappingByMatcher.splice(index, 1)
+      }
     }
   }
 }
