@@ -6,7 +6,8 @@
     "lint": "eslint --cache --cache-location=node_modules/.cache/.eslintcache/ ./ --max-warnings=0",
     "test": "pnpm --recursive run test",
     "coverage": "pnpm --recursive run coverage",
-    "coverage:badge": "pnpm --recursive run coverage:badge"
+    "coverage:badge": "pnpm --recursive run coverage:badge",
+    "postinstall": "dprint editor-info"
   },
   "packageManager": "pnpm@9.10.0",
   "engines": {
