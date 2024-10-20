@@ -1,3 +1,6 @@
+import type {} from '@typp/validator/error'
+import type {} from '@typp/validator/types'
+
 import type { IsEqual, IsTrue, Not, Switch, SwitchOtherEntry, t as tn } from '@typp/core/base'
 import { FALSY } from '@typp/validator/constants'
 
@@ -100,7 +103,7 @@ export function structuralValidator(t: typeof tn) {
   t.use(objectValidator)
 }
 
-export function arrayValidator(t: typeof tn) {
+export function arrayValidator(t: typeof tn): void {
   const { ValidateError } = t
 
   t.useValidator((s): s is tn.Schema<any[], any[]> => {
@@ -176,7 +179,7 @@ export function arrayValidator(t: typeof tn) {
   })
 }
 
-export function objectValidator(t: typeof tn) {
+export function objectValidator(t: typeof tn): void {
   const { ValidateError } = t
 
   // interface

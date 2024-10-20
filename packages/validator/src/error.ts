@@ -6,6 +6,7 @@ declare module '@typp/core/base' {
     export interface ErrorArgsMap {
       [k: string]: unknown[]
     }
+    export { ParseError, ValidateError }
   }
 }
 
@@ -46,9 +47,11 @@ export class ParseError extends Error {
 }
 
 export function isWhatError<K extends ErrorArgsMapKeys>(
-  error: unknown, key: K
-): error is { keyword: K, args: GetErrorArgs<K> } {
-  if (typeof error !== 'object' || error === null)
+  error: unknown,
+  key: K
+): error is { keyword: K; args: GetErrorArgs<K> } {
+  if (typeof error !== 'object' || error === null) {
     return false
+  }
   return 'keyword' in error && error.keyword === key
 }

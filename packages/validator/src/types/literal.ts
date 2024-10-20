@@ -1,3 +1,5 @@
+import '@typp/validator/types'
+
 import type { SwitchBaseType } from '#internal'
 
 import type { t as tn } from '@typp/core/base'

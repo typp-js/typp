@@ -1,42 +1,13 @@
 import { catchAndWrapProxy } from '#internal/utils.ts'
-import type { AtLeastOneProperty, IsConfigure, IsEqual, IsNotEqual, Narrow, Switch, t as tn } from '@typp/core/base'
+
+import type { AtLeastOneProperty, t as tn } from '@typp/core/base'
 import { ParseError as _ParseError, ValidateError as _ValidateError } from '@typp/validator/error'
 
-import type { Transform, Validate } from './types'
-
-// TODO
-// @ts-ignore error TS2589: Type instantiation is excessively deep and possibly infinite.
-type Match<Shape = unknown> = (s: tn.Schema<any, any>, input: unknown) => s is tn.Schema<Shape, any>
 const validatorMappingByMatcher = [] as [
-  matcher: Match,
+  matcher: tn.Match,
   validator: AtLeastOneProperty<tn.Validator>
 ][]
 const validators = new Map<unknown, AtLeastOneProperty<tn.Validator>>()
-
-function _useValidator<Shape>(
-  shapesOrMatcher: Shape[] | Match<Shape>,
-  validator: AtLeastOneProperty<tn.Validator<Shape>>
-) {
-  if (Array.isArray(shapesOrMatcher)) {
-    for (const shape of shapesOrMatcher) {
-      validators.set(shape, validator)
-    }
-    return () => {
-      for (const shape of shapesOrMatcher) {
-        validators.delete(shape)
-      }
-    }
-  } else {
-    const item = [shapesOrMatcher, validator] as (typeof validatorMappingByMatcher)[number]
-    validatorMappingByMatcher.push(item)
-    return () => {
-      const index = validatorMappingByMatcher.indexOf(item)
-      if (index !== -1) {
-        validatorMappingByMatcher.splice(index, 1)
-      }
-    }
-  }
-}
 
 // 如果俩个类型之间不支持转化，应该抛出「校验错误」还是「转化错误」？
 // 实际上来说，一个值不能作为某个类型使用，存在俩种情况
@@ -47,7 +18,7 @@ function _useValidator<Shape>(
 //   - `1` 就是不匹配 `'2' | '3'` 的
 //   - `{}` 并不在 `number` 的转化范围内，是一个无法被转化的值，这个时候应该抛出「校验错误」的异常，而不是「无法转化」的异常
 function validate(this: tn.Schema<any, any>, data: any, options?: tn.ValidateOptions): any
-function validate(this: tn.Schema<any, any>, ...args: any[]) {
+function validate(this: tn.Schema<any, any>, ...args: any[]): any {
   if (args.length === 0) {
     throw new Error('No data to validate')
   }
@@ -91,6 +62,7 @@ function validate(this: tn.Schema<any, any>, ...args: any[]) {
       validate,
       transform,
       preprocess
+      // @ts-ignore
     ] = [validateNoThis, transformNoThis, preprocessNoThis].map(fn => fn?.bind(this))
     if (!validate) {
       throw new Error(`Unable to validate when shape is ${this.shape}, because the shape is not supported validator`)
@@ -145,7 +117,27 @@ function validateGen(skm: tn.Schema<any, any>, defaultOptions?: tn.ValidateOptio
 }
 
 export function validatorSkeleton(t: typeof tn) {
-  t.useStatic('useValidator', _useValidator)
+  t.useStatic('useValidator', (shapesOrMatcher, validator) => {
+    if (Array.isArray(shapesOrMatcher)) {
+      for (const shape of shapesOrMatcher) {
+        validators.set(shape, validator)
+      }
+      return () => {
+        for (const shape of shapesOrMatcher) {
+          validators.delete(shape)
+        }
+      }
+    } else {
+      const item = [shapesOrMatcher, validator] as (typeof validatorMappingByMatcher)[number]
+      validatorMappingByMatcher.push(item)
+      return () => {
+        const index = validatorMappingByMatcher.indexOf(item)
+        if (index !== -1) {
+          validatorMappingByMatcher.splice(index, 1)
+        }
+      }
+    }
+  })
   t.useStatic('ParseError', _ParseError)
   t.useStatic('ValidateError', _ValidateError)
   t.useFields({
@@ -167,140 +159,4 @@ export function validatorSkeleton(t: typeof tn) {
       return validateGen(this, { ...options, try: true })(data, options).success
     }
   })
-}
-
-// dprint-ignore
-declare module '@typp/core/base' {
-  namespace t {
-    export const useValidator: typeof _useValidator
-    export const ValidateError: typeof _ValidateError
-    export type ValidateError = _ValidateError
-    export const ParseError: typeof _ParseError
-    export type ParseError = _ParseError
-    export interface ValidateExtendsEntries<T> {
-      [key: string]: [boolean, any]
-    }
-    export interface ValidateTransformEntries<T, Input, InputRest> {
-      [key: string]: [boolean, any]
-    }
-    export interface ValidateSuccessResult<T> {
-      success: true
-      data: T
-    }
-    export interface ValidateErrorResult {
-      success: false
-      error: _ValidateError
-    }
-    export type ValidateResult<T> = ValidateSuccessResult<T> | ValidateErrorResult
-    export type ValidateReturnType<
-      T,
-      ExtendsT,
-      Input,
-      InputRest,
-      Opts extends ValidateOptions
-    > = [
-      Opts['transform'], Omit<Opts, 'transform'>
-    ] extends [
-      true, infer Next extends ValidateOptions
-    ] ? (
-      Switch<ValidateTransformEntries<T, Input, InputRest>> extends infer TransformInput
-        ? ValidateReturnType<T, ExtendsT, TransformInput, TransformInput, Next>
-        : never
-    ) : [
-      Opts['try'], Omit<Opts, 'try'>
-    ] extends [
-      true, infer Next extends ValidateOptions
-    ] ? (
-      true extends (
-        (
-          | (
-            & IsNotEqual<T, any>
-            & IsEqual<InputRest, any>
-          )
-          | (
-            & IsNotEqual<T, unknown>
-            & IsEqual<InputRest, unknown>
-          )
-        )
-        & IsNotEqual<Input, never>
-      ) ? ValidateResult<ValidateReturnType<T, ExtendsT, Input, InputRest, Next>>
-        : true extends (
-          | ([Input] extends [ExtendsT] ? false : true)
-          | (IsNotEqual<T, never> & IsEqual<Input, never>)
-        ) ? ValidateErrorResult
-          : ValidateSuccessResult<ValidateReturnType<T, ExtendsT, Input, InputRest, Next>>
-    ) : [
-      Opts['const'], Omit<Opts, 'const'>
-    ] extends [
-      true, infer Next extends ValidateOptions
-    ] ? (
-      ValidateReturnType<
-        true extends (
-          | ([Input] extends [T] ? true : false)
-          | IsEqual<InputRest, unknown>
-        ) ? Input : never,
-        ExtendsT,
-        Input, InputRest, Next
-      >
-    ) : (
-      true extends (
-        (
-          | ([Input] extends [ExtendsT] ? true : false)
-          | IsEqual<Input, unknown>
-        )
-        & IsNotEqual<Input, never>
-      ) ? T : never
-    )
-    interface Validator<Shape = unknown> {
-      validate: Validate<Shape>
-      /**
-       * always called before `validate`, error will be caught and thrown as `ParseError`
-       */
-      preprocess: Transform<Shape>
-      /**
-       * only when `transform` is `true` and validate failed, this function will be called
-       * error will be caught and thrown as `ParseError`
-       */
-      transform: Transform<Shape>
-    }
-    interface ValidateItf<
-      Shape, T, O extends ValidateOptions = {},
-      ExtendsT = Switch<ValidateExtendsEntries<T>>
-    > {
-      <
-        TT extends ExtendsT,
-        Rest extends true extends (
-          | IsConfigure<O, 'try'>
-          | IsConfigure<O, 'transform'>
-          | IsConfigure<Opts, 'try'>
-          | IsConfigure<Opts, 'transform'>
-        ) ? unknown : never,
-        const Input extends TT | Rest,
-        Opts extends ValidateOptions = {}
-      >(
-        data: Input, options?: Opts
-      ): ValidateReturnType<T, ExtendsT, typeof data, Exclude<typeof data, ExtendsT>, Opts & O>
-      narrow<
-        TT extends ExtendsT,
-        Rest extends true extends(
-          | (O['try'] extends true ? true : false)
-          | (O['transform'] extends true ? true : false)
-        ) ? unknown : never,
-        D extends TT | Rest,
-        Opts extends ValidateOptions
-      >(
-        data: Narrow<D>, options?: Opts
-      ): ValidateReturnType<T, ExtendsT, D, Exclude<D, ExtendsT>, Opts & O & { const: true }>
-    }
-    interface SchemaFieldsAll<Shape, T> {
-      validate: ValidateItf<Shape, T>
-      tryValidate: ValidateItf<Shape, T, { try: true }>
-      parse: ValidateItf<Shape, T, { transform: true }>
-      tryParse: ValidateItf<Shape, T, { try: true, transform: true }>
-      // for zod
-      safeParse: this['tryParse']
-
-      test: (data: unknown, options?: Omit<tn.ValidateOptions, 'try'>) => data is T
-    }
-  }
 }

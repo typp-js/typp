@@ -1,3 +1,5 @@
+import '@typp/validator/types'
+
 import type { LiteralTypeGuard } from '#internal'
 
 import type { IsWhat, OnlySubType, t as tn } from '@typp/core/base'
