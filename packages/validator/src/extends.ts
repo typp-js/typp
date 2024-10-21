@@ -50,6 +50,8 @@ declare module '@typp/core/base' {
       transform: Transform<Shape>
     }
     interface Match<Shape = unknown> {
+      // TODO
+      // @ts-ignore  error TS2589: Type instantiation is excessively deep and possibly infinite.
       (s: t.Schema<any, any>, input: unknown): s is t.Schema<Shape, any>
     }
     function useValidator<Shape>(

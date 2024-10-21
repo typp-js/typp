@@ -1,10 +1,10 @@
 import { t } from '@typp/core'
 import { validatorSkeleton } from '@typp/validator'
 import { ParseError, ValidateError } from '@typp/validator/error'
-import { bigintValidator } from '@typp/validator/types/primitive.bigint'
-import { booleanValidator } from '@typp/validator/types/primitive.boolean'
-import { numberValidator } from '@typp/validator/types/primitive.number'
-import { stringValidator } from '@typp/validator/types/primitive.string'
+import { bigintValidator } from '@typp/validator/typings/primitive.bigint'
+import { booleanValidator } from '@typp/validator/typings/primitive.boolean'
+import { numberValidator } from '@typp/validator/typings/primitive.number'
+import { stringValidator } from '@typp/validator/typings/primitive.string'
 
 import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 
@@ -84,17 +84,25 @@ describe('bigint', () => {
 
       expect(() => {
         skm.parse(Number.MAX_SAFE_INTEGER + 1)
-      }).toThrow(new ParseError(
-        'transform', skm, Number.MAX_SAFE_INTEGER + 1,
-        new Error('number must greater than or equal to -2^53 and less than or equal to 2^53'))
+      }).toThrow(
+        new ParseError(
+          'transform',
+          skm,
+          Number.MAX_SAFE_INTEGER + 1,
+          new Error('number must greater than or equal to -2^53 and less than or equal to 2^53')
+        )
       )
 
       expect(() => {
         skm.parse(Number.NaN)
-      }).toThrow(new ParseError(
-        'transform', skm, Number.NaN,
-        new Error('NaN cannot be converted to BigInt')
-      ))
+      }).toThrow(
+        new ParseError(
+          'transform',
+          skm,
+          Number.NaN,
+          new Error('NaN cannot be converted to BigInt')
+        )
+      )
     })
     test('transform - primitive.string', () => {
       const skm = t.bigint()
@@ -142,30 +150,52 @@ describe('boolean', () => {
     expect(r1).toBe(true)
     expectTypeOf(r1).toEqualTypeOf<boolean>()
 
-    const r2 = t.boolean().validate(new class extends Boolean {
-      constructor() {
-        super(true)
-      }
-    }())
+    const r2 = t.boolean().validate(
+      new class extends Boolean {
+        constructor() {
+          super(true)
+        }
+      }()
+    )
     expect(r2).toBe(true)
     expectTypeOf(r2).toEqualTypeOf<boolean>()
-    const r3 = t.boolean().validate(new class extends Boolean {
-      constructor() { super(true) }
-      valueOf() { return false }
-    })
+    const r3 = t.boolean().validate(
+      new class extends Boolean {
+        constructor() {
+          super(true)
+        }
+        valueOf() {
+          return false
+        }
+      }()
+    )
     expect(r3).toBe(false)
     expectTypeOf(r3).toEqualTypeOf<boolean>()
-    const r4 = t.boolean().validate(new class extends Boolean {
-      constructor() { super(true) }
-      [Symbol.toPrimitive]() { return false }
-    })
+    const r4 = t.boolean().validate(
+      new class extends Boolean {
+        constructor() {
+          super(true)
+        }
+        [Symbol.toPrimitive]() {
+          return false
+        }
+      }()
+    )
     expect(r4).toBe(false)
     expectTypeOf(r4).toEqualTypeOf<boolean>()
-    const r5 = t.boolean().validate(new class extends Boolean {
-      constructor() { super(true) }
-      valueOf() { return false }
-      [Symbol.toPrimitive]() { return true }
-    })
+    const r5 = t.boolean().validate(
+      new class extends Boolean {
+        constructor() {
+          super(true)
+        }
+        valueOf() {
+          return false
+        }
+        [Symbol.toPrimitive]() {
+          return true
+        }
+      }()
+    )
     expect(r5).toBe(true)
     expectTypeOf(r5).toEqualTypeOf<boolean>()
   })
@@ -296,33 +326,55 @@ describe('number', () => {
     expect(r3).toBe(1)
     expectTypeOf(r3).toEqualTypeOf<number>()
 
-    const r4 = t.number().validate(new class extends Number {
-      constructor() {
-        super(1)
-      }
-    }())
+    const r4 = t.number().validate(
+      new class extends Number {
+        constructor() {
+          super(1)
+        }
+      }()
+    )
     expect(r4).toBe(1)
     expectTypeOf(r4).toEqualTypeOf<number>()
 
-    const r5 = t.number().validate(new class extends Number {
-      constructor() { super(1) }
-      valueOf() { return 2 }
-    }())
+    const r5 = t.number().validate(
+      new class extends Number {
+        constructor() {
+          super(1)
+        }
+        valueOf() {
+          return 2
+        }
+      }()
+    )
     expect(r5).toBe(2)
     expectTypeOf(r5).toEqualTypeOf<number>()
 
-    const r6 = t.number().validate(new class extends Number {
-      constructor() { super(1) }
-      [Symbol.toPrimitive]() { return 3 }
-    }())
+    const r6 = t.number().validate(
+      new class extends Number {
+        constructor() {
+          super(1)
+        }
+        [Symbol.toPrimitive]() {
+          return 3
+        }
+      }()
+    )
     expect(r6).toBe(3)
     expectTypeOf(r6).toEqualTypeOf<number>()
 
-    const r7 = t.number().validate(new class extends Number {
-      constructor() { super(1) }
-      valueOf() { return 2 }
-      [Symbol.toPrimitive]() { return 3 }
-    }())
+    const r7 = t.number().validate(
+      new class extends Number {
+        constructor() {
+          super(1)
+        }
+        valueOf() {
+          return 2
+        }
+        [Symbol.toPrimitive]() {
+          return 3
+        }
+      }()
+    )
     expect(r7).toBe(3)
     expectTypeOf(r7).toEqualTypeOf<number>()
 

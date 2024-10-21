@@ -1,20 +1,21 @@
-import { ValidateError } from '#internal'
-
 import { t } from '@typp/core'
-import { isWhatError, validatorSkeleton } from '@typp/validator'
-import { numberValidator } from '@typp/validator/types/primitive.number'
-import { stringValidator } from '@typp/validator/types/primitive.string'
-import { symbolValidator } from '@typp/validator/types/primitive.symbol'
-import { arrayValidator, objectValidator } from '@typp/validator/types/structural'
+import { validatorSkeleton } from '@typp/validator/base'
+import { isWhatError, ValidateError } from '@typp/validator/error'
+import { numberValidator } from '@typp/validator/typings/primitive.number'
+import { stringValidator } from '@typp/validator/typings/primitive.string'
+import { symbolValidator } from '@typp/validator/typings/primitive.symbol'
+import { arrayValidator, objectValidator } from '@typp/validator/typings/structural'
 import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 
 beforeAll(() => t.use(validatorSkeleton))
 
 describe('array', () => {
-  beforeAll(() => t.use(ctx => {
-    ctx.use(arrayValidator)
-    ctx.use(stringValidator)
-  }))
+  beforeAll(() =>
+    t.use(ctx => {
+      ctx.use(arrayValidator)
+      ctx.use(stringValidator)
+    })
+  )
   test('base', () => {
     const t0 = t(Array, String)
 
@@ -78,10 +79,12 @@ describe('array', () => {
   })
 })
 describe('tuple', () => {
-  beforeAll(() => t.use(ctx => {
-    ctx.use(arrayValidator)
-    ctx.use(stringValidator)
-  }))
+  beforeAll(() =>
+    t.use(ctx => {
+      ctx.use(arrayValidator)
+      ctx.use(stringValidator)
+    })
+  )
   test('base', () => {
     const t0 = t([String])
     const output = t0.validate([''])
@@ -183,11 +186,13 @@ describe('tuple', () => {
   })
 })
 describe('interface', () => {
-  beforeAll(() => t.use(ctx => {
-    ctx.use(objectValidator)
-    ctx.use(stringValidator)
-    ctx.use(numberValidator)
-  }))
+  beforeAll(() =>
+    t.use(ctx => {
+      ctx.use(objectValidator)
+      ctx.use(stringValidator)
+      ctx.use(numberValidator)
+    })
+  )
   test('base', () => {
     const t0 = t({ foo: String })
     const output = t0.validate({ foo: '' })
@@ -296,12 +301,14 @@ describe('interface', () => {
   })
 })
 describe('record', () => {
-  beforeAll(() => t.use(ctx => {
-    ctx.use(objectValidator)
-    ctx.use(stringValidator)
-    ctx.use(numberValidator)
-    ctx.use(symbolValidator)
-  }))
+  beforeAll(() =>
+    t.use(ctx => {
+      ctx.use(objectValidator)
+      ctx.use(stringValidator)
+      ctx.use(numberValidator)
+      ctx.use(symbolValidator)
+    })
+  )
   test('base', () => {
     const t0 = t(Object, Number)
     //    _?

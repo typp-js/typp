@@ -2,7 +2,7 @@ import type { t as tn } from '@typp/core'
 
 import { validatorSkeleton } from '@typp/validator/base'
 import { MAX_TIME } from '@typp/validator/constants'
-import { typesValidator } from '@typp/validator/types'
+import { typesValidator } from '@typp/validator/typings'
 import { preprocess } from '@typp/validator/utils'
 
 export default function validator(t: typeof tn) {

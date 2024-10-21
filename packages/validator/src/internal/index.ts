@@ -7,7 +7,7 @@ import type {
   Switch,
   SwitchEntries,
   SwitchOtherEntry
-} from '@typp/core'
+} from '@typp/core/types'
 
 type BaseTypeNames =
   | 'bigint'

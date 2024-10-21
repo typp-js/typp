@@ -1,4 +1,4 @@
-import '@typp/validator/types'
+import ''
 
 import type { LiteralTypeGuard } from '#internal'
 

@@ -1,14 +1,13 @@
-import '@typp/validator/types'
-
 import type { SwitchBaseType } from '#internal'
 
 import type { t as tn } from '@typp/core/base'
 import { FALSY } from '@typp/validator/constants'
-import { bigintTransform } from '@typp/validator/types/primitive.bigint'
-import { booleanTransform } from '@typp/validator/types/primitive.boolean'
-import { numberTransform } from '@typp/validator/types/primitive.number'
-import { stringTransform } from '@typp/validator/types/primitive.string'
-import { symbolTransform } from '@typp/validator/types/primitive.symbol'
+import type {} from '@typp/validator/extends'
+import { bigintTransform } from '@typp/validator/typings/primitive.bigint'
+import { booleanTransform } from '@typp/validator/typings/primitive.boolean'
+import { numberTransform } from '@typp/validator/typings/primitive.number'
+import { stringTransform } from '@typp/validator/typings/primitive.string'
+import { symbolTransform } from '@typp/validator/typings/primitive.symbol'
 import { preprocess } from '@typp/validator/utils'
 
 declare module '@typp/core/base' {

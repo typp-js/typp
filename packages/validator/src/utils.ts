@@ -1,4 +1,4 @@
-import type { Transform } from './types'
+import type { Transform } from '@typp/validator/extends'
 
 export function parseBigInt(inputStr: string): bigint {
   const str = inputStr.trim()
