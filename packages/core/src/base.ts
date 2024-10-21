@@ -1,3 +1,4 @@
+// dprint-ignore-file
 import type {
   AtLeastOneProperty,
   IsEqual,
@@ -15,6 +16,8 @@ const __typp__: unique symbol = Symbol('typp')
 export type Typp<T extends readonly any[]> = true extends (
   | IsEqual<T, []>
   | IsEqual<T, readonly []>
+  | IsEqual<T, [any]>
+  | IsEqual<T, readonly [any]>
 ) ? t.Schema<any, any> : (
   Stack.Shift<T> extends [infer L, infer Rest extends any[]]
     ? t.ShapeMapping<L, Rest>
