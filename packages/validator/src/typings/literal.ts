@@ -1,4 +1,5 @@
 import type { t as tn } from '@typp/core/base'
+import type {} from '@typp/core/consumers/primitive'
 import { FALSY } from '@typp/validator/constants'
 import type {} from '@typp/validator/extends'
 import type { SwitchBaseType } from '@typp/validator/types'
