@@ -1,4 +1,4 @@
-import type { t as tn } from '@typp/core'
+import type { t as tn } from '@typp/core/base'
 import { toPrimitive } from '@typp/validator/utils'
 
 declare module '@typp/core/base' {
