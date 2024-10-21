@@ -8,12 +8,13 @@
     "coverage:badge": "istanbul-badges-readme"
   },
   "typesVersions": {
-    "<5.0": { "*": [ "*", "dist/*", "dist/*/index.d.ts" ] }
+    "<5.0": { "*": ["*", "dist/*", "dist/*/index.d.ts"] }
   },
   "exports": {
     "./package.json": "./package.json",
     ".": "./src/index.ts",
     "./base": "./src/base.ts",
+    "./types": "./src/types.ts",
     "./consumers": "./src/consumers/index.ts",
     "./consumers/*": "./src/consumers/*.ts"
   },
