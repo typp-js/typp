@@ -20,6 +20,7 @@ function literalPlaceholder<T extends string>(type: T): LiteralPlaceholder<T> {
   return `__DO_NOT_USE_SAME_LITERAL_${type}__IF_YOU_WANT_TO_USE_IT__`
 }
 
+// dprint-ignore
 declare module '@typp/core/base' {
   // Consumer
   namespace t {
@@ -201,11 +202,11 @@ declare module '@typp/core/base' {
   }
 }
 
-export default function (ctx: typeof tn) {
+export default function(ctx: typeof tn) {
   const t = ctx
 
   function literal<
-    T extends string | number | bigint | symbol | null | boolean | undefined
+    T extends string | number | bigint | symbol | null | boolean | undefined,
   >(value: T): Typp<[T]> {
     return t(value)
   }
@@ -216,13 +217,15 @@ export default function (ctx: typeof tn) {
   literal.Null = literalPlaceholder('NULL')
   literal.Undefined = literalPlaceholder('UNDEFINED')
   t.useConsumer(first => {
-    if ([
-      'string',
-      'number',
-      'bigint',
-      'boolean',
-      'symbol'
-    ].includes(typeof first)) {
+    if (
+      [
+        'string',
+        'number',
+        'bigint',
+        'boolean',
+        'symbol'
+      ].includes(typeof first)
+    ) {
       return [first]
     }
   })
@@ -232,17 +235,19 @@ export default function (ctx: typeof tn) {
     }
     // TODO when pass t.Symbols, return target specialShape schema
     const [first, ...rest] = args
-    if ([
-      String,
-      Number,
-      BigInt,
-      Boolean,
-      Symbol,
-      Date,
-      RegExp,
-      undefined,
-      null
-    ].includes(first)) {
+    if (
+      [
+        String,
+        Number,
+        BigInt,
+        Boolean,
+        Symbol,
+        Date,
+        RegExp,
+        undefined,
+        null
+      ].includes(first)
+    ) {
       return [first] as const
     }
   })
@@ -262,7 +267,7 @@ export default function (ctx: typeof tn) {
   t.useStatic('regexp', () => t(RegExp))
   t.useStatic('undefined', () => t(undefined))
   t.useStatic('null', () => t(null))
-  t.useStatic('never', () =>t(t.specialShape(symbols.never)))
+  t.useStatic('never', () => t(t.specialShape(symbols.never)))
   t.useStatic('void', () => t(t.specialShape(symbols.void)))
   t.useStatic('literal', literal)
   t.useStatic.proxy('literal', 'const')
