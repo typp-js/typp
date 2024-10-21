@@ -1,4 +1,3 @@
-import type {} from '@typp/validator/error'
 import type {
   AtLeastOneProperty,
   IsConfigure,
@@ -9,6 +8,18 @@ import type {
   t as tn,
   Typp
 } from '@typp/core/base'
+import type {} from '@typp/validator/error'
+
+export type Transform<Shape = any> = (
+  this: Typp<[Shape]>,
+  input: unknown,
+  options?: Omit<tn.ValidateOptions, 'transform'>
+) => unknown
+export type Validate<Shape = any> = (
+  this: Typp<[Shape]>,
+  input: unknown,
+  options?: Omit<tn.ValidateOptions, 'transform'>
+) => boolean
 
 // dprint-ignore
 declare module '@typp/core/base' {
@@ -37,7 +48,7 @@ declare module '@typp/core/base' {
        */
       transform?: boolean
     }
-    interface Validator<Shape = unknown> {
+    interface Validator<Shape = any> {
       validate: Validate<Shape>
       /**
        * always called before `validate`, error will be caught and thrown as `ParseError`
@@ -49,7 +60,7 @@ declare module '@typp/core/base' {
        */
       transform: Transform<Shape>
     }
-    interface Match<Shape = unknown> {
+    interface Match<Shape = any> {
       // TODO
       // @ts-ignore  error TS2589: Type instantiation is excessively deep and possibly infinite.
       (s: t.Schema<any, any>, input: unknown): s is t.Schema<Shape, any>
@@ -175,14 +186,3 @@ declare module '@typp/core/base' {
     }
   }
 }
-
-export type Transform<Shape = unknown> = (
-  this: Typp<[Shape]>,
-  input: unknown,
-  options?: Omit<tn.ValidateOptions, 'transform'>
-) => unknown
-export type Validate<Shape = unknown> = (
-  this: Typp<[Shape]>,
-  input: unknown,
-  options?: Omit<tn.ValidateOptions, 'transform'>
-) => boolean

@@ -1,4 +1,4 @@
-import { ValidateError } from '#internal'
+import { ValidateError } from '#internal/types.ts.ts'
 
 import { t } from '@typp/core'
 import validator from '@typp/validator'

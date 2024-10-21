@@ -1,8 +1,7 @@
-import type { SwitchBaseType } from '#internal'
-
 import type { t as tn } from '@typp/core/base'
 import { FALSY } from '@typp/validator/constants'
 import type {} from '@typp/validator/extends'
+import type { SwitchBaseType } from '@typp/validator/types'
 import { bigintTransform } from '@typp/validator/typings/primitive.bigint'
 import { booleanTransform } from '@typp/validator/typings/primitive.boolean'
 import { numberTransform } from '@typp/validator/typings/primitive.number'

@@ -1,8 +1,5 @@
-import ''
-
-import type { LiteralTypeGuard, SwitchBaseType } from '#internal'
-
 import type { IsWhat, OnlySubType, t as tn } from '@typp/core/base'
+import type { LiteralTypeGuard, SwitchBaseType } from '@typp/validator/types'
 import { preprocess } from '@typp/validator/utils'
 
 // dprint-ignore

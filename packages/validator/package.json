@@ -14,6 +14,7 @@
     ".": "./src/index.ts",
     "./base": "./src/base.ts",
     "./error": "./src/error.ts",
+    "./types": "./src/types.ts",
     "./utils": "./src/utils.ts",
     "./extends": "./src/extends.ts",
     "./typings": "./src/typings/index.ts",

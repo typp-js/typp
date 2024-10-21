@@ -1,7 +1,8 @@
 import { catchAndWrapProxy } from '#internal/utils.ts'
 
 import type { AtLeastOneProperty, t as tn } from '@typp/core/base'
-import { ParseError as _ParseError, ValidateError as _ValidateError } from '@typp/validator/error'
+import { ParseError, ValidateError } from '@typp/validator/error'
+import type {} from '@typp/validator/extends'
 
 const validatorMappingByMatcher = [] as [
   matcher: tn.Match,
@@ -62,7 +63,7 @@ function validate(this: tn.Schema<any, any>, ...args: any[]): any {
       validate,
       transform,
       preprocess
-      // @ts-ignore
+      // @ts-ignore error TS2589: Type instantiation is excessively deep and possibly infinite.
     ] = [validateNoThis, transformNoThis, preprocessNoThis].map(fn => fn?.bind(this))
     if (!validate) {
       throw new Error(`Unable to validate when shape is ${this.shape}, because the shape is not supported validator`)
@@ -72,7 +73,7 @@ function validate(this: tn.Schema<any, any>, ...args: any[]): any {
       rt = preprocess ? preprocess(rt, options) : rt
     } catch (e) {
       if (e instanceof Error) {
-        throw new _ParseError('preprocess', this, rt, e)
+        throw new ParseError('preprocess', this, rt, e)
       }
       throw e
     }
@@ -88,13 +89,13 @@ function validate(this: tn.Schema<any, any>, ...args: any[]): any {
         rt = transform(rt, options)
       } catch (e) {
         if (e instanceof Error) {
-          throw new _ParseError('transform', this, rt, e)
+          throw new ParseError('transform', this, rt, e)
         }
         throw e
       }
     }
     if (!validate(rt, options)) {
-      throw new _ValidateError('unexpected', this, rt)
+      throw new ValidateError('unexpected', this, rt)
     }
     return rt
   }
@@ -138,8 +139,8 @@ export function validatorSkeleton(t: typeof tn) {
       }
     }
   })
-  t.useStatic('ParseError', _ParseError)
-  t.useStatic('ValidateError', _ValidateError)
+  t.useStatic('ParseError', ParseError)
+  t.useStatic('ValidateError', ValidateError)
   t.useFields({
     get validate() {
       return validateGen(this)
