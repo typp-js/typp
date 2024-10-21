@@ -1,5 +1,5 @@
 import type { t as tn, Typp } from '@typp/core'
-import type { IsEqual, IsNotEqual, IsWhat, NoIndexSignature, ValueOf, Values } from '../types'
+import type { IsEqual, IsNotEqual, IsWhat, NoIndexSignature, ValueOf, Values } from '@typp/core/types'
 
 interface Symbols {
   readonly any: unique symbol
