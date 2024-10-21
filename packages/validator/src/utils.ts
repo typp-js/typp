@@ -47,18 +47,18 @@ export function parseBigInt(inputStr: string): bigint {
   // * parseInt('0x2') 会得到 2
   // * parseInt('0xx') 会得到 NaN，如果按照我们的想法，应该是 0 才对，尽可能去处理用户输入的字符串到数字
   // * parseInt('0x2x') 会得到 2
-  const notBase10 = str.match(/^[+-]?(0[bB][01]+|0[oO][0-7]+|0[xX][0-9a-fA-F]+)/)
+  const notBase10 = str.match(/^[+-]?(0b[01]+|0o[0-7]+|0x[0-9a-f]+)/i)
   if (notBase10) {
     const [, inputStr] = notBase10
     numStr = inputStr
   } else {
-    const tenRadixMatchResult = str.match(/^[+-]?(\d+)(?:\.(?:(\d+)?0*)?)?(?:e([+-]?\d+)?)?/)
+    const tenRadixMatchResult = str.match(/^[+-]?(\d+)(?:\.(\d+)?)?(?:e([+-]?\d+)?)?/)
     if (!tenRadixMatchResult) {
       throw new SyntaxError(`Cannot convert ${inputStr} to a BigInt`)
     }
 
     const [, integer, fraction, offsetStr] = tenRadixMatchResult
-    const offset = offsetStr ? parseInt(offsetStr) : 0
+    const offset = offsetStr ? Number.parseInt(offsetStr) : 0
     if (offset > Number.MAX_SAFE_INTEGER) {
       throw new RangeError('Exponential part is too large')
     }
@@ -84,7 +84,7 @@ export function parseBigInt(inputStr: string): bigint {
  * @see https://tc39.es/ecma262/multipage/abstract-operations.html#sec-getmethod
  */
 function getMethod(obj: unknown, key: string | symbol): Function | undefined {
-  const func = Reflect.get(Object(obj), key)
+  const func = Reflect.get(new Object(obj), key)
   if (func === undefined || func === null) {
     return undefined
   }
