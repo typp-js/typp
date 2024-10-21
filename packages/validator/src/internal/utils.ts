@@ -1,4 +1,4 @@
-import type { t as tn } from '@typp/core'
+import type { t as tn } from '@typp/core/base'
 import { ParseError, ValidateError } from '@typp/validator/error'
 
 export function catchAndWrap(func: Function): tn.ValidateResult<any> {
