@@ -1,3 +1,4 @@
+import type { Primitive } from '@typp/core/types'
 import type { Transform } from '@typp/validator/extends'
 
 export function parseBigInt(inputStr: string): bigint {
@@ -94,8 +95,6 @@ function getMethod(obj: unknown, key: string | symbol): Function | undefined {
   throw new TypeError(`${func} is not a function`)
 }
 
-type Primitive = number | bigint | boolean | string | symbol | object | null | undefined
-
 /**
  * @see https://tc39.es/ecma262/multipage/abstract-operations.html#sec-ordinarytoprimitive
  */
@@ -111,7 +110,7 @@ function ordinaryToPrimitive(o: object, hint: 'number' | 'string' | (string & {}
     if (typeof method === 'function') {
       const result = Reflect.apply(method, o, [])
       if (typeof result !== 'object') {
-        return result
+        return result as Primitive
       }
     }
   }

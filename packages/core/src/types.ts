@@ -1,3 +1,4 @@
+// dprint-ignore-file
 export type WithThis<T> = T & ThisType<T>
 
 export type AtLeastOneProperty<T> = keyof T extends infer Keys ? Keys extends (
@@ -196,7 +197,7 @@ export type Replace<
 
 type Cast<A, B> = A extends B ? A : B
 
-type Primitive = string | number | boolean | bigint | symbol | undefined | null
+export type Primitive = string | number | boolean | bigint | symbol | undefined | null
 
 export type Narrow<T> = Cast<T, unknown[] | [] | (T extends Primitive ? T : never) | ({
   [K in keyof T]: K extends typeof Symbol.species
