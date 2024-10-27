@@ -313,6 +313,17 @@ describe('record', () => {
     const t0 = t(Object, String, Number)
     expect(t0.validate({ foo: 1 })).toEqual({ foo: 1 })
     expectTypeOf(t0.validate({ foo: 1 })).toEqualTypeOf<Record<string, number>>()
+    expect(() => {
+      t0.validate({
+        // @ts-expect-error - TS2322: Type 'string' is not assignable to type 'number'
+        foo: '1'
+      })
+    }).toThrow(ValidateError)
+    // TODO t Object
+    // TODO t Object, String
+    // TODO t Object, Number, String
+    // TODO t Object, Number | String
+    // TODO t Object, 'foo' | 'bar' | 1
   })
 })
 describe('dictionary', () => {})

@@ -272,11 +272,12 @@ export function objectValidator(t: typeof tn): void {
           ...Object.getOwnPropertySymbols(input)
         ]
       ) {
-        if (keysSkms.every(skm => !(skm as tn.Schema<any, any>).tryValidate(key, options))) {
+        if (keysSkms.every(skm => !(skm as tn.Schema<any, any>).tryValidate(key, options).success)) {
+          // TODO partial match error
           return false
         }
         const value = (input as Record<string | symbol, any>)[key]
-        if (!valueSkm.tryValidate(value, options)) {
+        if (!valueSkm.tryValidate(value, options).success) {
           return false
         }
       }
