@@ -152,7 +152,7 @@ export default function (ctx: typeof tn) {
   t.useStatic.proxy('intersect', 'intersection')
 
   function merge(s: tn.Schema<any, any>, i: any, type: 'union' | 'intersection') {
-    if (!t.isWhatSpecialShape(type, s)) {
+    if (!t.isWhatSpecialShapeSkm(type, s)) {
       switch (type) {
         case 'union':
           return t.union([s, i])

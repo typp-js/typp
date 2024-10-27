@@ -195,7 +195,7 @@ export namespace t {
         .values(specialShapeTypeMapping)
         .includes(obj.type)
   }
-  export function isWhatSpecialShape<
+  export function isWhatSpecialShapeSkm<
     T extends keyof t.SpecialShapeTypeMapping
   >(type: T, s: t.Schema<any, any>): s is t.Schema<
     t.SpecialShape<t.SpecialShapeTypeMapping[T], readonly t.Schema<any, any>[]>,

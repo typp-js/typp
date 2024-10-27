@@ -90,24 +90,24 @@ test('isSchema', () => {
   expect(t.isSchemas([t(), {}])).toBe(false)
 })
 test('isWhatSpecialShape', () => {
-  expect(t.isWhatSpecialShape('any', t())).toBe(true)
-  expect(t.isWhatSpecialShape('any', t(Number))).toBe(false)
-  expect(t.isWhatSpecialShape(
+  expect(t.isWhatSpecialShapeSkm('any', t())).toBe(true)
+  expect(t.isWhatSpecialShapeSkm('any', t(Number))).toBe(false)
+  expect(t.isWhatSpecialShapeSkm(
     'any',
     // @ts-expect-error
     {}
   )).toBe(false)
-  expect(t.isWhatSpecialShape(
+  expect(t.isWhatSpecialShapeSkm(
     'any',
     // @ts-expect-error
     { shape: {} }
   )).toBe(false)
-  expect(t.isWhatSpecialShape(
+  expect(t.isWhatSpecialShapeSkm(
     'any',
     // @ts-expect-error
     {}
   )).toBe(false)
-  expect(t.isWhatSpecialShape(
+  expect(t.isWhatSpecialShapeSkm(
     'any',
     // @ts-expect-error
     { shape: { type: undefined } }
