@@ -1,4 +1,6 @@
 import type { IsEqual, IsTrue, Not, Switch, SwitchOtherEntry, t as tn } from '@typp/core/base'
+import type {} from '@typp/core/consumers/array'
+import type {} from '@typp/core/consumers/object'
 import { FALSY } from '@typp/validator/constants'
 import type {} from '@typp/validator/error'
 import type {} from '@typp/validator/extends'
@@ -179,14 +181,18 @@ export function arrayValidator(t: typeof tn): void {
 }
 
 export function objectValidator(t: typeof tn): void {
-  const { ValidateError } = t
+  const {
+    ValidateError,
+    isSpecialShape,
+    isWhatSpecialShapeSkm
+  } = t
 
   // interface
   t.useValidator((s): s is tn.Schema<
     Record<string | number | symbol, tn.Schema<unknown, unknown>>,
     Record<string | number | symbol, unknown>
   > => {
-    return typeof s.shape === 'object' && !Array.isArray(s.shape)
+    return typeof s.shape === 'object' && !Array.isArray(s.shape) && !isSpecialShape(s.shape)
   }, {
     validate(input) {
       if (typeof input !== 'object' || Array.isArray(input) || input === null) {
@@ -238,6 +244,46 @@ export function objectValidator(t: typeof tn): void {
       return true
     },
     transform(input, options) {
+      return input
+    }
+  })
+  // record
+  t.useValidator((s): s is tn.Schema<
+    tn.SpecialShape<tn.SpecialShapeTypeMapping['record'], [
+      [
+        tn.Schema<StringConstructor, string>,
+        tn.Schema<NumberConstructor, number>,
+        tn.Schema<SymbolConstructor, symbol>
+      ],
+      tn.Schema<any, any>
+    ]>,
+    { [k: PropertyKey]: any }
+  > => {
+    return isWhatSpecialShapeSkm('record', s)
+  }, {
+    validate(input, options) {
+      if (typeof input !== 'object' || Array.isArray(input) || input === null) {
+        return false
+      }
+      const [keysSkms, valueSkm] = this.shape.schemas
+      for (
+        const key of [
+          ...Object.keys(input),
+          ...Object.getOwnPropertySymbols(input)
+        ]
+      ) {
+        if (keysSkms.every(skm => !(skm as tn.Schema<any, any>).tryValidate(key, options))) {
+          return false
+        }
+        const value = (input as Record<string | symbol, any>)[key]
+        if (!valueSkm.tryValidate(value, options)) {
+          return false
+        }
+      }
+      return true
+    },
+    transform(input, options) {
+      // TODO resolve Map
       return input
     }
   })

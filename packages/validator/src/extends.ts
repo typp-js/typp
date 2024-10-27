@@ -1,29 +1,27 @@
-import type {
-  AtLeastOneProperty,
-  IsConfigure,
-  IsEqual,
-  IsNotEqual,
-  Narrow,
-  Switch,
-  t as tn,
-  Typp
-} from '@typp/core/base'
+import type { AtLeastOneProperty, IsConfigure, IsEqual, IsNotEqual, Narrow, Switch, t as tn } from '@typp/core/base'
 import type {} from '@typp/validator/error'
-
-export type Transform<Shape = any> = (
-  this: Typp<[Shape]>,
-  input: unknown,
-  options?: Omit<tn.ValidateOptions, 'transform'>
-) => unknown
-export type Validate<Shape = any> = (
-  this: Typp<[Shape]>,
-  input: unknown,
-  options?: Omit<tn.ValidateOptions, 'transform'>
-) => boolean
 
 // dprint-ignore
 declare module '@typp/core/base' {
   namespace t {
+    // TODO remove t.Schema
+    // @ts-ignore error TS2589: Type instantiation is excessively deep and possibly infinite.
+    type Transform<
+      Shape = any,
+      SKM extends t.Schema<Shape, any> = t.Schema<Shape, any>
+    > = (
+      this: SKM,
+      input: unknown,
+      options?: Omit<t.ValidateOptions, 'transform'>
+    ) => unknown
+    type Validate<
+      Shape = any,
+      SKM extends t.Schema<Shape, any> = t.Schema<Shape, any>
+    > = (
+      this: SKM,
+      input: unknown,
+      options?: Omit<t.ValidateOptions, 'transform'>
+    ) => boolean
     // TODO https://zod.dev/?id=coercion-for-primitives
     // export const coerce: typeof tn
     interface ValidateOptions {
@@ -48,26 +46,33 @@ declare module '@typp/core/base' {
        */
       transform?: boolean
     }
-    interface Validator<Shape = any> {
-      validate: Validate<Shape>
+    interface Validator<
+      Shape = any,
+      SKM extends t.Schema<Shape, any> = t.Schema<Shape, any>
+    > {
+      validate: Validate<Shape, SKM>
       /**
        * always called before `validate`, error will be caught and thrown as `ParseError`
        */
-      preprocess: Transform<Shape>
+      preprocess: Transform<Shape, SKM>
       /**
        * only when `transform` is `true` and validate failed, this function will be called
        * error will be caught and thrown as `ParseError`
        */
-      transform: Transform<Shape>
+      transform: Transform<Shape, SKM>
     }
-    interface Match<Shape = any> {
-      // TODO
-      // @ts-ignore  error TS2589: Type instantiation is excessively deep and possibly infinite.
-      (s: t.Schema<any, any>, input: unknown): s is t.Schema<Shape, any>
+    interface Match<
+      Shape = any,
+      SKM extends t.Schema<Shape, any> = t.Schema<Shape, any>
+    > {
+      (s: t.Schema<any, any>, input: unknown): s is SKM
     }
-    function useValidator<Shape>(
-      shapesOrMatcher: Shape[] | Match<Shape>,
-      validator: AtLeastOneProperty<Validator<Shape>>
+    function useValidator<
+      Shape = any,
+      SKM extends t.Schema<Shape, any> = t.Schema<Shape, any>
+    >(
+      shapesOrMatcher: Shape[] | Match<Shape, SKM>,
+      validator: AtLeastOneProperty<Validator<Shape, SKM>>
     ): () => void
   }
   namespace t {

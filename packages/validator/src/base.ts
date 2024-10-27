@@ -121,7 +121,7 @@ export function validatorSkeleton(t: typeof tn) {
   t.useStatic('useValidator', (shapesOrMatcher, validator) => {
     if (Array.isArray(shapesOrMatcher)) {
       for (const shape of shapesOrMatcher) {
-        validators.set(shape, validator)
+        validators.set(shape, validator as any)
       }
       return () => {
         for (const shape of shapesOrMatcher) {
@@ -129,7 +129,10 @@ export function validatorSkeleton(t: typeof tn) {
         }
       }
     } else {
-      const item = [shapesOrMatcher, validator] as (typeof validatorMappingByMatcher)[number]
+      const item = [
+        shapesOrMatcher,
+        validator as any
+      ] as (typeof validatorMappingByMatcher)[number]
       validatorMappingByMatcher.push(item)
       return () => {
         const index = validatorMappingByMatcher.indexOf(item)

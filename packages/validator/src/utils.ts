@@ -1,5 +1,6 @@
+import type { t as tn } from '@typp/core/base'
 import type { Primitive } from '@typp/core/types'
-import type { Transform } from '@typp/validator/extends'
+import type {} from '@typp/validator/extends'
 
 export function parseBigInt(inputStr: string): bigint {
   const str = inputStr.trim()
@@ -143,4 +144,4 @@ export function toPrimitive(input: unknown, preferredType: 'number' | 'string' |
   return input as Primitive
 }
 
-export const preprocess: Transform = (input, options) => toPrimitive(input)
+export const preprocess: tn.Transform = (input, options) => toPrimitive(input)

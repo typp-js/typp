@@ -310,11 +310,9 @@ describe('record', () => {
     })
   )
   test('base', () => {
-    const t0 = t(Object, Number)
-    //    _?
-    const output = t0.validate({
-      foo: 1
-    })
+    const t0 = t(Object, String, Number)
+    expect(t0.validate({ foo: 1 })).toEqual({ foo: 1 })
+    expectTypeOf(t0.validate({ foo: 1 })).toEqualTypeOf<Record<string, number>>()
   })
 })
 describe('dictionary', () => {})
