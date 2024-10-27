@@ -201,7 +201,7 @@ export namespace t {
     t.SpecialShape<t.SpecialShapeTypeMapping[T], readonly t.Schema<any, any>[]>,
     any
   > {
-    if (!isSpecialShape(s)) return false
+    if (!isSpecialShape(s.shape)) return false
     return s.shape.type === t.specialShapeTypeMapping[type]
   }
   export type IsSpecialShape<
