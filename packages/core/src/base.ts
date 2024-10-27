@@ -202,8 +202,6 @@ export namespace t {
     any
   > {
     if (!isSpecialShape(s)) return false
-    if (!s.shape) return false
-    if (!s.shape.type) return false
     return s.shape.type === t.specialShapeTypeMapping[type]
   }
   export type IsSpecialShape<
