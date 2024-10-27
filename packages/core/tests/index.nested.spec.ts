@@ -6,6 +6,7 @@ import set from '#~/consumers/set.ts'
 import { t } from '@typp/core/base'
 import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
 
+// dprint-ignore
 describe('array and tuple', () => {
   beforeAll(() => t.use(ctx => {
     ctx.use(array)
@@ -280,6 +281,7 @@ describe('array and tuple', () => {
   })
 })
 
+// dprint-ignore
 describe('object', () => {
   beforeAll(() => t.use(ctx => {
     ctx.use(object)
@@ -297,8 +299,8 @@ describe('object', () => {
         t.Schema<any, any>
       ]>, {
         [k: PropertyKey]: any
-      }>
-    >()
+      }
+    >>()
     expectTypeOf<t.Infer<typeof case0>>()
       .toEqualTypeOf<{ [x: PropertyKey]: any }>()
     const shape0 = case0.shape
