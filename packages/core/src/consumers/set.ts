@@ -1,7 +1,9 @@
-import type { t as tn, Typp } from '@typp/core'
-import type { IsEqual } from '../types'
+import type { t as tn, Typp } from '@typp/core/base'
+import type { IsEqual } from '@typp/core/types'
 
 const setSymbol = Symbol('set')
+
+// dprint-ignore
 declare module '@typp/core/base' {
   // consumer
   namespace t {
@@ -44,7 +46,7 @@ declare module '@typp/core/base' {
   }
 }
 
-export default function (ctx: typeof tn) {
+export default function(ctx: typeof tn) {
   const t = ctx
   t.useSpecialShapeType('set', setSymbol)
   t.useConsumer((first, ...rest) => {
