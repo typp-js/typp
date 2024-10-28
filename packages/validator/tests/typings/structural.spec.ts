@@ -333,6 +333,7 @@ describe('record', () => {
     expect(caught, 'Should catch ValidateError').toBe(true)
     // TODO t Object
     // TODO t Object, String
+    // TODO t Object, Symbol, Number
     // TODO t Object, Number, String
     // TODO t Object, Number | String
     // TODO t Object, 'foo' | 'bar' | 1
