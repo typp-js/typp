@@ -1,7 +1,6 @@
-import { ValidateError } from '#internal/types.ts.ts'
-
 import { t } from '@typp/core'
 import validator from '@typp/validator'
+import { ValidateError } from '@typp/validator/error'
 import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 
 beforeAll(() => t.use(validator))
