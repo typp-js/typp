@@ -313,7 +313,7 @@ describe('record', () => {
     const t0 = t(Object, String, Number)
     expect(t0.validate({ foo: 1 })).toEqual({ foo: 1 })
     expectTypeOf(t0.validate({ foo: 1 })).toEqualTypeOf<Record<string, number>>()
-    let caught = false
+    const isCaught = vi.fn()
     const input = { foo: '1' }
     try {
       t0.validate(
@@ -321,7 +321,7 @@ describe('record', () => {
         input
       )
     } catch (e) {
-      caught = true
+      isCaught()
       expect(e).toBeInstanceOf(ValidateError)
       expect(e).property('message').eq('Data is partially match')
       expect(e).property('type').eq('partially match')
@@ -330,7 +330,7 @@ describe('record', () => {
       expect((e as ValidateError).args)
         .toMatchSnapshot()
     }
-    expect(caught, 'Should catch ValidateError').toBe(true)
+    expect(isCaught, 'Not caught ValidateError as expected').toHaveBeenCalled()
     // TODO t Object
     // TODO t Object, String
     // TODO t Object, Symbol, Number
