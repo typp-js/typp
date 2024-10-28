@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`record > base 1`] = `
+[
+  1,
+  [
+    [
+      "foo",
+      [ValidateError: Data is unexpected],
+    ],
+  ],
+]
+`;

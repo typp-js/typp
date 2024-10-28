@@ -313,12 +313,24 @@ describe('record', () => {
     const t0 = t(Object, String, Number)
     expect(t0.validate({ foo: 1 })).toEqual({ foo: 1 })
     expectTypeOf(t0.validate({ foo: 1 })).toEqualTypeOf<Record<string, number>>()
-    expect(() => {
-      t0.validate({
-        // @ts-expect-error - TS2322: Type 'string' is not assignable to type 'number'
-        foo: '1'
-      })
-    }).toThrow(ValidateError)
+    let caught = false
+    const input = { foo: '1' }
+    try {
+      t0.validate(
+        // @ts-expect-error - TS2345: Argument of type { foo: string; } is not assignable to parameter of type { [x: string]: number; }
+        input
+      )
+    } catch (e) {
+      caught = true
+      expect(e).toBeInstanceOf(ValidateError)
+      expect(e).property('message').eq('Data is partially match')
+      expect(e).property('type').eq('partially match')
+      expect(e).property('actual').eq(input)
+      expect(e).property('keyword').eq('ValidateError:not match the properties')
+      expect((e as ValidateError).args)
+        .toMatchSnapshot()
+    }
+    expect(caught, 'Should catch ValidateError').toBe(true)
     // TODO t Object
     // TODO t Object, String
     // TODO t Object, Number, String

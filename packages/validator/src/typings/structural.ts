@@ -255,7 +255,7 @@ export function objectValidator(t: typeof tn): void {
         tn.Schema<NumberConstructor, number>,
         tn.Schema<SymbolConstructor, symbol>
       ],
-      tn.Schema<any, any>
+      tn.Schema<unknown, unknown>
     ]>,
     { [k: PropertyKey]: any }
   > => {
@@ -266,20 +266,37 @@ export function objectValidator(t: typeof tn): void {
         return false
       }
       const [keysSkms, valueSkm] = this.shape.schemas
-      for (
-        const key of [
-          ...Object.keys(input),
-          ...Object.getOwnPropertySymbols(input)
-        ]
-      ) {
-        if (keysSkms.every(skm => !(skm as tn.Schema<any, any>).tryValidate(key, options).success)) {
-          // TODO partial match error
-          return false
+      const keys = [
+        ...Object.keys(input),
+        ...Object.getOwnPropertySymbols(input)
+      ]
+      const unexpectedPropertyErrors: [string | symbol, tn.ValidateError][] = []
+      // eslint-disable-next-line no-labels
+      keyloop: for (const key of keys) {
+        for (const skm of keysSkms) {
+          const skmResult = (skm as tn.Schema<unknown, unknown>).tryValidate(key, options)
+          if (!skmResult.success) {
+            unexpectedPropertyErrors.push([key, skmResult.error])
+            // eslint-disable-next-line no-labels
+            continue keyloop
+          }
         }
-        const value = (input as Record<string | symbol, any>)[key]
-        if (!valueSkm.tryValidate(value, options).success) {
-          return false
+        const valueSkmResult = valueSkm.tryValidate((input as Record<string | symbol, any>)[key], options)
+        if (!valueSkmResult.success) {
+          unexpectedPropertyErrors.push([key, valueSkmResult.error])
         }
+      }
+      if (unexpectedPropertyErrors.length > 0) {
+        throw new ValidateError(
+          'partially match',
+          this,
+          input,
+          'ValidateError:not match the properties',
+          [
+            unexpectedPropertyErrors.length,
+            unexpectedPropertyErrors
+          ]
+        )
       }
       return true
     },
