@@ -1,4 +1,5 @@
-import type { IsEqual, IsTrue, Not, Switch, SwitchOtherEntry, t as tn } from '@typp/core/base'
+import type { t as tn } from '@typp/core/base'
+import type { IsEqual, IsTrue, Not, Switch, SwitchOtherEntry } from '@typp/core/types'
 import type {} from '@typp/core/consumers/array'
 import type {} from '@typp/core/consumers/object'
 import { FALSY } from '@typp/validator/constants'
@@ -25,7 +26,7 @@ declare module '@typp/core/base' {
        * - const t0: [number] = ['1']
        * - const t1: number[] = ['1']
        */
-      'ValidateError:item of array not match': [index: number, error: tn.ValidateError]
+      'ValidateError:item of array not match': [index: number, error: t.ValidateError]
       /**
        * e.g.
        * - const t0: { a: number } = {}
@@ -35,7 +36,7 @@ declare module '@typp/core/base' {
       'ValidateError:is missing properties': [
         count: number,
         properties: (readonly [
-          key: string | symbol, property: tn.Schema<unknown, unknown>
+          key: string | symbol, property: t.Schema<unknown, unknown>
         ])[]
       ]
       /**
@@ -46,7 +47,7 @@ declare module '@typp/core/base' {
       'ValidateError:not match the properties': [
         count: number,
         properties: (readonly [
-          key: string | symbol, error: tn.ValidateError
+          key: string | symbol, error: t.ValidateError
         ])[]
       ]
     }
@@ -59,8 +60,8 @@ declare module '@typp/core/base' {
       array: [IsArray<T>, T]
       interface: [IsInterface<T>, T]
       record: [
-        tn.IsSpecialShape<T, 'record'>,
-        tn.InferSpecialShapeSchemas<T, 'record'> extends [infer K extends PropertyKey, infer V]
+        t.IsSpecialShape<T, 'record'>,
+        t.InferSpecialShapeSchemas<T, 'record'> extends [infer K extends PropertyKey, infer V]
           ? { [k in K]: V }
           : never
       ]
