@@ -1,16 +1,17 @@
-import { t, t as tn } from '@typp/core/base'
-import isWhatSpecialShapeSkm = t.isWhatSpecialShapeSkm
-
-// TODO union
-// TODO intersection
+import type { t as tn } from '@typp/core/base'
 
 // dprint-ignore
 declare module '@typp/core/base' {
-  namespace t {}
+  namespace t {
+    export interface ErrorArgsMap {
+    }
+  }
 }
 
-export function unionValidator(t: typeof tn) {
-  const { ValidateError } = t
+export function compoundValidator(t: typeof tn) {
+  const {
+    isWhatSpecialShapeSkm
+  } = t
   t.useValidator((s): s is tn.Schema<
     tn.SpecialShape<
       tn.SpecialShapeTypeMapping['union'],
@@ -19,23 +20,19 @@ export function unionValidator(t: typeof tn) {
     any
   > => isWhatSpecialShapeSkm('union', s), {
     validate(input, options) {
-      const { schemas } = this.shape
-      let result: tn.ValidateErrorResult
-      for (const schema of schemas) {
-        const r = schema.tryValidate(input)
-        if (r.success) {
-          return true
-        } else {
-        }
-        result = r.error
-      }
-      throw new ValidateError(
-        'union',
-        this,
-        input,
-        'ValidateError:union not match any schemas',
-        [schemas]
-      )
+      return this.shape.schemas.some(schema => schema.tryValidate(input).success)
+    },
+    transform: i => i
+  })
+  t.useValidator((s): s is tn.Schema<
+    tn.SpecialShape<
+      tn.SpecialShapeTypeMapping['intersection'],
+      tn.Schema<unknown, unknown>[]
+    >,
+    any
+  > => isWhatSpecialShapeSkm('intersection', s), {
+    validate(input, options) {
+      return this.shape.schemas.every(schema => schema.tryValidate(input).success)
     },
     transform: i => i
   })
