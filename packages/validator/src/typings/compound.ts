@@ -5,6 +5,12 @@ declare module '@typp/core/base' {
   namespace t {
     export interface ErrorArgsMap {
     }
+    interface ValidateExtendsEntries<T> {
+      // TODO
+    }
+    interface ValidateTransformEntries<T, Input, InputRest> {
+      // TODO
+    }
   }
 }
 
