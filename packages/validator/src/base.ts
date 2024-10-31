@@ -23,6 +23,7 @@ function validate(this: tn.Schema<any, any>, ...args: any[]): any {
   if (args.length === 0) {
     throw new Error('No data to validate')
   }
+  // TODO resolve function arguments
   const [data, options = {}] = args as [any, tn.ValidateOptions]
   const {
     try: isTry = false,
