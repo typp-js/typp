@@ -180,7 +180,6 @@ export type Replace<
   ]
 ) : [T] extends [Record<string | symbol | number, any>] ? (
   true extends (
-    // eslint-disable-next-line ts/no-empty-object-type
     | IsEqual<T, {}>
   ) ? never : (
     {
