@@ -1,4 +1,5 @@
 import type { t as tn } from '@typp/core/base'
+import type { IsNotEqual, IsUnion } from '@typp/core/types'
 
 // dprint-ignore
 declare module '@typp/core/base' {
@@ -6,10 +7,10 @@ declare module '@typp/core/base' {
     export interface ErrorArgsMap {
     }
     interface ValidateExtendsEntries<T> {
-      // TODO
+      union: [IsUnion<T> & IsNotEqual<T, boolean>, T]
     }
     interface ValidateTransformEntries<T, Input, InputRest> {
-      // TODO
+      union: [IsUnion<T> & IsNotEqual<T, boolean>, T]
     }
   }
 }
