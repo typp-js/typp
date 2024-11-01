@@ -521,7 +521,7 @@ export namespace t {
           || typeof field !== 'function'
         ) return field
 
-        return new Proxy(field, {
+        return new Proxy(field as () => unknown, {
           get(target, fieldKey, receiver) {
             const field = Reflect.get(target, fieldKey, receiver)
             if (typeof field !== 'function') return field
