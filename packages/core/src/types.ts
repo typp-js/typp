@@ -44,6 +44,13 @@ export type Not<A extends boolean> = [A] extends [false] ? true : false
 
 export type IsTrue<A> = IsEqual<A, any> extends true ? false : IsWhat<A, true>
 
+export type IsArray<T> = [T] extends [unknown[]] ? true : false
+
+export type IsInterface<T> = IsTrue<
+  & Not<IsArray<T>>
+  & ([T] extends [Record<PropertyKey, any>] ? true : false)
+>
+
 export type IsConfigure<T, K, Expected = true> = K extends keyof T ? IsWhat<T[K], Expected> : false
 
 export type IsEqual<A, B> =

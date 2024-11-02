@@ -1,5 +1,5 @@
 import type { t as tn } from '@typp/core/base'
-import type { IsEqual, IsTrue, Not, Switch, SwitchOtherEntry } from '@typp/core/types'
+import type { IsArray, IsEqual, IsInterface, Switch, SwitchOtherEntry } from '@typp/core/types'
 import type {} from '@typp/core/consumers/array'
 import type {} from '@typp/core/consumers/object'
 import { FALSY } from '@typp/validator/constants'
@@ -51,11 +51,6 @@ declare module '@typp/core/base' {
         ])[]
       ]
     }
-    type IsArray<T> = [T] extends [unknown[]] ? true : false
-    type IsInterface<T> = IsTrue<
-      & Not<IsArray<T>>
-      & ([T] extends [Record<PropertyKey, any>] ? true : false)
-    >
     export interface ValidateExtendsEntries<T> {
       array: [IsArray<T>, T]
       interface: [IsInterface<T>, T]
