@@ -1,10 +1,12 @@
 import { t } from '@typp/core'
+import type { Pretty } from '@typp/core/types'
 import { ValidateError, validatorSkeleton } from '@typp/validator'
 import { compoundValidator } from '@typp/validator/typings/compound'
 import { literalValidator } from '@typp/validator/typings/literal'
 import { booleanValidator } from '@typp/validator/typings/primitive.boolean'
 import { numberValidator } from '@typp/validator/typings/primitive.number'
 import { stringValidator } from '@typp/validator/typings/primitive.string'
+import { structuralValidator } from '@typp/validator/typings/structural'
 import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 
 beforeAll(() => t.use(validatorSkeleton))
@@ -13,9 +15,10 @@ describe('compound', () => {
   beforeAll(() => {
     t.use(compoundValidator)
     t.use(literalValidator)
+    t.use(booleanValidator)
     t.use(stringValidator)
     t.use(numberValidator)
-    t.use(booleanValidator)
+    t.use(structuralValidator)
   })
   describe('union', () => {
     test('base', () => {
@@ -85,5 +88,22 @@ describe('compound', () => {
     })
   })
   describe('intersection', () => {
+    test('base', () => {
+      const results = [
+        t.intersection([t({ a: String })]).validate({ a: 'a' }),
+        t.intersection([t({ a: String }), t({ b: Number })]).validate({ a: 'a', b: 1 })
+      ] as const
+      expect(results).toEqual([
+        { a: 'a' },
+        { a: 'a', b: 1 }
+      ])
+      type MapPretty<T> = { [K in keyof T]: Pretty<T[K]> }
+      expectTypeOf<MapPretty<typeof results>>().toEqualTypeOf<
+        readonly [
+          { a: string },
+          { a: string; b: number }
+        ]
+      >()
+    })
   })
 })
