@@ -36,6 +36,7 @@ export function compoundValidator(t: typeof tn) {
     validate(input, options) {
       return this.shape.schemas.some(schema => schema.tryValidate(input).success)
     },
+    // TODO map schema transform
     transform: i => i
   })
   t.useValidator((s): s is tn.Schema<
@@ -59,6 +60,7 @@ export function compoundValidator(t: typeof tn) {
         [errors]
       )
     },
+    // TODO map schema transform
     transform: i => i
   })
 }
