@@ -1,6 +1,7 @@
 import { t } from '@typp/core'
 import { validatorSkeleton } from '@typp/validator'
 import { compoundValidator } from '@typp/validator/typings/compound'
+import { literalValidator } from '@typp/validator/typings/literal'
 import { booleanValidator } from '@typp/validator/typings/primitive.boolean'
 import { numberValidator } from '@typp/validator/typings/primitive.number'
 import { stringValidator } from '@typp/validator/typings/primitive.string'
@@ -11,6 +12,7 @@ beforeAll(() => t.use(validatorSkeleton))
 describe('compound', () => {
   beforeAll(() => {
     t.use(compoundValidator)
+    t.use(literalValidator)
     t.use(stringValidator)
     t.use(numberValidator)
     t.use(booleanValidator)
@@ -50,6 +52,20 @@ describe('compound', () => {
           true,
           true | false
         ]
+      >()
+    })
+    test('narrow', () => {
+      const results = [
+        t.union([String]).validate.narrow('a'),
+        t.union([String, Number]).validate.narrow('a'),
+        t.union([String, Number]).validate.narrow(1),
+        t.union([true]).validate.narrow(true),
+        t.union([Boolean]).validate.narrow(true),
+        t.union([Boolean]).validate.narrow(false)
+      ] as const
+      expect(results).toEqual(['a', 'a', 1, true, true, false])
+      expectTypeOf(results).toEqualTypeOf<
+        readonly ['a', 'a', 1, true, true, false]
       >()
     })
   })
