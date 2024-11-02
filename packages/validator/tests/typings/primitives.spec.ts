@@ -6,7 +6,7 @@ import { booleanValidator } from '@typp/validator/typings/primitive.boolean'
 import { numberValidator } from '@typp/validator/typings/primitive.number'
 import { stringValidator } from '@typp/validator/typings/primitive.string'
 
-import { beforeAll, describe, expect, expectTypeOf, test } from 'vitest'
+import { beforeAll, describe, expect, expectTypeOf, test, vi } from 'vitest'
 
 beforeAll(() => t.use(validatorSkeleton))
 
@@ -37,10 +37,18 @@ describe('bigint', () => {
   })
   test('unexpected', () => {
     const skm = t.bigint()
-    expect(() => {
+    const caught = vi.fn()
+    try {
       // @ts-expect-error
       skm.validate('abc')
-    }).toThrow(new ValidateError('unexpected', skm, '1'))
+    } catch (e) {
+      caught()
+      expect(e).toBeInstanceOf(ValidateError)
+      expect(e).property('type').equal('unexpected')
+      expect(e).property('actual').equal('abc')
+      expect(e).property('expected').equal(skm)
+    }
+    expect(caught).toHaveBeenCalled()
   })
   describe('parse', () => {
     test('transform - primitive.boolean', () => {
