@@ -2,14 +2,6 @@
   "name": "@typp/core",
   "version": "0.1.0",
   "description": "Type meta system.",
-  "scripts": {
-    "test": "vitest --typecheck --no-watch",
-    "coverage": "vitest run --coverage",
-    "coverage:badge": "istanbul-badges-readme"
-  },
-  "typesVersions": {
-    "<5.0": { "*": ["*", "dist/*", "dist/*/index.d.ts"] }
-  },
   "exports": {
     "./package.json": "./package.json",
     ".": "./src/index.ts",
@@ -17,6 +9,14 @@
     "./types": "./src/types.ts",
     "./consumers": "./src/consumers/index.ts",
     "./consumers/*": "./src/consumers/*.ts"
+  },
+  "typesVersions": {
+    "<5.0": { "*": ["*", "dist/*", "dist/*/index.d.ts"] }
+  },
+  "scripts": {
+    "test": "vitest --typecheck --no-watch",
+    "coverage": "vitest run --coverage",
+    "coverage:badge": "istanbul-badges-readme"
   },
   "imports": {
     "#~": "./src/index.ts",

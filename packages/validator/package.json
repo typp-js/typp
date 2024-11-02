@@ -2,14 +2,6 @@
   "name": "@typp/validator",
   "version": "0.1.0",
   "description": "Validate your data by type.",
-  "scripts": {
-    "test": "vitest --typecheck --no-watch",
-    "coverage": "vitest run --coverage",
-    "coverage:badge": "istanbul-badges-readme"
-  },
-  "typesVersions": {
-    "<5.0": { "*": ["*", "dist/*", "dist/*/index.d.ts"] }
-  },
   "exports": {
     ".": "./src/index.ts",
     "./base": "./src/base.ts",
@@ -20,6 +12,14 @@
     "./typings": "./src/typings/index.ts",
     "./typings/*": "./src/typings/*.ts",
     "./constants": "./src/constants.ts"
+  },
+  "typesVersions": {
+    "<5.0": { "*": ["*", "dist/*", "dist/*/index.d.ts"] }
+  },
+  "scripts": {
+    "test": "vitest --typecheck --no-watch",
+    "coverage": "vitest run --coverage",
+    "coverage:badge": "istanbul-badges-readme"
   },
   "imports": {
     "#internal": "./src/internal/index.ts",
