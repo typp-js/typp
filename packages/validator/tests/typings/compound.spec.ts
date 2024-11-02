@@ -105,6 +105,12 @@ describe('compound', () => {
         ]
       >()
     })
+    test('string', () => {
+      // TODO
+    })
+    test('narrow', () => {
+      // TODO
+    })
     test('unexpected', () => {
       const aSkm = t({ a: String })
       const bSkm = t({ b: Number })
