@@ -105,5 +105,38 @@ describe('compound', () => {
         ]
       >()
     })
+    test('unexpected', () => {
+      const aSkm = t({ a: String })
+      const bSkm = t({ b: Number })
+      const skm = t.intersection([aSkm, bSkm])
+      const caught = vi.fn()
+      try {
+        // @ts-expect-error
+        skm.validate({ a: 1 })
+      } catch (e) {
+        caught()
+        expect(e).toBeInstanceOf(ValidateError)
+        expect(e).property('type').equal('unexpected')
+        expect(e).property('actual').deep.equal({ a: 1 })
+        expect(e).property('keyword').equal('ValidateError:intersection not match')
+        expect(e).property('expected').equal(skm)
+        const [errors] = (e as { args: t.ErrorArgsMap['ValidateError:intersection not match'] }).args
+        expect(errors).toHaveLength(2)
+        const [[skm0, error0], [skm1, error1]] = errors
+        expect(skm0).toBe(aSkm)
+        expect(skm1).toBe(bSkm)
+        expect(error0).toBeInstanceOf(ValidateError)
+        expect(error0).property('type').equal('partially match')
+        expect(error0).property('actual').deep.equal({ a: 1 })
+        expect(error0).property('expected').equal(aSkm)
+        expect(error0).property('keyword').equal('ValidateError:not match the properties')
+        expect(error1).toBeInstanceOf(ValidateError)
+        expect(error1).property('type').equal('partially match')
+        expect(error1).property('actual').deep.equal({ a: 1 })
+        expect(error1).property('expected').equal(bSkm)
+        expect(error1).property('keyword').equal('ValidateError:is missing properties')
+      }
+      expect(caught).toHaveBeenCalled()
+    })
   })
 })
