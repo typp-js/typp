@@ -1,7 +1,8 @@
 {
   "name": "docs",
   "imports": {
-    "#components/*": "./.vitepress/components/*"
+    "#components/*": "./.vitepress/components/*",
+    "#define/*": "./.vitepress/define/*"
   },
   "scripts": {
     "docs:dev": "vitepress dev",

@@ -1,5 +1,17 @@
 <script setup>
-import Foo from '#components/Foo.vue'
+import Playground from '#components/Playground.vue'
+
+const code = `
+import { t } from '@typp/core'
+import validator from '@typp/validator'
+
+t.use(validator)
+
+const Dog = t({ name: String, age: Number })
+
+Dog.validate({ name: 'dog', age: 1 })
+Dog.validate({ name: 'dog', age: '1' })
+`
 </script>
 
 # 快速开始
@@ -21,18 +33,4 @@ npm install @typp/core @typp/validator
 
 ### 使用
 
-```ts
-import { t } from '@typp/core'
-import validator from '@typp/validator'
-
-t.use(validator)
-
-const Dog = t({ name: String, age: Number })
-
-const dog0 = Dog.validate({ name: 'dog', age: 1 })
-// => { name: 'dog', age: 1 }
-const dog1 = Dog.validate({ name: 'dog', age: '1' })
-// => ValidateError: Data is partially match
-```
-
-<Foo />
+<Playground :code="code" />
