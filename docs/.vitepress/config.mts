@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitepress'
-import type { DefaultTheme, LocaleConfig } from 'vitepress/types/shared'
+import type { DefaultTheme, LocaleConfig } from 'vitepress'
 
 const i18nDict = {
   'zh-Hans': {
@@ -29,7 +29,9 @@ const i18nDict = {
   }
 }
 
-const localeConfig: LocaleConfig<DefaultTheme.Config> = Object.keys(i18nDict).reduce((config, lang, index) => ({
+const localeConfig: LocaleConfig<DefaultTheme.Config> = (
+  Object.keys(i18nDict) as (keyof typeof i18nDict)[]
+).reduce((config, lang, index) => ({
   ...config,
   [index === 0 ? 'root' : lang]: {
     label: i18nDict[lang].label,
@@ -37,7 +39,7 @@ const localeConfig: LocaleConfig<DefaultTheme.Config> = Object.keys(i18nDict).re
     link: `/${lang}/`,
     themeConfig: {
       i18nRouting: true,
-      nav: ['quick-start', 'references', 'examples']
+      nav: (['quick-start', 'references', 'examples'] as const)
         .map((key) => ({ text: i18nDict[lang][key], link: `/${lang}/${key}` })),
       docFooter: { prev: true, next: true },
       footer: {
