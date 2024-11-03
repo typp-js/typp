@@ -8,6 +8,11 @@
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview"
   },
+  "dependencies": {
+    "@guolao/vue-monaco-editor": "^1.5.4",
+    "monaco-editor": "^0.52.0",
+    "vue": "^3.5.12"
+  },
   "devDependencies": {
     "vitepress": "^1.4.3"
   }
