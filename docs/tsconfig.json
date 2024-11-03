@@ -1,0 +1,23 @@
+{
+  "extends": "../tsconfigs/tsconfig.browser.json",
+  "compilerOptions": {
+    "jsx": "preserve"
+  },
+  "include": [
+    "./**/*.ts",
+    "./**/*.ts",
+    "./**/*.d.ts",
+    "./**/*.tsx",
+    "./**/*.vue",
+    "./**/*.md",
+    "./.vitepress/**/*.ts",
+    "./.vitepress/**/*.tsx",
+    "./.vitepress/**/*.vue"
+  ],
+  "exclude": [
+    "./.vitepress/config.mts"
+  ],
+  "vueCompilerOptions": {
+    "vitePressExtensions": [".md"]
+  }
+}
