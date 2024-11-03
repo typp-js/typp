@@ -15,7 +15,7 @@
   margin-top: 20px;
   padding: 4px 0;
   padding-right: 4px;
-  height: 200px;
+  height: 300px;
 }
 </style>
 <script lang="ts" setup>
@@ -23,7 +23,7 @@ import { Editor } from '@guolao/vue-monaco-editor'
 
 import type Monaco from 'monaco-editor'
 import { useData } from 'vitepress'
-import { ref, computed } from 'vue'
+import { ref, computed, reactive, onUnmounted } from 'vue'
 
 import { extraLibs } from '#define/extraLibs.ts'
 
@@ -70,6 +70,8 @@ const forkTheme = (monaco: typeof Monaco) => {
   })
 }
 
+const disposes = reactive<(() => void)[]>([])
+
 const onEditorMounted = (
   editor: Monaco.editor.IStandaloneCodeEditor,
   monaco: typeof Monaco
@@ -78,7 +80,6 @@ const onEditorMounted = (
 
   const ts = monaco.languages.typescript
   const ls = monaco.languages.typescript.typescriptDefaults
-  editor.setValue('')
   extraLibs.forEach(({ filePath, content }) => {
     const suffix = filePath.split('/').pop()!.split('.').pop() ?? ''
 
@@ -137,5 +138,91 @@ const onEditorMounted = (
   setTimeout(() => {
     editor.setValue(trimmedCode.value)
   }, 100)
+  ;(async () => {
+    const getWorker = await monaco.languages.typescript.getTypeScriptWorker()
+    const worker = await getWorker(monaco.Uri.parse(path.value))
+
+    disposes.push(monaco.languages.registerInlayHintsProvider('typescript', {
+      provideInlayHints: async (model) => {
+        const queryPositions: [
+          {
+            lineNumber: number
+            column: number
+          },
+          {
+            lineNumber: number
+            column: number
+          }
+        ][] = []
+        model
+          .getLinesContent()
+          .forEach((line, index) => {
+            const match = /([\s\S]*\/\/\s*)_\?/g.exec(line)
+            if (match) {
+              queryPositions.push([
+                {
+                  lineNumber: index + 1 + 1,
+                  column: match.index + match[1].length + 1 + 1
+                },
+                {
+                  lineNumber: index + 1,
+                  column: match[1].length + 1 + 2
+                }
+              ])
+            }
+          })
+        return {
+          hints: await Promise.all([
+            ...queryPositions.map(async ([queryPosition, position]) => {
+              const result = await worker.getQuickInfoAtPosition(
+                path.value,
+                model.getOffsetAt(queryPosition)
+              )
+              console.log(result)
+              return {
+                label: result
+                  .displayParts
+                  .map(({ text }: { text: string }) => text)
+                  .join('')
+                  .replace(/\n */g, "␊")
+                  .replace(/[\u0000-\u001F\u007F-\u009F]/g, ""),
+                position
+              } as Monaco.languages.InlayHint
+            })
+          ]),
+          dispose: () => void 0
+        }
+      }
+    }).dispose)
+
+    const model = editor.getModel()!
+    const diagnostics = [
+      ...await worker.getSyntacticDiagnostics(path.value),
+      ...await worker.getSemanticDiagnostics(path.value)
+    ]
+    editor.changeViewZones((accessor) => {
+      diagnostics.forEach(({ start, messageText }) => {
+        const pos = model.getPositionAt(start!)
+        const domNode = document.createElement('div')
+        domNode.classList.add('mtk20')
+        domNode.textContent = typeof messageText === 'string'
+          ? messageText
+          : (function leafMessageText(m: typeof messageText): string {
+            if (m.next && m.next.length > 0) {
+              return leafMessageText(m.next[0])
+            }
+            return m.messageText
+          })(messageText)
+        accessor.addZone({
+          afterLineNumber: pos.lineNumber - 1,
+          heightInLines: 1,
+          domNode
+        })
+      })
+    })
+  })();
 }
+onUnmounted(() => {
+  disposes.forEach(dispose => dispose())
+})
 </script>

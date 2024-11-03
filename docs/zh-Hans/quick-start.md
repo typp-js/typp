@@ -2,14 +2,17 @@
 import Playground from '#components/Playground.vue'
 
 const code = `
-import { t } from '@typp/core'
+import { t, type Pretty } from '@typp/core'
 import validator from '@typp/validator'
 
 t.use(validator)
 
 const Dog = t({ name: String, age: Number })
 
-Dog.validate({ name: 'dog', age: 1 })
+const dog0 = Dog.validate({ name: 'dog', age: 1 })
+//   _?
+type Dog0 = Pretty<typeof dog0>
+
 Dog.validate({ name: 'dog', age: '1' })
 `
 </script>
