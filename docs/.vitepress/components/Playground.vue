@@ -1,6 +1,8 @@
 <template>
   <div class="playground">
+    <slot />
     <Editor
+      class="editor"
       language="typescript"
       v-model:path="path"
       v-model:theme="theme"
@@ -13,9 +15,10 @@
 <style scoped>
 .playground {
   margin-top: 20px;
-  padding: 4px 0;
-  padding-right: 4px;
-  height: 300px;
+  min-height: 150px;
+}
+.playground > :deep .language-ts {
+  display: none !important;
 }
 </style>
 <script lang="ts" setup>
@@ -23,15 +26,23 @@ import { Editor } from '@guolao/vue-monaco-editor'
 
 import type Monaco from 'monaco-editor'
 import { useData } from 'vitepress'
-import { ref, computed, reactive, onUnmounted } from 'vue'
+import { ref, computed, reactive, onUnmounted, VNode, onMounted } from 'vue'
 
 import { extraLibs } from '#define/extraLibs.ts'
 
 const props = defineProps<{
-  code: string
+}>()
+const slots = defineSlots<{
+  default: () => VNode[]
 }>()
 const data = useData()
+const uuid = ref(Math.random().toString(36).slice(2))
 const path = ref('file:///index.ts')
+const code = ref('')
+
+const [vnode] = slots.default()
+vnode.props ??= {}
+vnode.props.id = `playground-${uuid.value}`
 
 const trimIndent = (code: string) => {
   const lines = code.split('\n')
@@ -42,7 +53,7 @@ const trimIndent = (code: string) => {
   return lines.map((line) => line.slice(indent)).join('\n')
 }
 
-const trimmedCode = computed(() => trimIndent(props.code.trim()) + '\n')
+const trimmedCode = computed(() => trimIndent(code.value.trim()) + '\n')
 const theme = computed(() => data.isDark.value ? 'vs-dark' : 'vs-fork')
 
 const MONACO_EDITOR_OPTIONS:
@@ -178,7 +189,6 @@ const onEditorMounted = (
                 path.value,
                 model.getOffsetAt(queryPosition)
               )
-              console.log(result)
               return {
                 label: result
                   .displayParts
@@ -222,6 +232,10 @@ const onEditorMounted = (
     })
   })();
 }
+
+onMounted(() => {
+  code.value = document.querySelector(`#playground-${uuid.value} > pre`)!.textContent ?? ''
+})
 onUnmounted(() => {
   disposes.forEach(dispose => dispose())
 })

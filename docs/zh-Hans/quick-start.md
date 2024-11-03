@@ -1,20 +1,5 @@
 <script setup>
 import Playground from '#components/Playground.vue'
-
-const code = `
-import { t, type Pretty } from '@typp/core'
-import validator from '@typp/validator'
-
-t.use(validator)
-
-const Dog = t({ name: String, age: Number })
-
-const dog0 = Dog.validate({ name: 'dog', age: 1 })
-//   _?
-type Dog0 = Pretty<typeof dog0>
-
-Dog.validate({ name: 'dog', age: '1' })
-`
 </script>
 
 # 快速开始
@@ -36,4 +21,21 @@ npm install @typp/core @typp/validator
 
 ### 使用
 
-<Playground :code="code" />
+<Playground style="height: 300px">
+
+```ts
+import { type Pretty, t } from '@typp/core'
+import validator from '@typp/validator'
+
+t.use(validator)
+
+const Dog = t({ name: String, age: Number })
+
+const dog = Dog.validate({ name: 'dog', age: 1 })
+//   _?
+type Dog = Pretty<typeof dog>
+
+Dog.validate({ name: 'dog', age: '1' })
+```
+
+</Playground>
