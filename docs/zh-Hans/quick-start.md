@@ -1,3 +1,7 @@
+<script setup>
+import Foo from '#components/Foo.vue'
+</script>
+
 # 快速开始
 
 如果你想体验 `typp`，你可以按照本教程对本工具进行快速上手。
@@ -30,3 +34,5 @@ const dog0 = Dog.validate({ name: 'dog', age: 1 })
 const dog1 = Dog.validate({ name: 'dog', age: '1' })
 // => ValidateError: Data is partially match
 ```
+
+<Foo />
