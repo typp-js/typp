@@ -60,12 +60,7 @@ const localeConfig: LocaleConfig<DefaultTheme.Config> = (
 const extraLibs: {
   filePath: string
   content: string
-}[] = [
-  // {
-  //   filePath: 'file:///env.d.ts',
-  //   content: 'export {}'
-  // }
-]
+}[] = []
 const __dirname = new URL('.', import.meta.url).pathname
 const resolveRoot = (...paths: string[]) => resolve(__dirname, '../../', ...paths)
 readdirSync(resolveRoot('./packages'))
