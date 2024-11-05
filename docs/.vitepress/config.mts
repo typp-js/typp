@@ -90,6 +90,7 @@ readdirSync(resolveRoot('./packages'))
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: '/typp/',
   title: 'Typp',
   description: 'TypeScript++',
   lang: 'zh-Hans',
