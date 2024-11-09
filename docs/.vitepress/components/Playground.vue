@@ -30,14 +30,18 @@ import { ref, computed, reactive, onUnmounted, VNode, onMounted } from 'vue'
 
 import { extraLibs } from '#define/extraLibs.ts'
 
-const props = defineProps<{
-}>()
+const props = defineProps({
+  global: {
+    type: Boolean,
+    default: false
+  }
+})
 const slots = defineSlots<{
   default: () => VNode[]
 }>()
 const data = useData()
 const uuid = ref(Math.random().toString(36).slice(2))
-const path = ref('file:///index.ts')
+const path = ref(`file:///index.${uuid.value}.ts`)
 const code = ref('')
 
 const [vnode] = slots.default()
@@ -91,7 +95,22 @@ const onEditorMounted = (
 
   const ts = monaco.languages.typescript
   const ls = monaco.languages.typescript.typescriptDefaults
-  extraLibs.forEach(({ filePath, content }) => {
+  const libs: typeof extraLibs = [
+    {
+      filePath: 'file:///env.d.ts',
+      content: trimIndent(`
+        import { typp } from '@typp/core';
+        import '@typp/validator';
+
+        declare global {
+          var t: typeof typp;
+        }
+        export {};
+      `)
+    },
+    ...extraLibs
+  ]
+  libs.forEach(({ filePath, content }) => {
     const suffix = filePath.split('/').pop()!.split('.').pop() ?? ''
 
     const uri = monaco.Uri.parse(filePath)
