@@ -1,0 +1,12 @@
+{
+  "label": "English",
+  "quick_start": "Quick Start",
+  "references": "References",
+  "examples": "Examples",
+  "footer_message": "Released under the MIT License.",
+  "not_found": {
+    "title": "Resource Not Found",
+    "quote": "Lost in the middle of nowhere? The link you followed probably broken or does not exist, you can contact us through the community if you have any questions.",
+    "link_label": "Back to Home"
+  }
+}

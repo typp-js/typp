@@ -12,22 +12,55 @@ import Playground from '#components/Playground.vue'
 
 `typp` 非常注重系统内的可扩展性，在设计之初便考虑到了许多的场景：自定义类型、自定义教养规则、自定义类型转换等等。这些在 `typp` 中都能够轻而易举的做到，通过 `typp` 你能很方便的将运行时的类型系统与 TypeScript 的类型系统进行无缝对接。
 
+## 特性
+
+- 与 TypeScript 类型系统一一对应
+
 ## 方式
 
 你可以通过一下两种方式来体验或使用 `typp`：
 
 - Playground
 - NPM
-
-### NPM
-
-现在我们先简单介绍一下如何在项目中使用它，首先你可以通过 NPM 来安装 `typp`：
-
 ```bash
 npm install @typp/core @typp/validator
 ```
 
-#### 使用
+### 运行时与编译时的类型检查
+
+- 首先引入 `@typp/core`
+
+```ts
+import { t } from '@typp/core' // [!code focus]
+
+const Dog = t({ name: String, age: Number })
+```
+
+- 引入 `@typp/validator` 插件并安装
+
+```ts
+import { t } from '@typp/core'
+import validator from '@typp/validator' // [!code focus]
+
+t.use(validator) // [!code focus]
+
+const Dog = t({ name: String, age: Number })
+```
+
+- 使用定义的数据类型对目标数据进行验证
+
+```ts
+import { t } from '@typp/core'
+import validator from '@typp/validator'
+
+t.use(validator)
+
+const Dog = t({ name: String, age: Number })
+
+const dog = Dog.validate({ name: 'dog', age: 1 }) // [!code focus]
+```
+
+在 Playground 中看看效果吧：
 
 <Playground style="height: 300px">
 
@@ -47,3 +80,5 @@ Dog.validate({ name: 'dog', age: '1' })
 ```
 
 </Playground>
+
+### 通过 js 反向生成类型

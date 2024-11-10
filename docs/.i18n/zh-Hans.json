@@ -1,0 +1,12 @@
+{
+  "label": "简体中文",
+  "quick_start": "快速开始",
+  "references": "参考文档",
+  "examples": "示例",
+  "footer_message": "基于 MIT 协议发布。",
+  "not_found": {
+    "title": "资源不存在",
+    "quote": "迷路了吗？访问的链接似乎已经失效或不存在，如果有问题可通过社区联系我们。",
+    "link_label": "返回首页"
+  }
+}
