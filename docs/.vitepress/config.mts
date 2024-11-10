@@ -69,7 +69,10 @@ const localeConfig: LocaleConfig<DefaultTheme.Config> = (
           link: `/${lang}/playground`
         }
       ],
-      docFooter: { prev: true, next: true },
+      docFooter: {
+        prev: i18n.t('prev', { lng: lang }),
+        next: i18n.t('next', { lng: lang })
+      },
       search: { provider: 'local' },
       footer: {
         message: i18n.t('footer_message', { lng: lang }),

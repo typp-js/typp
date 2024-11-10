@@ -1,3 +1,9 @@
+---
+next:
+  text: '类型运算'
+  link: './compound.md'
+---
+
 <script setup>
 import Playground from '#components/Playground.vue'
 </script>
@@ -14,11 +20,22 @@ import Playground from '#components/Playground.vue'
 
 字符串类型是 JavaScript 中最常见的数据类型之一，它表示一个文本数据。
 
-<Playground global style="height: 200px">
+<Playground global style="height: 300px">
 
 ```ts
-t.string().validate('hello')
-t.string().validate(1)
+const strSchema = t.string()
+
+strSchema.validate('hello')
+strSchema.validate(1)
+
+//    _?
+const s0 = strSchema.validate.narrow('hello')
+//    _?
+const s1 = strSchema.parse(1)
+//    _?
+const s2 = strSchema.tryValidate('hello')
+//    _?
+const s3 = strSchema.tryValidate(1)
 ```
 
 </Playground>
