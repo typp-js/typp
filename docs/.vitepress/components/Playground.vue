@@ -172,57 +172,59 @@ const onEditorMounted = (
     const getWorker = await monaco.languages.typescript.getTypeScriptWorker()
     const worker = await getWorker(monaco.Uri.parse(path.value))
 
-    disposes.push(monaco.languages.registerInlayHintsProvider('typescript', {
-      provideInlayHints: async (model) => {
-        const queryPositions: [
-          {
-            lineNumber: number
-            column: number
-          },
-          {
-            lineNumber: number
-            column: number
-          }
-        ][] = []
-        model
-          .getLinesContent()
-          .forEach((line, index) => {
-            const match = /([\s\S]*\/\/\s*)_\?/g.exec(line)
-            if (match) {
-              queryPositions.push([
-                {
-                  lineNumber: index + 1 + 1,
-                  column: match.index + match[1].length + 1 + 1
-                },
-                {
-                  lineNumber: index + 1,
-                  column: match[1].length + 1 + 2
-                }
-              ])
+    disposes.push(
+      monaco.languages.registerInlayHintsProvider('typescript', {
+        provideInlayHints: async (model) => {
+          const queryPositions: [
+            {
+              lineNumber: number
+              column: number
+            },
+            {
+              lineNumber: number
+              column: number
             }
-          })
-        return {
-          hints: await Promise.all([
-            ...queryPositions.map(async ([queryPosition, position]) => {
-              const result = await worker.getQuickInfoAtPosition(
-                path.value,
-                model.getOffsetAt(queryPosition)
-              )
-              return {
-                label: result
-                  .displayParts
-                  .map(({ text }: { text: string }) => text)
-                  .join('')
-                  .replace(/\n */g, "␊")
-                  .replace(/[\u0000-\u001F\u007F-\u009F]/g, ""),
-                position
-              } as Monaco.languages.InlayHint
+          ][] = []
+          model
+            .getLinesContent()
+            .forEach((line, index) => {
+              const match = /([\s\S]*\/\/\s*)_\?/g.exec(line)
+              if (match) {
+                queryPositions.push([
+                  {
+                    lineNumber: index + 1 + 1,
+                    column: match.index + match[1].length + 1 + 1
+                  },
+                  {
+                    lineNumber: index + 1,
+                    column: match[1].length + 1 + 2
+                  }
+                ])
+              }
             })
-          ]),
-          dispose: () => void 0
+          return {
+            hints: await Promise.all([
+              ...queryPositions.map(async ([queryPosition, position]) => {
+                const result = await worker.getQuickInfoAtPosition(
+                  path.value,
+                  model.getOffsetAt(queryPosition)
+                )
+                return {
+                  label: result
+                    .displayParts
+                    .map(({ text }: { text: string }) => text)
+                    .join('')
+                    .replace(/\n */g, '␊')
+                    .replace(/[\u0000-\u001F\u007F-\u009F]/g, ''),
+                  position
+                } as Monaco.languages.InlayHint
+              })
+            ]),
+            dispose: () => void 0
+          }
         }
-      }
-    }).dispose)
+      }).dispose
+    )
 
     const model = editor.getModel()!
     const diagnostics = [
@@ -253,7 +255,8 @@ const onEditorMounted = (
 }
 
 onMounted(() => {
-  code.value = document.querySelector(`#playground-${uuid.value} > pre`)!.textContent ?? ''
+  code.value =
+    document.querySelector(`#playground-${uuid.value} > pre`)!.textContent ?? ''
 })
 onUnmounted(() => {
   disposes.forEach(dispose => dispose())
