@@ -1,8 +1,7 @@
-import { readdirSync, readFileSync, statSync } from 'node:fs'
-import { resolve } from 'node:path'
-
 import { defineConfig } from 'vitepress'
 import type { DefaultTheme, LocaleConfig } from 'vitepress'
+
+import { extraLibs } from './loadExtraLibs.node'
 
 const i18nDict = {
   'zh-Hans': {
@@ -42,9 +41,108 @@ const localeConfig: LocaleConfig<DefaultTheme.Config> = (
     link: `/${lang}/`,
     themeConfig: {
       i18nRouting: true,
-      nav: (['quick-start', 'references', 'examples'] as const)
-        .map((key) => ({ text: i18nDict[lang][key], link: `/${lang}/${key}` })),
+      nav: [
+        ...(['quick-start', 'references', 'examples'] as const).map((key) => ({
+          text: i18nDict[lang][key],
+          link: `/${lang}/${key}`
+        })),
+        {
+          text: '生态',
+          items: [
+            {
+              text: '转化器',
+              items: [
+                { text: 'ts2tp', link: `/${lang}/todo` },
+                { text: 'tp2ts', link: `/${lang}/todo` },
+                { text: 'jsonschema2tp', link: `/${lang}/todo` },
+                { text: 'tp2jsonschema', link: `/${lang}/todo` }
+              ]
+            },
+            {
+              text: 'UI 工具',
+              items: [
+                { text: 'tpform', link: `/${lang}/todo` },
+                { text: 'tpui', link: `/${lang}/todo` }
+              ]
+            },
+            {
+              text: '常用插件',
+              items: [
+                { text: '验证器', link: `/${lang}/validator` }
+              ]
+            }
+          ]
+        },
+        {
+          text: '关于',
+          items: [
+            { text: 'Releases', link: `/${lang}/releases` },
+            { text: 'F&Q', link: `/${lang}/faq` }
+          ]
+        },
+        {
+          text: 'Playground',
+          link: `/${lang}/playground`
+        }
+      ],
+      sidebar: {
+        [`/${lang}/references/`]: [
+          {
+            text: '基础能力',
+            base: `/${lang}/references/basic/`,
+            items: [
+              {
+                text: '常用类型',
+                link: '/general'
+              },
+              {
+                text: '类型运算',
+                link: '/compound'
+              },
+              {
+                text: '构造器',
+                link: '/constructor'
+              },
+              {
+                text: '函数',
+                link: '/function'
+              },
+              {
+                text: '语法简写',
+                link: `/shorthand_syntax`
+              }
+            ]
+          },
+          {
+            text: '进阶',
+            base: `/${lang}/references/advanced/`,
+            items: [
+              {
+                text: '泛型与高阶定义',
+                link: '/generic'
+              },
+              {
+                text: '扩展性',
+                link: '/extensibility'
+              },
+              {
+                text: '可序列化',
+                link: '/sealable'
+              },
+              {
+                text: '类型守卫',
+                link: '/type_guard'
+              }
+            ]
+          },
+          {
+            text: '多语言',
+            link: `/${lang}/references/i18n`
+          }
+        ]
+      },
       docFooter: { prev: true, next: true },
+      search: { provider: 'local' },
       footer: {
         message: i18nDict[lang].footerMessage,
         copyright: 'Copyright © 2024-present YiJie'
@@ -56,37 +154,6 @@ const localeConfig: LocaleConfig<DefaultTheme.Config> = (
     }
   } as LocaleConfig<DefaultTheme.Config>[string]
 }), {})
-
-const extraLibs: {
-  filePath: string
-  content: string
-}[] = []
-const __dirname = new URL('.', import.meta.url).pathname
-const resolveRoot = (...paths: string[]) => resolve(__dirname, '../../', ...paths)
-readdirSync(resolveRoot('./packages'))
-  .forEach((path) => {
-    const resolveByPkg = (...paths: string[]) => resolveRoot('./packages', path, ...paths)
-    const { name } = JSON.parse(readFileSync(resolveByPkg('package.json'), 'utf-8')) as { name: string }
-    const children = readdirSync(resolveByPkg('.'))
-      .filter(p => ['node_modules', 'tests', 'dist', 'lib'].every(d => !p.includes(d)))
-    ;[...children].forEach((child) => {
-      const p = resolveByPkg(child)
-      if (statSync(p).isFile()) {
-        return
-      }
-      children.push(...readdirSync(resolveByPkg(child), { recursive: true }).map(c => `${child}/${c}`))
-    })
-    children.forEach((child) => {
-      const filepath = resolveByPkg(child)
-      if (statSync(filepath).isDirectory()) return
-      if (!/\.(?:(?:d\.)?tsx?|jsx?|json)$/.test(filepath)) return
-
-      extraLibs.push({
-        filePath: `file:///node_modules/${name}/${child}`,
-        content: readFileSync(filepath, 'utf-8')
-      })
-    })
-  })
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
