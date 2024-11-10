@@ -94,8 +94,15 @@ export default defineConfig({
   title: 'Typp',
   description: 'TypeScript++',
   lang: 'zh-Hans',
+  head: [
+    ['link', { rel: 'icon', href: '/typp/favicon.svg' }]
+  ],
   locales: localeConfig,
   themeConfig: {
+    logo: {
+      src: '/favicon.svg',
+      alt: 'Typp Home'
+    },
     // https://vitepress.dev/reference/default-theme-config
     socialLinks: [
       {
