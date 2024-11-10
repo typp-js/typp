@@ -4,6 +4,7 @@
     "generic.md",
     "extensibility.md",
     "serializable.md",
-    "type_guard.md"
+    "type_guard.md",
+    "pattern_matching.md"
   ]
 }
