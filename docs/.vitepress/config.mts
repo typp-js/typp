@@ -140,6 +140,7 @@ export default defineConfig({
     plugins: [
       AutoSidebar({
         path: '.',
+        collapsed: true,
         titleFromFile: true
       })
     ]
