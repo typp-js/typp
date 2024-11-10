@@ -15,7 +15,8 @@
     "./.vitepress/**/*.vue"
   ],
   "exclude": [
-    "./.vitepress/config.mts"
+    "./.vitepress/config.mts",
+    "./**/*.node.ts"
   ],
   "vueCompilerOptions": {
     "vitePressExtensions": [".md"]
