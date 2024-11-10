@@ -26,7 +26,7 @@ import { Editor } from '@guolao/vue-monaco-editor'
 
 import type Monaco from 'monaco-editor'
 import { useData } from 'vitepress'
-import { ref, computed, reactive, onUnmounted, VNode, onMounted } from 'vue'
+import { VNode, computed, onMounted, onUnmounted, reactive, ref } from 'vue'
 
 import { extraLibs } from '#define/extraLibs.ts'
 
