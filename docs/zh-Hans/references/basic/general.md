@@ -20,7 +20,7 @@ import Playground from '#components/Playground.vue'
 
 字符串类型是 JavaScript 中最常见的数据类型之一，它表示一个文本数据。
 
-<Playground global style="height: 300px">
+<Playground global style="height: 380px">
 
 ```ts
 const strSchema = t.string()
@@ -28,14 +28,14 @@ const strSchema = t.string()
 strSchema.validate('hello')
 strSchema.validate(1)
 
-//    _?
-const s0 = strSchema.validate.narrow('hello')
-//    _?
-const s1 = strSchema.parse(1)
-//    _?
-const s2 = strSchema.tryValidate('hello')
-//    _?
-const s3 = strSchema.tryValidate(1)
+//           _?
+export const s0 = strSchema.validate.narrow('hello')
+//           _?
+export const s1 = strSchema.parse(1) // '1'
+//           _?
+export const s2 = strSchema.tryValidate('hello')
+//           _?
+export const s3 = strSchema.tryValidate(1)
 ```
 
 </Playground>

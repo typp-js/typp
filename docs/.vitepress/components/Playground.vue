@@ -1,5 +1,15 @@
 <template>
   <div class="playground">
+    <div class="top-bar">
+      <div class="left"></div>
+      <div class="right">
+        <span class="material-symbols-rounded">edit</span>
+        <span class="material-symbols-rounded">content_copy</span>
+        <span class="material-symbols-rounded">link</span>
+        <span class="material-symbols-rounded">report</span>
+        <span class="material-symbols-rounded">open_in_new</span>
+      </div>
+    </div>
     <slot />
     <Editor
       class="editor"
@@ -10,14 +20,83 @@
       :options="MONACO_EDITOR_OPTIONS"
       @mount="onEditorMounted"
     />
+    <div class="bottom-bar">
+      <div class="left">
+        <span class="material-symbols-rounded">keyboard_double_arrow_down</span>
+      </div>
+      <span>Powered by <a
+          href="https://microsoft.github.io/monaco-editor/"
+          target="_blank"
+        >Monaco Editor</a>.&nbsp;&nbsp;</span>
+    </div>
   </div>
 </template>
-<style scoped>
+<style scoped lang="scss">
 .playground {
+  --shadow: 0 8px 16px rgba(0, 0, 0, .1);
+
+  display: flex;
+  flex-direction: column;
+
   margin-top: 20px;
   min-height: 150px;
+
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0));
+  transition: .2s;
+  &:hover {
+    filter: drop-shadow(var(--shadow));
+  }
 }
-.playground > :deep .language-ts {
+.dark .playground {
+  --shadow: 0 8px 16px rgba(0, 0, 0, .4);
+}
+.top-bar, .bottom-bar {
+  --radius: 8px;
+
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background-color: var(--vp-c-bg-alt);
+  border: 1px solid var(--vp-c-divider);
+
+  font-size: 12px;
+  overflow: hidden;
+  > .left, > .right {
+    display: flex;
+    align-items: center;
+
+    .material-symbols-rounded {
+      padding: 4px;
+
+      font-size: 18px;
+      user-select: none;
+      cursor: pointer;
+
+      transition: .2s;
+      &:hover {
+        color: var(--vp-c-brand-1);
+        background-color: var(--vp-c-bg);
+      }
+    }
+  }
+}
+.top-bar {
+  border-radius: var(--radius) var(--radius) 0 0;
+  border-bottom: none;
+}
+.bottom-bar {
+  border-radius: 0 0 var(--radius) var(--radius);
+  border-top: none;
+}
+.editor {
+  flex: 1;
+  height: 0 !important;
+
+  border: 1px solid var(--vp-c-divider);
+}
+.playground > :deep(.language-ts) {
   display: none !important;
 }
 </style>

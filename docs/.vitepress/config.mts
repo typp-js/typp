@@ -98,7 +98,26 @@ export default defineConfig({
   description: 'TypeScript++',
   lang: 'zh-Hans',
   head: [
-    ['link', { rel: 'icon', href: '/typp/favicon.svg' }]
+    ['link', { rel: 'icon', href: '/typp/favicon.svg' }],
+    [
+      'link',
+      {
+        href:
+          'https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200',
+        rel: 'stylesheet'
+      }
+    ],
+    [
+      'style',
+      {},
+      `.material-symbols-rounded {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 300,
+  'GRAD' 0,
+  'opsz' 24
+}`
+    ]
   ],
   locales: localeConfig,
   themeConfig: {
