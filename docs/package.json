@@ -12,11 +12,12 @@
   },
   "dependencies": {
     "@guolao/vue-monaco-editor": "^1.5.4",
+    "i18next": "^23.16.5",
     "monaco-editor": "^0.52.0",
     "vue": "^3.5.12"
   },
   "devDependencies": {
-    "i18next": "^23.16.5",
+    "@jiek/vite-plugin-vitepress-auto-sidebar": "^1.8.3",
     "vitepress": "^1.4.3"
   }
 }

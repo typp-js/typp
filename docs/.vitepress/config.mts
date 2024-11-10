@@ -1,3 +1,5 @@
+import AutoSidebar from '@jiek/vite-plugin-vitepress-auto-sidebar'
+
 import { defineConfig } from 'vitepress'
 import type { DefaultTheme, LocaleConfig } from 'vitepress'
 
@@ -16,15 +18,23 @@ const localeConfig: LocaleConfig<DefaultTheme.Config> = (
     themeConfig: {
       i18nRouting: true,
       nav: [
-        ...(['quick_start', 'references', 'examples'] as const).map((key) => ({
-          text: i18n.t(key, { lng: lang }),
-          link: `/${lang}/${key}`
-        })),
         {
-          text: '生态',
+          text: i18n.t('quick_start', { lng: lang }),
+          link: `/${lang}/quick_start`
+        },
+        {
+          text: i18n.t('references', { lng: lang }),
+          link: `/${lang}/references/basic`
+        },
+        {
+          text: i18n.t('examples', { lng: lang }),
+          link: `/${lang}/examples`
+        },
+        {
+          text: i18n.t('ecosystem', { lng: lang }),
           items: [
             {
-              text: '转化器',
+              text: i18n.t('converters', { lng: lang }),
               items: [
                 { text: 'ts2tp', link: `/${lang}/todo` },
                 { text: 'tp2ts', link: `/${lang}/todo` },
@@ -33,24 +43,24 @@ const localeConfig: LocaleConfig<DefaultTheme.Config> = (
               ]
             },
             {
-              text: 'UI 工具',
+              text: i18n.t('libraries', { lng: lang }),
               items: [
                 { text: 'tpform', link: `/${lang}/todo` },
                 { text: 'tpui', link: `/${lang}/todo` }
               ]
             },
             {
-              text: '常用插件',
+              text: i18n.t('common_plugins', { lng: lang }),
               items: [
-                { text: '验证器', link: `/${lang}/validator` }
+                { text: i18n.t('validator', { lng: lang }), link: `/${lang}/validator` }
               ]
             }
           ]
         },
         {
-          text: '关于',
+          text: i18n.t('about', { lng: lang }),
           items: [
-            { text: 'Releases', link: `/${lang}/releases` },
+            { text: i18n.t('releases', { lng: lang }), link: `/${lang}/releases` },
             { text: 'F&Q', link: `/${lang}/faq` }
           ]
         },
@@ -59,62 +69,6 @@ const localeConfig: LocaleConfig<DefaultTheme.Config> = (
           link: `/${lang}/playground`
         }
       ],
-      sidebar: {
-        [`/${lang}/references/`]: [
-          {
-            text: '基础能力',
-            base: `/${lang}/references/basic/`,
-            items: [
-              {
-                text: '常用类型',
-                link: '/general'
-              },
-              {
-                text: '类型运算',
-                link: '/compound'
-              },
-              {
-                text: '构造器',
-                link: '/constructor'
-              },
-              {
-                text: '函数',
-                link: '/function'
-              },
-              {
-                text: '语法简写',
-                link: `/shorthand_syntax`
-              }
-            ]
-          },
-          {
-            text: '进阶',
-            base: `/${lang}/references/advanced/`,
-            items: [
-              {
-                text: '泛型与高阶定义',
-                link: '/generic'
-              },
-              {
-                text: '扩展性',
-                link: '/extensibility'
-              },
-              {
-                text: '可序列化',
-                link: '/sealable'
-              },
-              {
-                text: '类型守卫',
-                link: '/type_guard'
-              }
-            ]
-          },
-          {
-            text: '多语言',
-            link: `/${lang}/references/i18n`
-          }
-        ]
-      },
       docFooter: { prev: true, next: true },
       search: { provider: 'local' },
       footer: {
@@ -155,6 +109,12 @@ export default defineConfig({
   vite: {
     define: {
       __EXTRA_LIBS__: JSON.stringify(extraLibs)
-    }
+    },
+    plugins: [
+      AutoSidebar({
+        path: '.',
+        titleFromFile: true
+      })
+    ]
   }
 })
