@@ -1,3 +1,5 @@
+import './index.css'
+
 import { loader } from '@guolao/vue-monaco-editor'
 
 import DefaultTheme from 'vitepress/theme'

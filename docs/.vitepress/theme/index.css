@@ -1,0 +1,14 @@
+:root {
+  --vp-c-brand-1: #4476c0 !important;
+  --vp-c-brand-2: #5b82bd !important;
+  --vp-c-brand-3: #5173b6 !important;
+  --vp-c-bg: #fafafa !important;
+  --vp-c-bg-alt: #efefef !important;
+}
+.dark {
+  --vp-c-brand-1: #4476c0 !important;
+  --vp-c-brand-2: #5b82bd !important;
+  --vp-c-brand-3: #5173b6 !important;
+  --vp-c-bg: #262626 !important;
+  --vp-c-bg-alt: #1f1f1f !important;
+}
