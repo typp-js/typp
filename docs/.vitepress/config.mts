@@ -34,11 +34,16 @@ const localeConfig: LocaleConfig<DefaultTheme.Config> = (
           text: i18n.t('ecosystem', { lng: lang }),
           items: [
             {
-              text: i18n.t('converters', { lng: lang }),
+              text: `${i18n.t('converters', { lng: lang })} | X to Typp`,
               items: [
                 { text: 'ts2tp', link: `/${lang}/todo` },
+                { text: 'jsonschema2tp', link: `/${lang}/todo` }
+              ]
+            },
+            {
+              text: `${i18n.t('converters', { lng: lang })} | Typp to X`,
+              items: [
                 { text: 'tp2ts', link: `/${lang}/todo` },
-                { text: 'jsonschema2tp', link: `/${lang}/todo` },
                 { text: 'tp2jsonschema', link: `/${lang}/todo` }
               ]
             },
