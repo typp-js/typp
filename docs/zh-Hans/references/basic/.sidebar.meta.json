@@ -2,6 +2,7 @@
   "title": "基础能力",
   "order": [
     "general.md",
+    "structural.md",
     "compound.md",
     "constructor.md",
     "function.md",
