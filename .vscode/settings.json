@@ -1,4 +1,14 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "vue.server.includeLanguages": ["vue", "markdown"]
+  "vue.server.includeLanguages": [
+    "vue",
+    "markdown"
+  ],
+  // dprint config
+  "dprint.path": "./node_modules/.bin/dprint",
+  "editor.defaultFormatter": "dprint.dprint",
+  "editor.formatOnSave": true,
+  "[vue]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  }
 }
