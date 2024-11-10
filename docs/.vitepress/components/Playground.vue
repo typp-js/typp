@@ -3,7 +3,7 @@
     <div class="top-bar">
       <div class="left"></div>
       <div class="right">
-        <span class="material-symbols-rounded">edit</span>
+        <span class="material-symbols-rounded">lock</span>
         <span class="material-symbols-rounded">content_copy</span>
         <span class="material-symbols-rounded">link</span>
         <span class="material-symbols-rounded">report</span>
