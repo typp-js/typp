@@ -22,6 +22,7 @@ import Playground from '#components/Playground.vue'
 
 - Playground
 - NPM
+
 ```bash
 npm install @typp/core @typp/validator
 ```
@@ -31,9 +32,15 @@ npm install @typp/core @typp/validator
 - 首先引入 `@typp/core`
 
 ```ts
-import { t } from '@typp/core' // [!code focus]
+import { t } from '@typp/core'
+```
 
-const Dog = t({ name: String, age: Number })
+- 定义一个数据类型
+
+```ts
+import { t } from '@typp/core'
+
+const Dog = t({ name: String, age: Number }) // [!code focus]
 ```
 
 - 引入 `@typp/validator` 插件并安装
