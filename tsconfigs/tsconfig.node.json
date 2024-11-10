@@ -15,6 +15,7 @@
     "../vitest.config.ts",
     "../vitest.workspace.ts",
     "../docs/.vitepress/config.mts",
+    "../docs/.vitepress/**/*.node.mts",
     "../packages/*/src/**/*.node.ts"
   ]
 }
