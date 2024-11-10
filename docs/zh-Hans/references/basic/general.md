@@ -12,13 +12,52 @@ import Playground from '#components/Playground.vue'
 
 在 Typp 中的设计中，我们借用了一些现有的概念，以用来减少用户的学习成本。这些概念包括了 TypeScript、Flow 等静态类型检查工具中的一些概念，以及一些 JavaScript 本身的概念。
 
+基于一些共识，我们按照一些已经存在的观点在这里介绍 Typp 中的一些常用类型，以及它们的常见用法。
+
 ## 原初类型（Primitive）
 
-原初类型是 JavaScript 中的最基本数据类型，会对应到运行时的最小数据形状。
+原初类型是 JavaScript 运行时的最小数据类型，在值领域中它们是不可变的，不可分解的，不可变更的。原初类型包括了字符串、数字、布尔值、大整数、符号、空值、未定义值。
+
+> - [MDN - 原始值（Primitive）](https://developer.mozilla.org/zh-CN/docs/Glossary/Primitive)
+> - [JavaScript 数据类型和数据结构#原始值](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Data_structures#%E5%8E%9F%E5%A7%8B%E5%80%BC)
+> - [常用的原初类型: `string`, `number`, 和 `boolean`](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#the-primitives-string-number-and-boolean)
+> - [TypeScript 中的基础类型](https://www.typescriptlang.org/docs/handbook/basic-types.html)
+> - [Flow 中的原初类型](https://flow.org/en/docs/types/primitives/)
+> - [Zod 中的原初类型](https://zod.dev/?id=primitives)
+
+:::tip
+
+- 值领域（Value Domain）：在运行时的实际数据
+
+:::
 
 ### `string`
 
-字符串类型是 JavaScript 中最常见的数据类型之一，它表示一个文本数据。
+字符串类型是 JavaScript 中最常见的数据类型之一，它表示一个文本数据。我们可以通过如下的方式来定义一个字符串类型：
+
+```ts
+const strSchema = t.string()
+```
+
+当我们安装了对应的校验器插件之后，我们可以使用 `validate` 方法来校验一个字符串类型的值：
+
+```ts
+const strSchema = t.string()
+
+strSchema.validate('hello') // [!code focus]
+// => 'hello' // [!code focus]
+```
+
+当我们传入一个非字符串类型的值时，校验器会抛出一个错误：
+
+```ts
+const strSchema = t.string()
+
+strSchema.validate(1) // [!code focus]
+// => TypeError: Expected string, but got number // [!code focus]
+```
+
+在 Playground 中看看：
 
 <Playground global style="height: 380px">
 
@@ -31,7 +70,8 @@ strSchema.validate(1)
 //           _?
 export const s0 = strSchema.validate.narrow('hello')
 //           _?
-export const s1 = strSchema.parse(1) // '1'
+export const s1 = strSchema.parse(1)
+// => '1'
 //           _?
 export const s2 = strSchema.tryValidate('hello')
 //           _?
