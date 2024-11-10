@@ -139,7 +139,7 @@ const onEditorMounted = (
       .replace(/^file:\/\/\/node_modules\//, '')
       .replace(/\/package.json$/, ''),
     json: JSON.parse(content) as {
-      name: string,
+      name: string
       exports: Record<string, unknown>
       // TODO
       // imports: Record<string, unknown>
@@ -249,7 +249,7 @@ const onEditorMounted = (
         })
       })
     })
-  })();
+  })()
 }
 
 onMounted(() => {
