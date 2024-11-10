@@ -24,7 +24,7 @@ const localeConfig: LocaleConfig<DefaultTheme.Config> = (
         },
         {
           text: i18n.t('references', { lng: lang }),
-          link: `/${lang}/references/basic`
+          link: `/${lang}/references/basic/general`
         },
         {
           text: i18n.t('examples', { lng: lang }),
