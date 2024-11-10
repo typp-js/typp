@@ -9,7 +9,7 @@ hero:
   actions:
     - theme: brand
       text: 快速开始
-      link: /zh-Hans/quick-start
+      link: /zh-Hans/quick_start
   image:
     src: /favicon.svg
     alt: Typp
