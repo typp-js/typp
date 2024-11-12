@@ -3,7 +3,10 @@
     <div class="top-bar">
       <div class="left"></div>
       <div class="right">
-        <span class="material-symbols-rounded">lock</span>
+        <span
+          class="material-symbols-rounded"
+          @click="editable = !editable"
+        >{{ editable ? 'lock_open' : 'lock' }}</span>
         <span class="material-symbols-rounded">content_copy</span>
         <span class="material-symbols-rounded">link</span>
         <span class="material-symbols-rounded">report</span>
@@ -105,7 +108,16 @@ import { Editor } from '@guolao/vue-monaco-editor'
 
 import type Monaco from 'monaco-editor'
 import { useData } from 'vitepress'
-import { VNode, computed, onMounted, onUnmounted, reactive, ref } from 'vue'
+import {
+  VNode,
+  computed,
+  onMounted,
+  onUnmounted,
+  reactive,
+  readonly,
+  ref,
+  watch
+} from 'vue'
 
 import { extraLibs } from '#define/extraLibs.ts'
 
@@ -122,6 +134,8 @@ const data = useData()
 const uuid = ref(Math.random().toString(36).slice(2))
 const path = ref(`file:///index.${uuid.value}.ts`)
 const code = ref('')
+const editable = ref(false)
+const editorRef = ref<Monaco.editor.IStandaloneCodeEditor>()
 
 const [vnode] = slots.default()
 vnode.props ??= {}
@@ -143,7 +157,7 @@ const MONACO_EDITOR_OPTIONS:
   Monaco.editor.IStandaloneEditorConstructionOptions = {
     tabSize: 2,
 
-    readOnly: true,
+    readOnly: !editable.value,
     // https://github.com/microsoft/monaco-editor/issues/311#issuecomment-578026465
     renderValidationDecorations: 'on',
 
@@ -152,6 +166,15 @@ const MONACO_EDITOR_OPTIONS:
     minimap: { enabled: false },
     fontSize: 14
   }
+
+watch(
+  () => editable.value,
+  (value) => {
+    if (!editorRef.value) return
+
+    editorRef.value.updateOptions({ readOnly: !value })
+  }
+)
 
 const forkTheme = (monaco: typeof Monaco) => {
   monaco.editor.defineTheme('vs-fork', {
@@ -170,6 +193,7 @@ const onEditorMounted = (
   editor: Monaco.editor.IStandaloneCodeEditor,
   monaco: typeof Monaco
 ) => {
+  editorRef.value = editor
   forkTheme(monaco)
 
   const ts = monaco.languages.typescript
