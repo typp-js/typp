@@ -6,9 +6,9 @@
     "#define/*": "./.vitepress/define/*"
   },
   "scripts": {
-    "docs:dev": "vitepress dev",
-    "docs:build": "vitepress build",
-    "docs:preview": "vitepress preview"
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
   },
   "dependencies": {
     "@guolao/vue-monaco-editor": "^1.5.4",
