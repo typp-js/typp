@@ -14,8 +14,8 @@
     "../.jiek.config.ts",
     "../vitest.config.ts",
     "../vitest.workspace.ts",
-    "../docs/.vitepress/config.mts",
-    "../docs/.vitepress/**/*.node.mts",
+    "../docs/.vitepress/config.ts",
+    "../docs/.vitepress/**/*.node.ts",
     "../packages/*/src/**/*.node.ts"
   ]
 }

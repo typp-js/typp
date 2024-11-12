@@ -10,12 +10,13 @@
     "./**/*.tsx",
     "./**/*.vue",
     "./**/*.md",
+    "./.i18n/index.ts",
     "./.vitepress/**/*.ts",
     "./.vitepress/**/*.tsx",
     "./.vitepress/**/*.vue"
   ],
   "exclude": [
-    "./.vitepress/config.mts",
+    "./.vitepress/config.ts",
     "./**/*.node.ts"
   ],
   "vueCompilerOptions": {

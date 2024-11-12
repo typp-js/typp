@@ -1,5 +1,6 @@
 {
   "name": "docs",
+  "type": "module",
   "imports": {
     "#i18n": "./.i18n/index.ts",
     "#components/*": "./.vitepress/components/*",
