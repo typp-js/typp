@@ -1,7 +1,11 @@
 {
   "extends": "../tsconfigs/tsconfig.browser.json",
   "compilerOptions": {
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "types": [
+      "vite/client",
+      "vitepress/client"
+    ]
   },
   "include": [
     "./**/*.ts",
