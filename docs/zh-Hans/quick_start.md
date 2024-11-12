@@ -69,7 +69,7 @@ const dog = Dog.validate({ name: 'dog', age: 1 }) // [!code focus]
 
 在 Playground 中看看效果吧：
 
-<Playground style="height: 300px">
+<Playground style="height: 350px">
 
 ```ts
 import { type Pretty, t } from '@typp/core'
