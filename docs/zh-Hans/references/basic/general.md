@@ -82,7 +82,49 @@ export const s3 = strSchema.tryValidate(1)
 
 ### `number`
 
+<Playground global style="height: 380px">
+
+```ts
+const numSchema = t.number()
+
+numSchema.validate(1)
+numSchema.validate('hello')
+
+//           _?
+export const n0 = numSchema.validate.narrow(1)
+//           _?
+export const n1 = numSchema.parse('1')
+// => 1
+//           _?
+export const n2 = numSchema.tryValidate('hello')
+//           _?
+export const n3 = numSchema.tryValidate(1)
+```
+
+</Playground>
+
 ### `boolean`
+
+<Playground global style="height: 380px">
+
+```ts
+const boolSchema = t.boolean()
+
+boolSchema.validate(true)
+boolSchema.validate('hello')
+
+//           _?
+export const b0 = boolSchema.validate.narrow(true)
+//           _?
+export const b1 = boolSchema.parse('true')
+// => true
+//           _?
+export const b2 = boolSchema.tryValidate('hello')
+//           _?
+export const b3 = boolSchema.tryValidate(true)
+```
+
+</Playground>
 
 ### `bigint`
 
