@@ -7,9 +7,13 @@ import i18n from '../.i18n'
 
 import { extraLibs } from './loadExtraLibs.node'
 
-const localeConfig: LocaleConfig<DefaultTheme.Config> = (
-  ['zh-Hans', 'en'] as const
-).reduce((config, lang, index) => ({
+const lang = 'zh-Hans'
+
+const i18nKeys = Object
+  .keys(i18n.store.options.resources!)
+  .reduce((keys, key) => key === lang ? keys : [...keys, key], [lang])
+
+const localeConfig: LocaleConfig<DefaultTheme.Config> = i18nKeys.reduce((config, lang, index) => ({
   ...config,
   [index === 0 ? 'root' : lang]: {
     label: i18n.t('label', { lng: lang }),
@@ -96,7 +100,7 @@ export default defineConfig({
   base: '/typp/',
   title: 'Typp',
   description: 'TypeScript++',
-  lang: 'zh-Hans',
+  lang,
   head: [
     ['link', { rel: 'icon', href: '/typp/favicon.svg' }],
     [
@@ -132,6 +136,9 @@ export default defineConfig({
         link: 'https://github.com/typp-js/typp'
       }
     ]
+  },
+  rewrites: {
+    'zh-Hans/index.md': 'index.md'
   },
   vite: {
     define: {
