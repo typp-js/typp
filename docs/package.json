@@ -4,7 +4,8 @@
   "imports": {
     "#i18n": "./.i18n/index.ts",
     "#components/*": "./.vitepress/components/*",
-    "#define/*": "./.vitepress/define/*"
+    "#define/*": "./.vitepress/define/*",
+    "#utils/*": "./.vitepress/utils/*"
   },
   "scripts": {
     "dev": "vitepress dev",
