@@ -7,7 +7,10 @@
           class="material-symbols-rounded"
           @click="editable = !editable"
         >{{ editable ? 'lock_open' : 'lock' }}</span>
-        <span class="material-symbols-rounded">content_copy</span>
+        <span
+          class="material-symbols-rounded"
+          @click="copy"
+        >content_copy{{ copyStatusSuffix }}</span>
         <span class="material-symbols-rounded">link</span>
         <span class="material-symbols-rounded">report</span>
         <span class="material-symbols-rounded">open_in_new</span>
@@ -136,6 +139,20 @@ const path = ref(`file:///index.${uuid.value}.ts`)
 const code = ref('')
 const editable = ref(false)
 const editorRef = ref<Monaco.editor.IStandaloneCodeEditor>()
+const copyStatusSuffix = ref('')
+
+const navigator = window.navigator
+const copy = () => {
+  try {
+    navigator.clipboard.writeText(trimmedCode.value)
+    copyStatusSuffix.value = 'check'
+    setTimeout(() => {
+      copyStatusSuffix.value = ''
+    }, 1000)
+  } catch {
+    copyStatusSuffix.value = 'report'
+  }
+}
 
 const [vnode] = slots.default()
 vnode.props ??= {}
