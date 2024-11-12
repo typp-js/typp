@@ -144,10 +144,10 @@ export const initMonacoEditor = (
                   model.getOffsetAt(queryPosition)
                 ) as {
                   displayParts?: { text: string }[]
-                }
+                } | undefined
                 return {
                   label: result
-                    .displayParts
+                    ?.displayParts
                     ?.map(({ text }: { text: string }) => text)
                     .join('')
                     .replace(/\n */g, '␊')
