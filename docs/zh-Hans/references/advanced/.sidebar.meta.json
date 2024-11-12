@@ -6,5 +6,6 @@
     "serializable.md",
     "type_guard.md",
     "pattern_matching.md"
-  ]
+  ],
+  "collapsed": false
 }

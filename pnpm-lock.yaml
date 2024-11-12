@@ -70,8 +70,8 @@ importers:
         version: 3.5.12(typescript@5.6.3)
     devDependencies:
       '@jiek/vite-plugin-vitepress-auto-sidebar':
-        specifier: ^1.8.3
-        version: 1.8.3(vite@5.4.10(@types/node@18.19.55)(sass-embedded@1.80.6)(terser@5.26.0))(vitepress@1.4.3(@algolia/client-search@5.12.0)(@types/node@18.19.55)(postcss@8.4.47)(sass-embedded@1.80.6)(search-insights@2.17.2)(terser@5.26.0)(typescript@5.6.3))
+        specifier: ^1.8.4
+        version: 1.8.4(vite@5.4.10(@types/node@18.19.55)(sass-embedded@1.80.6)(terser@5.26.0))(vitepress@1.4.3(@algolia/client-search@5.12.0)(@types/node@18.19.55)(postcss@8.4.47)(sass-embedded@1.80.6)(search-insights@2.17.2)(terser@5.26.0)(typescript@5.6.3))
       sass-embedded:
         specifier: ^1.80.6
         version: 1.80.6
@@ -674,8 +674,8 @@ packages:
   '@jiek/utils@0.2.1':
     resolution: {integrity: sha512-kx449RHEXfDPEqLaPcYh6VoO/5tiOz8OaFmX/iSPhAXEQUB+eEkjJmDyTtjJ3qngnXdUO6149Dbc+THXOwvUog==}
 
-  '@jiek/vite-plugin-vitepress-auto-sidebar@1.8.3':
-    resolution: {integrity: sha512-QUmrmEfK/IMycRlQ3ro0KsKI8a083KNk59jiLrKabJOttpZoxr91pfMPsN2j2PQ9sJM/BvycUqnYyATanUPd8w==}
+  '@jiek/vite-plugin-vitepress-auto-sidebar@1.8.4':
+    resolution: {integrity: sha512-0V9mvkeKhqbAitRED2n8NzXD68R2QYi2lc9Ok0NY3YuiOZX1EPsCIXvvjXs4asCQPo8S8zEAg0LeYFAzxUDAsA==}
     peerDependencies:
       vite: ^5.4.10
       vitepress: ^1.5.0
@@ -4817,7 +4817,7 @@ snapshots:
 
   '@jiek/utils@0.2.1': {}
 
-  '@jiek/vite-plugin-vitepress-auto-sidebar@1.8.3(vite@5.4.10(@types/node@18.19.55)(sass-embedded@1.80.6)(terser@5.26.0))(vitepress@1.4.3(@algolia/client-search@5.12.0)(@types/node@18.19.55)(postcss@8.4.47)(sass-embedded@1.80.6)(search-insights@2.17.2)(terser@5.26.0)(typescript@5.6.3))':
+  '@jiek/vite-plugin-vitepress-auto-sidebar@1.8.4(vite@5.4.10(@types/node@18.19.55)(sass-embedded@1.80.6)(terser@5.26.0))(vitepress@1.4.3(@algolia/client-search@5.12.0)(@types/node@18.19.55)(postcss@8.4.47)(sass-embedded@1.80.6)(search-insights@2.17.2)(terser@5.26.0)(typescript@5.6.3))':
     dependencies:
       front-matter: 4.0.2
       vite: 5.4.10(@types/node@18.19.55)(sass-embedded@1.80.6)(terser@5.26.0)
