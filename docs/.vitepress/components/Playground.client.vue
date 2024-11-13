@@ -137,6 +137,10 @@ const props = defineProps({
   global: {
     type: Boolean,
     default: false
+  },
+  defaultEditable: {
+    type: Boolean,
+    default: false
   }
 })
 const slots = defineSlots<{
@@ -146,7 +150,7 @@ const data = useData()
 const uuid = ref(Math.random().toString(36).slice(2))
 const path = ref(`file:///index.${uuid.value}.ts`)
 const code = ref('')
-const editable = ref(false)
+const editable = ref(props.defaultEditable)
 const editorRef = ref<Monaco.editor.IStandaloneCodeEditor>()
 const copyStatusSuffix = ref('')
 

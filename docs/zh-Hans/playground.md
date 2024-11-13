@@ -11,6 +11,7 @@ import Playground from '#components/Playground.vue'
 <Playground
   style="--radius: 0px; margin-top: 0; height: calc(100vh - 64px);"
   class="xl"
+  defaultEditable
 >
 
 ```ts
