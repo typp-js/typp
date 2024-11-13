@@ -13,7 +13,8 @@
         >content_copy{{ copyStatusSuffix }}</span>
         <span class="material-symbols-rounded">link</span>
         <span class="material-symbols-rounded">report</span>
-        <span class="material-symbols-rounded">open_in_new</span>
+        <span class="material-symbols-rounded" v-if="!diableOpenInNew"
+        >open_in_new</span>
       </div>
     </div>
     <slot />
@@ -57,8 +58,8 @@
     .top-bar, .bottom-bar {
       > .left, > .right {
         .material-symbols-rounded {
-          padding: 12px;
-          font-size: 24px;
+          padding: 18px;
+          font-size: 20px;
         }
       }
     }
@@ -139,6 +140,10 @@ const props = defineProps({
     default: false
   },
   defaultEditable: {
+    type: Boolean,
+    default: false
+  },
+  diableOpenInNew: {
     type: Boolean,
     default: false
   }
