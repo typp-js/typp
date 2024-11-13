@@ -39,6 +39,7 @@
 </template>
 <style scoped lang="scss">
 .playground {
+  --radius: 8px;
   --shadow: 0 8px 16px rgba(0, 0, 0, .1);
 
   display: flex;
@@ -52,13 +53,21 @@
   &:hover {
     filter: drop-shadow(var(--shadow));
   }
+  &.xl {
+    .top-bar, .bottom-bar {
+      > .left, > .right {
+        .material-symbols-rounded {
+          padding: 12px;
+          font-size: 24px;
+        }
+      }
+    }
+  }
 }
 .dark .playground {
   --shadow: 0 8px 16px rgba(0, 0, 0, .4);
 }
 .top-bar, .bottom-bar {
-  --radius: 8px;
-
   z-index: 1;
   display: flex;
   align-items: center;
