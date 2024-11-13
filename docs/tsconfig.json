@@ -1,29 +1,7 @@
 {
-  "extends": "../tsconfigs/tsconfig.browser.json",
-  "compilerOptions": {
-    "jsx": "preserve",
-    "types": [
-      "vite/client",
-      "vitepress/client"
-    ]
-  },
-  "include": [
-    "./**/*.ts",
-    "./**/*.ts",
-    "./**/*.d.ts",
-    "./**/*.tsx",
-    "./**/*.vue",
-    "./**/*.md",
-    "./.i18n/index.ts",
-    "./.vitepress/**/*.ts",
-    "./.vitepress/**/*.tsx",
-    "./.vitepress/**/*.vue"
-  ],
-  "exclude": [
-    "./.vitepress/config.ts",
-    "./**/*.node.ts"
-  ],
-  "vueCompilerOptions": {
-    "vitePressExtensions": [".md"]
-  }
+  "references": [
+    { "path": "./tsconfig.default.json" },
+    { "path": "./tsconfig.browser.json" },
+    { "path": "./tsconfig.config.json" }
+  ]
 }

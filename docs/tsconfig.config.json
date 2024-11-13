@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfigs/tsconfig.node.json",
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler"
+  },
+  "references": [
+    { "path": "./tsconfig.default.json" }
+  ],
+  "include": [
+    "./.vitepress/config.ts",
+    "./.vitepress/**/*.node.ts",
+    "./**/*.node.ts"
+  ]
+}

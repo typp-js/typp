@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfigs/tsconfig.default.json",
+  "compilerOptions": {
+  },
+  "include": [
+    "./**/*.ts",
+    "./.i18n/index.ts",
+    "./.vitepress/**/*.ts"
+  ],
+  "exclude": [
+    "./.vitepress/config.ts",
+    "./**/*.node.ts",
+    "./**/*.client.ts",
+    "./.vitepress/**/*.node.ts",
+    "./.vitepress/**/*.client.ts"
+  ]
+}

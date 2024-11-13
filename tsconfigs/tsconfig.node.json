@@ -6,7 +6,6 @@
     "customConditions": ["node"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "resolveJsonModule": true,
     "types": ["node"]
   },
   "include": [
@@ -14,8 +13,6 @@
     "../.jiek.config.ts",
     "../vitest.config.ts",
     "../vitest.workspace.ts",
-    "../docs/.vitepress/config.ts",
-    "../docs/.vitepress/**/*.node.ts",
     "../packages/*/src/**/*.node.ts"
   ]
 }

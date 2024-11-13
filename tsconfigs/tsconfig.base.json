@@ -3,11 +3,11 @@
     "target": "ESNext",
     "rootDir": "..",
     "module": "ESNext",
+    "resolveJsonModule": true,
     "strict": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true
+    "skipLibCheck": true
   }
 }
