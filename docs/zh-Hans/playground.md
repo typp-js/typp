@@ -32,6 +32,7 @@ import Playground from '#components/Playground.vue'
 <Playground
   style="--radius: 0px; --shadow: none; margin-top: 0; height: calc(100vh - 64px);"
   class="xl"
+  store
   enableLogs
   defaultEditable
   diableOpenInNew

@@ -16,7 +16,10 @@ const forkTheme = (monaco: typeof Monaco) => {
 
 export const initMonacoEditor = (
   editor: Monaco.editor.IStandaloneCodeEditor,
-  monaco: typeof Monaco
+  monaco: typeof Monaco,
+  options?: {
+    store?: boolean
+  }
 ) => {
   forkTheme(monaco)
 
@@ -94,9 +97,23 @@ export const initMonacoEditor = (
     resolveJsonModule: true,
     paths
   })
+  const hash = location.hash.slice(1)
+  const content = options.store && hash ? decodeURIComponent(atob(hash)) : editor.getValue()
   setTimeout(() => {
-    editor.setValue(editor.getValue())
+    editor.setValue(content)
   }, 100)
+
+  if (options.store) {
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
+      const model = editor.getModel()
+      const uri = model?.uri
+      if (!model || !uri) return
+
+      const content = model.getValue()
+      history.pushState(null, '', `#${btoa(encodeURIComponent(content))}`)
+      navigator.clipboard.writeText(content)
+    })
+  }
 
   void (async () => {
     const model = editor.getModel()

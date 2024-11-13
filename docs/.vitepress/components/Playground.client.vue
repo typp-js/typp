@@ -191,6 +191,10 @@ const props = defineProps({
   enableLogs: {
     type: Boolean,
     default: false
+  },
+  store: {
+    type: Boolean,
+    default: false
   }
 })
 const slots = defineSlots<{
@@ -265,7 +269,7 @@ const onEditorMounted = (
   monaco: typeof Monaco
 ) => {
   editorRef.value = editor
-  disposes.push(initMonacoEditor(editor, monaco))
+  disposes.push(initMonacoEditor(editor, monaco, { store: props.store }))
 }
 
 onMounted(() => {
