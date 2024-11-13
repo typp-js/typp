@@ -18,15 +18,22 @@
       </div>
     </div>
     <slot />
-    <Editor
-      class="editor"
-      language="typescript"
-      v-model:path="path"
-      v-model:theme="theme"
-      v-model:value="trimmedCode"
-      :options="MONACO_EDITOR_OPTIONS"
-      @mount="onEditorMounted"
-    />
+    <div class="container">
+      <Editor
+        class="editor"
+        language="typescript"
+        v-model:path="path"
+        v-model:theme="theme"
+        v-model:value="trimmedCode"
+        :options="MONACO_EDITOR_OPTIONS"
+        @mount="onEditorMounted"
+      />
+      <div
+        v-if="enableLogs"
+        :ref="ele => logs = ele as HTMLDivElement"
+        class="logs"
+      />
+    </div>
     <div class="bottom-bar">
       <div class="left">
         <span class="material-symbols-rounded">keyboard_double_arrow_down</span>
@@ -106,11 +113,20 @@
   border-radius: 0 0 var(--radius) var(--radius);
   border-top: none;
 }
-.editor {
-  flex: 1;
+.container {
+  display: flex;
+  flex-grow: 1;
   height: 0 !important;
 
   border: 1px solid var(--vp-c-divider);
+}
+.editor {
+  flex-grow: 1;
+  width: 0;
+  height: 100%;
+}
+.logs {
+  min-width: 400px;
 }
 .playground > :deep(.language-ts) {
   display: none !important;
@@ -134,6 +150,31 @@ import {
 import { trimIndent } from '#utils/trimIndent.ts'
 import { initMonacoEditor } from './initMonacoEditor'
 
+interface IOptions {
+  /** Max log number, zero means infinite. */
+  maxNum?: number
+  /** Asynchronous rendering. */
+  asyncRender?: boolean
+  /** Show time and from. */
+  showHeader?: boolean
+  /** Access getter value. */
+  accessGetter?: boolean
+  /** Show unenumerable properties. */
+  unenumerable?: boolean
+  /** Lazy evaluation for objects. */
+  lazyEvaluation?: boolean
+  /** Log filter. */
+  filter?: string | RegExp
+  /** Log level, verbose, info, warning and error. */
+  level?: string | string[]
+}
+
+declare class LunaConsole {
+  constructor(element: HTMLElement, options?: IOptions)
+  log(...args: any[]): void
+  evaluate(code: string): void
+}
+
 const props = defineProps({
   global: {
     type: Boolean,
@@ -144,6 +185,10 @@ const props = defineProps({
     default: false
   },
   diableOpenInNew: {
+    type: Boolean,
+    default: false
+  },
+  enableLogs: {
     type: Boolean,
     default: false
   }
@@ -158,6 +203,7 @@ const code = ref('')
 const editable = ref(props.defaultEditable)
 const editorRef = ref<Monaco.editor.IStandaloneCodeEditor>()
 const copyStatusSuffix = ref('')
+const logs = ref<HTMLDivElement>()
 
 const navigator = window.navigator
 const copy = () => {
@@ -177,7 +223,8 @@ vnode.props ??= {}
 vnode.props.id = `playground-${uuid.value}`
 
 const trimmedCode = computed(() => trimIndent(code.value.trim()) + '\n')
-const theme = computed(() => data.isDark.value ? 'vs-dark' : 'vs-fork')
+const isDark = computed(() => data.isDark.value)
+const theme = computed(() => isDark.value ? 'vs-dark' : 'vs-fork')
 
 const MONACO_EDITOR_OPTIONS:
   Monaco.editor.IStandaloneEditorConstructionOptions = {
@@ -202,6 +249,15 @@ watch(
   }
 )
 
+watch(
+  () => isDark.value,
+  (value) => {
+    if (!logs.value) return
+
+    logs.value.classList.toggle('luna-console-theme-dark', value)
+  }
+)
+
 const disposes = reactive<(() => void)[]>([])
 
 const onEditorMounted = (
@@ -215,6 +271,13 @@ const onEditorMounted = (
 onMounted(() => {
   code.value =
     document.querySelector(`#playground-${uuid.value} > pre`)!.textContent ?? ''
+
+  if ('LunaConsole' in window) {
+    console.log(LunaConsole)
+    const lunaConsole = new LunaConsole(logs.value!)
+    logs.value!.classList.toggle('luna-console-theme-dark', isDark.value)
+    lunaConsole.evaluate("console.log({ name: 'string', age: 18 })")
+  }
 })
 onUnmounted(() => {
   disposes.forEach(dispose => dispose())
