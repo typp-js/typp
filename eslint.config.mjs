@@ -12,7 +12,8 @@ export default config({
       'ts/no-wrapper-object-types': 'off',
       'ts/no-unsafe-function-type': 'off',
       'import/no-mutable-exports': 'off',
-      'perfectionist/sort-imports': 'off'
+      'perfectionist/sort-imports': 'off',
+      'perfectionist/sort-named-imports': 'off'
     }
   },
   javascript: {
