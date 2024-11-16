@@ -1,10 +1,10 @@
-import type { t as tn, Typp } from '@typp/core'
-import type { Collect, IsEqual, IsNotEqual, Replace, Stack } from '../types'
+import type { Typp, t as tn } from '@typp/core'
+import type { Collect, IsEqual, IsNotEqual, Replace, Stack } from '@typp/core/types'
 
 const functionSymbol = Symbol('function')
 const genericSymbol = Symbol('generic')
 
-export default function (ctx: typeof tn) {
+export default function(ctx: typeof tn) {
   const t = ctx
   t.useSpecialShapeType('function', functionSymbol)
   t.useSpecialShapeType('generic', genericSymbol)
@@ -24,32 +24,33 @@ export default function (ctx: typeof tn) {
   })
 
   t.useStatic('fn', <
-    const Args extends readonly any[], RT extends readonly any[] = []
+    const Args extends readonly any[],
+    RT extends readonly any[] = [],
   >(args: Args, ...rt: RT) => {
     return t(Function, args, ...rt)
   })
   t.useStatic.proxy('fn', 'function')
-  t.useStatic('generic', function _generic<
+  t.useStatic('generic', <
     const L extends string,
     E = any,
     ES extends tn.Schema<any, any> = tn.TyppWhenNotATypp<E>,
-    D extends tn.Infer<ES> = never
-  >(label: L, _extends?: E, _default?: D) {
-    return t.specialShape(genericSymbol, {
+    D extends tn.Infer<ES> = never,
+  >(label: L, _extends?: E, _default?: D) =>
+    t.specialShape(genericSymbol, {
       label,
       extends: _extends ? t(_extends) : t(),
       default: _default
     }) as tn.SpecialShape<
       tn.SpecialShapeTypeMapping['generic'],
       tn.Generic<L, ES, D>
-    >
-  })
+    >)
 
   t.useFields((shape: any): shape is tn.SpecialShape<tn.SpecialShapeTypeMapping['function'], any> => {
     return shape?.type === functionSymbol
   }, () => ({ implement: func => func }))
 }
 
+// dprint-ignore
 declare module '@typp/core/base' {
   namespace t {
     type FunctionConsume<
