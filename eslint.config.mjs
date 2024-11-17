@@ -21,6 +21,11 @@ export default config({
       'unused-imports/no-unused-vars': 'off'
     }
   },
+  vue: {
+    overrides: {
+      'vue/no-v-model-argument': 'off'
+    }
+  },
   test: {
     overrides: {
       'test/consistent-test-it': 'off'
