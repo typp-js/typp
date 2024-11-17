@@ -4,6 +4,36 @@ import type { Collect, IsEqual, IsNotEqual, Replace, Stack } from '@typp/core/ty
 const functionSymbol = Symbol('function')
 const genericSymbol = Symbol('generic')
 
+/**
+ * 重载的时候支持根据传入参数调用不同的函数
+ * 不用再去手动处理对应的类型重载
+ *
+ * const foo = t.intersection(
+ *   t.fn([String], Number),
+ *   t.fn([Number], Number)
+ * )
+ * foo.implement([
+ * //_? string
+ *   a => Number(a),
+ * //_? number
+ *   a => a
+ * ])
+ *
+ * declare function foo(a: string): number
+ * declare function foo(a: number): number
+ * declare function foo(a: string | number): number
+ *
+ * interface Foo {
+ *   (a: string): number
+ *   (a: number): number
+ *   (a: string | number): number
+ * }
+ * declare const foo: Foo
+ *
+ * const isNumberSkm = t.fn([t.unknown()], t.fn.rt($0 => $0.is(Number)))
+ * const isNumber = isNumber.implement(a => typeof a === 'number')
+ */
+
 export default function(ctx: typeof tn) {
   const t = ctx
   t.useSpecialShapeType('function', functionSymbol)
