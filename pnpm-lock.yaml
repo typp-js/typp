@@ -47,9 +47,6 @@ importers:
       typescript:
         specifier: ^5.5.4
         version: 5.6.3
-      vite-tsconfig-paths:
-        specifier: ^4.3.1
-        version: 4.3.1(typescript@5.6.3)(vite@5.4.10(@types/node@18.19.55)(sass-embedded@1.80.6)(terser@5.26.0))
       vitest:
         specifier: ^2.0.5
         version: 2.1.2(@types/node@18.19.55)(sass-embedded@1.80.6)(terser@5.26.0)
@@ -2320,9 +2317,6 @@ packages:
     resolution: {integrity: sha512-sSs4inE1FB2YQiymcmTv6NWENryABjUNPeWhOvmn4SjtKybglsyPZxFB3U1/+L1bYi0rNZDqCLlHyLYDl1Pq5A==}
     engines: {node: '>=8'}
 
-  globrex@0.1.2:
-    resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
-
   graceful-fs@4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
 
@@ -3947,16 +3941,6 @@ packages:
     peerDependencies:
       typescript: '>=4.2.0'
 
-  tsconfck@3.0.1:
-    resolution: {integrity: sha512-7ppiBlF3UEddCLeI1JRx5m2Ryq+xk4JrZuq4EuYXykipebaq1dV0Fhgr1hb7CkmHt32QSgOZlcqVLEtHBG4/mg==}
-    engines: {node: ^18 || >=20}
-    hasBin: true
-    peerDependencies:
-      typescript: ^5.0.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-
   tslib@2.7.0:
     resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
 
@@ -4064,14 +4048,6 @@ packages:
     resolution: {integrity: sha512-HPcGNN5g/7I2OtPjLqgOtCRu/qhVvBxTUD3qzitmL0SrG1cWFzxzhMDWussxSbrRYWqnKf8P2jiNhPMSN+ymsQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
-
-  vite-tsconfig-paths@4.3.1:
-    resolution: {integrity: sha512-cfgJwcGOsIxXOLU/nELPny2/LUD/lcf1IbfyeKTv2bsupVbTH/xpFtdQlBmIP1GEK2CjjLxYhFfB+QODFAx5aw==}
-    peerDependencies:
-      vite: '*'
-    peerDependenciesMeta:
-      vite:
-        optional: true
 
   vite@5.4.10:
     resolution: {integrity: sha512-1hvaPshuPUtxeQ0hsVH3Mud0ZanOLwVTneA1EgbAM5LhaZEqyPWGRQ7BtaMvUrTDeEaC8pxtj6a6jku3x4z6SQ==, tarball: https://registry.npmjs.org/vite/-/vite-5.4.10.tgz}
@@ -6817,8 +6793,6 @@ snapshots:
       merge2: 1.4.1
       slash: 3.0.0
 
-  globrex@0.1.2: {}
-
   graceful-fs@4.2.10:
     optional: true
 
@@ -8653,10 +8627,6 @@ snapshots:
     dependencies:
       typescript: 5.6.3
 
-  tsconfck@3.0.1(typescript@5.6.3):
-    optionalDependencies:
-      typescript: 5.6.3
-
   tslib@2.7.0: {}
 
   type-check@0.4.0:
@@ -8776,17 +8746,6 @@ snapshots:
       - sugarss
       - supports-color
       - terser
-
-  vite-tsconfig-paths@4.3.1(typescript@5.6.3)(vite@5.4.10(@types/node@18.19.55)(sass-embedded@1.80.6)(terser@5.26.0)):
-    dependencies:
-      debug: 4.3.4
-      globrex: 0.1.2
-      tsconfck: 3.0.1(typescript@5.6.3)
-    optionalDependencies:
-      vite: 5.4.10(@types/node@18.19.55)(sass-embedded@1.80.6)(terser@5.26.0)
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
 
   vite@5.4.10(@types/node@18.19.55)(sass-embedded@1.80.6)(terser@5.26.0):
     dependencies:
