@@ -10,6 +10,7 @@ const isTestFileGlobExpr = (expr: string) => expr.includes('.spec.')
 const tsconfigPath = ts.findConfigFile(process.cwd(), fs.existsSync)
 if (!tsconfigPath) throw new Error('tsconfig.json not found')
 
+// eslint-disable-next-line ts/no-unsafe-assignment
 const { config: tsconfig, error } = ts.readConfigFile(tsconfigPath, p => fs.readFileSync(p, 'utf-8'))
 if (error) throw error
 
@@ -26,11 +27,14 @@ const projects: {
   options: ts.CompilerOptions
 }[] = []
 projectReferences?.forEach(({ path: p }) => {
+  // eslint-disable-next-line ts/no-unsafe-assignment
   const { config: tsconfig, error } = ts.readConfigFile(p, p => fs.readFileSync(p, 'utf-8'))
   if (error) throw error
   const { options, fileNames, errors } = ts.parseJsonConfigFileContent(tsconfig, ts.sys, path.dirname(p), {}, p)
   if (errors.length > 0) {
-    errors.forEach(e => console.warn(`[vitest] ${e.messageText}`))
+    errors.forEach(e =>
+      console.warn(`[vitest] ${typeof e.messageText === 'string' ? e.messageText : e.messageText.messageText}`)
+    )
   }
   if (fileNames.filter(isTestFileGlobExpr).length > 0) {
     projects.push({ files: fileNames, options })
@@ -41,6 +45,7 @@ export default defineWorkspace(projects.map(({
   files,
   options
 }) => ({
+  extends: './vitest.config.ts',
   test: { include: files },
   ssr: {
     target: options?.customConditions?.includes('browser')
