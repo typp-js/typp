@@ -13,7 +13,13 @@ if (!tsconfigPath) throw new Error('tsconfig.json not found')
 const { config: tsconfig, error } = ts.readConfigFile(tsconfigPath, p => fs.readFileSync(p, 'utf-8'))
 if (error) throw error
 
-const { projectReferences } = ts.parseJsonConfigFileContent(tsconfig, ts.sys, path.dirname(tsconfigPath), {}, tsconfigPath)
+const { projectReferences } = ts.parseJsonConfigFileContent(
+  tsconfig,
+  ts.sys,
+  path.dirname(tsconfigPath),
+  {},
+  tsconfigPath
+)
 
 const projects: {
   files: string[]
@@ -52,7 +58,7 @@ export default defineWorkspace(projects.map(({
           c.resolve.conditions = []
         }
         c.resolve.conditions = options?.customConditions ?? ['default']
-      },
+      }
     }
   ]
 })))
