@@ -1,17 +1,17 @@
 {
   "name": "typp-workspace",
   "type": "module",
+  "packageManager": "pnpm@9.10.0",
   "description": "A workspace for typp project.",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "lint": "eslint --cache --cache-location=node_modules/.cache/.eslintcache/ ./ --max-warnings=0",
     "test": "pnpm --recursive run test",
     "coverage": "pnpm --recursive run coverage",
     "coverage:badge": "pnpm --recursive run coverage:badge",
     "postinstall": "dprint editor-info"
-  },
-  "packageManager": "pnpm@9.10.0",
-  "engines": {
-    "node": ">=18.0.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.3.2",
